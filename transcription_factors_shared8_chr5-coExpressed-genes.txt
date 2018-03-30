@@ -1,0 +1,1539 @@
+Ensembl Gene ID	Gene Symbol	p-value value	Geneset friends	Total friends	BioType	GO Annotation	Chromosome	Chromosome Start	Chromosome End
+ENSG00000014824	SLC30A9	3.80e-06	6	3241	protein_coding	solute carrier family 30 (zinc transporter), member 9	4	41992489	42092474
+ENSG00000102931	ARL2BP	3.28e-05	5	2585	protein_coding	ADP-ribosylation factor-like 2 binding protein	16	57279010	57287516
+ENSG00000197008	ZNF138	3.76e-05	5	2659	protein_coding	zinc finger protein 138	7	64254766	64294054
+ENSG00000005436	GCFC2	4.17e-05	5	2716	protein_coding	GC-rich sequence DNA-binding factor 2	2	75879126	75938115
+ENSG00000067955	CBFB	4.31e-05	5	2735	protein_coding	core-binding factor, beta subunit	16	67063019	67134961
+ENSG00000073584	SMARCE1	6.00e-05	5	2928	protein_coding	SWI/SNF related, matrix associated, actin dependent regulator of chromatin, subfamily e, member 1	17	38781214	38804760
+ENSG00000255302	EID1	7.16e-05	5	3038	protein_coding	EP300 interacting inhibitor of differentiation 1	15	49170083	49172380
+ENSG00000140382	HMG20A	1.00e-04	5	3256	protein_coding	high mobility group 20A	15	77712754	77777949
+ENSG00000114503	NCBP2	1.11e-04	5	3330	protein_coding	nuclear cap binding protein subunit 2, 20kDa	3	196662273	196669468
+ENSG00000136518	ACTL6A	1.13e-04	5	3341	protein_coding	actin-like 6A	3	179280668	179306196
+ENSG00000079785	DDX1	1.23e-04	5	3397	protein_coding	DEAD (Asp-Glu-Ala-Asp) box helicase 1	2	15731302	15771235
+ENSG00000108064	TFAM	2.06e-04	5	3788	protein_coding	transcription factor A, mitochondrial	10	60144782	60158981
+ENSG00000147099	HDAC8	3.97e-04	4	2250	protein_coding	histone deacetylase 8	X	71549366	71792953
+ENSG00000113196	HAND1	5.38e-04	3	967	protein_coding	heart and neural crest derivatives expressed 1	5	153854532	153857824
+ENSG00000121864	ZNF639	5.57e-04	4	2459	protein_coding	zinc finger protein 639	3	179040779	179053323
+ENSG00000141380	SS18	8.05e-04	4	2709	protein_coding	synovial sarcoma translocation, chromosome 18	18	23596578	23671181
+ENSG00000025156	HSF2	8.97e-04	4	2787	protein_coding	heat shock transcription factor 2	6	122720691	122754264
+ENSG00000122882	ECD	9.25e-04	4	2810	protein_coding	ecdysoneless homolog (Drosophila)	10	74889913	74928813
+ENSG00000139687	RB1	9.31e-04	4	2815	protein_coding	retinoblastoma 1	13	48877887	49056122
+ENSG00000117505	DR1	9.62e-04	4	2839	protein_coding	down-regulator of transcription 1, TBP-binding (negative cofactor 2)	1	93811445	93835055
+ENSG00000101843	PSMD10	9.99e-04	4	2868	protein_coding	proteasome (prosome, macropain) 26S subunit, non-ATPase, 10	X	107327437	107334848
+ENSG00000121022	COPS5	1.00e-03	4	2872	protein_coding	COP9 signalosome subunit 5	8	67955314	67996018
+ENSG00000174738	NR1D2	1.01e-03	4	2875	protein_coding	nuclear receptor subfamily 1, group D, member 2	3	23986751	24022109
+ENSG00000111358	GTF2H3	1.01e-03	4	2876	protein_coding	general transcription factor IIH, polypeptide 3, 34kDa	12	124118375	124147153
+ENSG00000136159	NUDT15	1.04e-03	4	2896	protein_coding	nudix (nucleoside diphosphate linked moiety X)-type motif 15	13	48611703	48621358
+ENSG00000171497	PPID	1.07e-03	4	2922	protein_coding	peptidylprolyl isomerase D	4	159630286	159644548
+ENSG00000132485	ZRANB2	1.08e-03	4	2926	protein_coding	zinc finger, RAN-binding domain containing 2	1	71528974	71546980
+ENSG00000178919	FOXE1	1.09e-03	3	1234	protein_coding	forkhead box E1 (thyroid transcription factor 2)	9	100615536	100618986
+ENSG00000166200	COPS2	1.11e-03	4	2948	protein_coding	COP9 signalosome subunit 2	15	49398268	49447858
+ENSG00000111269	CREBL2	1.12e-03	4	2956	protein_coding	cAMP responsive element binding protein-like 2	12	12764761	12798042
+ENSG00000136352	NKX2-1	1.22e-03	3	1283	protein_coding	NK2 homeobox 1	14	36985602	36990354
+ENSG00000064313	TAF2	1.27e-03	4	3053	protein_coding	TAF2 RNA polymerase II, TATA box binding protein (TBP)-associated factor, 150kDa	8	120743015	120845103
+ENSG00000125618	PAX8	1.28e-03	3	1304	protein_coding	paired box 8	2	113973574	114036527
+ENSG00000152382	TADA1	1.32e-03	4	3089	protein_coding	transcriptional adaptor 1	1	166825747	166845564
+ENSG00000139372	TDG	1.35e-03	4	3108	protein_coding	thymine-DNA glycosylase	12	104359582	104382652
+ENSG00000108561	C1QBP	1.46e-03	4	3169	protein_coding	complement component 1, q subcomponent binding protein	17	5336097	5352150
+ENSG00000196290	NIF3L1	1.63e-03	4	3268	protein_coding	NIF3 NGG1 interacting factor 3-like 1 (S. cerevisiae)	2	201754050	201768655
+ENSG00000012048	BRCA1	1.64e-03	4	3270	protein_coding	breast cancer 1, early onset	17	41196312	41277500
+ENSG00000171566	PLRG1	1.64e-03	4	3270	protein_coding	pleiotropic regulator 1	4	155456158	155471587
+ENSG00000112312	GMNN	1.88e-03	4	3393	protein_coding	geminin, DNA replication inhibitor	6	24775159	24786327
+ENSG00000173611	SCAI	2.05e-03	3	1535	protein_coding	suppressor of cancer cell invasion	9	127704887	127905785
+ENSG00000079246	XRCC5	2.92e-03	4	3819	protein_coding	X-ray repair complementing defective repair in Chinese hamster cells 5 (double-strand-break rejoining)	2	216972187	217071026
+ENSG00000172201	ID4	3.34e-03	3	1822	protein_coding	inhibitor of DNA binding 4, dominant negative helix-loop-helix protein	6	19837617	19840915
+ENSG00000103671	TRIP4	3.35e-03	3	1823	protein_coding	thyroid hormone receptor interactor 4	15	64679947	64747502
+ENSG00000196419	XRCC6	3.47e-03	4	4002	protein_coding	X-ray repair complementing defective repair in Chinese hamster cells 6	22	42017123	42060044
+ENSG00000100084	HIRA	3.76e-03	3	1899	protein_coding	histone cell cycle regulator	22	19318221	19435224
+ENSG00000120693	SMAD9	4.57e-03	3	2035	protein_coding	SMAD family member 9	13	37418968	37494902
+ENSG00000133740	E2F5	4.58e-03	3	2036	protein_coding	E2F transcription factor 5, p130-binding	8	86089460	86129387
+ENSG00000105176	URI1	4.67e-03	3	2050	protein_coding	URI1, prefoldin-like chaperone	19	30414551	30506611
+ENSG00000136603	SKIL	4.68e-03	3	2052	protein_coding	SKI-like oncogene	3	170075466	170114623
+ENSG00000140987	ZSCAN32	4.70e-03	3	2054	protein_coding	zinc finger and SCAN domain containing 32	16	3432085	3451065
+ENSG00000166268		6.20e-03	2	679	protein_coding	myelin regulatory factor-like	12	70219084	70352877
+ENSG00000109854	HTATIP2	6.79e-03	3	2342	protein_coding	HIV-1 Tat interactive protein 2, 30kDa	11	20385231	20405329
+ENSG00000146757	ZNF92	7.18e-03	3	2389	protein_coding	zinc finger protein 92	7	64838712	64866038
+ENSG00000165244	ZNF367	7.45e-03	3	2421	protein_coding	zinc finger protein 367	9	99148223	99180611
+ENSG00000119401	TRIM32	7.64e-03	3	2443	protein_coding	tripartite motif containing 32	9	119449581	119463579
+ENSG00000106245	BUD31	7.91e-03	3	2474	protein_coding	BUD31 homolog (S. cerevisiae)	7	99006264	99017239
+ENSG00000159479	MED8	7.96e-03	3	2480	protein_coding	mediator complex subunit 8	1	43849588	43855479
+ENSG00000120837	NFYB	8.12e-03	3	2497	protein_coding	nuclear transcription factor Y, beta	12	104510855	104532067
+ENSG00000178913	TAF7	8.31e-03	3	2518	protein_coding	TAF7 RNA polymerase II, TATA box binding protein (TBP)-associated factor, 55kDa	5	140698057	140700330
+ENSG00000075407	ZNF37A	8.39e-03	3	2527	protein_coding	zinc finger protein 37A	10	38383264	38414472
+ENSG00000154727	GABPA	8.43e-03	3	2531	protein_coding	GA binding protein transcription factor, alpha subunit 60kDa	21	27106881	27144771
+ENSG00000183576	SETD3	8.73e-03	3	2563	protein_coding	SET domain containing 3	14	99864083	99947216
+ENSG00000186260	MKL2	8.76e-03	3	2566	protein_coding	MKL/myocardin-like 2	16	14165178	14360630
+ENSG00000137338	PGBD1	8.77e-03	3	2568	protein_coding	piggyBac transposable element derived 1	6	28249314	28270326
+ENSG00000113645	WWC1	8.90e-03	3	2581	protein_coding	WW and C2 domain containing 1	5	167718656	167899308
+ENSG00000165417	GTF2A1	9.02e-03	3	2594	protein_coding	general transcription factor IIA, 1, 19/37kDa	14	81641796	81687721
+ENSG00000214114	MYCBP	9.12e-03	3	2604	protein_coding	MYC binding protein	1	39328636	39347289
+ENSG00000129691	ASH2L	9.35e-03	3	2627	protein_coding	ash2 (absent, small, or homeotic)-like (Drosophila)	8	37962760	38001594
+ENSG00000196693	ZNF33B	9.36e-03	3	2629	protein_coding	zinc finger protein 33B	10	43084555	43133992
+ENSG00000071539	TRIP13	9.40e-03	3	2633	protein_coding	thyroid hormone receptor interactor 13	5	892758	919472
+ENSG00000121067	SPOP	9.45e-03	3	2638	protein_coding	speckle-type POZ protein	17	47676246	47755596
+ENSG00000198146	ZNF770	9.53e-03	3	2646	protein_coding	zinc finger protein 770	15	35270542	35280488
+ENSG00000253729	PRKDC	1.01e-02	3	2702	protein_coding	protein kinase, DNA-activated, catalytic polypeptide	8	48685669	48872743
+ENSG00000204435	CSNK2B	1.02e-02	3	2708	protein_coding	casein kinase 2, beta polypeptide	6	31633013	31638120
+ENSG00000136146	MED4	1.02e-02	3	2709	protein_coding	mediator complex subunit 4	13	48627459	48669267
+ENSG00000123268	ATF1	1.07e-02	3	2762	protein_coding	activating transcription factor 1	12	51157493	51214905
+ENSG00000185104	FAF1	1.08e-02	3	2768	protein_coding	Fas (TNFRSF6) associated factor 1	1	50905150	51425935
+ENSG00000100030	MAPK1	1.09e-02	3	2777	protein_coding	mitogen-activated protein kinase 1	22	22108789	22221970
+ENSG00000140262	TCF12	1.15e-02	3	2828	protein_coding	transcription factor 12	15	57210821	57591479
+ENSG00000101773	RBBP8	1.16e-02	3	2844	protein_coding	retinoblastoma binding protein 8	18	20378224	20606451
+ENSG00000172292	CERS6	1.20e-02	3	2872	protein_coding	ceramide synthase 6	2	169312372	169631644
+ENSG00000112983	BRD8	1.21e-02	3	2884	protein_coding	bromodomain containing 8	5	137475455	137514675
+ENSG00000127337	YEATS4	1.21e-02	3	2885	protein_coding	YEATS domain containing 4	12	69753483	69784576
+ENSG00000062194	GPBP1	1.24e-02	3	2910	protein_coding	GC-rich promoter binding protein 1	5	56469775	56560506
+ENSG00000102098	SCML2	1.24e-02	3	2913	protein_coding	sex comb on midleg-like 2 (Drosophila)	X	18257434	18372847
+ENSG00000050748	MAPK9	1.29e-02	3	2954	protein_coding	mitogen-activated protein kinase 9	5	179660143	179719099
+ENSG00000163697	APBB2	1.35e-02	3	3002	protein_coding	amyloid beta (A4) precursor protein-binding, family B, member 2	4	40812044	41218731
+ENSG00000125931	CITED1	1.38e-02	2	1029	protein_coding	Cbp/p300-interacting transactivator, with Glu/Asp-rich carboxy-terminal domain, 1	X	71521488	71527037
+ENSG00000230989	HSBP1	1.43e-02	3	3063	protein_coding	heat shock factor binding protein 1	16	83841448	83853342
+ENSG00000169714	CNBP	1.45e-02	3	3082	protein_coding	CCHC-type zinc finger, nucleic acid binding protein	3	128888327	128902765
+ENSG00000085231	TAF9	1.46e-02	3	3091	protein_coding	TAF9 RNA polymerase II, TATA box binding protein (TBP)-associated factor, 32kDa	5	68646811	68665840
+ENSG00000126261	UBA2	1.50e-02	3	3122	protein_coding	ubiquitin-like modifier activating enzyme 2	19	34919257	34960853
+ENSG00000198791	CNOT7	1.51e-02	3	3130	protein_coding	CCR4-NOT transcription complex, subunit 7	8	17086737	17104387
+ENSG00000116455	WDR77	1.53e-02	3	3144	protein_coding	WD repeat domain 77	1	111982512	111991998
+ENSG00000005100	DHX33	1.56e-02	3	3165	protein_coding	DEAH (Asp-Glu-Ala-His) box polypeptide 33	17	5344232	5372380
+ENSG00000112592	TBP	1.59e-02	3	3190	protein_coding	TATA box binding protein	6	170863390	170881958
+ENSG00000181163	NPM1	1.60e-02	3	3192	protein_coding	nucleophosmin (nucleolar phosphoprotein B23, numatrin)	5	170814120	170838141
+ENSG00000156256	USP16	1.67e-02	3	3244	protein_coding	ubiquitin specific peptidase 16	21	30396950	30426809
+ENSG00000161547	SRSF2	1.70e-02	3	3267	protein_coding	serine/arginine-rich splicing factor 2	17	74730197	74733456
+ENSG00000135829	DHX9	1.71e-02	3	3277	protein_coding	DEAH (Asp-Glu-Ala-His) box helicase 9	1	182808504	182856886
+ENSG00000125107	CNOT1	1.76e-02	3	3308	protein_coding	CCR4-NOT transcription complex, subunit 1	16	58553855	58663790
+ENSG00000103423	DNAJA3	1.77e-02	3	3314	protein_coding	DnaJ (Hsp40) homolog, subfamily A, member 3	16	4475806	4506776
+ENSG00000137310	TCF19	1.78e-02	3	3326	protein_coding	transcription factor 19	6	31126319	31134936
+ENSG00000169744	LDB2	1.80e-02	3	3335	protein_coding	LIM domain binding 2	4	16503164	16900432
+ENSG00000171720	HDAC3	1.82e-02	3	3354	protein_coding	histone deacetylase 3	5	141000443	141016437
+ENSG00000143799	PARP1	1.84e-02	3	3362	protein_coding	poly (ADP-ribose) polymerase 1	1	226548392	226595780
+ENSG00000106462	EZH2	1.86e-02	3	3380	protein_coding	enhancer of zeste homolog 2 (Drosophila)	7	148504475	148581413
+ENSG00000196591	HDAC2	1.96e-02	3	3444	protein_coding	histone deacetylase 2	6	114254192	114332472
+ENSG00000116478	HDAC1	1.97e-02	3	3453	protein_coding	histone deacetylase 1	1	32757687	32799236
+ENSG00000083544	TDRD3	2.22e-02	2	1322	protein_coding	tudor domain containing 3	13	60970591	61148012
+ENSG00000132341	RAN	2.25e-02	3	3627	protein_coding	RAN, member RAS oncogene family	12	131356424	131362223
+ENSG00000135625	EGR4	2.52e-02	2	1417	protein_coding	early growth response 4	2	73518058	73520833
+ENSG00000234224	TMEM229A	3.16e-02	2	1598	protein_coding	transmembrane protein 229A	7	123670973	123673523
+ENSG00000106004	HOXA5	3.38e-02	2	1657	protein_coding	homeobox A5	7	27180671	27183287
+ENSG00000198839	ZNF277	3.41e-02	2	1665	protein_coding	zinc finger protein 277	7	111846643	111983151
+ENSG00000101190	TCFL5	3.54e-02	2	1700	protein_coding	transcription factor-like 5 (basic helix-loop-helix)	20	61472467	61493115
+ENSG00000160199	PKNOX1	3.55e-02	2	1703	protein_coding	PBX/knotted 1 homeobox 1	21	44394620	44453691
+ENSG00000204103	MAFB	3.56e-02	2	1706	protein_coding	v-maf avian musculoaponeurotic fibrosarcoma oncogene homolog B	20	39314488	39317880
+ENSG00000172262	ZNF131	3.89e-02	2	1790	protein_coding	zinc finger protein 131	5	43065278	43192123
+ENSG00000115041	KCNIP3	4.06e-02	2	1831	protein_coding	Kv channel interacting protein 3, calsenilin	2	95963052	96051825
+ENSG00000197757	HOXC6	4.12e-02	2	1847	protein_coding	homeobox C6	12	54384408	54424607
+ENSG00000107643	MAPK8	4.13e-02	2	1849	protein_coding	mitogen-activated protein kinase 8	10	49514698	49647403
+ENSG00000178928	TPRX1	4.15e-02	2	1853	protein_coding	tetra-peptide repeat homeobox 1	19	48304500	48322308
+ENSG00000196812	ZSCAN16	4.24e-02	2	1875	protein_coding	zinc finger and SCAN domain containing 16	6	28092338	28097860
+ENSG00000197213	ZSCAN5B	4.36e-02	2	1905	protein_coding	zinc finger and SCAN domain containing 5B	19	56700939	56709289
+ENSG00000172465	TCEAL1	4.39e-02	2	1910	protein_coding	transcription elongation factor A (SII)-like 1	X	102883632	102885881
+ENSG00000164683	HEY1	4.50e-02	2	1938	protein_coding	hes-related family bHLH transcription factor with YRPW motif 1	8	80676245	80680098
+ENSG00000123685	BATF3	4.51e-02	2	1939	protein_coding	basic leucine zipper transcription factor, ATF-like 3	1	212859760	212873327
+ENSG00000171872	KLF17	4.51e-02	2	1940	protein_coding	Kruppel-like factor 17	1	44584522	44600812
+ENSG00000180532	ZSCAN4	4.52e-02	2	1941	protein_coding	zinc finger and SCAN domain containing 4	19	58180303	58190520
+ENSG00000136715	SAP130	4.53e-02	2	1944	protein_coding	Sin3A-associated protein, 130kDa	2	128698791	128785694
+ENSG00000120948	TARDBP	4.58e-02	2	1955	protein_coding	TAR DNA binding protein	1	11072414	11085796
+ENSG00000128710	HOXD10	4.61e-02	2	1964	protein_coding	homeobox D10	2	176973518	176984670
+ENSG00000258873	DUXA	4.69e-02	2	1981	protein_coding	double homeobox A	19	57665389	57678811
+ENSG00000128714	HOXD13	4.71e-02	2	1986	protein_coding	homeobox D13	2	176957619	176960666
+ENSG00000129173	E2F8	4.73e-02	2	1992	protein_coding	E2F transcription factor 8	11	19245610	19263167
+ENSG00000160908	ZNF394	4.74e-02	2	1994	protein_coding	zinc finger protein 394	7	99084142	99097947
+ENSG00000147124	ZNF41	4.76e-02	2	1998	protein_coding	zinc finger protein 41	X	47305278	47342345
+ENSG00000213988	ZNF90	4.76e-02	2	1999	protein_coding	zinc finger protein 90	19	20188803	20237885
+ENSG00000111249	CUX2	4.86e-02	2	2020	protein_coding	cut-like homeobox 2	12	111471828	111788358
+ENSG00000131848	ZSCAN5A	4.94e-02	2	2039	protein_coding	zinc finger and SCAN domain containing 5A	19	56732681	56879752
+ENSG00000136997	MYC	4.95e-02	2	2041	protein_coding	v-myc avian myelocytomatosis viral oncogene homolog	8	128747680	128753674
+ENSG00000124459	ZNF45	5.13e-02	2	2082	protein_coding	zinc finger protein 45	19	44416781	44439430
+ENSG00000177565	TBL1XR1	5.13e-02	2	2082	protein_coding	transducin (beta)-like 1 X-linked receptor 1	3	176737143	176915261
+ENSG00000168214	RBPJ	5.16e-02	2	2088	protein_coding	recombination signal binding protein for immunoglobulin kappa J region	4	26165077	26436541
+ENSG00000253506	NACA2	5.29e-02	2	2118	protein_coding	nascent polypeptide-associated complex alpha subunit 2	17	59667794	59668563
+ENSG00000196482	ESRRG	5.33e-02	2	2126	protein_coding	estrogen-related receptor gamma	1	216676588	217311097
+ENSG00000087842	PIR	5.35e-02	2	2131	protein_coding	pirin (iron-binding nuclear protein)	X	15402921	15511687
+ENSG00000126778	SIX1	5.38e-02	2	2137	protein_coding	SIX homeobox 1	14	61110133	61124977
+ENSG00000060339	CCAR1	5.40e-02	2	2142	protein_coding	cell division cycle and apoptosis regulator 1	10	70480769	70552134
+ENSG00000160310	PRMT2	5.43e-02	2	2149	protein_coding	protein arginine methyltransferase 2	21	48055079	48085036
+ENSG00000123095	BHLHE41	5.45e-02	2	2152	protein_coding	basic helix-loop-helix family, member e41	12	26272959	26278060
+ENSG00000125686	MED1	5.49e-02	2	2162	protein_coding	mediator complex subunit 1	17	37560538	37607539
+ENSG00000162851	TFB2M	5.54e-02	2	2172	protein_coding	transcription factor B2, mitochondrial	1	246703862	246729626
+ENSG00000169016	E2F6	5.58e-02	2	2182	protein_coding	E2F transcription factor 6	2	11584501	11606297
+ENSG00000136535	TBR1	5.62e-02	2	2191	protein_coding	T-box, brain, 1	2	162272605	162282381
+ENSG00000153879	CEBPG	5.77e-02	2	2222	protein_coding	CCAAT/enhancer binding protein (C/EBP), gamma	19	33864236	33873592
+ENSG00000198963	RORB	5.85e-02	2	2239	protein_coding	RAR-related orphan receptor B	9	77112281	77308093
+ENSG00000109819	PPARGC1A	5.90e-02	2	2251	protein_coding	peroxisome proliferator-activated receptor gamma, coactivator 1 alpha	4	23756664	23905712
+ENSG00000165891	E2F7	5.97e-02	2	2266	protein_coding	E2F transcription factor 7	12	77415027	77459360
+ENSG00000065526	SPEN	5.98e-02	2	2267	protein_coding	spen family transcriptional repressor	1	16174359	16266955
+ENSG00000119042	SATB2	6.00e-02	2	2272	protein_coding	SATB homeobox 2	2	200134223	200335989
+ENSG00000155868	MED7	6.04e-02	2	2279	protein_coding	mediator complex subunit 7	5	156564423	156586030
+ENSG00000144161	ZC3H8	6.08e-02	2	2289	protein_coding	zinc finger CCCH-type containing 8	2	112969102	113012713
+ENSG00000096717	SIRT1	6.20e-02	2	2313	protein_coding	sirtuin 1	10	69644427	69678147
+ENSG00000077080	ACTL6B	6.21e-02	2	2315	protein_coding	actin-like 6B	7	100240720	100254084
+ENSG00000260027	HOXB7	6.23e-02	2	2320	protein_coding	homeobox B7	17	46684594	46710934
+ENSG00000061337	LZTS1	6.28e-02	2	2330	protein_coding	leucine zipper, putative tumor suppressor 1	8	20103676	20161474
+ENSG00000176165	FOXG1	6.34e-02	2	2342	protein_coding	forkhead box G1	14	29235050	29238870
+ENSG00000133997	MED6	6.36e-02	2	2346	protein_coding	mediator complex subunit 6	14	71047974	71067384
+ENSG00000101557	USP14	6.38e-02	2	2350	protein_coding	ubiquitin specific peptidase 14 (tRNA-guanine transglycosylase)	18	158383	214629
+ENSG00000158691	ZSCAN12	6.41e-02	2	2358	protein_coding	zinc finger and SCAN domain containing 12	6	28346732	28367511
+ENSG00000175029	CTBP2	6.44e-02	2	2363	protein_coding	C-terminal binding protein 2	10	126676421	126849739
+ENSG00000116670	MAD2L2	6.46e-02	2	2367	protein_coding	MAD2 mitotic arrest deficient-like 2 (yeast)	1	11734537	11751707
+ENSG00000114126	TFDP2	6.48e-02	2	2371	protein_coding	transcription factor Dp-2 (E2F dimerization partner 2)	3	141663277	141868386
+ENSG00000161920	MED11	6.54e-02	2	2384	protein_coding	mediator complex subunit 11	17	4634723	4636905
+ENSG00000125629	INSIG2	6.54e-02	2	2384	protein_coding	insulin induced gene 2	2	118846028	118868573
+ENSG00000124444	ZNF576	6.54e-02	2	2384	protein_coding	zinc finger protein 576	19	44100544	44105309
+ENSG00000175745	NR2F1	6.56e-02	2	2388	protein_coding	nuclear receptor subfamily 2, group F, member 1	5	92919043	92930321
+ENSG00000131263	RLIM	6.67e-02	2	2410	protein_coding	ring finger protein, LIM domain interacting	X	73805052	73834452
+ENSG00000187555	USP7	6.67e-02	2	2411	protein_coding	ubiquitin specific peptidase 7 (herpes virus-associated)	16	8985951	9058371
+ENSG00000186487	MYT1L	6.68e-02	2	2413	protein_coding	myelin transcription factor 1-like	2	1792885	2335032
+ENSG00000155508	CNOT8	6.71e-02	2	2419	protein_coding	CCR4-NOT transcription complex, subunit 8	5	154237113	154256353
+ENSG00000197223	C1D	6.72e-02	2	2421	protein_coding	C1D nuclear receptor corepressor	2	68268262	68338080
+ENSG00000080839	RBL1	6.73e-02	2	2422	protein_coding	retinoblastoma-like 1 (p107)	20	35624752	35724398
+ENSG00000087095	NLK	6.76e-02	2	2428	protein_coding	nemo-like kinase	17	26368763	26523407
+ENSG00000174446	SNAPC5	6.78e-02	2	2432	protein_coding	small nuclear RNA activating complex, polypeptide 5, 19kDa	15	66782473	66790151
+ENSG00000141646	SMAD4	6.78e-02	2	2433	protein_coding	SMAD family member 4	18	48494410	48611415
+ENSG00000204209	DAXX	6.82e-02	2	2441	protein_coding	death-domain associated protein	6	33286335	33297046
+ENSG00000007237	GAS7	6.82e-02	2	2441	protein_coding	growth arrest-specific 7	17	9813926	10101868
+ENSG00000103316	CRYM	6.84e-02	2	2444	protein_coding	crystallin, mu	16	21250195	21314404
+ENSG00000198914	POU3F3	6.84e-02	2	2445	protein_coding	POU class 3 homeobox 3	2	105471969	105476929
+ENSG00000107187	LHX3	6.87e-02	1	392	protein_coding	LIM homeobox 3	9	139088096	139096955
+ENSG00000173275	ZNF449	6.99e-02	2	2475	protein_coding	zinc finger protein 449	X	134478721	134497077
+ENSG00000082701	GSK3B	7.02e-02	2	2481	protein_coding	glycogen synthase kinase 3 beta	3	119540170	119813264
+ENSG00000077092	RARB	7.04e-02	2	2485	protein_coding	retinoic acid receptor, beta	3	25215823	25639423
+ENSG00000075142	SRI	7.17e-02	2	2510	protein_coding	sorcin	7	87834433	87856308
+ENSG00000186376	ZNF75D	7.17e-02	2	2511	protein_coding	zinc finger protein 75D	X	134382867	134478012
+ENSG00000104320	NBN	7.18e-02	2	2513	protein_coding	nibrin	8	90945564	91015456
+ENSG00000109339	MAPK10	7.19e-02	2	2515	protein_coding	mitogen-activated protein kinase 10	4	86936276	87515284
+ENSG00000148835	TAF5	7.20e-02	2	2517	protein_coding	TAF5 RNA polymerase II, TATA box binding protein (TBP)-associated factor, 100kDa	10	105127724	105148822
+ENSG00000063978	RNF4	7.33e-02	2	2542	protein_coding	ring finger protein 4	4	2463947	2627047
+ENSG00000177425	PAWR	7.40e-02	2	2555	protein_coding	PRKC, apoptosis, WT1, regulator	12	79968759	80084877
+ENSG00000160563	MED27	7.41e-02	2	2558	protein_coding	mediator complex subunit 27	9	134735494	134955295
+ENSG00000186814	ZSCAN30	7.41e-02	2	2558	protein_coding	zinc finger and SCAN domain containing 30	18	32831032	32870196
+ENSG00000071575	TRIB2	7.43e-02	2	2562	protein_coding	tribbles pseudokinase 2	2	12857015	12882860
+ENSG00000133169	BEX1	7.45e-02	2	2565	protein_coding	brain expressed, X-linked 1	X	102317579	102319168
+ENSG00000164924	YWHAZ	7.50e-02	2	2576	protein_coding	tyrosine 3-monooxygenase/tryptophan 5-monooxygenase activation protein, zeta	8	101928753	101965616
+ENSG00000068305	MEF2A	7.52e-02	2	2580	protein_coding	myocyte enhancer factor 2A	15	100017370	100256671
+ENSG00000179981	TSHZ1	7.57e-02	2	2588	protein_coding	teashirt zinc finger homeobox 1	18	72922710	73001905
+ENSG00000165495	PKNOX2	7.72e-02	2	2617	protein_coding	PBX/knotted 1 homeobox 2	11	125034583	125303285
+ENSG00000117724	CENPF	7.73e-02	2	2620	protein_coding	centromere protein F, 350/400kDa	1	214776538	214837931
+ENSG00000042429	MED17	7.75e-02	2	2624	protein_coding	mediator complex subunit 17	11	93517393	93547861
+ENSG00000143514	TP53BP2	7.76e-02	2	2625	protein_coding	tumor protein p53 binding protein, 2	1	223967601	224033674
+ENSG00000188243	COMMD6	7.82e-02	2	2637	protein_coding	COMM domain containing 6	13	76099350	76123575
+ENSG00000072501	SMC1A	7.85e-02	2	2642	protein_coding	structural maintenance of chromosomes 1A	X	53401070	53449677
+ENSG00000141026	MED9	7.88e-02	2	2647	protein_coding	mediator complex subunit 9	17	17380300	17396540
+ENSG00000143013	LMO4	7.91e-02	2	2654	protein_coding	LIM domain only 4	1	87794151	87814606
+ENSG00000198793	MTOR	7.93e-02	2	2658	protein_coding	mechanistic target of rapamycin (serine/threonine kinase)	1	11166592	11322564
+ENSG00000213246	SUPT4H1	7.95e-02	2	2662	protein_coding	suppressor of Ty 4 homolog 1 (S. cerevisiae)	17	56422539	56430454
+ENSG00000143418	CERS2	7.95e-02	2	2662	protein_coding	ceramide synthase 2	1	150933059	150947479
+ENSG00000197780	TAF13	7.96e-02	2	2664	protein_coding	TAF13 RNA polymerase II, TATA box binding protein (TBP)-associated factor, 18kDa	1	109605108	109618624
+ENSG00000166913	YWHAB	7.97e-02	2	2666	protein_coding	tyrosine 3-monooxygenase/tryptophan 5-monooxygenase activation protein, beta	20	43514317	43537173
+ENSG00000196367	TRRAP	7.99e-02	2	2669	protein_coding	transformation/transcription domain-associated protein	7	98475556	98610866
+ENSG00000197386	HTT	8.11e-02	2	2691	protein_coding	huntingtin	4	3076408	3245676
+ENSG00000112282	MED23	8.12e-02	2	2694	protein_coding	mediator complex subunit 23	6	131895106	131949369
+ENSG00000094916	CBX5	8.14e-02	2	2697	protein_coding	chromobox homolog 5	12	54624724	54673886
+ENSG00000147649	MTDH	8.20e-02	2	2708	protein_coding	metadherin	8	98656407	98740998
+ENSG00000111653	ING4	8.22e-02	2	2713	protein_coding	inhibitor of growth family, member 4	12	6759446	6772314
+ENSG00000146676	PURB	8.23e-02	2	2715	protein_coding	purine-rich element binding protein B	7	44915896	44924960
+ENSG00000147862	NFIB	8.24e-02	2	2716	protein_coding	nuclear factor I/B	9	14081842	14398982
+ENSG00000133398	MED10	8.24e-02	2	2717	protein_coding	mediator complex subunit 10	5	6371994	6378707
+ENSG00000118217	ATF6	8.29e-02	2	2725	protein_coding	activating transcription factor 6	1	161736084	161933860
+ENSG00000113387	SUB1	8.31e-02	2	2730	protein_coding	SUB1 homolog (S. cerevisiae)	5	32531739	32604185
+ENSG00000100811	YY1	8.32e-02	2	2732	protein_coding	YY1 transcription factor	14	100704635	100749129
+ENSG00000126767	ELK1	8.40e-02	2	2747	protein_coding	ELK1, member of ETS oncogene family	X	47494920	47510003
+ENSG00000239306	RBM14	8.48e-02	2	2761	protein_coding	RNA binding motif protein 14	11	66384053	66394818
+ENSG00000111596	CNOT2	8.54e-02	2	2772	protein_coding	CCR4-NOT transcription complex, subunit 2	12	70636774	70748773
+ENSG00000138778	CENPE	8.58e-02	2	2779	protein_coding	centromere protein E, 312kDa	4	104026963	104119566
+ENSG00000170515	PA2G4	8.67e-02	2	2796	protein_coding	proliferation-associated 2G4, 38kDa	12	56498103	56507691
+ENSG00000130758	MAP3K10	8.70e-02	2	2802	protein_coding	mitogen-activated protein kinase kinase kinase 10	19	40697651	40721482
+ENSG00000101126	ADNP	8.76e-02	2	2813	protein_coding	activity-dependent neuroprotector homeobox	20	49505585	49547958
+ENSG00000077809	GTF2I	8.81e-02	2	2823		general transcription factor IIi	7	74071994	74175026
+ENSG00000113649	TCERG1	8.82e-02	2	2825	protein_coding	transcription elongation regulator 1	5	145826874	145891524
+ENSG00000172379	ARNT2	8.85e-02	2	2830	protein_coding	aryl-hydrocarbon receptor nuclear translocator 2	15	80696692	80890278
+ENSG00000114062	UBE3A	8.90e-02	2	2839	protein_coding	ubiquitin protein ligase E3A	15	25582381	25684128
+ENSG00000008838	MED24	8.91e-02	2	2841	protein_coding	mediator complex subunit 24	17	38175350	38217468
+ENSG00000144747	TMF1	8.94e-02	2	2846	protein_coding	TATA element modulatory factor 1	3	69068978	69101484
+ENSG00000102804	TSC22D1	8.95e-02	2	2848	protein_coding	TSC22 domain family, member 1	13	45007655	45151283
+ENSG00000095564	BTAF1	8.99e-02	2	2856	protein_coding	BTAF1 RNA polymerase II, B-TFIID transcription factor-associated, 170kDa	10	93683526	93790082
+ENSG00000213523	SRA1	9.00e-02	2	2857	protein_coding	steroid receptor RNA activator 1	5	139916925	139937895
+ENSG00000101544	ADNP2	9.02e-02	2	2861	protein_coding	ADNP homeobox 2	18	77866915	77905406
+ENSG00000163960	UBXN7	9.04e-02	2	2865	protein_coding	UBX domain protein 7	3	196074533	196159345
+ENSG00000184271	POU6F1	9.11e-02	2	2878	protein_coding	POU class 6 homeobox 1	12	51580719	51611477
+ENSG00000160783	PMF1	9.15e-02	2	2885	protein_coding	polyamine-modulated factor 1	1	156182784	156212874
+ENSG00000112242	E2F3	9.20e-02	2	2893	protein_coding	E2F transcription factor 3	6	20402398	20493941
+ENSG00000009954	BAZ1B	9.20e-02	2	2894	protein_coding	bromodomain adjacent to zinc finger domain, 1B	7	72854728	72936608
+ENSG00000115750	TAF1B	9.24e-02	2	2900	protein_coding	TATA box binding protein (TBP)-associated factor, RNA polymerase I, B, 63kDa	2	9983483	10074545
+ENSG00000107779	BMPR1A	9.32e-02	2	2915	protein_coding	bone morphogenetic protein receptor, type IA	10	88516407	88692595
+ENSG00000140307	GTF2A2	9.35e-02	2	2921	protein_coding	general transcription factor IIA, 2, 12kDa	15	59930261	59949740
+ENSG00000168036	CTNNB1	9.41e-02	2	2931	protein_coding	catenin (cadherin-associated protein), beta 1, 88kDa	3	41236328	41301587
+ENSG00000134504	KCTD1	9.41e-02	2	2931	protein_coding	potassium channel tetramerization domain containing 1	18	24034874	24237365
+ENSG00000088881	EBF4	9.41e-02	2	2931	protein_coding	early B-cell factor 4	20	2673524	2740753
+ENSG00000108270	AATF	9.47e-02	2	2943		apoptosis antagonizing transcription factor	17	35306175	35414171
+ENSG00000135457	TFCP2	9.55e-02	2	2957	protein_coding	transcription factor CP2	12	51487446	51566926
+ENSG00000198315	ZKSCAN8	9.56e-02	2	2959	protein_coding	zinc finger with KRAB and SCAN domains 8	6	28109688	28127250
+ENSG00000118707	TGIF2	9.68e-02	2	2979	protein_coding	TGFB-induced factor homeobox 2	20	35201891	35222353
+ENSG00000166313	APBB1	9.73e-02	2	2988	protein_coding	amyloid beta (A4) precursor protein-binding, family B, member 1 (Fe65)	11	6416355	6440644
+ENSG00000153560	UBP1	9.77e-02	2	2995	protein_coding	upstream binding protein 1 (LBP-1a)	3	33429828	33482863
+ENSG00000087191	PSMC5	9.82e-02	2	3004	protein_coding	proteasome (prosome, macropain) 26S subunit, ATPase, 5	17	61904512	61909379
+ENSG00000100410	PHF5A	9.86e-02	2	3011	protein_coding	PHD finger protein 5A	22	41855721	41864729
+ENSG00000143437	ARNT	9.87e-02	2	3013	protein_coding	aryl hydrocarbon receptor nuclear translocator	1	150782181	150849244
+ENSG00000164985	PSIP1	9.99e-02	2	3034	protein_coding	PC4 and SFRS1 interacting protein 1	9	15464064	15511017
+ENSG00000162613	FUBP1	1.00e-01	2	3036	protein_coding	far upstream element (FUSE) binding protein 1	1	78409740	78444794
+ENSG00000106261	ZKSCAN1	1.00e-01	2	3042	protein_coding	zinc finger with KRAB and SCAN domains 1	7	99613204	99639312
+ENSG00000116030	SUMO1	1.01e-01	2	3047	protein_coding	small ubiquitin-like modifier 1	2	203070903	203103331
+ENSG00000054118	THRAP3	1.01e-01	2	3053	protein_coding	thyroid hormone receptor associated protein 3	1	36690017	36770958
+ENSG00000106554	CHCHD3	1.01e-01	2	3062	protein_coding	coiled-coil-helix-coiled-coil-helix domain containing 3	7	132469629	132766848
+ENSG00000108924	HLF	1.02e-01	2	3072	protein_coding	hepatic leukemia factor	17	53342373	53402426
+ENSG00000180182	MED14	1.02e-01	2	3073	protein_coding	mediator complex subunit 14	X	40507558	40595110
+ENSG00000239672	NME1	1.02e-01	2	3075	protein_coding	NME/NM23 nucleoside diphosphate kinase 1	17	49230897	49239789
+ENSG00000162601	MYSM1	1.03e-01	2	3092	protein_coding	Myb-like, SWIRM and MPN domains 1	1	59120411	59165764
+ENSG00000004487	KDM1A	1.04e-01	2	3098	protein_coding	lysine (K)-specific demethylase 1A	1	23345941	23410182
+ENSG00000066117	SMARCD1	1.04e-01	2	3100	protein_coding	SWI/SNF related, matrix associated, actin dependent regulator of chromatin, subfamily d, member 1	12	50478755	50494495
+ENSG00000120798	NR2C1	1.05e-01	2	3118	protein_coding	nuclear receptor subfamily 2, group C, member 1	12	95414005	95467479
+ENSG00000178662	CSRNP3	1.05e-01	2	3123	protein_coding	cysteine-serine-rich nuclear protein 3	2	166326157	166545917
+ENSG00000110925	CSRNP2	1.05e-01	2	3127	protein_coding	cysteine-serine-rich nuclear protein 2	12	51454990	51477447
+ENSG00000196531	NACA	1.06e-01	2	3147	protein_coding	nascent polypeptide-associated complex alpha subunit	12	57106212	57125412
+ENSG00000151090	THRB	1.07e-01	2	3158	protein_coding	thyroid hormone receptor, beta	3	24158651	24536773
+ENSG00000151240	DIP2C	1.07e-01	2	3164	protein_coding	DIP2 disco-interacting protein 2 homolog C (Drosophila)	10	320130	735683
+ENSG00000065717	TLE2	1.07e-01	2	3166	protein_coding	transducin-like enhancer of split 2 (E(sp1) homolog, Drosophila)	19	2997636	3047633
+ENSG00000109501	WFS1	1.09e-01	2	3189	protein_coding	Wolfram syndrome 1 (wolframin)	4	6271576	6304992
+ENSG00000082014	SMARCD3	1.10e-01	2	3204	protein_coding	SWI/SNF related, matrix associated, actin dependent regulator of chromatin, subfamily d, member 3	7	150935850	150974982
+ENSG00000143390	RFX5	1.10e-01	2	3209	protein_coding	regulatory factor X, 5 (influences HLA class II expression)	1	151313116	151319833
+ENSG00000185651	UBE2L3	1.11e-01	2	3235	protein_coding	ubiquitin-conjugating enzyme E2L 3	22	21903736	21978323
+ENSG00000099956	SMARCB1	1.12e-01	2	3236	protein_coding	SWI/SNF related, matrix associated, actin dependent regulator of chromatin, subfamily b, member 1	22	24129150	24176703
+ENSG00000103275	UBE2I	1.14e-01	2	3286	protein_coding	ubiquitin-conjugating enzyme E2I	16	1355548	1377019
+ENSG00000104824	HNRNPL	1.19e-01	2	3362	protein_coding	heterogeneous nuclear ribonucleoprotein L	19	39327028	39342987
+ENSG00000165119	HNRNPK	1.21e-01	2	3398	protein_coding	heterogeneous nuclear ribonucleoprotein K	9	86582998	86595569
+ENSG00000169057	MECP2	1.25e-01	2	3458	protein_coding	methyl CpG binding protein 2 (Rett syndrome)	X	153287024	153363212
+ENSG00000121413	ZSCAN18	1.27e-01	2	3502	protein_coding	zinc finger and SCAN domain containing 18	19	58595205	58629794
+ENSG00000167074	TEF	1.29e-01	2	3522	protein_coding	thyrotrophic embryonic factor	22	41763337	41795330
+ENSG00000172845	SP3	1.29e-01	2	3528	protein_coding	Sp3 transcription factor	2	174771187	174830430
+ENSG00000185721	DRG1	1.30e-01	2	3539	protein_coding	developmentally regulated GTP binding protein 1	22	31795509	31924726
+ENSG00000121671	CRY2	1.30e-01	2	3549	protein_coding	cryptochrome 2 (photolyase-like)	11	45868669	45904798
+ENSG00000100603	SNW1	1.32e-01	2	3583	protein_coding	SNW domain containing 1	14	78183942	78227550
+ENSG00000124422	USP22	1.34e-01	2	3610	protein_coding	ubiquitin specific peptidase 22	17	20902910	20947073
+ENSG00000149480	MTA2	1.40e-01	2	3710	protein_coding	metastasis associated 1 family, member 2	11	62360686	62369312
+ENSG00000126351	THRA	1.45e-01	2	3786	protein_coding	thyroid hormone receptor, alpha	17	38214543	38250120
+ENSG00000111676	ATN1	1.48e-01	2	3836	protein_coding	atrophin 1	12	7033626	7051484
+ENSG00000092377	TBL1Y	1.60e-01	1	954	protein_coding	transducin (beta)-like 1, Y-linked	Y	6778727	6959724
+ENSG00000137090	DMRT1	1.65e-01	1	989	protein_coding	doublesex and mab-3 related transcription factor 1	9	841690	969090
+ENSG00000131849	ZNF132	1.68e-01	1	1007	protein_coding	zinc finger protein 132	19	58944181	58951589
+ENSG00000104447	TRPS1	1.74e-01	1	1046	protein_coding	trichorhinophalangeal syndrome I	8	116420724	116821899
+ENSG00000185686	PRAME	1.82e-01	1	1100	protein_coding	preferentially expressed antigen in melanoma	22	22890123	22901768
+ENSG00000125850	OVOL2	1.85e-01	1	1114	protein_coding	ovo-like zinc finger 2	20	17937623	18039832
+ENSG00000122145	TBX22	1.94e-01	1	1177	protein_coding	T-box 22	X	79270255	79287268
+ENSG00000184937	WT1	1.96e-01	1	1189	protein_coding	Wilms tumor 1	11	32409321	32457176
+ENSG00000187801	ZFP69B	1.97e-01	1	1199	protein_coding	ZFP69 zinc finger protein B	1	40915774	40929390
+ENSG00000183770	FOXL2	1.98e-01	1	1202	protein_coding	forkhead box L2	3	138663066	138665982
+ENSG00000102908	NFAT5	2.12e-01	1	1296	protein_coding	nuclear factor of activated T-cells 5, tonicity-responsive	16	69598997	69738569
+ENSG00000203989	RHOXF2B	2.12e-01	1	1301	protein_coding	Rhox homeobox family, member 2B	X	119205848	119211707
+ENSG00000104689	TNFRSF10A	2.12e-01	1	1302	protein_coding	tumor necrosis factor receptor superfamily, member 10a	8	23047965	23082639
+ENSG00000064218	DMRT3	2.13e-01	1	1307	protein_coding	doublesex and mab-3 related transcription factor 3	9	976964	991731
+ENSG00000170689	HOXB9	2.15e-01	1	1317	protein_coding	homeobox B9	17	46698518	46703839
+ENSG00000142025	DMRTC2	2.16e-01	1	1325	protein_coding	DMRT-like family C2	19	42348806	42356401
+ENSG00000182521	TBPL2	2.16e-01	1	1328	protein_coding	TATA box binding protein like 2	14	55880259	55923444
+ENSG00000126752	SSX1	2.17e-01	1	1335	protein_coding	synovial sarcoma, X breakpoint 1	X	48114752	48126879
+ENSG00000163666	HESX1	2.18e-01	1	1338	protein_coding	HESX homeobox 1	3	57231944	57260549
+ENSG00000004848	ARX	2.26e-01	1	1392	protein_coding	aristaless related homeobox	X	25021811	25034065
+ENSG00000185219	ZNF445	2.27e-01	1	1403	protein_coding	zinc finger protein 445	3	44481262	44519162
+ENSG00000054598	FOXC1	2.27e-01	1	1403	protein_coding	forkhead box C1	6	1610681	1614127
+ENSG00000268171		2.31e-01	1	1429		Uncharacterized protein 	4	57276682	57277131
+ENSG00000165643	SOHLH1	2.31e-01	1	1431	protein_coding	spermatogenesis and oogenesis specific basic helix-loop-helix 1	9	138585253	138591374
+ENSG00000188816	HMX2	2.33e-01	1	1441	protein_coding	H6 family homeobox 2	10	124907638	124910188
+ENSG00000171456	ASXL1	2.36e-01	1	1462	protein_coding	additional sex combs like 1 (Drosophila)	20	30946155	31027122
+ENSG00000128652	HOXD3	2.36e-01	1	1466	protein_coding	homeobox D3	2	177001340	177037830
+ENSG00000198300	PEG3	2.39e-01	1	1484	protein_coding	paternally expressed 3	19	57321445	57352096
+ENSG00000160949	TONSL	2.39e-01	1	1485	protein_coding	tonsoku-like, DNA repair protein	8	145654165	145669827
+ENSG00000173473	SMARCC1	2.43e-01	1	1514	protein_coding	SWI/SNF related, matrix associated, actin dependent regulator of chromatin, subfamily c, member 1	3	47626762	47823596
+ENSG00000168505	GBX2	2.43e-01	1	1516	protein_coding	gastrulation brain homeobox 2	2	237073879	237077012
+ENSG00000172466	ZNF24	2.45e-01	1	1529	protein_coding	zinc finger protein 24	18	32912176	32925446
+ENSG00000131721	RHOXF2	2.48e-01	1	1549	protein_coding	Rhox homeobox family, member 2	X	119292467	119297945
+ENSG00000117036	ETV3	2.49e-01	1	1554	protein_coding	ets variant 3	1	157090983	157108266
+ENSG00000204532		2.49e-01	1	1556	protein_coding	zinc finger and SCAN domain containing 5C	19	56713670	56720821
+ENSG00000196459	TRAPPC2	2.51e-01	1	1570	protein_coding	trafficking protein particle complex 2	X	13730363	13752754
+ENSG00000159692	CTBP1	2.52e-01	1	1575	protein_coding	C-terminal binding protein 1	4	1205236	1243741
+ENSG00000147117	ZNF157	2.54e-01	1	1593	protein_coding	zinc finger protein 157	X	47229982	47273704
+ENSG00000139154	AEBP2	2.54e-01	1	1593	protein_coding	AE binding protein 2	12	19556979	19873735
+ENSG00000101255	TRIB3	2.56e-01	1	1603	protein_coding	tribbles pseudokinase 3	20	361261	378203
+ENSG00000165388	ZNF488	2.57e-01	1	1614		zinc finger protein 488	10	48355024	48373866
+ENSG00000141040	ZNF287	2.59e-01	1	1624	protein_coding	zinc finger protein 287	17	16454701	16472520
+ENSG00000078399	HOXA9	2.60e-01	1	1632	protein_coding	homeobox A9	7	27202054	27210117
+ENSG00000111642	CHD4	2.60e-01	1	1633	protein_coding	chromodomain helicase DNA binding protein 4	12	6679249	6716642
+ENSG00000136866	ZFP37	2.60e-01	1	1634	protein_coding	ZFP37 zinc finger protein	9	115800660	115819039
+ENSG00000105085	MED26	2.60e-01	1	1634	protein_coding	mediator complex subunit 26	19	16685718	16739873
+ENSG00000100146	SOX10	2.62e-01	1	1648	protein_coding	SRY (sex determining region Y)-box 10	22	38366693	38383429
+ENSG00000120952	PRAMEF2	2.63e-01	1	1653	protein_coding	PRAME family member 2	1	12916941	12921764
+ENSG00000134532	SOX5	2.63e-01	1	1653	protein_coding	SRY (sex determining region Y)-box 5	12	23682440	24103966
+ENSG00000165259	HDX	2.65e-01	1	1668	protein_coding	highly divergent homeobox	X	83572882	83757487
+ENSG00000116721	PRAMEF1	2.66e-01	1	1675	protein_coding	PRAME family member 1	1	12851546	12856777
+ENSG00000037965	HOXC8	2.67e-01	1	1682	protein_coding	homeobox C8	12	54402832	54407570
+ENSG00000169981	ZNF35	2.67e-01	1	1687	protein_coding	zinc finger protein 35	3	44690219	44702283
+ENSG00000118526	TCF21	2.68e-01	1	1691	protein_coding	transcription factor 21	6	134210276	134216691
+ENSG00000171634	BPTF	2.68e-01	1	1694	protein_coding	bromodomain PHD finger transcription factor	17	65821640	65980494
+ENSG00000113658	SMAD5	2.70e-01	1	1704	protein_coding	SMAD family member 5	5	135468534	135524435
+ENSG00000111912	NCOA7	2.70e-01	1	1708	protein_coding	nuclear receptor coactivator 7	6	126102307	126252266
+ENSG00000170370	EMX2	2.71e-01	1	1712	protein_coding	empty spiracles homeobox 2	10	119301955	119309056
+ENSG00000170448	NFXL1	2.71e-01	1	1717	protein_coding	nuclear transcription factor, X-box binding-like 1	4	47849257	47916653
+ENSG00000078403	MLLT10	2.72e-01	1	1721	protein_coding	myeloid/lymphoid or mixed-lineage leukemia (trithorax homolog, Drosophila); translocated to, 10	10	21823094	22032559
+ENSG00000130751	NPAS1	2.72e-01	1	1721	protein_coding	neuronal PAS domain protein 1	19	47523077	47549033
+ENSG00000163064	EN1	2.72e-01	1	1724	protein_coding	engrailed homeobox 1	2	119599747	119605254
+ENSG00000111670	GNPTAB	2.72e-01	1	1724	protein_coding	N-acetylglucosamine-1-phosphate transferase, alpha and beta subunits	12	102139275	102224716
+ENSG00000107249	GLIS3	2.73e-01	1	1726	protein_coding	GLIS family zinc finger 3	9	3824127	4348392
+ENSG00000170166	HOXD4	2.74e-01	1	1734	protein_coding	homeobox D4	2	177015950	177017954
+ENSG00000109670	FBXW7	2.74e-01	1	1736	protein_coding	F-box and WD repeat domain containing 7, E3 ubiquitin protein ligase	4	153242410	153457253
+ENSG00000213921	LEUTX	2.74e-01	1	1736	protein_coding	leucine twenty homeobox	19	40267235	40276775
+ENSG00000119547	ONECUT2	2.74e-01	1	1737	protein_coding	one cut homeobox 2	18	55102917	55158529
+ENSG00000167157	PRRX2	2.74e-01	1	1739	protein_coding	paired related homeobox 2	9	132427920	132484875
+ENSG00000133937	GSC	2.75e-01	1	1741	protein_coding	goosecoid homeobox	14	95234553	95236562
+ENSG00000144791	LIMD1	2.76e-01	1	1753	protein_coding	LIM domains containing 1	3	45596886	45727830
+ENSG00000111704	NANOG	2.77e-01	1	1756	protein_coding	Nanog homeobox	12	7940390	7948655
+ENSG00000095794	CREM	2.77e-01	1	1759	protein_coding	cAMP responsive element modulator	10	35415719	35501886
+ENSG00000128709	HOXD9	2.79e-01	1	1772	protein_coding	homeobox D9	2	176987088	176989853
+ENSG00000187140	FOXD3	2.79e-01	1	1775	protein_coding	forkhead box D3	1	63788730	63790797
+ENSG00000124216	SNAI1	2.80e-01	1	1780	protein_coding	snail family zinc finger 1	20	48599536	48605423
+ENSG00000139613	SMARCC2	2.81e-01	1	1788	protein_coding	SWI/SNF related, matrix associated, actin dependent regulator of chromatin, subfamily c, member 2	12	56556767	56583351
+ENSG00000180318	ALX1	2.83e-01	1	1801	protein_coding	ALX homeobox 1	12	85673885	85695562
+ENSG00000180818	HOXC10	2.84e-01	1	1810	protein_coding	homeobox C10	12	54378849	54384063
+ENSG00000116726	PRAMEF12	2.84e-01	1	1812	protein_coding	PRAME family member 12	1	12834984	12838049
+ENSG00000204513	PRAMEF11	2.85e-01	1	1814		PRAME family member 11	1	12884468	12891264
+ENSG00000188290	HES4	2.85e-01	1	1815	protein_coding	hes family bHLH transcription factor 4	1	934342	935552
+ENSG00000108511	HOXB6	2.85e-01	1	1819	protein_coding	homeobox B6	17	46671639	46682354
+ENSG00000204595	DPRX	2.86e-01	1	1822	protein_coding	divergent-paired related homeobox	19	54135310	54140263
+ENSG00000117475	BLZF1	2.87e-01	1	1834	protein_coding	basic leucine zipper nuclear factor 1	1	169337208	169365778
+ENSG00000111802	TDP2	2.88e-01	1	1841	protein_coding	tyrosyl-DNA phosphodiesterase 2	6	24650205	24667261
+ENSG00000144355	DLX1	2.89e-01	1	1850	protein_coding	distal-less homeobox 1	2	172949468	172954405
+ENSG00000177311	ZBTB38	2.89e-01	1	1850	protein_coding	zinc finger and BTB domain containing 38	3	141043055	141168634
+ENSG00000176293	ZNF135	2.90e-01	1	1851	protein_coding	zinc finger protein 135	19	58570607	58597677
+ENSG00000145736	GTF2H2	2.91e-01	1	1863	protein_coding	general transcription factor IIH, polypeptide 2, 44kDa	5	70330784	70363516
+ENSG00000148737	TCF7L2	2.92e-01	1	1866	protein_coding	transcription factor 7-like 2 (T-cell specific, HMG-box)	10	114710009	114927437
+ENSG00000181449	SOX2	2.92e-01	1	1870	protein_coding	SRY (sex determining region Y)-box 2	3	181429714	181432221
+ENSG00000123064	DDX54	2.93e-01	1	1876	protein_coding	DEAD (Asp-Glu-Ala-Asp) box polypeptide 54	12	113594979	113623284
+ENSG00000186103	ARGFX	2.94e-01	1	1883	protein_coding	arginine-fifty homeobox	3	121289551	121305481
+ENSG00000136960	ENPP2	2.94e-01	1	1883	protein_coding	ectonucleotide pyrophosphatase/phosphodiesterase 2	8	120569326	120685693
+ENSG00000139624	CERS5	2.94e-01	1	1884	protein_coding	ceramide synthase 5	12	50523575	50561288
+ENSG00000169131	ZNF354A	2.94e-01	1	1887	protein_coding	zinc finger protein 354A	5	178138593	178157703
+ENSG00000186448	ZNF197	2.95e-01	1	1890	protein_coding	zinc finger protein 197	3	44626380	44689963
+ENSG00000080603	SRCAP	2.97e-01	1	1908	protein_coding	Snf2-related CREBBP activator protein	16	30709530	30755602
+ENSG00000214325		2.98e-01	1	1915		Uncharacterized protein 	16	75728367	75734089
+ENSG00000128645	HOXD1	2.98e-01	1	1917	protein_coding	homeobox D1	2	177053307	177055688
+ENSG00000163132	MSX1	2.99e-01	1	1921	protein_coding	msh homeobox 1	4	4861393	4865663
+ENSG00000167548	KMT2D	2.99e-01	1	1923	protein_coding	lysine (K)-specific methyltransferase 2D	12	49412758	49453557
+ENSG00000118495	PLAGL1	3.00e-01	1	1929	protein_coding	pleiomorphic adenoma gene-like 1	6	144261437	144385735
+ENSG00000164778	EN2	3.01e-01	1	1938	protein_coding	engrailed homeobox 2	7	155250824	155257526
+ENSG00000142684	ZNF593	3.02e-01	1	1941	protein_coding	zinc finger protein 593	1	26496362	26498551
+ENSG00000156469	MTERFD1	3.04e-01	1	1956	protein_coding	MTERF domain containing 1	8	97251626	97273838
+ENSG00000167085	PHB	3.04e-01	1	1959	protein_coding	prohibitin	17	47481414	47492246
+ENSG00000090612	ZNF268	3.04e-01	1	1961	protein_coding	zinc finger protein 268	12	133707570	133783698
+ENSG00000152926	ZNF117	3.05e-01	1	1970	protein_coding	zinc finger protein 117	7	64432154	64467062
+ENSG00000106689	LHX2	3.06e-01	1	1974	protein_coding	LIM homeobox 2	9	126763949	126795580
+ENSG00000131196	NFATC1	3.07e-01	1	1984	protein_coding	nuclear factor of activated T-cells, cytoplasmic, calcineurin-dependent 1	18	77155856	77289325
+ENSG00000205857	NANOGNB	3.07e-01	1	1984	protein_coding	NANOG neighbor homeobox	12	7917812	7926717
+ENSG00000164611	PTTG1	3.09e-01	1	1996	protein_coding	pituitary tumor-transforming 1	5	159848829	159855748
+ENSG00000147889	CDKN2A	3.09e-01	1	1997	protein_coding	cyclin-dependent kinase inhibitor 2A	9	21967751	21995300
+ENSG00000124440	HIF3A	3.09e-01	1	1999	protein_coding	hypoxia inducible factor 3, alpha subunit	19	46800303	46846690
+ENSG00000133111	RFXAP	3.11e-01	1	2011	protein_coding	regulatory factor X-associated protein	13	37393361	37403241
+ENSG00000137494	ANKRD42	3.11e-01	1	2012	protein_coding	ankyrin repeat domain 42	11	82904781	82971736
+ENSG00000139800	ZIC5	3.11e-01	1	2013	protein_coding	Zic family member 5	13	100615218	100624163
+ENSG00000117139	KDM5B	3.12e-01	1	2019	protein_coding	lysine (K)-specific demethylase 5B	1	202696526	202778598
+ENSG00000103343	ZNF174	3.13e-01	1	2027	protein_coding	zinc finger protein 174	16	3451235	3459370
+ENSG00000101161	PRPF6	3.14e-01	1	2038	protein_coding	pre-mRNA processing factor 6	20	62612488	62664453
+ENSG00000006468	ETV1	3.15e-01	1	2043	protein_coding	ets variant 1	7	13930853	14031050
+ENSG00000124766	SOX4	3.15e-01	1	2047	protein_coding	SRY (sex determining region Y)-box 4	6	21593972	21598847
+ENSG00000157514	TSC22D3	3.16e-01	1	2051	protein_coding	TSC22 domain family, member 3	X	106956451	107020572
+ENSG00000100644	HIF1A	3.17e-01	1	2060	protein_coding	hypoxia inducible factor 1, alpha subunit (basic helix-loop-helix transcription factor)	14	62162231	62214976
+ENSG00000205927	OLIG2	3.17e-01	1	2061	protein_coding	oligodendrocyte lineage transcription factor 2	21	34398153	34401504
+ENSG00000159086	PAXBP1	3.18e-01	1	2067	protein_coding	PAX3 and PAX7 binding protein 1	21	34106210	34144169
+ENSG00000180806	HOXC9	3.18e-01	1	2067	protein_coding	homeobox C9	12	54388679	54397121
+ENSG00000159592	GPBP1L1	3.19e-01	1	2074	protein_coding	GC-rich promoter binding protein 1-like 1	1	46092976	46153785
+ENSG00000196792	STRN3	3.19e-01	1	2075	protein_coding	striatin, calmodulin binding protein 3	14	31363005	31495607
+ENSG00000116793	PHTF1	3.19e-01	1	2075	protein_coding	putative homeodomain transcription factor 1	1	114239453	114302111
+ENSG00000066136	NFYC	3.19e-01	1	2076	protein_coding	nuclear transcription factor Y, gamma	1	41157320	41237275
+ENSG00000211445	GPX3	3.20e-01	1	2081	protein_coding	glutathione peroxidase 3 (plasma)	5	150400124	150408554
+ENSG00000175879	HOXD8	3.20e-01	1	2081	protein_coding	homeobox D8	2	176994422	176997423
+ENSG00000006377	DLX6	3.20e-01	1	2084	protein_coding	distal-less homeobox 6	7	96634860	96640351
+ENSG00000162624	LHX8	3.22e-01	1	2097	protein_coding	LIM homeobox 8	1	75594119	75627218
+ENSG00000159556	ISL2	3.23e-01	1	2103	protein_coding	ISL LIM homeobox 2	15	76629065	76634817
+ENSG00000269404	SPIB	3.23e-01	1	2104	protein_coding	Spi-B transcription factor (Spi-1/PU.1 related)	19	50922195	50934570
+ENSG00000123411	IKZF4	3.24e-01	1	2111	protein_coding	IKAROS family zinc finger 4 (Eos)	12	56401443	56432219
+ENSG00000049618	ARID1B	3.24e-01	1	2116	protein_coding	AT rich interactive domain 1B (SWI1-like)	6	157099063	157531913
+ENSG00000124092	CTCFL	3.24e-01	1	2116	protein_coding	CCCTC-binding factor (zinc finger protein)-like	20	56071035	56100708
+ENSG00000108654	DDX5	3.25e-01	1	2119	protein_coding	DEAD (Asp-Glu-Ala-Asp) box helicase 5	17	62495734	62504317
+ENSG00000253293	HOXA10	3.25e-01	1	2120	protein_coding	homeobox A10	7	27210210	27219880
+ENSG00000141448	GATA6	3.25e-01	1	2125	protein_coding	GATA binding protein 6	18	19749404	19782491
+ENSG00000135547	HEY2	3.26e-01	1	2126	protein_coding	hes-related family bHLH transcription factor with YRPW motif 2	6	126068810	126082415
+ENSG00000134086	VHL	3.26e-01	1	2128	protein_coding	von Hippel-Lindau tumor suppressor, E3 ubiquitin protein ligase	3	10182692	10193904
+ENSG00000204920	ZNF155	3.26e-01	1	2129	protein_coding	zinc finger protein 155	19	44472014	44502477
+ENSG00000196092	PAX5	3.27e-01	1	2135	protein_coding	paired box 5	9	36833272	37034103
+ENSG00000176302	FOXR1	3.27e-01	1	2139	protein_coding	forkhead box R1	11	118842417	118852001
+ENSG00000137948	BRDT	3.27e-01	1	2140	protein_coding	bromodomain, testis-specific	1	92414928	92479983
+ENSG00000100219	XBP1	3.29e-01	1	2150	protein_coding	X-box binding protein 1	22	29190543	29196585
+ENSG00000159210	SNF8	3.29e-01	1	2151	protein_coding	SNF8, ESCRT-II complex subunit	17	47006678	47022479
+ENSG00000005513	SOX8	3.29e-01	1	2154	protein_coding	SRY (sex determining region Y)-box 8	16	1031808	1036979
+ENSG00000104976	SNAPC2	3.30e-01	1	2157	protein_coding	small nuclear RNA activating complex, polypeptide 2, 45kDa	19	7985201	7988135
+ENSG00000165659	DACH1	3.32e-01	1	2176		dachshund homolog 1 (Drosophila)	13	72012098	72441330
+ENSG00000135272	MDFIC	3.34e-01	1	2191	protein_coding	MyoD family inhibitor domain containing	7	114562209	114659256
+ENSG00000110777	POU2AF1	3.34e-01	1	2196	protein_coding	POU class 2 associating factor 1	11	111222977	111326355
+ENSG00000167840	ZNF232	3.35e-01	1	2197	protein_coding	zinc finger protein 232	17	5008836	5026411
+ENSG00000087510	TFAP2C	3.35e-01	1	2197	protein_coding	transcription factor AP-2 gamma (activating enhancer binding protein 2 gamma)	20	55204358	55214339
+ENSG00000182568	SATB1	3.35e-01	1	2200	protein_coding	SATB homeobox 1	3	18386879	18487080
+ENSG00000203883	SOX18	3.35e-01	1	2201	protein_coding	SRY (sex determining region Y)-box 18	20	62679076	62680994
+ENSG00000171606	ZNF274	3.35e-01	1	2202	protein_coding	zinc finger protein 274	19	58694396	58724928
+ENSG00000111727	HCFC2	3.36e-01	1	2206	protein_coding	host cell factor C2	12	104458235	104498639
+ENSG00000105173	CCNE1	3.36e-01	1	2210	protein_coding	cyclin E1	19	30302805	30315215
+ENSG00000163909	HEYL	3.36e-01	1	2210	protein_coding	hes-related family bHLH transcription factor with YRPW motif-like	1	40089825	40105617
+ENSG00000106546	AHR	3.37e-01	1	2212	protein_coding	aryl hydrocarbon receptor	7	17338246	17385776
+ENSG00000176973	FAM89B	3.37e-01	1	2213	protein_coding	family with sequence similarity 89, member B	11	65339820	65341669
+ENSG00000102981	PARD6A	3.37e-01	1	2215	protein_coding	par-6 family cell polarity regulator alpha	16	67694849	67696681
+ENSG00000074319	TSG101	3.40e-01	1	2239	protein_coding	tumor susceptibility 101	11	18489883	18548779
+ENSG00000064961	HMG20B	3.40e-01	1	2239	protein_coding	high mobility group 20B	19	3572775	3579086
+ENSG00000105419	MEIS3	3.40e-01	1	2242	protein_coding	Meis homeobox 3	19	47906381	47922780
+ENSG00000117707	PROX1	3.40e-01	1	2242	protein_coding	prospero homeobox 1	1	214156524	214214595
+ENSG00000153814	JAZF1	3.41e-01	1	2245	protein_coding	JAZF zinc finger 1	7	27870192	28220362
+ENSG00000150907	FOXO1	3.41e-01	1	2247	protein_coding	forkhead box O1	13	41129804	41240734
+ENSG00000180530	NRIP1	3.41e-01	1	2250	protein_coding	nuclear receptor interacting protein 1	21	16333556	16437321
+ENSG00000104825	NFKBIB	3.42e-01	1	2258	protein_coding	nuclear factor of kappa light polypeptide gene enhancer in B-cells inhibitor, beta	19	39390340	39399533
+ENSG00000155592	ZKSCAN2	3.43e-01	1	2264	protein_coding	zinc finger with KRAB and SCAN domains 2	16	25247322	25269252
+ENSG00000005073	HOXA11	3.44e-01	1	2268	protein_coding	homeobox A11	7	27221129	27224842
+ENSG00000176371	ZSCAN2	3.45e-01	1	2277	protein_coding	zinc finger and SCAN domain containing 2	15	85144217	85171027
+ENSG00000047634	SCML1	3.45e-01	1	2279	protein_coding	sex comb on midleg-like 1 (Drosophila)	X	17755588	17773105
+ENSG00000112214	FHL5	3.45e-01	1	2281	protein_coding	four and a half LIM domains 5	6	97010424	97064512
+ENSG00000178764	ZHX2	3.46e-01	1	2286	protein_coding	zinc fingers and homeoboxes 2	8	123793633	123986750
+ENSG00000140968	IRF8	3.47e-01	1	2296	protein_coding	interferon regulatory factor 8	16	85932409	85956215
+ENSG00000115548	KDM3A	3.48e-01	1	2305	protein_coding	lysine (K)-specific demethylase 3A	2	86667770	86719839
+ENSG00000141968	VAV1	3.49e-01	1	2311	protein_coding	vav 1 guanine nucleotide exchange factor	19	6772725	6857377
+ENSG00000176399	DMRTA1	3.51e-01	1	2324	protein_coding	DMRT-like family A1	9	22446840	22455739
+ENSG00000102554	KLF5	3.51e-01	1	2328	protein_coding	Kruppel-like factor 5 (intestinal)	13	73629114	73651676
+ENSG00000084093	REST	3.51e-01	1	2331	protein_coding	RE1-silencing transcription factor	4	57774075	57802010
+ENSG00000013561	RNF14	3.52e-01	1	2332	protein_coding	ring finger protein 14	5	141337893	141369856
+ENSG00000166164	BRD7	3.52e-01	1	2335	protein_coding	bromodomain containing 7	16	50347398	50402845
+ENSG00000152454	ZNF256	3.52e-01	1	2337	protein_coding	zinc finger protein 256	19	58452201	58459043
+ENSG00000100823	APEX1	3.53e-01	1	2343	protein_coding	APEX nuclease (multifunctional DNA repair enzyme) 1	14	20923350	20925927
+ENSG00000172059	KLF11	3.53e-01	1	2348	protein_coding	Kruppel-like factor 11	2	10182976	10194963
+ENSG00000136504	KAT7	3.54e-01	1	2352	protein_coding	K(lysine) acetyltransferase 7	17	47865917	47906458
+ENSG00000182158	CREB3L2	3.55e-01	1	2357	protein_coding	cAMP responsive element binding protein 3-like 2	7	137559725	137686813
+ENSG00000173230	GOLGB1	3.55e-01	1	2362	protein_coding	golgin B1	3	121382046	121468602
+ENSG00000189157	FAM47E	3.55e-01	1	2363	protein_coding	family with sequence similarity 47, member E	4	77135193	77204933
+ENSG00000107175	CREB3	3.56e-01	1	2368	protein_coding	cAMP responsive element binding protein 3	9	35732332	35737001
+ENSG00000135638	EMX1	3.56e-01	1	2368	protein_coding	empty spiracles homeobox 1	2	73143389	73162020
+ENSG00000114315	HES1	3.56e-01	1	2369	protein_coding	hes family bHLH transcription factor 1	3	193853934	193856521
+ENSG00000166529	ZSCAN21	3.56e-01	1	2372	protein_coding	zinc finger and SCAN domain containing 21	7	99647390	99662661
+ENSG00000138433	CIR1	3.57e-01	1	2378	protein_coding	corepressor interacting with RBPJ, 1	2	175212750	175260443
+ENSG00000185155	MIXL1	3.57e-01	1	2378	protein_coding	Mix paired-like homeobox	1	226411319	226414755
+ENSG00000198176	TFDP1	3.58e-01	1	2382	protein_coding	transcription factor Dp-1	13	114239013	114295785
+ENSG00000126756	UXT	3.59e-01	1	2395	protein_coding	ubiquitously-expressed, prefoldin-like chaperone	X	47511197	47518560
+ENSG00000184939	ZFP90	3.60e-01	1	2398	protein_coding	ZFP90 zinc finger protein	16	68563993	68609975
+ENSG00000108590	MED31	3.61e-01	1	2408	protein_coding	mediator complex subunit 31	17	6546635	6554954
+ENSG00000087274	ADD1	3.61e-01	1	2413	protein_coding	adducin 1 (alpha)	4	2845584	2931803
+ENSG00000183337	BCOR	3.61e-01	1	2413	protein_coding	BCL6 corepressor	X	39909068	40036582
+ENSG00000137309	HMGA1	3.62e-01	1	2414	protein_coding	high mobility group AT-hook 1	6	34204650	34214008
+ENSG00000108055	SMC3	3.62e-01	1	2417	protein_coding	structural maintenance of chromosomes 3	10	112327449	112364394
+ENSG00000164105	SAP30	3.62e-01	1	2419	protein_coding	Sin3A-associated protein, 30kDa	4	174291120	174298683
+ENSG00000104064	GABPB1	3.63e-01	1	2424	protein_coding	GA binding protein transcription factor, beta subunit 1	15	50569389	50647605
+ENSG00000119596	YLPM1	3.64e-01	1	2431	protein_coding	YLP motif containing 1	14	75230069	75322244
+ENSG00000165588	OTX2	3.64e-01	1	2433	protein_coding	orthodenticle homeobox 2	14	57267425	57277197
+ENSG00000085274	MYNN	3.65e-01	1	2439	protein_coding	myoneurin	3	169490619	169507504
+ENSG00000130816	DNMT1	3.65e-01	1	2440	protein_coding	DNA (cytosine-5-)-methyltransferase 1	19	10244021	10341962
+ENSG00000138380	CARF	3.65e-01	1	2446	protein_coding	calcium responsive transcription factor	2	203776937	203851786
+ENSG00000108509	CAMTA2	3.66e-01	1	2447	protein_coding	calmodulin binding transcription activator 2	17	4871287	4890960
+ENSG00000124641	MED20	3.67e-01	1	2455	protein_coding	mediator complex subunit 20	6	41873092	41888877
+ENSG00000256060	TRAPPC2	3.67e-01	1	2455	protein_coding	trafficking protein particle complex 2 pseudogene 1	19	57874879	57876721
+ENSG00000183955	SETD8	3.67e-01	1	2458	protein_coding	SET domain containing (lysine methyltransferase) 8	12	123868320	123893905
+ENSG00000116044	NFE2L2	3.67e-01	1	2461	protein_coding	nuclear factor, erythroid 2-like 2	2	178092323	178257425
+ENSG00000073417	PDE8A	3.68e-01	1	2468	protein_coding	phosphodiesterase 8A	15	85523671	85682376
+ENSG00000126003	PLAGL2	3.68e-01	1	2470	protein_coding	pleiomorphic adenoma gene-like 2	20	30780306	30795594
+ENSG00000131470	PSMC3IP	3.68e-01	1	2470	protein_coding	PSMC3 interacting protein	17	40724333	40729849
+ENSG00000020633	RUNX3	3.70e-01	1	2482	protein_coding	runt-related transcription factor 3	1	25226002	25291612
+ENSG00000103495	MAZ	3.70e-01	1	2482	protein_coding	MYC-associated zinc finger protein (purine-binding transcription factor)	16	29817427	29823649
+ENSG00000129474	AJUBA	3.70e-01	1	2485	protein_coding	ajuba LIM protein	14	23440383	23451851
+ENSG00000188779	SKOR1	3.70e-01	1	2486	protein_coding	SKI family transcriptional corepressor 1	15	68112042	68126899
+ENSG00000103449	SALL1	3.71e-01	1	2493	protein_coding	spalt-like transcription factor 1	16	51169886	51185278
+ENSG00000112333	NR2E1	3.71e-01	1	2494	protein_coding	nuclear receptor subfamily 2, group E, member 1	6	108487262	108510013
+ENSG00000124191	TOX2	3.71e-01	1	2495	protein_coding	TOX high mobility group box family member 2	20	42543504	42698256
+ENSG00000169946	ZFPM2	3.72e-01	1	2496	protein_coding	zinc finger protein, FOG family member 2	8	106330920	106816760
+ENSG00000117222	RBBP5	3.72e-01	1	2498	protein_coding	retinoblastoma binding protein 5	1	205055270	205091143
+ENSG00000143006	DMRTB1	3.72e-01	1	2502	protein_coding	DMRT-like family B with proline-rich C-terminal, 1	1	53925072	53933161
+ENSG00000010244	ZNF207	3.73e-01	1	2505	protein_coding	zinc finger protein 207	17	30677136	30708905
+ENSG00000179456	ZBTB18	3.73e-01	1	2506	protein_coding	zinc finger and BTB domain containing 18	1	244214585	244220778
+ENSG00000129194	SOX15	3.74e-01	1	2516	protein_coding	SRY (sex determining region Y)-box 15	17	7491496	7493488
+ENSG00000079102	RUNX1T1	3.74e-01	1	2518	protein_coding	runt-related transcription factor 1; translocated to, 1 (cyclin D-related)	8	92967203	93115514
+ENSG00000160633	SAFB	3.75e-01	1	2522	protein_coding	scaffold attachment factor B	19	5623046	5668489
+ENSG00000121297	TSHZ3	3.75e-01	1	2526	protein_coding	teashirt zinc finger homeobox 3	19	31765851	31840453
+ENSG00000118762	PKD2	3.75e-01	1	2528	protein_coding	polycystic kidney disease 2 (autosomal dominant)	4	88928820	88998929
+ENSG00000163848	ZNF148	3.76e-01	1	2531	protein_coding	zinc finger protein 148	3	124944405	125094198
+ENSG00000102034	ELF4	3.77e-01	1	2540	protein_coding	E74-like factor 4 (ets domain transcription factor)	X	129198849	129244691
+ENSG00000215301	DDX3X	3.77e-01	1	2540	protein_coding	DEAD (Asp-Glu-Ala-Asp) box helicase 3, X-linked	X	41192651	41223725
+ENSG00000138386	NAB1	3.77e-01	1	2542	protein_coding	NGFI-A binding protein 1 (EGR1 binding protein 1)	2	191511472	191557492
+ENSG00000155827	RNF20	3.78e-01	1	2551	protein_coding	ring finger protein 20, E3 ubiquitin protein ligase	9	104296133	104325622
+ENSG00000149054	ZNF215	3.79e-01	1	2557	protein_coding	zinc finger protein 215	11	6947635	7005863
+ENSG00000113231	PDE8B	3.80e-01	1	2567	protein_coding	phosphodiesterase 8B	5	76506274	76725632
+ENSG00000005889	ZFX	3.80e-01	1	2569	protein_coding	zinc finger protein, X-linked	X	24167290	24234372
+ENSG00000170854	MINA	3.80e-01	1	2570	protein_coding	MYC induced nuclear antigen	3	97660662	97691301
+ENSG00000196628	TCF4	3.81e-01	1	2578	protein_coding	transcription factor 4	18	52889562	53332018
+ENSG00000110330	BIRC2	3.82e-01	1	2584	protein_coding	baculoviral IAP repeat containing 2	11	102217942	102249401
+ENSG00000107438	PDLIM1	3.82e-01	1	2586	protein_coding	PDZ and LIM domain 1	10	96997329	97050781
+ENSG00000071564	TCF3	3.83e-01	1	2588	protein_coding	transcription factor 3	19	1609291	1652604
+ENSG00000108788	MLX	3.83e-01	1	2592	protein_coding	MLX, MAX dimerization protein	17	40719086	40725257
+ENSG00000115966	ATF2	3.86e-01	1	2621	protein_coding	activating transcription factor 2	2	175936978	176033110
+ENSG00000102710	SUPT20H	3.86e-01	1	2621	protein_coding	suppressor of Ty 20 homolog (S. cerevisiae)	13	37583449	37633850
+ENSG00000149308	NPAT	3.87e-01	1	2625	protein_coding	nuclear protein, ataxia-telangiectasia locus	11	108027942	108093369
+ENSG00000148300	REXO4	3.88e-01	1	2638	protein_coding	REX4, RNA exonuclease 4 homolog (S. cerevisiae)	9	136271186	136283164
+ENSG00000006194	ZNF263	3.89e-01	1	2646	protein_coding	zinc finger protein 263	16	3313743	3351401
+ENSG00000074800	ENO1	3.90e-01	1	2648	protein_coding	enolase 1, (alpha)	1	8921061	8939308
+ENSG00000183733	FIGLA	3.91e-01	1	2659	protein_coding	folliculogenesis specific basic helix-loop-helix	2	71004442	71017775
+ENSG00000151623	NR3C2	3.91e-01	1	2662	protein_coding	nuclear receptor subfamily 3, group C, member 2	4	148999913	149365850
+ENSG00000150459	SAP18	3.93e-01	1	2673	protein_coding	Sin3A-associated protein, 18kDa	13	21714653	21723221
+ENSG00000113068	PFDN1	3.93e-01	1	2675	protein_coding	prefoldin subunit 1	5	139624624	139682706
+ENSG00000162714	ZNF496	3.94e-01	1	2685	protein_coding	zinc finger protein 496	1	247460714	247495148
+ENSG00000072364	AFF4	3.94e-01	1	2686	protein_coding	AF4/FMR2 family, member 4	5	132211071	132299326
+ENSG00000166261	ZNF202	3.94e-01	1	2688	protein_coding	zinc finger protein 202	11	123594885	123612383
+ENSG00000137504	CREBZF	3.94e-01	1	2689	protein_coding	CREB/ATF bZIP transcription factor	11	85370752	85393951
+ENSG00000008405	CRY1	3.94e-01	1	2689	protein_coding	cryptochrome 1 (photolyase-like)	12	107385142	107487607
+ENSG00000065978	YBX1	3.95e-01	1	2692	protein_coding	Y box binding protein 1	1	43148098	43168020
+ENSG00000110063	DCPS	3.95e-01	1	2695	protein_coding	decapping enzyme, scavenger	11	126173647	126215644
+ENSG00000152944	MED21	3.95e-01	1	2696	protein_coding	mediator complex subunit 21	12	27175479	27219276
+ENSG00000176182	MYPOP	3.96e-01	1	2701	protein_coding	Myb-related transcription factor, partner of profilin	19	46393278	46405862
+ENSG00000111206	FOXM1	3.96e-01	1	2702	protein_coding	forkhead box M1	12	2966847	2986206
+ENSG00000018408	WWTR1	3.96e-01	1	2702	protein_coding	WW domain containing transcription regulator 1	3	149235022	149454501
+ENSG00000165671	NSD1	3.96e-01	1	2707	protein_coding	nuclear receptor binding SET domain protein 1	5	176560026	176727216
+ENSG00000134058	CDK7	3.97e-01	1	2714	protein_coding	cyclin-dependent kinase 7	5	68530668	68573250
+ENSG00000033800	PIAS1	3.97e-01	1	2715	protein_coding	protein inhibitor of activated STAT, 1	15	68346517	68483096
+ENSG00000100395	L3MBTL2	3.99e-01	1	2728	protein_coding	l(3)mbt-like 2 (Drosophila)	22	41601209	41627275
+ENSG00000164758	MED30	4.00e-01	1	2734	protein_coding	mediator complex subunit 30	8	118532952	118552501
+ENSG00000141510	TP53	4.00e-01	1	2739	protein_coding	tumor protein p53	17	7565097	7590856
+ENSG00000118922	KLF12	4.01e-01	1	2750	protein_coding	Kruppel-like factor 12	13	74260226	74708394
+ENSG00000185630	PBX1	4.02e-01	1	2755	protein_coding	pre-B-cell leukemia homeobox 1	1	164524821	164868533
+ENSG00000196646	ZNF136	4.02e-01	1	2756	protein_coding	zinc finger protein 136	19	12273879	12300064
+ENSG00000156603	MED19	4.03e-01	1	2765	protein_coding	mediator complex subunit 19	11	57471186	57479693
+ENSG00000156374	PCGF6	4.03e-01	1	2766	protein_coding	polycomb group ring finger 6	10	105062553	105110891
+ENSG00000148411	NACC2	4.03e-01	1	2766	protein_coding	NACC family member 2, BEN and BTB (POZ) domain containing	9	138898383	138987131
+ENSG00000189403	HMGB1	4.04e-01	1	2768	protein_coding	high mobility group box 1	13	31032884	31191734
+ENSG00000048052	HDAC9	4.04e-01	1	2775	protein_coding	histone deacetylase 9	7	18126572	19042039
+ENSG00000196284	SUPT3H	4.04e-01	1	2776	protein_coding	suppressor of Ty 3 homolog (S. cerevisiae)	6	44777054	45345690
+ENSG00000198646	NCOA6	4.07e-01	1	2796	protein_coding	nuclear receptor coactivator 6	20	33284722	33413452
+ENSG00000149273	RPS3	4.07e-01	1	2798	protein_coding	ribosomal protein S3	11	75110530	75133324
+ENSG00000163482	STK36	4.07e-01	1	2799	protein_coding	serine/threonine kinase 36	2	219536749	219567439
+ENSG00000198715	C1orf85	4.08e-01	1	2803	protein_coding	chromosome 1 open reading frame 85	1	156259880	156265463
+ENSG00000149600	COMMD7	4.08e-01	1	2808	protein_coding	COMM domain containing 7	20	31290493	31331803
+ENSG00000188976	NOC2L	4.09e-01	1	2814	protein_coding	nucleolar complex associated 2 homolog (S. cerevisiae)	1	879584	894689
+ENSG00000120656	TAF12	4.09e-01	1	2815	protein_coding	TAF12 RNA polymerase II, TATA box binding protein (TBP)-associated factor, 20kDa	1	28915835	28969597
+ENSG00000184634	MED12	4.09e-01	1	2818	protein_coding	mediator complex subunit 12	X	70338406	70362303
+ENSG00000143321	HDGF	4.11e-01	1	2830	protein_coding	hepatoma-derived growth factor	1	156711899	156736717
+ENSG00000119138	KLF9	4.11e-01	1	2837	protein_coding	Kruppel-like factor 9	9	72999503	73029540
+ENSG00000152409	JMY	4.12e-01	1	2839	protein_coding	junction mediating and regulatory protein, p53 cofactor	5	78532012	78623038
+ENSG00000181690	PLAG1	4.13e-01	1	2848	protein_coding	pleiomorphic adenoma gene 1	8	57073463	57123883
+ENSG00000161021	MAML1	4.15e-01	1	2867	protein_coding	mastermind-like 1 (Drosophila)	5	179159851	179223512
+ENSG00000100201	DDX17	4.16e-01	1	2874	protein_coding	DEAD (Asp-Glu-Ala-Asp) box helicase 17	22	38879445	38903665
+ENSG00000187079	TEAD1	4.16e-01	1	2875	protein_coding	TEA domain family member 1 (SV40 transcriptional enhancer factor)	11	12695969	12966298
+ENSG00000135801	TAF5L	4.16e-01	1	2875	protein_coding	TAF5-like RNA polymerase II, p300/CBP-associated factor (PCAF)-associated factor, 65kDa	1	229728858	229761794
+ENSG00000120533	ENY2	4.18e-01	1	2892	protein_coding	enhancer of yellow 2 homolog (Drosophila)	8	110346553	110358182
+ENSG00000179222	MAGED1	4.19e-01	1	2902	protein_coding	melanoma antigen family D, 1	X	51546103	51645453
+ENSG00000164080	RAD54L2	4.19e-01	1	2902	protein_coding	RAD54-like 2 (S. cerevisiae)	3	51575160	51702683
+ENSG00000148450	MSRB2	4.19e-01	1	2903	protein_coding	methionine sulfoxide reductase B2	10	23384435	23410942
+ENSG00000165156	ZHX1	4.19e-01	1	2907	protein_coding	zinc fingers and homeoboxes 1	8	124260696	124287781
+ENSG00000169375	SIN3A	4.20e-01	1	2916	protein_coding	SIN3 transcription regulator family member A	15	75661720	75748183
+ENSG00000006704	GTF2IRD1	4.21e-01	1	2919	protein_coding	GTF2I repeat domain containing 1	7	73868120	74016931
+ENSG00000057935	MTA3	4.21e-01	1	2920	protein_coding	metastasis associated 1 family, member 3	2	42721709	42984087
+ENSG00000114861	FOXP1	4.22e-01	1	2929	protein_coding	forkhead box P1	3	71003844	71633140
+ENSG00000178568	ERBB4	4.22e-01	1	2929	protein_coding	v-erb-b2 avian erythroblastic leukemia viral oncogene homolog 4	2	212240446	213403565
+ENSG00000110801	PSMD9	4.22e-01	1	2933	protein_coding	proteasome (prosome, macropain) 26S subunit, non-ATPase, 9	12	122326637	122356203
+ENSG00000148843	PDCD11	4.22e-01	1	2935	protein_coding	programmed cell death 11	10	105156405	105206049
+ENSG00000157259	GATAD1	4.24e-01	1	2947	protein_coding	GATA zinc finger domain containing 1	7	92076767	92088150
+ENSG00000163161	ERCC3	4.24e-01	1	2948	protein_coding	excision repair cross-complementing rodent repair deficiency, complementation group 3	2	128014866	128051752
+ENSG00000184635	ZNF93	4.26e-01	1	2966	protein_coding	zinc finger protein 93	19	20011722	20046384
+ENSG00000172534	HCFC1	4.26e-01	1	2969	protein_coding	host cell factor C1 (VP16-accessory protein)	X	153213004	153237258
+ENSG00000163517	HDAC11	4.29e-01	1	2990	protein_coding	histone deacetylase 11	3	13521224	13547916
+ENSG00000148297	MED22	4.29e-01	1	2993	protein_coding	mediator complex subunit 22	9	136205160	136214986
+ENSG00000134852	CLOCK	4.29e-01	1	2997	protein_coding	clock circadian regulator	4	56294070	56413305
+ENSG00000183864	TOB2	4.31e-01	1	3008	protein_coding	transducer of ERBB2, 2	22	41829496	41843027
+ENSG00000137947	GTF2B	4.31e-01	1	3010	protein_coding	general transcription factor IIB	1	89318615	89357627
+ENSG00000146109	ABT1	4.31e-01	1	3015	protein_coding	activator of basal transcription 1	6	26597180	26600278
+ENSG00000141384	TAF4B	4.31e-01	1	3016	protein_coding	TAF4b RNA polymerase II, TATA box binding protein (TBP)-associated factor, 105kDa	18	23805900	23971649
+ENSG00000028839	TBPL1	4.32e-01	1	3023	protein_coding	TBP-like 1	6	134273308	134311570
+ENSG00000213762	ZNF134	4.32e-01	1	3025	protein_coding	zinc finger protein 134	19	58125601	58134724
+ENSG00000154655	L3MBTL4	4.35e-01	1	3045	protein_coding	l(3)mbt-like 4 (Drosophila)	18	5954705	6415236
+ENSG00000110711	AIP	4.36e-01	1	3057	protein_coding	aryl hydrocarbon receptor interacting protein	11	67250512	67258574
+ENSG00000197157	SND1	4.36e-01	1	3060	protein_coding	staphylococcal nuclease and tudor domain containing 1	7	127292234	127732661
+ENSG00000133112	TPT1	4.37e-01	1	3067	protein_coding	tumor protein, translationally-controlled 1	13	45911008	45915505
+ENSG00000064995	TAF11	4.39e-01	1	3087	protein_coding	TAF11 RNA polymerase II, TATA box binding protein (TBP)-associated factor, 28kDa	6	34845555	34855866
+ENSG00000106268	NUDT1	4.40e-01	1	3098	protein_coding	nudix (nucleoside diphosphate linked moiety X)-type motif 1	7	2281857	2290781
+ENSG00000166228	PCBD1	4.41e-01	1	3105	protein_coding	pterin-4 alpha-carbinolamine dehydratase/dimerization cofactor of hepatocyte nuclear factor 1 alpha	10	72642037	72648541
+ENSG00000166855	CLPX	4.42e-01	1	3110	protein_coding	caseinolytic mitochondrial matrix peptidase chaperone subunit	15	65440557	65477680
+ENSG00000106290	TAF6	4.44e-01	1	3131	protein_coding	TAF6 RNA polymerase II, TATA box binding protein (TBP)-associated factor, 80kDa	7	99704693	99717464
+ENSG00000118058	KMT2A	4.45e-01	1	3139	protein_coding	lysine (K)-specific methyltransferase 2A	11	118307205	118397539
+ENSG00000162702	ZNF281	4.46e-01	1	3152	protein_coding	zinc finger protein 281	1	200374068	200379184
+ENSG00000130726	TRIM28	4.46e-01	1	3153	protein_coding	tripartite motif containing 28	19	59055458	59062089
+ENSG00000197451	HNRNPAB	4.47e-01	1	3161	protein_coding	heterogeneous nuclear ribonucleoprotein A/B	5	177631508	177638164
+ENSG00000120832	MTERFD3	4.53e-01	1	3216	protein_coding	MTERF domain containing 3	12	107371069	107380944
+ENSG00000133895	MEN1	4.56e-01	1	3244	protein_coding	multiple endocrine neoplasia I	11	64570982	64578766
+ENSG00000155229	MMS19	4.60e-01	1	3282	protein_coding	MMS19 nucleotide excision repair homolog (S. cerevisiae)	10	99218081	99258551
+ENSG00000137693	YAP1	4.63e-01	1	3305	protein_coding	Yes-associated protein 1	11	101981192	102104154
+ENSG00000087152	ATXN7L3	4.74e-01	1	3411	protein_coding	ataxin 7-like 3	17	42269173	42277481
+ENSG00000189180	ZNF33A	4.74e-01	1	3411	protein_coding	zinc finger protein 33A	10	38299578	38354016
+ENSG00000100320	RBFOX2	4.86e-01	1	3530	protein_coding	RNA binding protein, fox-1 homolog (C. elegans) 2	22	36134783	36424473
+ENSG00000147133	TAF1	4.90e-01	1	3573	protein_coding	TAF1 RNA polymerase II, TATA box binding protein (TBP)-associated factor, 250kDa	X	70586114	70752224
+ENSG00000171681	ATF7IP	4.97e-01	1	3642	protein_coding	activating transcription factor 7 interacting protein	12	14518610	14651697
+ENSG00000204231	RXRB	5.00e-01	1	3674	protein_coding	retinoid X receptor, beta	6	33161365	33168630
+ENSG00000188994	ZNF292	5.05e-01	1	3730	protein_coding	zinc finger protein 292	6	87862551	87973914
+ENSG00000127511	SIN3B	5.17e-01	1	3848	protein_coding	SIN3 transcription regulator family member B	19	16940211	16991164
+ENSG00000083168	KAT6A	5.23e-01	1	3912	protein_coding	K(lysine) acetyltransferase 6A	8	41786997	41909508
+ENSG00000164916	FOXK1	1.00e+00	0	2406	protein_coding	forkhead box K1	7	4683388	4811074
+ENSG00000174059	CD34	1.00e+00	0	1966	protein_coding	CD34 molecule	1	208057594	208084747
+ENSG00000019549	SNAI2	1.00e+00	0	2029	protein_coding	snail family zinc finger 2	8	49830249	49834299
+ENSG00000106006	HOXA6	1.00e+00	0	1420	protein_coding	homeobox A6	7	27185015	27190222
+ENSG00000078699	CBFA2T2	1.00e+00	0	2323	protein_coding	core-binding factor, runt domain, alpha subunit 2; translocated to, 2	20	32077881	32237842
+ENSG00000179632	MAF1	1.00e+00	0	2708	protein_coding	MAF1 homolog (S. cerevisiae)	8	145159402	145162514
+ENSG00000149922	TBX6	1.00e+00	0	2954	protein_coding	T-box 6	16	30097114	30103208
+ENSG00000245848	CEBPA	1.00e+00	0	1712	protein_coding	CCAAT/enhancer binding protein (C/EBP), alpha	19	33790840	33793470
+ENSG00000082641	NFE2L1	1.00e+00	0	2410	protein_coding	nuclear factor, erythroid 2-like 1	17	46125691	46138849
+ENSG00000077150	NFKB2	1.00e+00	0	2456	protein_coding	nuclear factor of kappa light polypeptide gene enhancer in B-cells 2 (p49/p100)	10	104153867	104162281
+ENSG00000248483	POU5F2	1.00e+00	0	4808	protein_coding	POU domain class 5, transcription factor 2	5	93070508	93077343
+ENSG00000148513	ANKRD30A	1.00e+00	0	690	protein_coding	ankyrin repeat domain 30A	10	37414785	37673039
+ENSG00000181788	SIAH2	1.00e+00	0	1137	protein_coding	siah E3 ubiquitin protein ligase 2	3	150458914	150481264
+ENSG00000104885	DOT1L	1.00e+00	0	2941	protein_coding	DOT1-like histone H3K79 methyltransferase	19	2164148	2232577
+ENSG00000139352	ASCL1	1.00e+00	0	1181	protein_coding	achaete-scute family bHLH transcription factor 1	12	103351464	103354294
+ENSG00000060138	YBX3	1.00e+00	0	1469	protein_coding	Y box binding protein 3	12	10851683	10875911
+ENSG00000167528	ZNF641	1.00e+00	0	2475	protein_coding	zinc finger protein 641	12	48733791	48745197
+ENSG00000179772	FOXS1	1.00e+00	0	980	protein_coding	forkhead box S1	20	30432103	30433420
+ENSG00000135373	EHF	1.00e+00	0	2003	protein_coding	ets homologous factor	11	34642640	34682604
+ENSG00000137203	TFAP2A	1.00e+00	0	1919	protein_coding	transcription factor AP-2 alpha (activating enhancer binding protein 2 alpha)	6	10393419	10419892
+ENSG00000185002	RFX6	1.00e+00	0	935	protein_coding	regulatory factor X, 6	6	117198375	117253326
+ENSG00000101040	ZMYND8	1.00e+00	0	2600	protein_coding	zinc finger, MYND-type containing 8	20	45837859	45985567
+ENSG00000152977	ZIC1	1.00e+00	0	1638	protein_coding	Zic family member 1	3	147111209	147228080
+ENSG00000165030	NFIL3	1.00e+00	0	2294	protein_coding	nuclear factor, interleukin 3 regulated	9	94171327	94186144
+ENSG00000160113	NR2F6	1.00e+00	0	3139	protein_coding	nuclear receptor subfamily 2, group F, member 6	19	17342692	17356749
+ENSG00000099949	LZTR1	1.00e+00	0	3496	protein_coding	leucine-zipper-like transcription regulator 1	22	21333751	21353327
+ENSG00000178028	DMAP1	1.00e+00	0	2859	protein_coding	DNA methyltransferase 1 associated protein 1	1	44679127	44686353
+ENSG00000115641	FHL2	1.00e+00	0	1798	protein_coding	four and a half LIM domains 2	2	105974169	106054970
+ENSG00000175221	MED16	1.00e+00	0	2735	protein_coding	mediator complex subunit 16	19	867962	893218
+ENSG00000185650	ZFP36L1	1.00e+00	0	2432	protein_coding	ZFP36 ring finger protein-like 1	14	69254377	69263190
+ENSG00000069812	HES2	1.00e+00	0	1408	protein_coding	hes family bHLH transcription factor 2	1	6472478	6484730
+ENSG00000187323	DCC	1.00e+00	0	2388	protein_coding	deleted in colorectal carcinoma	18	49866542	51057784
+ENSG00000171223	JUNB	1.00e+00	0	2043	protein_coding	jun B proto-oncogene	19	12902310	12904124
+ENSG00000106829	TLE4	1.00e+00	0	3294	protein_coding	transducin-like enhancer of split 4 (E(sp1) homolog, Drosophila)	9	82186688	82341658
+ENSG00000092607	TBX15	1.00e+00	0	1819	protein_coding	T-box 15	1	119425669	119532179
+ENSG00000169840	GSX1	1.00e+00	0	587	protein_coding	GS homeobox 1	13	28366780	28368905
+ENSG00000134013	LOXL2	1.00e+00	0	1807	protein_coding	lysyl oxidase-like 2	8	23154702	23282841
+ENSG00000164989	CCDC171	1.00e+00	0	1800	protein_coding	coiled-coil domain containing 171	9	15552895	16061661
+ENSG00000179583	CIITA	1.00e+00	0	2352	protein_coding	class II, major histocompatibility complex, transactivator	16	10971055	11026079
+ENSG00000123338	NCKAP1L	1.00e+00	0	2929	protein_coding	NCK-associated protein 1-like	12	54891495	54937726
+ENSG00000135363	LMO2	1.00e+00	0	1943	protein_coding	LIM domain only 2 (rhombotin-like 1)	11	33880122	33913836
+ENSG00000140464	PML	1.00e+00	0	2920	protein_coding	promyelocytic leukemia	15	74287014	74340153
+ENSG00000158773	USF1	1.00e+00	0	3160	protein_coding	upstream transcription factor 1	1	161009041	161015767
+ENSG00000116809	ZBTB17	1.00e+00	0	2872	protein_coding	zinc finger and BTB domain containing 17	1	16268364	16302627
+ENSG00000171791	BCL2	1.00e+00	0	2214	protein_coding	B-cell CLL/lymphoma 2	18	60790579	60987361
+ENSG00000101096	NFATC2	1.00e+00	0	2510	protein_coding	nuclear factor of activated T-cells, cytoplasmic, calcineurin-dependent 2	20	50003494	50179370
+ENSG00000113580	NR3C1	1.00e+00	0	2396	protein_coding	nuclear receptor subfamily 3, group C, member 1 (glucocorticoid receptor)	5	142657496	142815077
+ENSG00000163565	IFI16	1.00e+00	0	2503	protein_coding	interferon, gamma-inducible protein 16	1	158969758	159024945
+ENSG00000159216	RUNX1	1.00e+00	0	1714	protein_coding	runt-related transcription factor 1	21	36160098	37376965
+ENSG00000133794	ARNTL	1.00e+00	0	3355	protein_coding	aryl hydrocarbon receptor nuclear translocator-like	11	13298199	13408813
+ENSG00000113916	BCL6	1.00e+00	0	2056	protein_coding	B-cell CLL/lymphoma 6	3	187439165	187463515
+ENSG00000070444	MNT	1.00e+00	0	2655	protein_coding	MAX network transcriptional repressor	17	2287354	2304412
+ENSG00000178175	ZNF366	1.00e+00	0	1402	protein_coding	zinc finger protein 366	5	71738479	71803554
+ENSG00000166949	SMAD3	1.00e+00	0	2366	protein_coding	SMAD family member 3	15	67356101	67487533
+ENSG00000121454	LHX4	1.00e+00	0	3527	protein_coding	LIM homeobox 4	1	180199421	180249380
+ENSG00000170345	FOS	1.00e+00	0	1847	protein_coding	FBJ murine osteosarcoma viral oncogene homolog	14	75745477	75748933
+ENSG00000136026	CKAP4	1.00e+00	0	2393	protein_coding	cytoskeleton-associated protein 4	12	106631655	106698057
+ENSG00000105516	DBP	1.00e+00	0	2492	protein_coding	D site of albumin promoter (albumin D-box) binding protein	19	49133287	49140695
+ENSG00000125816	NKX2-4	1.00e+00	0	1335	protein_coding	NK2 homeobox 4	20	21376005	21378666
+ENSG00000109072	VTN	1.00e+00	0	1228	protein_coding	vitronectin	17	26691290	26700110
+ENSG00000123908	AGO2	1.00e+00	0	2650	protein_coding	argonaute RISC catalytic component 2	8	141541264	141645718
+ENSG00000184486	POU3F2	1.00e+00	0	1966	protein_coding	POU class 3 homeobox 2	6	99282580	99286660
+ENSG00000151702	FLI1	1.00e+00	0	3213	protein_coding	Fli-1 proto-oncogene, ETS transcription factor	11	128556430	128683162
+ENSG00000160973	FOXH1	1.00e+00	0	1291	protein_coding	forkhead box H1	8	145698795	145701718
+ENSG00000125968	ID1	1.00e+00	0	2331	protein_coding	inhibitor of DNA binding 1, dominant negative helix-loop-helix protein	20	30193086	30194318
+ENSG00000074219	TEAD2	1.00e+00	0	2667	protein_coding	TEA domain family member 2	19	49843852	49865714
+ENSG00000162129	CLPB	1.00e+00	0	3318	protein_coding	ClpB caseinolytic peptidase B homolog (E. coli)	11	72003469	72145692
+ENSG00000175595	ERCC4	1.00e+00	0	3012	protein_coding	excision repair cross-complementing rodent repair deficiency, complementation group 4	16	14014014	14046202
+ENSG00000168453	HR	1.00e+00	0	1699	protein_coding	hair growth associated	8	21971928	21990897
+ENSG00000248643	RBM14-RBM4	1.00e+00	0	2881	protein_coding	RBM14-RBM4 readthrough	11	66384097	66413940
+ENSG00000130700	GATA5	1.00e+00	0	1106	protein_coding	GATA binding protein 5	20	61038553	61051026
+ENSG00000163623	NKX6-1	1.00e+00	0	1336	protein_coding	NK6 homeobox 1	4	85413140	85419603
+ENSG00000119715	ESRRB	1.00e+00	0	1139	protein_coding	estrogen-related receptor beta	14	76776957	76968178
+ENSG00000198353	HOXC4	1.00e+00	0	1511	protein_coding	homeobox C4	12	54410715	54449813
+ENSG00000153234	NR4A2	1.00e+00	0	1339	protein_coding	nuclear receptor subfamily 4, group A, member 2	2	157180944	157198860
+ENSG00000111046	MYF6	1.00e+00	0	1193	protein_coding	myogenic factor 6 (herculin)	12	81101277	81103253
+ENSG00000167967	E4F1	1.00e+00	0	2717	protein_coding	E4F transcription factor 1	16	2273567	2285743
+ENSG00000099326	MZF1	1.00e+00	0	2849	protein_coding	myeloid zinc finger 1	19	59073298	59084942
+ENSG00000140682	TGFB1I1	1.00e+00	0	2313	protein_coding	transforming growth factor beta 1 induced transcript 1	16	31482906	31489281
+ENSG00000267281		1.00e+00	0	1390	protein_coding	Uncharacterized protein 	12	53900472	54019763
+ENSG00000171940	ZNF217	1.00e+00	0	1347	protein_coding	zinc finger protein 217	20	52183604	52226446
+ENSG00000137265	IRF4	1.00e+00	0	2183	protein_coding	interferon regulatory factor 4	6	391739	411447
+ENSG00000170581	STAT2	1.00e+00	0	2500	protein_coding	signal transducer and activator of transcription 2, 113kDa	12	56735381	56753939
+ENSG00000012061	ERCC1	1.00e+00	0	1403	protein_coding	excision repair cross-complementing rodent repair deficiency, complementation group 1 (includes overlapping antisense sequence)	19	45910591	45982086
+ENSG00000105392	CRX	1.00e+00	0	1037	protein_coding	cone-rod homeobox	19	48322703	48346587
+ENSG00000196652	ZKSCAN5	1.00e+00	0	2496	protein_coding	zinc finger with KRAB and SCAN domains 5	7	99102274	99132323
+ENSG00000186496	ZNF396	1.00e+00	0	1585	protein_coding	zinc finger protein 396	18	32946661	32957301
+ENSG00000197483	ZNF628	1.00e+00	0	2398	protein_coding	zinc finger protein 628	19	55987699	55995854
+ENSG00000136861	CDK5RAP2	1.00e+00	0	2257	protein_coding	CDK5 regulatory subunit associated protein 2	9	123151147	123342448
+ENSG00000088305	DNMT3B	1.00e+00	0	1527	protein_coding	DNA (cytosine-5-)-methyltransferase 3 beta	20	31350191	31397162
+ENSG00000100906	NFKBIA	1.00e+00	0	1971	protein_coding	nuclear factor of kappa light polypeptide gene enhancer in B-cells inhibitor, alpha	14	35870717	35873955
+ENSG00000085276	MECOM	1.00e+00	0	1935	protein_coding	MDS1 and EVI1 complex locus	3	168801287	169381406
+ENSG00000122592	HOXA7	1.00e+00	0	2186	protein_coding	homeobox A7	7	27193335	27197555
+ENSG00000129535	NRL	1.00e+00	0	958	protein_coding	neural retina leucine zipper	14	24549316	24584223
+ENSG00000259399	TGIF2-C20orf24	1.00e+00	0	832	protein_coding	TGIF2-C20orf24 readthrough	20	35202956	35240787
+ENSG00000106511	MEOX2	1.00e+00	0	1822	protein_coding	mesenchyme homeobox 2	7	15650837	15726437
+ENSG00000132005	RFX1	1.00e+00	0	3071	protein_coding	regulatory factor X, 1 (influences HLA class II expression)	19	14072350	14117851
+ENSG00000134107	BHLHE40	1.00e+00	0	2259	protein_coding	basic helix-loop-helix family, member e40	3	5020801	5027008
+ENSG00000174279	EVX2	1.00e+00	0	3113	protein_coding	even-skipped homeobox 2	2	176942200	176948641
+ENSG00000138892		1.00e+00	0	3325	protein_coding	tubulin tyrosine ligase-like family, member 8	22	50453552	50495364
+ENSG00000112658	SRF	1.00e+00	0	1627	protein_coding	serum response factor (c-fos serum response element-binding transcription factor)	6	43139037	43149243
+ENSG00000141568	FOXK2	1.00e+00	0	2631	protein_coding	forkhead box K2	17	80477589	80602538
+ENSG00000171956	FOXB1	1.00e+00	0	782	protein_coding	forkhead box B1	15	60296421	60353929
+ENSG00000176678	FOXL1	1.00e+00	0	1680	protein_coding	forkhead box L1	16	86609974	86615303
+ENSG00000125347	IRF1	1.00e+00	0	2403	protein_coding	interferon regulatory factor 1	5	131817301	131826490
+ENSG00000134323	MYCN	1.00e+00	0	1248	protein_coding	v-myc avian myelocytomatosis viral oncogene neuroblastoma derived homolog	2	16080686	16087129
+ENSG00000167771	RCOR2	1.00e+00	0	2122	protein_coding	REST corepressor 2	11	63678693	63684316
+ENSG00000164509	IL31RA	1.00e+00	0	838	protein_coding	interleukin 31 receptor A	5	55147207	55218678
+ENSG00000107859	PITX3	1.00e+00	0	1315	protein_coding	paired-like homeodomain 3	10	103989943	104001231
+ENSG00000121075	TBX4	1.00e+00	0	743	protein_coding	T-box 4	17	59529765	59562471
+ENSG00000101109	STK4	1.00e+00	0	4170	protein_coding	serine/threonine kinase 4	20	43595115	43708600
+ENSG00000123066	MED13L	1.00e+00	0	1516	protein_coding	mediator complex subunit 13-like	12	116395711	116715143
+ENSG00000185499	MUC1	1.00e+00	0	1690	protein_coding	mucin 1, cell surface associated	1	155158300	155162707
+ENSG00000115112	TFCP2L1	1.00e+00	0	1700	protein_coding	transcription factor CP2-like 1	2	121974163	122042783
+ENSG00000105880	DLX5	1.00e+00	0	1521	protein_coding	distal-less homeobox 5	7	96649704	96654409
+ENSG00000113722	CDX1	1.00e+00	0	1368	protein_coding	caudal type homeobox 1	5	149546358	149564120
+ENSG00000181965	NEUROG1	1.00e+00	0	1474	protein_coding	neurogenin 1	5	134869991	134871639
+ENSG00000161405	IKZF3	1.00e+00	0	1356	protein_coding	IKAROS family zinc finger 3 (Aiolos)	17	37921198	38020441
+ENSG00000253831	ETV3L	1.00e+00	0	2726	protein_coding	ets variant 3-like	1	157061836	157069600
+ENSG00000179909	ZNF154	1.00e+00	0	2117	protein_coding	zinc finger protein 154	19	58208735	58220579
+ENSG00000162367	TAL1	1.00e+00	0	1236	protein_coding	T-cell acute lymphocytic leukemia 1	1	47681962	47697892
+ENSG00000015153	YAF2	1.00e+00	0	2265	protein_coding	YY1 associated factor 2	12	42550906	42632151
+ENSG00000185610	DBX2	1.00e+00	0	988	protein_coding	developing brain homeobox 2	12	45408455	45444882
+ENSG00000178573	MAF	1.00e+00	0	2221	protein_coding	v-maf avian musculoaponeurotic fibrosarcoma oncogene homolog	16	79619740	79634611
+ENSG00000125285	SOX21	1.00e+00	0	1793	protein_coding	SRY (sex determining region Y)-box 21	13	95361886	95364389
+ENSG00000101076	HNF4A	1.00e+00	0	1881	protein_coding	hepatocyte nuclear factor 4, alpha	20	42984340	43061485
+ENSG00000126603	GLIS2	1.00e+00	0	3234	protein_coding	GLIS family zinc finger 2	16	4364762	4389598
+ENSG00000142700	DMRTA2	1.00e+00	0	1185	protein_coding	DMRT-like family A2	1	50883222	50889172
+ENSG00000130856	ZNF236	1.00e+00	0	2898	protein_coding	zinc finger protein 236	18	74534563	74682683
+ENSG00000163508	EOMES	1.00e+00	0	741	protein_coding	eomesodermin	3	27757440	27764206
+ENSG00000152284	TCF7L1	1.00e+00	0	2127	protein_coding	transcription factor 7-like 1 (T-cell specific, HMG-box)	2	85360533	85537511
+ENSG00000080298	RFX3	1.00e+00	0	2785	protein_coding	regulatory factor X, 3 (influences HLA class II expression)	9	3218297	3526004
+ENSG00000128573	FOXP2	1.00e+00	0	1250	protein_coding	forkhead box P2	7	113726382	114333827
+ENSG00000138738	PRDM5	1.00e+00	0	1158	protein_coding	PR domain containing 5	4	121606074	121844025
+ENSG00000136870	ZNF189	1.00e+00	0	2170	protein_coding	zinc finger protein 189	9	104161155	104172942
+ENSG00000050628	PTGER3	1.00e+00	0	1802	protein_coding	prostaglandin E receptor 3 (subtype EP3)	1	71318036	71513491
+ENSG00000181722	ZBTB20	1.00e+00	0	1960	protein_coding	zinc finger and BTB domain containing 20	3	114056941	114866118
+ENSG00000164190	NIPBL	1.00e+00	0	3580	protein_coding	Nipped-B homolog (Drosophila)	5	36876861	37066515
+ENSG00000112511	PHF1	1.00e+00	0	2988	protein_coding	PHD finger protein 1	6	33378176	33384230
+ENSG00000007866	TEAD3	1.00e+00	0	3221	protein_coding	TEA domain family member 3	6	35441374	35464853
+ENSG00000148704	VAX1	1.00e+00	0	695	protein_coding	ventral anterior homeobox 1	10	118888032	118897812
+ENSG00000101883	RHOXF1	1.00e+00	0	780	protein_coding	Rhox homeobox family, member 1	X	119243011	119249847
+ENSG00000103510	KAT8	1.00e+00	0	2812	protein_coding	K(lysine) acetyltransferase 8	16	31127075	31142714
+ENSG00000063245	EPN1	1.00e+00	0	3541	protein_coding	epsin 1	19	56186592	56221224
+ENSG00000267908	ZSCAN5D	1.00e+00	0	956	protein_coding	zinc finger and SCAN domain containing 5D	19	56751773	56758863
+ENSG00000157110	RBPMS	1.00e+00	0	2789	protein_coding	RNA binding protein with multiple splicing	8	30241944	30429778
+ENSG00000154222	CC2D1B	1.00e+00	0	2889	protein_coding	coiled-coil and C2 domain containing 1B	1	52811395	52831865
+ENSG00000151014	CCRN4L	1.00e+00	0	1664	protein_coding	CCR4 carbon catabolite repression 4-like (S. cerevisiae)	4	139936943	139966906
+ENSG00000242441	GTF2A1L	1.00e+00	0	1927	protein_coding	general transcription factor IIA, 1-like	2	48844937	48960287
+ENSG00000061273	HDAC7	1.00e+00	0	2728	protein_coding	histone deacetylase 7	12	48176505	48226915
+ENSG00000105229	PIAS4	1.00e+00	0	2101	protein_coding	protein inhibitor of activated STAT, 4	19	4007644	4039384
+ENSG00000132740	IGHMBP2	1.00e+00	0	2453	protein_coding	immunoglobulin mu binding protein 2	11	68671310	68708070
+ENSG00000170178	HOXD12	1.00e+00	0	3189	protein_coding	homeobox D12	2	176964458	176966408
+ENSG00000112837	TBX18	1.00e+00	0	1697	protein_coding	T-box 18	6	85397069	85474237
+ENSG00000109851	DBX1	1.00e+00	0	1121	protein_coding	developing brain homeobox 1	11	20177701	20182159
+ENSG00000170616	SCRT1	1.00e+00	0	2973		scratch family zinc finger 1	8	145554228	145559943
+ENSG00000187325	TAF9B	1.00e+00	0	1267	protein_coding	TAF9B RNA polymerase II, TATA box binding protein (TBP)-associated factor, 31kDa	X	77385245	77395203
+ENSG00000197724	PHF2	1.00e+00	0	2986	protein_coding	PHD finger protein 2	9	96338689	96441869
+ENSG00000012822	CALCOCO1	1.00e+00	0	2667	protein_coding	calcium binding and coiled-coil domain 1	12	54104903	54121529
+ENSG00000157933	SKI	1.00e+00	0	2465	protein_coding	v-ski avian sarcoma viral oncogene homolog	1	2160134	2241558
+ENSG00000005339	CREBBP	1.00e+00	0	1994	protein_coding	CREB binding protein	16	3775055	3930727
+ENSG00000171476	HOPX	1.00e+00	0	1598	protein_coding	HOP homeobox	4	57514155	57548065
+ENSG00000105261	OVOL3	1.00e+00	0	2510	protein_coding	ovo-like zinc finger 3	19	36602104	36604613
+ENSG00000204779	FOXD4L5	1.00e+00	0	1484	protein_coding	forkhead box D4-like 5	9	70175707	70178815
+ENSG00000072736	NFATC3	1.00e+00	0	2592	protein_coding	nuclear factor of activated T-cells, cytoplasmic, calcineurin-dependent 3	16	68118654	68263162
+ENSG00000121068	TBX2	1.00e+00	0	2053	protein_coding	T-box 2	17	59477257	59486827
+ENSG00000123609	NMI	1.00e+00	0	2655	protein_coding	N-myc (and STAT) interactor	2	152126979	152146571
+ENSG00000067369	TP53BP1	1.00e+00	0	3411	protein_coding	tumor protein p53 binding protein 1	15	43699407	43802926
+ENSG00000132024	CC2D1A	1.00e+00	0	3792	protein_coding	coiled-coil and C2 domain containing 1A	19	14017014	14041692
+ENSG00000115415	STAT1	1.00e+00	0	2100	protein_coding	signal transducer and activator of transcription 1, 91kDa	2	191829084	191885686
+ENSG00000167766	ZNF83	1.00e+00	0	2792	protein_coding	zinc finger protein 83	19	53097313	53193749
+ENSG00000188313	PLSCR1	1.00e+00	0	1887	protein_coding	phospholipid scramblase 1	3	146232967	146262651
+ENSG00000184895	SRY	1.00e+00	0	1412	protein_coding	sex determining region Y	Y	2654896	2655740
+ENSG00000160224	AIRE	1.00e+00	0	391	protein_coding	autoimmune regulator	21	45705721	45718531
+ENSG00000170122	FOXD4	1.00e+00	0	283	protein_coding	forkhead box D4	9	116237	118417
+ENSG00000130589	HELZ2	1.00e+00	0	1628	protein_coding	helicase with zinc finger 2, transcriptional coactivator	20	62189439	62205592
+ENSG00000178860	MSC	1.00e+00	0	2042	protein_coding	musculin	8	72753784	72756703
+ENSG00000185811	IKZF1	1.00e+00	0	3822	protein_coding	IKAROS family zinc finger 1 (Ikaros)	7	50343720	50472799
+ENSG00000112559	MDFI	1.00e+00	0	2011	protein_coding	MyoD family inhibitor	6	41604620	41621984
+ENSG00000118263	KLF7	1.00e+00	0	1955	protein_coding	Kruppel-like factor 7 (ubiquitous)	2	207938861	208031991
+ENSG00000181220	ZNF746	1.00e+00	0	1623	protein_coding	zinc finger protein 746	7	149169885	149194908
+ENSG00000166501	PRKCB	1.00e+00	0	2930	protein_coding	protein kinase C, beta	16	23847322	24231932
+ENSG00000167286	CD3D	1.00e+00	0	1915	protein_coding	CD3d molecule, delta (CD3-TCR complex)	11	118209669	118213459
+ENSG00000197779	ZNF81	1.00e+00	0	3651	protein_coding	zinc finger protein 81	X	47696301	47861960
+ENSG00000188620	HMX3	1.00e+00	0	1517	protein_coding	H6 family homeobox 3	10	124895478	124897257
+ENSG00000185669	SNAI3	1.00e+00	0	1539	protein_coding	snail family zinc finger 3	16	88744090	88752901
+ENSG00000204612	FOXB2	1.00e+00	0	711	protein_coding	forkhead box B2	9	79634571	79635869
+ENSG00000137834	SMAD6	1.00e+00	0	2290	protein_coding	SMAD family member 6	15	66994566	67074338
+ENSG00000043039	BARX2	1.00e+00	0	1592	protein_coding	BARX homeobox 2	11	129245835	129322171
+ENSG00000142453	CARM1	1.00e+00	0	2365	protein_coding	coactivator-associated arginine methyltransferase 1	19	10982189	11033453
+ENSG00000134438	RAX	1.00e+00	0	569	protein_coding	retina and anterior neural fold homeobox	18	56934267	56941318
+ENSG00000143258	USP21	1.00e+00	0	2665	protein_coding	ubiquitin specific peptidase 21	1	161129240	161135513
+ENSG00000138136	LBX1	1.00e+00	0	861	protein_coding	ladybird homeobox 1	10	102986733	102989551
+ENSG00000163497	FEV	1.00e+00	0	1076	protein_coding	FEV (ETS oncogene family)	2	219845809	219850379
+ENSG00000165066	NKX6-3	1.00e+00	0	729	protein_coding	NK6 homeobox 3	8	41502697	41508855
+ENSG00000163795	ZNF513	1.00e+00	0	2938	protein_coding	zinc finger protein 513	2	27600098	27603657
+ENSG00000155011	DKK2	1.00e+00	0	1175	protein_coding	dickkopf WNT signaling pathway inhibitor 2	4	107842959	108204963
+ENSG00000128713	HOXD11	1.00e+00	0	2195	protein_coding	homeobox D11	2	176968944	176974722
+ENSG00000165556	CDX2	1.00e+00	0	1336	protein_coding	caudal type homeobox 2	13	28536274	28545276
+ENSG00000184481	FOXO4	1.00e+00	0	1771	protein_coding	forkhead box O4	X	70316047	70323385
+ENSG00000115593	SMYD1	1.00e+00	0	1682	protein_coding	SET and MYND domain containing 1	2	88367299	88412906
+ENSG00000064490	RFXANK	1.00e+00	0	3102	protein_coding	regulatory factor X-associated ankyrin-containing protein	19	19303008	19312678
+ENSG00000204859	ZBTB48	1.00e+00	0	3089	protein_coding	zinc finger and BTB domain containing 48	1	6640061	6649340
+ENSG00000135111	TBX3	1.00e+00	0	1875	protein_coding	T-box 3	12	115108059	115121969
+ENSG00000165462	PHOX2A	1.00e+00	0	1017	protein_coding	paired-like homeobox 2a	11	71950121	71956708
+ENSG00000116035	VAX2	1.00e+00	0	1050	protein_coding	ventral anterior homeobox 2	2	71127720	71160576
+ENSG00000152804	HHEX	1.00e+00	0	2247	protein_coding	hematopoietically expressed homeobox	10	94447945	94455403
+ENSG00000175325	PROP1	1.00e+00	0	5076	protein_coding	PROP paired-like homeobox 1	5	177419236	177423243
+ENSG00000179833	SERTAD2	1.00e+00	0	1929	protein_coding	SERTA domain containing 2	2	64858755	64978139
+ENSG00000107807	TLX1	1.00e+00	0	278	protein_coding	T-cell leukemia homeobox 1	10	102889257	102897545
+ENSG00000108773	KAT2A	1.00e+00	0	2707	protein_coding	K(lysine) acetyltransferase 2A	17	40265126	40273376
+ENSG00000204793	FOXD4L6	1.00e+00	0	9099		forkhead box D4-like 6	9	69199480	69202204
+ENSG00000149948	HMGA2	1.00e+00	0	1826	protein_coding	high mobility group AT-hook 2	12	66217911	66360075
+ENSG00000102103	PQBP1	1.00e+00	0	2639	protein_coding	polyglutamine binding protein 1	X	48755195	48760420
+ENSG00000162772	ATF3	1.00e+00	0	1594	protein_coding	activating transcription factor 3	1	212738676	212794119
+ENSG00000112246	SIM1	1.00e+00	0	1006	protein_coding	single-minded family bHLH transcription factor 1	6	100832891	100912805
+ENSG00000170561	IRX2	1.00e+00	0	1757	protein_coding	iroquois homeobox 2	5	2745959	2752969
+ENSG00000173153	ESRRA	1.00e+00	0	2498	protein_coding	estrogen-related receptor alpha	11	64073044	64084215
+ENSG00000143162	CREG1	1.00e+00	0	1885	protein_coding	cellular repressor of E1A-stimulated genes 1	1	167498914	167523004
+ENSG00000197905	TEAD4	1.00e+00	0	2531	protein_coding	TEA domain family member 4	12	3068496	3149839
+ENSG00000105991	HOXA1	1.00e+00	0	1329	protein_coding	homeobox A1	7	27132612	27135615
+ENSG00000092067	CEBPE	1.00e+00	0	1154	protein_coding	CCAAT/enhancer binding protein (C/EBP), epsilon	14	23586513	23588825
+ENSG00000162419	GMEB1	1.00e+00	0	1884	protein_coding	glucocorticoid modulatory element binding protein 1	1	28995244	29045865
+ENSG00000008197	TFAP2D	1.00e+00	0	1623	protein_coding	transcription factor AP-2 delta (activating enhancer binding protein 2 delta)	6	50681541	50740701
+ENSG00000159388	BTG2	1.00e+00	0	1947	protein_coding	BTG family, member 2	1	203274619	203278730
+ENSG00000130772	MED18	1.00e+00	0	1416	protein_coding	mediator complex subunit 18	1	28655513	28662476
+ENSG00000049768	FOXP3	1.00e+00	0	886	protein_coding	forkhead box P3	X	49106897	49121288
+ENSG00000129911	KLF16	1.00e+00	0	2676	protein_coding	Kruppel-like factor 16	19	1852399	1863567
+ENSG00000172216	CEBPB	1.00e+00	0	2419	protein_coding	CCAAT/enhancer binding protein (C/EBP), beta	20	48807376	48809212
+ENSG00000169083	AR	1.00e+00	0	1964	protein_coding	androgen receptor	X	66764465	66950461
+ENSG00000084676	NCOA1	1.00e+00	0	2374	protein_coding	nuclear receptor coactivator 1	2	24714783	24993571
+ENSG00000108813	DLX4	1.00e+00	0	1186	protein_coding	distal-less homeobox 4	17	48046334	48052321
+ENSG00000116132	PRRX1	1.00e+00	0	2103	protein_coding	paired related homeobox 1	1	170631869	170708560
+ENSG00000137270	GCM1	1.00e+00	0	338	protein_coding	glial cells missing homolog 1 (Drosophila)	6	52991762	53013627
+ENSG00000124664	SPDEF	1.00e+00	0	1869	protein_coding	SAM pointed domain containing ETS transcription factor	6	34505579	34524110
+ENSG00000204060	FOXO6	1.00e+00	0	1327	protein_coding	forkhead box O6	1	41827594	41849262
+ENSG00000166135	HIF1AN	1.00e+00	0	2351	protein_coding	hypoxia inducible factor 1, alpha subunit inhibitor	10	102288829	102319755
+ENSG00000165702	GFI1B	1.00e+00	0	1294	protein_coding	growth factor independent 1B transcription repressor	9	135820932	135867083
+ENSG00000188095	MESP2	1.00e+00	0	1395	protein_coding	mesoderm posterior 2 homolog (mouse)	15	90303822	90321982
+ENSG00000103199	ZNF500	1.00e+00	0	2701	protein_coding	zinc finger protein 500	16	4798240	4817625
+ENSG00000105996	HOXA2	1.00e+00	0	1066	protein_coding	homeobox A2	7	27139721	27142430
+ENSG00000117318	ID3	1.00e+00	0	1952	protein_coding	inhibitor of DNA binding 3, dominant negative helix-loop-helix protein	1	23884409	23886285
+ENSG00000155846	PPARGC1B	1.00e+00	0	907	protein_coding	peroxisome proliferator-activated receptor gamma, coactivator 1 beta	5	149109861	149234585
+ENSG00000120896	SORBS3	1.00e+00	0	3355	protein_coding	sorbin and SH3 domain containing 3	8	22402499	22433301
+ENSG00000134138	MEIS2	1.00e+00	0	2023	protein_coding	Meis homeobox 2	15	37181406	37393504
+ENSG00000186766	FOXI2	1.00e+00	0	412	protein_coding	forkhead box I2	10	129535499	129539450
+ENSG00000152104	PTPN14	1.00e+00	0	2358	protein_coding	protein tyrosine phosphatase, non-receptor type 14	1	214522039	214725792
+ENSG00000124201	ZNFX1	1.00e+00	0	1772	protein_coding	zinc finger, NFX1-type containing 1	20	47854483	47894963
+ENSG00000109111	SUPT6H	1.00e+00	0	2195	protein_coding	suppressor of Ty 6 homolog (S. cerevisiae)	17	26989109	27029697
+ENSG00000213780	GTF2H4	1.00e+00	0	2899	protein_coding	general transcription factor IIH, polypeptide 4, 52kDa	6	30875961	30881883
+ENSG00000141644	MBD1	1.00e+00	0	3191	protein_coding	methyl-CpG binding domain protein 1	18	47793252	47808144
+ENSG00000164749	HNF4G	1.00e+00	0	1662	protein_coding	hepatocyte nuclear factor 4, gamma	8	76320149	76479078
+ENSG00000180772	AGTR2	1.00e+00	0	1581	protein_coding	angiotensin II receptor, type 2	X	115301975	115306225
+ENSG00000167034	NKX3-1	1.00e+00	0	1057	protein_coding	NK3 homeobox 1	8	23536206	23540440
+ENSG00000177192	PUS1	1.00e+00	0	2823	protein_coding	pseudouridylate synthase 1	12	132413745	132428406
+ENSG00000022840	RNF10	1.00e+00	0	1626	protein_coding	ring finger protein 10	12	120971283	121015397
+ENSG00000214513	NOTO	1.00e+00	0	5925	protein_coding	notochord homeobox	2	73429386	73439641
+ENSG00000119950	MXI1	1.00e+00	0	2239	protein_coding	MAX interactor 1, dimerization protein	10	111967363	112047123
+ENSG00000164532	TBX20	1.00e+00	0	916	protein_coding	T-box 20	7	35242042	35293758
+ENSG00000233608	TWIST2	1.00e+00	0	1687	protein_coding	twist family bHLH transcription factor 2	2	239756673	239795893
+ENSG00000136574	GATA4	1.00e+00	0	1812	protein_coding	GATA binding protein 4	8	11534468	11617511
+ENSG00000120093	HOXB3	1.00e+00	0	1216	protein_coding	homeobox B3	17	46626232	46682274
+ENSG00000130699	TAF4	1.00e+00	0	2267	protein_coding	TAF4 RNA polymerase II, TATA box binding protein (TBP)-associated factor, 135kDa	20	60528525	60640866
+ENSG00000177551	NHLH2	1.00e+00	0	944	protein_coding	nescient helix loop helix 2	1	116378998	116386538
+ENSG00000185668	POU3F1	1.00e+00	0	1212	protein_coding	POU class 3 homeobox 1	1	38509523	38512450
+ENSG00000105497	ZNF175	1.00e+00	0	2051	protein_coding	zinc finger protein 175	19	52074551	52092991
+ENSG00000125398	SOX9	1.00e+00	0	1948	protein_coding	SRY (sex determining region Y)-box 9	17	70117161	70122561
+ENSG00000182742	HOXB4	1.00e+00	0	1376	protein_coding	homeobox B4	17	46652875	46657473
+ENSG00000128886	ELL3	1.00e+00	0	1642	protein_coding	elongation factor RNA polymerase II-like 3	15	44064798	44069741
+ENSG00000157613	CREB3L1	1.00e+00	0	2080	protein_coding	cAMP responsive element binding protein 3-like 1	11	46299212	46342972
+ENSG00000151615	POU4F2	1.00e+00	0	536	protein_coding	POU class 4 homeobox 2	4	147560045	147563626
+ENSG00000174744	BRMS1	1.00e+00	0	2851	protein_coding	breast cancer metastasis suppressor 1	11	66104804	66112596
+ENSG00000143995	MEIS1	1.00e+00	0	2292	protein_coding	Meis homeobox 1	2	66660584	66801001
+ENSG00000112033	PPARD	1.00e+00	0	2295	protein_coding	peroxisome proliferator-activated receptor delta	6	35310335	35395968
+ENSG00000164900	GBX1	1.00e+00	0	3081	protein_coding	gastrulation brain homeobox 1	7	150845676	150871832
+ENSG00000131668	BARX1	1.00e+00	0	1137	protein_coding	BARX homeobox 1	9	96713905	96717654
+ENSG00000196387	ZNF140	1.00e+00	0	2255	protein_coding	zinc finger protein 140	12	133656424	133684130
+ENSG00000009950	MLXIPL	1.00e+00	0	2285	protein_coding	MLX interacting protein-like	7	73007524	73038873
+ENSG00000186564	FOXD2	1.00e+00	0	1840	protein_coding	forkhead box D2	1	47901689	47906363
+ENSG00000175329	ISX	1.00e+00	0	1240	protein_coding	intestine-specific homeobox	22	35462129	35483380
+ENSG00000106852	LHX6	1.00e+00	0	972	protein_coding	LIM homeobox 6	9	124964856	124991905
+ENSG00000016082	ISL1	1.00e+00	0	1838	protein_coding	ISL LIM homeobox 1	5	50678921	50690564
+ENSG00000150347	ARID5B	1.00e+00	0	1942	protein_coding	AT rich interactive domain 5B (MRF1-like)	10	63661059	63856703
+ENSG00000197576	HOXA4	1.00e+00	0	1274	protein_coding	homeobox A4	7	27168126	27170418
+ENSG00000120068	HOXB8	1.00e+00	0	1065	protein_coding	homeobox B8	17	46688739	46692478
+ENSG00000109381	ELF2	1.00e+00	0	3971	protein_coding	E74-like factor 2 (ets domain transcription factor)	4	139949266	140098372
+ENSG00000123143	PKN1	1.00e+00	0	3095	protein_coding	protein kinase N1	19	14543865	14582679
+ENSG00000101849	TBL1X	1.00e+00	0	1862	protein_coding	transducin (beta)-like 1X-linked	X	9431335	9687780
+ENSG00000108604	SMARCD2	1.00e+00	0	2230	protein_coding	SWI/SNF related, matrix associated, actin dependent regulator of chromatin, subfamily d, member 2	17	61909444	61920425
+ENSG00000117713	ARID1A	1.00e+00	0	2829	protein_coding	AT rich interactive domain 1A (SWI-like)	1	27022524	27108595
+ENSG00000197037	ZSCAN25	1.00e+00	0	2751	protein_coding	zinc finger and SCAN domain containing 25	7	99214569	99230030
+ENSG00000186951	PPARA	1.00e+00	0	2954	protein_coding	peroxisome proliferator-activated receptor alpha	22	46546424	46639653
+ENSG00000125820	NKX2-2	1.00e+00	0	1440	protein_coding	NK2 homeobox 2	20	21491648	21494664
+ENSG00000143171	RXRG	1.00e+00	0	1212	protein_coding	retinoid X receptor, gamma	1	165370159	165414433
+ENSG00000215397	SCRT2	1.00e+00	0	1187	protein_coding	scratch family zinc finger 2	20	642240	656823
+ENSG00000140265	ZSCAN29	1.00e+00	0	2730	protein_coding	zinc finger and SCAN domain containing 29	15	43650370	43663223
+ENSG00000121903	ZSCAN20	1.00e+00	0	3002	protein_coding	zinc finger and SCAN domain containing 20	1	33938246	33962107
+ENSG00000129315	CCNT1	1.00e+00	0	3431	protein_coding	cyclin T1	12	49082247	49110681
+ENSG00000167081	PBX3	1.00e+00	0	1691	protein_coding	pre-B-cell leukemia homeobox 3	9	128509624	128729656
+ENSG00000090447	TFAP4	1.00e+00	0	2105	protein_coding	transcription factor AP-4 (activating enhancer binding protein 4)	16	4307187	4323076
+ENSG00000187786	SCXB	1.00e+00	0	1091		scleraxis homolog B (mouse)	8	145321517	145323045
+ENSG00000143257	NR1I3	1.00e+00	0	721	protein_coding	nuclear receptor subfamily 1, group I, member 3	1	161199456	161208092
+ENSG00000159387	IRX6	1.00e+00	0	1110	protein_coding	iroquois homeobox 6	16	55357672	55364672
+ENSG00000185122	HSF1	1.00e+00	0	3403	protein_coding	heat shock transcription factor 1	8	145515280	145538385
+ENSG00000133639	BTG1	1.00e+00	0	2755	protein_coding	B-cell translocation gene 1, anti-proliferative	12	92536286	92539673
+ENSG00000125798	FOXA2	1.00e+00	0	1707	protein_coding	forkhead box A2	20	22561643	22566093
+ENSG00000116604	MEF2D	1.00e+00	0	2783	protein_coding	myocyte enhancer factor 2D	1	156433519	156470620
+ENSG00000132274	TRIM22	1.00e+00	0	3123	protein_coding	tripartite motif containing 22	11	5710919	5758319
+ENSG00000167685	ZNF444	1.00e+00	0	2478	protein_coding	zinc finger protein 444	19	56643968	56672262
+ENSG00000169554	ZEB2	1.00e+00	0	2963	protein_coding	zinc finger E-box binding homeobox 2	2	145141648	145282147
+ENSG00000197114	ZGPAT	1.00e+00	0	2592	protein_coding	zinc finger, CCCH-type with G patch domain	20	62338817	62367494
+ENSG00000172493	AFF1	1.00e+00	0	1991	protein_coding	AF4/FMR2 family, member 1	4	87856154	88062206
+ENSG00000184584	TMEM173	1.00e+00	0	2240	protein_coding	transmembrane protein 173	5	138855119	138862520
+ENSG00000081189	MEF2C	1.00e+00	0	1964	protein_coding	myocyte enhancer factor 2C	5	88013975	88199922
+ENSG00000091138	SLC26A3	1.00e+00	0	1174	protein_coding	solute carrier family 26 (anion exchanger), member 3	7	107405912	107443670
+ENSG00000137699	TRIM29	1.00e+00	0	1534	protein_coding	tripartite motif containing 29	11	119981983	120056237
+ENSG00000111837	MAK	1.00e+00	0	1211	protein_coding	male germ cell-associated kinase	6	10762956	10838764
+ENSG00000162761	LMX1A	1.00e+00	0	1014	protein_coding	LIM homeobox transcription factor 1, alpha	1	165171104	165325952
+ENSG00000111145	ELK3	1.00e+00	0	2435	protein_coding	ELK3, ETS-domain protein (SRF accessory protein 2)	12	96588160	96663613
+ENSG00000101412	E2F1	1.00e+00	0	1960	protein_coding	E2F transcription factor 1	20	32263489	32274210
+ENSG00000175550	DRAP1	1.00e+00	0	2591	protein_coding	DR1-associated protein 1 (negative cofactor 2 alpha)	11	65686728	65689032
+ENSG00000182759	MAFA	1.00e+00	0	1174	protein_coding	v-maf avian musculoaponeurotic fibrosarcoma oncogene homolog A	8	144501352	144512576
+ENSG00000173253	DMRT2	1.00e+00	0	1470	protein_coding	doublesex and mab-3 related transcription factor 2	9	1050354	1057552
+ENSG00000113272	THG1L	1.00e+00	0	1365	protein_coding	tRNA-histidine guanylyltransferase 1-like (S. cerevisiae)	5	157158205	157168456
+ENSG00000009709	PAX7	1.00e+00	0	1074	protein_coding	paired box 7	1	18957500	19075360
+ENSG00000170162	VGLL2	1.00e+00	0	1350	protein_coding	vestigial like 2 (Drosophila)	6	117586721	117594728
+ENSG00000136367	ZFHX2	1.00e+00	0	2631	protein_coding	zinc finger homeobox 2	14	23990066	24025401
+ENSG00000131759	RARA	1.00e+00	0	2916	protein_coding	retinoic acid receptor, alpha	17	38465444	38513094
+ENSG00000105997	HOXA3	1.00e+00	0	1646	protein_coding	homeobox A3	7	27145803	27192200
+ENSG00000175197	DDIT3	1.00e+00	0	2013	protein_coding	DNA-damage-inducible transcript 3	12	57910371	57914300
+ENSG00000184302	SIX6	1.00e+00	0	466	protein_coding	SIX homeobox 6	14	60975669	60979568
+ENSG00000175832	ETV4	1.00e+00	0	2210	protein_coding	ets variant 4	17	41605212	41656988
+ENSG00000132130	LHX1	1.00e+00	0	1080		LIM homeobox 1	17	35294084	35301917
+ENSG00000089902	RCOR1	1.00e+00	0	2707	protein_coding	REST corepressor 1	14	103058998	103196913
+ENSG00000213999	MEF2BNB-MEF2B	1.00e+00	0	1467	protein_coding	myocyte enhancer factor 2B	19	19256377	19303400
+ENSG00000100902	PSMA6	1.00e+00	0	2505	protein_coding	proteasome (prosome, macropain) subunit, alpha type, 6	14	35747839	35786699
+ENSG00000010030	ETV7	1.00e+00	0	937	protein_coding	ets variant 7	6	36322419	36356164
+ENSG00000123358	NR4A1	1.00e+00	0	1962	protein_coding	nuclear receptor subfamily 4, group A, member 1	12	52416616	52453291
+ENSG00000069399	BCL3	1.00e+00	0	2133	protein_coding	B-cell CLL/lymphoma 3	19	45250962	45263301
+ENSG00000066336	SPI1	1.00e+00	0	1865	protein_coding	spleen focus forming virus (SFFV) proviral integration oncogene	11	47376411	47400127
+ENSG00000183621	ZNF438	1.00e+00	0	2240	protein_coding	zinc finger protein 438	10	31109136	31320866
+ENSG00000138795	LEF1	1.00e+00	0	2041	protein_coding	lymphoid enhancer-binding factor 1	4	108968701	109090112
+ENSG00000141564	RPTOR	1.00e+00	0	2408	protein_coding	regulatory associated protein of MTOR, complex 1	17	78518619	78940171
+ENSG00000129152	MYOD1	1.00e+00	0	1280	protein_coding	myogenic differentiation 1	11	17741115	17743678
+ENSG00000166211	SPIC	1.00e+00	0	472	protein_coding	Spi-C transcription factor (Spi-1/PU.1 related)	12	101869199	101880775
+ENSG00000032219	ARID4A	1.00e+00	0	2552	protein_coding	AT rich interactive domain 4A (RBP1-like)	14	58765103	58840605
+ENSG00000183734	ASCL2	1.00e+00	0	1935	protein_coding	achaete-scute family bHLH transcription factor 2	11	2289725	2292182
+ENSG00000148826	NKX6-2	1.00e+00	0	1512	protein_coding	NK6 homeobox 2	10	134598297	134599556
+ENSG00000106031	HOXA13	1.00e+00	0	1496	protein_coding	homeobox A13	7	27233122	27239725
+ENSG00000110693	SOX6	1.00e+00	0	1643	protein_coding	SRY (sex determining region Y)-box 6	11	15987995	16761138
+ENSG00000136931	NR5A1	1.00e+00	0	1482	protein_coding	nuclear receptor subfamily 5, group A, member 1	9	127243516	127269709
+ENSG00000189298	ZKSCAN3	1.00e+00	0	2054	protein_coding	zinc finger with KRAB and SCAN domains 3	6	28317691	28336947
+ENSG00000036257	CUL3	1.00e+00	0	2491	protein_coding	cullin 3	2	225334867	225450110
+ENSG00000148677	ANKRD1	1.00e+00	0	1555	protein_coding	ankyrin repeat domain 1 (cardiac muscle)	10	92671853	92681033
+ENSG00000123933	MXD4	1.00e+00	0	3231	protein_coding	MAX dimerization protein 4	4	2249159	2264021
+ENSG00000164736	SOX17	1.00e+00	0	1365	protein_coding	SRY (sex determining region Y)-box 17	8	55370495	55373448
+ENSG00000157168	NRG1	1.00e+00	0	1977	protein_coding	neuregulin 1	8	31496902	32622548
+ENSG00000025434	NR1H3	1.00e+00	0	1923	protein_coding	nuclear receptor subfamily 1, group H, member 3	11	47269851	47290396
+ENSG00000091831	ESR1	1.00e+00	0	956	protein_coding	estrogen receptor 1	6	151977826	152450754
+ENSG00000100968	NFATC4	1.00e+00	0	2494	protein_coding	nuclear factor of activated T-cells, cytoplasmic, calcineurin-dependent 4	14	24834879	24848810
+ENSG00000185022	MAFF	1.00e+00	0	2077	protein_coding	v-maf avian musculoaponeurotic fibrosarcoma oncogene homolog F	22	38597889	38612518
+ENSG00000106571	GLI3	1.00e+00	0	1796	protein_coding	GLI family zinc finger 3	7	42000548	42277469
+ENSG00000105204	DYRK1B	1.00e+00	0	3288	protein_coding	dual-specificity tyrosine-(Y)-phosphorylation regulated kinase 1B	19	40315990	40324841
+ENSG00000171540	OTP	1.00e+00	0	765	protein_coding	orthopedia homeobox	5	76924538	76935513
+ENSG00000141002	TCF25	1.00e+00	0	2182	protein_coding	transcription factor 25 (basic helix-loop-helix)	16	89940000	89977792
+ENSG00000173917	HOXB2	1.00e+00	0	1641	protein_coding	homeobox B2	17	46618256	46623441
+ENSG00000071282	LMCD1	1.00e+00	0	2143	protein_coding	LIM and cysteine-rich domains 1	3	8543393	8609805
+ENSG00000198911	SREBF2	1.00e+00	0	3022	protein_coding	sterol regulatory element binding transcription factor 2	22	42229109	42303312
+ENSG00000104973	MED25	1.00e+00	0	2070	protein_coding	mediator complex subunit 25	19	50321539	50342073
+ENSG00000139515	PDX1	1.00e+00	0	1245	protein_coding	pancreatic and duodenal homeobox 1	13	28494157	28500368
+ENSG00000172819	RARG	1.00e+00	0	2325	protein_coding	retinoic acid receptor, gamma	12	53604354	53626764
+ENSG00000179111	HES7	1.00e+00	0	1364	protein_coding	hes family bHLH transcription factor 7	17	8023908	8027410
+ENSG00000100625	SIX4	1.00e+00	0	2057	protein_coding	SIX homeobox 4	14	61176246	61191066
+ENSG00000197587	DMBX1	1.00e+00	0	365	protein_coding	diencephalon/mesencephalon homeobox 1	1	46972668	46979898
+ENSG00000140009	ESR2	1.00e+00	0	1748	protein_coding	estrogen receptor 2 (ER beta)	14	64550950	64804830
+ENSG00000124496	TRERF1	1.00e+00	0	1895	protein_coding	transcriptional regulating factor 1	6	42192669	42419789
+ENSG00000166925	TSC22D4	1.00e+00	0	2329	protein_coding	TSC22 domain family, member 4	7	100060982	100076902
+ENSG00000129993	CBFA2T3	1.00e+00	0	2247	protein_coding	core-binding factor, runt domain, alpha subunit 2; translocated to, 3	16	88941266	89043612
+ENSG00000057657	PRDM1	1.00e+00	0	1647	protein_coding	PR domain containing 1, with ZNF domain	6	106534195	106557814
+ENSG00000174255	ZNF80	1.00e+00	0	642	protein_coding	zinc finger protein 80	3	113953483	113956425
+ENSG00000151650	VENTX	1.00e+00	0	1005	protein_coding	VENT homeobox	10	135050908	135055433
+ENSG00000005102	MEOX1	1.00e+00	0	1796	protein_coding	mesenchyme homeobox 1	17	41717756	41739322
+ENSG00000100987	VSX1	1.00e+00	0	743	protein_coding	visual system homeobox 1	20	25051521	25062996
+ENSG00000183434	TFDP3	1.00e+00	0	1770	protein_coding	transcription factor Dp family, member 3	X	132350697	132352376
+ENSG00000109101	FOXN1	1.00e+00	0	852	protein_coding	forkhead box N1	17	26833261	26865914
+ENSG00000162992	NEUROD1	1.00e+00	0	1530	protein_coding	neuronal differentiation 1	2	182537815	182545603
+ENSG00000168267	PTF1A	1.00e+00	0	1327	protein_coding	pancreas specific transcription factor, 1a	10	23481256	23483181
+ENSG00000140836	ZFHX3	1.00e+00	0	2091	protein_coding	zinc finger homeobox 3	16	72816784	73093597
+ENSG00000174306	ZHX3	1.00e+00	0	2293	protein_coding	zinc fingers and homeoboxes 3	20	39807088	39946312
+ENSG00000135374	ELF5	1.00e+00	0	1177	protein_coding	E74-like factor 5 (ets domain transcription factor)	11	34500340	34535352
+ENSG00000101665	SMAD7	1.00e+00	0	2344	protein_coding	SMAD family member 7	18	46446223	46477081
+ENSG00000125878	TCF15	1.00e+00	0	1332	protein_coding	transcription factor 15 (basic helix-loop-helix)	20	584441	591042
+ENSG00000179862	CITED4	1.00e+00	0	1633	protein_coding	Cbp/p300-interacting transactivator, with Glu/Asp-rich carboxy-terminal domain, 4	1	41326729	41328018
+ENSG00000152518	ZFP36L2	1.00e+00	0	2610	protein_coding	ZFP36 ring finger protein-like 2	2	43449541	43453748
+ENSG00000109132	PHOX2B	1.00e+00	0	1049	protein_coding	paired-like homeobox 2b	4	41746099	41750987
+ENSG00000229544	NKX1-2	1.00e+00	0	606	protein_coding	NK1 homeobox 2	10	126135592	126138753
+ENSG00000038945	MSR1	1.00e+00	0	1174	protein_coding	macrophage scavenger receptor 1	8	15965387	16424999
+ENSG00000198728	LDB1	1.00e+00	0	2250	protein_coding	LIM domain binding 1	10	103867317	103880210
+ENSG00000125084	WNT1	1.00e+00	0	493	protein_coding	wingless-type MMTV integration site family, member 1	12	49372398	49375459
+ENSG00000189299	FOXR2	1.00e+00	0	353	protein_coding	forkhead box R2	X	55649833	55652621
+ENSG00000131910	NR0B2	1.00e+00	0	1640	protein_coding	nuclear receptor subfamily 0, group B, member 2	1	27237980	27240457
+ENSG00000179528	LBX2	1.00e+00	0	2266	protein_coding	ladybird homeobox 2	2	74724644	74730443
+ENSG00000108264	TADA2A	1.00e+00	0	2177		transcriptional adaptor 2A	17	35766965	35839835
+ENSG00000116731	PRDM2	1.00e+00	0	2388	protein_coding	PR domain containing 2, with ZNF domain	1	14026693	14151574
+ENSG00000164463	CREBRF	1.00e+00	0	3875	protein_coding	CREB3 regulatory factor	5	172483355	172566291
+ENSG00000142279	WTIP	1.00e+00	0	1790	protein_coding	Wilms tumor 1 interacting protein	19	34971874	34997258
+ENSG00000053254	FOXN3	1.00e+00	0	2939	protein_coding	forkhead box N3	14	89591215	90085493
+ENSG00000105866	SP4	1.00e+00	0	2045	protein_coding	Sp4 transcription factor	7	21467652	21554440
+ENSG00000028277	POU2F2	1.00e+00	0	2161	protein_coding	POU class 2 homeobox 2	19	42590263	42700737
+ENSG00000213928	IRF9	1.00e+00	0	3112	protein_coding	interferon regulatory factor 9	14	24630262	24635774
+ENSG00000103037	SETD6	1.00e+00	0	2749	protein_coding	SET domain containing 6	16	58549383	58554431
+ENSG00000121060	TRIM25	1.00e+00	0	2461	protein_coding	tripartite motif containing 25	17	54965270	54991399
+ENSG00000179388	EGR3	1.00e+00	0	1145	protein_coding	early growth response 3	8	22545172	22550815
+ENSG00000180353	HCLS1	1.00e+00	0	2874	protein_coding	hematopoietic cell-specific Lyn substrate 1	3	121350246	121379774
+ENSG00000143164	DCAF6	1.00e+00	0	1809	protein_coding	DDB1 and CUL4 associated factor 6	1	167905021	168045081
+ENSG00000134954	ETS1	1.00e+00	0	2899	protein_coding	v-ets avian erythroblastosis virus E26 oncogene homolog 1	11	128328656	128457453
+ENSG00000164330	EBF1	1.00e+00	0	2221	protein_coding	early B-cell factor 1	5	158122928	158526769
+ENSG00000165684	SNAPC4	1.00e+00	0	2697	protein_coding	small nuclear RNA activating complex, polypeptide 4, 190kDa	9	139270029	139293249
+ENSG00000160685	ZBTB7B	1.00e+00	0	2998	protein_coding	zinc finger and BTB domain containing 7B	1	154975127	154990998
+ENSG00000186174	BCL9L	1.00e+00	0	2650	protein_coding	B-cell CLL/lymphoma 9-like	11	118764584	118796317
+ENSG00000119614	VSX2	1.00e+00	0	608	protein_coding	visual system homeobox 2	14	74706175	74729441
+ENSG00000240563	L1TD1	1.00e+00	0	1683	protein_coding	LINE-1 type transposase domain containing 1	1	62660503	62678000
+ENSG00000106038	EVX1	1.00e+00	0	2519	protein_coding	even-skipped homeobox 1	7	27282164	27290112
+ENSG00000120149	MSX2	1.00e+00	0	1237	protein_coding	msh homeobox 2	5	174151536	174157896
+ENSG00000171855	IFNB1	1.00e+00	0	787	protein_coding	interferon, beta 1, fibroblast	9	21077104	21077943
+ENSG00000143355	LHX9	1.00e+00	0	331	protein_coding	LIM homeobox 9	1	197881037	197904608
+ENSG00000160007	ARHGAP35	1.00e+00	0	3079	protein_coding	Rho GTPase activating protein 35	19	47421933	47508334
+ENSG00000010803	SCMH1	1.00e+00	0	2438	protein_coding	sex comb on midleg homolog 1 (Drosophila)	1	41492872	41707826
+ENSG00000166454	ATMIN	1.00e+00	0	1409	protein_coding	ATM interactor	16	81069452	81080963
+ENSG00000163602	RYBP	1.00e+00	0	1832	protein_coding	RING1 and YY1 binding protein	3	72420976	72496069
+ENSG00000113430	IRX4	1.00e+00	0	1361	protein_coding	iroquois homeobox 4	5	1877541	1887350
+ENSG00000141582	CBX4	1.00e+00	0	2421	protein_coding	chromobox homolog 4	17	77806955	77813228
+ENSG00000168269	FOXI1	1.00e+00	0	645	protein_coding	forkhead box I1	5	169532901	169536727
+ENSG00000172238	ATOH1	1.00e+00	0	1091	protein_coding	atonal homolog 1 (Drosophila)	4	94750042	94751221
+ENSG00000164438	TLX3	1.00e+00	0	1023	protein_coding	T-cell leukemia homeobox 3	5	170736288	170739138
+ENSG00000162599	NFIA	1.00e+00	0	2529	protein_coding	nuclear factor I/A	1	61330931	61928465
+ENSG00000105717	PBX4	1.00e+00	0	551	protein_coding	pre-B-cell leukemia homeobox 4	19	19672522	19729725
+ENSG00000173673	HES3	1.00e+00	0	1015	protein_coding	hes family bHLH transcription factor 3	1	6304252	6305638
+ENSG00000111424	VDR	1.00e+00	0	1839	protein_coding	vitamin D (1,25- dihydroxyvitamin D3) receptor	12	48235320	48336831
+ENSG00000137273	FOXF2	1.00e+00	0	1783	protein_coding	forkhead box F2	6	1390069	1395832
+ENSG00000129514	FOXA1	1.00e+00	0	2093	protein_coding	forkhead box A1	14	38059189	38069245
+ENSG00000005483	KMT2E	1.00e+00	0	3828	protein_coding	lysine (K)-specific methyltransferase 2E	7	104654626	104754808
+ENSG00000196924	FLNA	1.00e+00	0	2095	protein_coding	filamin A, alpha	X	153576892	153603006
+ENSG00000180828	BHLHE22	1.00e+00	0	1731	protein_coding	basic helix-loop-helix family, member e22	8	65492814	65496181
+ENSG00000152467	ZSCAN1	1.00e+00	0	1532	protein_coding	zinc finger and SCAN domain containing 1	19	58545400	58565999
+ENSG00000102878	HSF4	1.00e+00	0	2673	protein_coding	heat shock transcription factor 4	16	67197288	67203848
+ENSG00000146592	CREB5	1.00e+00	0	2114	protein_coding	cAMP responsive element binding protein 5	7	28338940	28865511
+ENSG00000100345	MYH9	1.00e+00	0	2019	protein_coding	myosin, heavy chain 9, non-muscle	22	36677327	36784063
+ENSG00000123407	HOXC12	1.00e+00	0	1419	protein_coding	homeobox C12	12	54348618	54352740
+ENSG00000117595	IRF6	1.00e+00	0	2435	protein_coding	interferon regulatory factor 6	1	209959036	209979465
+ENSG00000105750	ZNF85	1.00e+00	0	1689	protein_coding	zinc finger protein 85	19	21106028	21133503
+ENSG00000056661	PCGF2	1.00e+00	0	2764		polycomb group ring finger 2	17	36890150	36906070
+ENSG00000134595	SOX3	1.00e+00	0	1495	protein_coding	SRY (sex determining region Y)-box 3	X	139585152	139587225
+ENSG00000086102	NFX1	1.00e+00	0	1991	protein_coding	nuclear transcription factor, X-box binding 1	9	33290509	33371155
+ENSG00000188786	MTF1	1.00e+00	0	2348	protein_coding	metal-regulatory transcription factor 1	1	38275239	38325292
+ENSG00000124232	RBPJL	1.00e+00	0	1237	protein_coding	recombination signal binding protein for immunoglobulin kappa J region-like	20	43935491	43945803
+ENSG00000180613	GSX2	1.00e+00	0	425	protein_coding	GS homeobox 2	4	54965690	54968672
+ENSG00000115844	DLX2	1.00e+00	0	1590	protein_coding	distal-less homeobox 2	2	172964167	172967628
+ENSG00000171129	HSFX2	1.00e+00	0	2042		heat shock transcription factor family, X linked 2	X	148674172	148676974
+ENSG00000167232	ZNF91	1.00e+00	0	2306	protein_coding	zinc finger protein 91	19	23487793	23578362
+ENSG00000106331	PAX4	1.00e+00	0	206	protein_coding	paired box 4	7	127250346	127255982
+ENSG00000196428	TSC22D2	1.00e+00	0	1977	protein_coding	TSC22 domain family, member 2	3	150126122	150184218
+ENSG00000175387	SMAD2	1.00e+00	0	2637	protein_coding	SMAD family member 2	18	45357922	45457515
+ENSG00000073282	TP63	1.00e+00	0	1378	protein_coding	tumor protein p63	3	189349205	189615068
+ENSG00000125520	SLC2A4RG	1.00e+00	0	3271	protein_coding	SLC2A4 regulator	20	62371214	62374858
+ENSG00000116017	ARID3A	1.00e+00	0	1931	protein_coding	AT rich interactive domain 3A (BRIGHT-like)	19	925781	975939
+ENSG00000159263	SIM2	1.00e+00	0	1394	protein_coding	single-minded family bHLH transcription factor 2	21	38071433	38122218
+ENSG00000187821	HELT	1.00e+00	0	1651	protein_coding	helt bHLH transcription factor	4	185939995	185941958
+ENSG00000069667	RORA	1.00e+00	0	2257	protein_coding	RAR-related orphan receptor A	15	60780483	61521518
+ENSG00000107485	GATA3	1.00e+00	0	1565	protein_coding	GATA binding protein 3	10	8095567	8117161
+ENSG00000186812	ZNF397	1.00e+00	0	2667	protein_coding	zinc finger protein 397	18	32820994	32847097
+ENSG00000197951	ZNF71	1.00e+00	0	865	protein_coding	zinc finger protein 71	19	57106632	57137849
+ENSG00000127528	KLF2	1.00e+00	0	1850	protein_coding	Kruppel-like factor 2	19	16435628	16438685
+ENSG00000136630	HLX	1.00e+00	0	1829	protein_coding	H2.0-like homeobox	1	221051699	221058401
+ENSG00000147274	SNORD61	1.00e+00	0	1029	protein_coding	RNA binding motif protein, X-linked	X	135930163	135962923
+ENSG00000138293	NCOA4	1.00e+00	0	1567		nuclear receptor coactivator 4	10	51565108	51590734
+ENSG00000122877	EGR2	1.00e+00	0	1485	protein_coding	early growth response 2	10	64571756	64679660
+ENSG00000102145	GATA1	1.00e+00	0	1370	protein_coding	GATA binding protein 1 (globin transcription factor 1)	X	48644962	48652716
+ENSG00000135164	DMTF1	1.00e+00	0	3573	protein_coding	cyclin D binding myb-like transcription factor 1	7	86781677	86825653
+ENSG00000143178	TBX19	1.00e+00	0	539	protein_coding	T-box 19	1	168250278	168283664
+ENSG00000156150	ALX3	1.00e+00	0	479	protein_coding	ALX homeobox 3	1	110602616	110613322
+ENSG00000105698	USF2	1.00e+00	0	3713	protein_coding	upstream transcription factor 2, c-fos interacting	19	35759881	35770724
+ENSG00000131264	CDX4	1.00e+00	0	726	protein_coding	caudal type homeobox 4	X	72667090	72675081
+ENSG00000137166	FOXP4	1.00e+00	0	2103	protein_coding	forkhead box P4	6	41514164	41570122
+ENSG00000126432	PRDX5	1.00e+00	0	3284	protein_coding	peroxiredoxin 5	11	64085560	64089283
+ENSG00000110395	CBL	1.00e+00	0	1486	protein_coding	Cbl proto-oncogene, E3 ubiquitin protein ligase	11	119076752	119178859
+ENSG00000124782	RREB1	1.00e+00	0	1867	protein_coding	ras responsive element binding protein 1	6	7107830	7252213
+ENSG00000163935	SFMBT1	1.00e+00	0	2294	protein_coding	Scm-like with four mbt domains 1	3	52937588	53080766
+ENSG00000166886	NAB2	1.00e+00	0	2570	protein_coding	NGFI-A binding protein 2 (EGR1 binding protein 2)	12	57482677	57489259
+ENSG00000001167	NFYA	1.00e+00	0	3343	protein_coding	nuclear transcription factor Y, alpha	6	41040684	41067715
+ENSG00000134324	LPIN1	1.00e+00	0	3171	protein_coding	lipin 1	2	11817721	11967535
+ENSG00000144655	CSRNP1	1.00e+00	0	1666	protein_coding	cysteine-serine-rich nuclear protein 1	3	39183346	39196053
+ENSG00000143458	GABPB2	1.00e+00	0	1354	protein_coding	GA binding protein transcription factor, beta subunit 2	1	151043054	151098018
+ENSG00000196132	MYT1	1.00e+00	0	1326	protein_coding	myelin transcription factor 1	20	62783144	62873604
+ENSG00000074047	GLI2	1.00e+00	0	1796	protein_coding	GLI family zinc finger 2	2	121493199	121750229
+ENSG00000143032	BARHL2	1.00e+00	0	534	protein_coding	BarH-like homeobox 2	1	91177096	91182794
+ENSG00000164488	DACT2	1.00e+00	0	1237	protein_coding	dishevelled-binding antagonist of beta-catenin 2	6	168693510	168720434
+ENSG00000123349	PFDN5	1.00e+00	0	2648	protein_coding	prefoldin subunit 5	12	53689075	53693234
+ENSG00000164853	UNCX	1.00e+00	0	1121	protein_coding	UNC homeobox	7	1272543	1276954
+ENSG00000102243	VGLL1	1.00e+00	0	1112	protein_coding	vestigial like 1 (Drosophila)	X	135614311	135638966
+ENSG00000164104	HMGB2	1.00e+00	0	2910	protein_coding	high mobility group box 2	4	174252846	174256276
+ENSG00000008441	NFIX	1.00e+00	0	2276	protein_coding	nuclear factor I/X (CCAAT-binding transcription factor)	19	13106422	13209610
+ENSG00000165916	PSMC3	1.00e+00	0	2099	protein_coding	proteasome (prosome, macropain) 26S subunit, ATPase, 3	11	47440320	47447993
+ENSG00000244405	ETV5	1.00e+00	0	2551	protein_coding	ets variant 5	3	185764097	185828107
+ENSG00000167941	SOST	1.00e+00	0	830	protein_coding	sclerostin	17	41831099	41836156
+ENSG00000130159	ECSIT	1.00e+00	0	2616	protein_coding	ECSIT signalling integrator	19	11616731	11639989
+ENSG00000107223	EDF1	1.00e+00	0	2847	protein_coding	endothelial differentiation-related factor 1	9	139756571	139760738
+ENSG00000072310	SREBF1	1.00e+00	0	2787	protein_coding	sterol regulatory element binding transcription factor 1	17	17713713	17740325
+ENSG00000075891	PAX2	1.00e+00	0	971	protein_coding	paired box 2	10	102495360	102589698
+ENSG00000110031	LPXN	1.00e+00	0	2388	protein_coding	leupaxin	11	58294344	58345693
+ENSG00000112561	TFEB	1.00e+00	0	2502	protein_coding	transcription factor EB	6	41651716	41703997
+ENSG00000173757	STAT5B	1.00e+00	0	2842	protein_coding	signal transducer and activator of transcription 5B	17	40351186	40428725
+ENSG00000005302	MSL3	1.00e+00	0	2558	protein_coding	male-specific lethal 3 homolog (Drosophila)	X	11776278	11793870
+ENSG00000166888	STAT6	1.00e+00	0	3265	protein_coding	signal transducer and activator of transcription 6, interleukin-4 induced	12	57489191	57525922
+ENSG00000232810	TNF	1.00e+00	0	2216	protein_coding	tumor necrosis factor	6	31543344	31546113
+ENSG00000198205	ZXDA	1.00e+00	0	1604	protein_coding	zinc finger, X-linked, duplicated A	X	57931864	57937067
+ENSG00000064489	MEF2BNB-MEF2B	1.00e+00	0	1065	protein_coding	MEF2BNB-MEF2B readthrough	19	19256376	19302967
+ENSG00000123405	NFE2	1.00e+00	0	1603	protein_coding	nuclear factor, erythroid 2	12	54685895	54694905
+ENSG00000081059	TCF7	1.00e+00	0	1384	protein_coding	transcription factor 7 (T-cell specific, HMG-box)	5	133450402	133487556
+ENSG00000188686	SCXB	1.00e+00	0	1420		scleraxis homolog A (mouse)	8	145490549	145492470
+ENSG00000127152	BCL11B	1.00e+00	0	2930	protein_coding	B-cell CLL/lymphoma 11B (zinc finger protein)	14	99635624	99737861
+ENSG00000116584	ARHGEF2	1.00e+00	0	2435	protein_coding	Rho/Rac guanine nucleotide exchange factor (GEF) 2	1	155916630	155976861
+ENSG00000185640	KRT79	1.00e+00	0	745	protein_coding	keratin 79	12	53215194	53228079
+ENSG00000128342	LIF	1.00e+00	0	1447	protein_coding	leukemia inhibitory factor	22	30636436	30642840
+ENSG00000123594	ATXN3L	1.00e+00	0	2845	protein_coding	ataxin 3-like	X	13336770	13338518
+ENSG00000167604	NFKBID	1.00e+00	0	1315	protein_coding	nuclear factor of kappa light polypeptide gene enhancer in B-cells inhibitor, delta	19	36378555	36393205
+ENSG00000143614	GATAD2B	1.00e+00	0	2406	protein_coding	GATA zinc finger domain containing 2B	1	153777201	153895451
+ENSG00000187098	MITF	1.00e+00	0	1993	protein_coding	microphthalmia-associated transcription factor	3	69788586	70017488
+ENSG00000142655	PEX14	1.00e+00	0	3225	protein_coding	peroxisomal biogenesis factor 14	1	10532345	10690815
+ENSG00000090661	CERS4	1.00e+00	0	2640	protein_coding	ceramide synthase 4	19	8271620	8327305
+ENSG00000235109	ZSCAN31	1.00e+00	0	929	protein_coding	zinc finger and SCAN domain containing 31	6	28292470	28324048
+ENSG00000157227	MMP14	1.00e+00	0	2332	protein_coding	matrix metallopeptidase 14 (membrane-inserted)	14	23305766	23318236
+ENSG00000172273	HINFP	1.00e+00	0	1978	protein_coding	histone H4 transcription factor	11	118992297	119006752
+ENSG00000182318	ZSCAN22	1.00e+00	0	1420	protein_coding	zinc finger and SCAN domain containing 22	19	58838385	58853698
+ENSG00000123388	HOXC11	1.00e+00	0	1478	protein_coding	homeobox C11	12	54366910	54371427
+ENSG00000139445	FOXN4	1.00e+00	0	931	protein_coding	forkhead box N4	12	109715784	109747025
+ENSG00000182979	MTA1	1.00e+00	0	3066	protein_coding	metastasis associated 1	14	105886159	105937066
+ENSG00000257184		1.00e+00	0	1892	protein_coding	Uncharacterized protein 	7	27203154	27219632
+ENSG00000167491	GATAD2A	1.00e+00	0	2399	protein_coding	GATA zinc finger domain containing 2A	19	19496635	19619740
+ENSG00000143365	RORC	1.00e+00	0	2187	protein_coding	RAR-related orphan receptor C	1	151778547	151804348
+ENSG00000173258	ZNF483	1.00e+00	0	1891	protein_coding	zinc finger protein 483	9	114287439	114340124
+ENSG00000156273	BACH1	1.00e+00	0	2450	protein_coding	BTB and CNC homology 1, basic leucine zipper transcription factor 1	21	30566392	31003071
+ENSG00000148200	NR6A1	1.00e+00	0	1776	protein_coding	nuclear receptor subfamily 6, group A, member 1	9	127279554	127533589
+ENSG00000141905	NFIC	1.00e+00	0	2851	protein_coding	nuclear factor I/C (CCAAT-binding transcription factor)	19	3359561	3469215
+ENSG00000101577	LPIN2	1.00e+00	0	995	protein_coding	lipin 2	18	2916992	3013313
+ENSG00000135144	DTX1	1.00e+00	0	1350	protein_coding	deltex homolog 1 (Drosophila)	12	113494514	113535833
+ENSG00000157429	ZNF19	1.00e+00	0	1806	protein_coding	zinc finger protein 19	16	71498453	71598992
+ENSG00000158711	ELK4	1.00e+00	0	3101	protein_coding	ELK4, ETS-domain protein (SRF accessory protein 1)	1	205577071	205601090
+ENSG00000132522	GPS2	1.00e+00	0	3149	protein_coding	G protein pathway suppressor 2	17	7214643	7218883
+ENSG00000066084	DIP2B	1.00e+00	0	3106	protein_coding	DIP2 disco-interacting protein 2 homolog B (Drosophila)	12	50898768	51142450
+ENSG00000164442	CITED2	1.00e+00	0	2089	protein_coding	Cbp/p300-interacting transactivator, with Glu/Asp-rich carboxy-terminal domain, 2	6	139693393	139695757
+ENSG00000204531	POU5F1	1.00e+00	0	1365	protein_coding	POU class 5 homeobox 1	6	31132119	31148508
+ENSG00000159200	RCAN1	1.00e+00	0	2005	protein_coding	regulator of calcineurin 1	21	35885440	35987441
+ENSG00000168066	SF1	1.00e+00	0	2486	protein_coding	splicing factor 1	11	64532078	64546258
+ENSG00000165821	SALL2	1.00e+00	0	2117	protein_coding	spalt-like transcription factor 2	14	21989232	22005350
+ENSG00000089225	TBX5	1.00e+00	0	2121	protein_coding	T-box 5	12	114791736	114846247
+ENSG00000105967	TFEC	1.00e+00	0	1888	protein_coding	transcription factor EC	7	115575202	115799950
+ENSG00000115661	STK16	1.00e+00	0	2240	protein_coding	serine/threonine kinase 16	2	220110177	220115059
+ENSG00000120738	EGR1	1.00e+00	0	1803	protein_coding	early growth response 1	5	137801179	137805004
+ENSG00000157554	ERG	1.00e+00	0	1711	protein_coding	v-ets avian erythroblastosis virus E26 oncogene homolog	21	39751949	40033704
+ENSG00000104856	RELB	1.00e+00	0	2497	protein_coding	v-rel avian reticuloendotheliosis viral oncogene homolog B	19	45504688	45541452
+ENSG00000172977	KAT5	1.00e+00	0	3222	protein_coding	K(lysine) acetyltransferase 5	11	65479467	65487075
+ENSG00000196843	ARID5A	1.00e+00	0	2372	protein_coding	AT rich interactive domain 5A (MRF1-like)	2	97202480	97218375
+ENSG00000174197	MGA	1.00e+00	0	2410	protein_coding	MGA, MAX dimerization protein	15	41913422	42062141
+ENSG00000186350	RXRA	1.00e+00	0	3081	protein_coding	retinoid X receptor, alpha	9	137208944	137332431
+ENSG00000103326	CAPN15	1.00e+00	0	2983	protein_coding	calpain 15	16	577717	604636
+ENSG00000140044	JDP2	1.00e+00	0	2347	protein_coding	Jun dimerization protein 2	14	75894419	75940814
+ENSG00000198026	ZNF335	1.00e+00	0	2834	protein_coding	zinc finger protein 335	20	44577292	44600833
+ENSG00000074966	TXK	1.00e+00	0	3882	protein_coding	TXK tyrosine kinase	4	48068410	48136273
+ENSG00000118689	FOXO3	1.00e+00	0	1847	protein_coding	forkhead box O3	6	108881038	109005977
+ENSG00000187792	ZNF70	1.00e+00	0	2019	protein_coding	zinc finger protein 70	22	24083769	24093279
+ENSG00000059728	MXD1	1.00e+00	0	2636	protein_coding	MAX dimerization protein 1	2	70124820	70170077
+ENSG00000125952	MAX	1.00e+00	0	1801	protein_coding	MYC associated factor X	14	65472892	65569413
+ENSG00000119919	NKX2-3	1.00e+00	0	1889	protein_coding	NK2 homeobox 3	10	101292690	101296278
+ENSG00000116016	EPAS1	1.00e+00	0	2512	protein_coding	endothelial PAS domain protein 1	2	46520806	46613836
+ENSG00000064835	POU1F1	1.00e+00	0	336	protein_coding	POU class 1 homeobox 1	3	87308554	87325737
+ENSG00000122515	ZMIZ2	1.00e+00	0	2527	protein_coding	zinc finger, MIZ-type containing 2	7	44788180	44809477
+ENSG00000156925	ZIC3	1.00e+00	0	1672	protein_coding	Zic family member 3	X	136648301	136659850
+ENSG00000109787	KLF3	1.00e+00	0	1664	protein_coding	Kruppel-like factor 3 (basic)	4	38665817	38702663
+ENSG00000176692	FOXC2	1.00e+00	0	1475	protein_coding	forkhead box C2 (MFH-1, mesenchyme forkhead 1)	16	86600857	86602539
+ENSG00000102974	CTCF	1.00e+00	0	2452	protein_coding	CCCTC-binding factor (zinc finger protein)	16	67596310	67673086
+ENSG00000196588	MKL1	1.00e+00	0	3098	protein_coding	megakaryoblastic leukemia (translocation) 1	22	40806285	41032706
+ENSG00000163884	KLF15	1.00e+00	0	2669	protein_coding	Kruppel-like factor 15	3	126061478	126076285
+ENSG00000168779	SHOX2	1.00e+00	0	2401	protein_coding	short stature homeobox 2	3	157814948	157824292
+ENSG00000170653	ATF7	1.00e+00	0	2449	protein_coding	activating transcription factor 7	12	53901640	54020199
+ENSG00000109705	NKX3-2	1.00e+00	0	1449	protein_coding	NK3 homeobox 2	4	13542454	13546674
+ENSG00000121931	LRIF1	1.00e+00	0	2388	protein_coding	ligand dependent nuclear receptor interacting factor 1	1	111489807	111506701
+ENSG00000039600	SOX30	1.00e+00	0	3336	protein_coding	SRY (sex determining region Y)-box 30	5	157052687	157098488
+ENSG00000150051	MKX	1.00e+00	0	1468	protein_coding	mohawk homeobox	10	27961804	28034989
+ENSG00000145214	DGKQ	1.00e+00	0	3053	protein_coding	diacylglycerol kinase, theta 110kDa	4	952675	980683
+ENSG00000130182	ZSCAN10	1.00e+00	0	1248	protein_coding	zinc finger and SCAN domain containing 10	16	3138891	3149318
+ENSG00000141052	MYOCD	1.00e+00	0	1618	protein_coding	myocardin	17	12569207	12672266
+ENSG00000100393	EP300	1.00e+00	0	1507	protein_coding	E1A binding protein p300	22	41487790	41576081
+ENSG00000185551	NR2F2	1.00e+00	0	2141	protein_coding	nuclear receptor subfamily 2, group F, member 2	15	96869167	96883492
+ENSG00000152266	PTH	1.00e+00	0	1101	protein_coding	parathyroid hormone	11	13513602	13517728
+ENSG00000154957	ZNF18	1.00e+00	0	1268	protein_coding	zinc finger protein 18	17	11880756	11900827
+ENSG00000136807	CDK9	1.00e+00	0	3196	protein_coding	cyclin-dependent kinase 9	9	130547958	130553066
+ENSG00000029153	ARNTL2	1.00e+00	0	1982	protein_coding	aryl hydrocarbon receptor nuclear translocator-like 2	12	27485787	27576241
+ENSG00000171532	NEUROD2	1.00e+00	0	1852	protein_coding	neuronal differentiation 2	17	37759789	37766030
+ENSG00000137709	POU2F3	1.00e+00	0	986	protein_coding	POU class 2 homeobox 3	11	120107349	120190653
+ENSG00000050344	NFE2L3	1.00e+00	0	2384	protein_coding	nuclear factor, erythroid 2-like 3	7	26191860	26226745
+ENSG00000109118	PHF12	1.00e+00	0	2555	protein_coding	PHD finger protein 12	17	27232268	27278789
+ENSG00000108840	HDAC5	1.00e+00	0	3512	protein_coding	histone deacetylase 5	17	42154114	42201070
+ENSG00000179348	GATA2	1.00e+00	0	1386	protein_coding	GATA binding protein 2	3	128198270	128212028
+ENSG00000135100	HNF1A	1.00e+00	0	2337	protein_coding	HNF1 homeobox A	12	121416346	121440315
+ENSG00000164458	T	1.00e+00	0	612	protein_coding	T, brachyury homolog (mouse)	6	166571144	166582188
+ENSG00000169594	BNC1	1.00e+00	0	1471	protein_coding	basonuclin 1	15	83924655	83953466
+ENSG00000196767	POU3F4	1.00e+00	0	1011	protein_coding	POU class 3 homeobox 4	X	82763269	82764775
+ENSG00000205922	ONECUT3	1.00e+00	0	988	protein_coding	one cut homeobox 3	19	1752372	1780987
+ENSG00000068903	SIRT2	1.00e+00	0	2028	protein_coding	sirtuin 2	19	39369197	39390502
+ENSG00000176160	HSF5	1.00e+00	0	2155	protein_coding	heat shock transcription factor family member 5	17	56497528	56565745
+ENSG00000065970	FOXJ2	1.00e+00	0	2584	protein_coding	forkhead box J2	12	8185299	8208099
+ENSG00000176842	IRX5	1.00e+00	0	1796	protein_coding	iroquois homeobox 5	16	54964774	54968397
+ENSG00000171056	SOX7	1.00e+00	0	2207	protein_coding	SRY (sex determining region Y)-box 7	8	10581278	10697357
+ENSG00000143190	POU2F1	1.00e+00	0	2506	protein_coding	POU class 2 homeobox 1	1	167190066	167396582
+ENSG00000187559	FOXD4L3	1.00e+00	0	8205	protein_coding	forkhead box D4-like 3	9	70917276	70920000
+ENSG00000173334	TRIB1	1.00e+00	0	1576	protein_coding	tribbles pseudokinase 1	8	126442563	126450647
+ENSG00000166337	TAF10	1.00e+00	0	2535	protein_coding	TAF10 RNA polymerase II, TATA box binding protein (TBP)-associated factor, 30kDa	11	6627526	6633898
+ENSG00000177508	IRX3	1.00e+00	0	1956	protein_coding	iroquois homeobox 3	16	54317216	54320675
+ENSG00000162924	REL	1.00e+00	0	2803	protein_coding	v-rel avian reticuloendotheliosis viral oncogene homolog	2	61108656	61158745
+ENSG00000160305	DIP2A	1.00e+00	0	2907	protein_coding	DIP2 disco-interacting protein 2 homolog A (Drosophila)	21	47878812	47989926
+ENSG00000170608	FOXA3	1.00e+00	0	1862	protein_coding	forkhead box A3	19	46367247	46377055
+ENSG00000104881	PPP1R13L	1.00e+00	0	2270	protein_coding	protein phosphatase 1, regulatory subunit 13 like	19	45882892	45909607
+ENSG00000118513	MYB	1.00e+00	0	1930	protein_coding	v-myb avian myeloblastosis viral oncogene homolog	6	135502453	135540311
+ENSG00000204304	PBX2	1.00e+00	0	3109	protein_coding	pre-B-cell leukemia homeobox 2	6	32152512	32157963
+ENSG00000112062	MAPK14	1.00e+00	0	3118	protein_coding	mitogen-activated protein kinase 14	6	35995488	36079013
+ENSG00000196498	NCOR2	1.00e+00	0	2833	protein_coding	nuclear receptor corepressor 2	12	124808961	125052135
+ENSG00000011422	PLAUR	1.00e+00	0	1492	protein_coding	plasminogen activator, urokinase receptor	19	44150247	44174699
+ENSG00000104964	AES	1.00e+00	0	3622	protein_coding	amino-terminal enhancer of split	19	3052908	3063105
+ENSG00000128272	ATF4	1.00e+00	0	2722	protein_coding	activating transcription factor 4	22	39915700	39918691
+ENSG00000180053	NKX2-6	1.00e+00	0	1621	protein_coding	NK2 homeobox 6	8	23559964	23564111
+ENSG00000162227	TAF6L	1.00e+00	0	3284	protein_coding	TAF6-like RNA polymerase II, p300/CBP-associated factor (PCAF)-associated factor, 65kDa	11	62538775	62554814
+ENSG00000197063	MAFG	1.00e+00	0	1745	protein_coding	v-maf avian musculoaponeurotic fibrosarcoma oncogene homolog G	17	79876146	79885590
+ENSG00000144485	HES6	1.00e+00	0	1450	protein_coding	hes family bHLH transcription factor 6	2	239146908	239149303
+ENSG00000179059	ZFP42	1.00e+00	0	1857	protein_coding	ZFP42 zinc finger protein	4	188916925	188926204
+ENSG00000168310	IRF2	1.00e+00	0	2977	protein_coding	interferon regulatory factor 2	4	185308867	185395734
+ENSG00000128604	IRF5	1.00e+00	0	2506	protein_coding	interferon regulatory factor 5	7	128577666	128590089
+ENSG00000069011	PITX1	1.00e+00	0	1821	protein_coding	paired-like homeodomain 1	5	134363425	134370503
+ENSG00000130522	JUND	1.00e+00	0	2156	protein_coding	jun D proto-oncogene	19	18390563	18392432
+ENSG00000179344	HLA-DQB1	1.00e+00	0	2271	protein_coding	major histocompatibility complex, class II, DQ beta 1	6	32627244	32636160
+ENSG00000112182	BACH2	1.00e+00	0	867	protein_coding	BTB and CNC homology 1, basic leucine zipper transcription factor 2	6	90636248	91006627
+ENSG00000182968	SOX1	1.00e+00	0	1399	protein_coding	SRY (sex determining region Y)-box 1	13	112721913	112726020
+ENSG00000185129	PURA	1.00e+00	0	1967	protein_coding	purine-rich element binding protein A	5	139487362	139496321
+ENSG00000123364	HOXC13	1.00e+00	0	1660	protein_coding	homeobox C13	12	54332535	54340328
+ENSG00000132326	PER2	1.00e+00	0	2015	protein_coding	period circadian clock 2	2	239152679	239198743
+ENSG00000170577	SIX2	1.00e+00	0	1713	protein_coding	SIX homeobox 2	2	45232300	45236569
+ENSG00000196782	MAML3	1.00e+00	0	2009	protein_coding	mastermind-like 3 (Drosophila)	4	140637907	141075338
+ENSG00000172818	OVOL1	1.00e+00	0	1343	protein_coding	ovo-like zinc finger 1	11	65554493	65564690
+ENSG00000066827	ZFAT	1.00e+00	0	1913	protein_coding	zinc finger and AT hook domain containing	8	135490031	135725292
+ENSG00000175787	ZNF169	1.00e+00	0	844	protein_coding	zinc finger protein 169	9	97021593	97063736
+ENSG00000185591	SP1	1.00e+00	0	1500	protein_coding	Sp1 transcription factor	12	53773960	53810230
+ENSG00000162676	GFI1	1.00e+00	0	1388	protein_coding	growth factor independent 1 transcription repressor	1	92940319	92952433
+ENSG00000126561	STAT5A	1.00e+00	0	2379	protein_coding	signal transducer and activator of transcription 5A	17	40439565	40463961
+ENSG00000152784	PRDM8	1.00e+00	0	1793	protein_coding	PR domain containing 8	4	81105033	81125483
+ENSG00000177732	SOX12	1.00e+00	0	2836	protein_coding	SRY (sex determining region Y)-box 12	20	306207	310865
+ENSG00000184384	MAML2	1.00e+00	0	2908	protein_coding	mastermind-like 2 (Drosophila)	11	95709762	96076344
+ENSG00000184058	TBX1	1.00e+00	0	1233	protein_coding	T-box 1	22	19744226	19771116
+ENSG00000232040	SCAND3	1.00e+00	0	1790	protein_coding	SCAN domain containing 3	6	28539407	28583989
+ENSG00000100815	TRIP11	1.00e+00	0	2183	protein_coding	thyroid hormone receptor interactor 11	14	92432335	92507240
+ENSG00000137185	ZSCAN9	1.00e+00	0	1865	protein_coding	zinc finger and SCAN domain containing 9	6	28192664	28201260
+ENSG00000152192	POU4F1	1.00e+00	0	1625	protein_coding	POU class 4 homeobox 1	13	79172497	79177673
+ENSG00000154370	TRIM11	1.00e+00	0	2380	protein_coding	tripartite motif containing 11	1	228581374	228594541
+ENSG00000060566	CREB3L3	1.00e+00	0	1336	protein_coding	cAMP responsive element binding protein 3-like 3	19	4153598	4173051
+ENSG00000172789	HOXC5	1.00e+00	0	1832	protein_coding	homeobox C5	12	54426637	54429142
+ENSG00000183779	ZNF703	1.00e+00	0	2183	protein_coding	zinc finger protein 703	8	37553269	37557537
+ENSG00000114378	HYAL1	1.00e+00	0	2065	protein_coding	hyaluronoglucosaminidase 1	3	50337320	50349812
+ENSG00000125740	FOSB	1.00e+00	0	1509	protein_coding	FBJ murine osteosarcoma viral oncogene homolog B	19	45971253	45978437
+ENSG00000105610	KLF1	1.00e+00	0	1218	protein_coding	Kruppel-like factor 1 (erythroid)	19	12995237	12997995
+ENSG00000108753	HNF1B	1.00e+00	0	1765		HNF1 homeobox B	17	36046435	36105237
+ENSG00000082175	PGR	1.00e+00	0	815	protein_coding	progesterone receptor	11	100900355	101001255
+ENSG00000251493	FOXD1	1.00e+00	0	1825	protein_coding	forkhead box D1	5	72740654	72744352
+ENSG00000078043	PIAS2	1.00e+00	0	3582	protein_coding	protein inhibitor of activated STAT, 2	18	44388353	44500123
+ENSG00000197279	ZNF165	1.00e+00	0	2998	protein_coding	zinc finger protein 165	6	28048753	28057341
+ENSG00000164850	GPER1	1.00e+00	0	1885	protein_coding	G protein-coupled estrogen receptor 1	7	1121844	1133451
+ENSG00000168062	BATF2	1.00e+00	0	947	protein_coding	basic leucine zipper transcription factor, ATF-like 2	11	64755415	64764517
+ENSG00000154342	WNT3A	1.00e+00	0	528	protein_coding	wingless-type MMTV integration site family, member 3A	1	228194752	228248961
+ENSG00000158055	GRHL3	1.00e+00	0	1232	protein_coding	grainyhead-like 3 (Drosophila)	1	24645812	24690972
+ENSG00000198815	FOXJ3	1.00e+00	0	2195	protein_coding	forkhead box J3	1	42642210	42801548
+ENSG00000177463	NR2C2	1.00e+00	0	2716	protein_coding	nuclear receptor subfamily 2, group C, member 2	3	14989091	15095107
+ENSG00000089116	LHX5	1.00e+00	0	512	protein_coding	LIM homeobox 5	12	113899839	113910085
+ENSG00000171794	UTF1	1.00e+00	0	1409	protein_coding	undifferentiated embryonic cell transcription factor 1	10	135043778	135045062
+ENSG00000007372	PAX6	1.00e+00	0	1447	protein_coding	paired box 6	11	31806340	31839509
+ENSG00000212993	POU5F1B	1.00e+00	0	1136	protein_coding	POU class 5 homeobox 1B	8	128426535	128432311
+ENSG00000108510	MED13	1.00e+00	0	2654	protein_coding	mediator complex subunit 13	17	60019966	60142643
+ENSG00000135903	PAX3	1.00e+00	0	901	protein_coding	paired box 3	2	223064607	223163715
+ENSG00000162552	WNT4	1.00e+00	0	1559	protein_coding	wingless-type MMTV integration site family, member 4	1	22443798	22470462
+ENSG00000141027	NCOR1	1.00e+00	0	2329	protein_coding	nuclear receptor corepressor 1	17	15932471	16121499
+ENSG00000171148	TADA3	1.00e+00	0	3089	protein_coding	transcriptional adaptor 3	3	9821544	9834695
+ENSG00000078900	TP73	1.00e+00	0	1490	protein_coding	tumor protein p73	1	3569084	3652765
+ENSG00000257923	CUX1	1.00e+00	0	2264	protein_coding	cut-like homeobox 1	7	101458959	101927249
+ENSG00000111087	GLI1	1.00e+00	0	1819	protein_coding	GLI family zinc finger 1	12	57853918	57866045
+ENSG00000101057	MYBL2	1.00e+00	0	2935	protein_coding	v-myb avian myeloblastosis viral oncogene homolog-like 2	20	42295754	42345136
+ENSG00000165606	DRGX	1.00e+00	0	497	protein_coding	dorsal root ganglia homeobox	10	50572237	50603497
+ENSG00000198373	WWP2	1.00e+00	0	2448	protein_coding	WW domain containing E3 ubiquitin protein ligase 2	16	69796209	69975644
+ENSG00000119866	BCL11A	1.00e+00	0	1402	protein_coding	B-cell CLL/lymphoma 11A (zinc finger protein)	2	60678302	60780702
+ENSG00000122180	MYOG	1.00e+00	0	1322	protein_coding	myogenin (myogenic factor 4)	1	203052260	203055164
+ENSG00000105672	ETV2	1.00e+00	0	2431	protein_coding	ets variant 2	19	36132647	36135773
+ENSG00000166823	MESP1	1.00e+00	0	1645	protein_coding	mesoderm posterior 1 homolog (mouse)	15	90291892	90294541
+ENSG00000169856	ONECUT1	1.00e+00	0	841	protein_coding	one cut homeobox 1	15	53049637	53083273
+ENSG00000215271	HOMEZ	1.00e+00	0	2473	protein_coding	homeobox and leucine zipper encoding	14	23741666	23768656
+ENSG00000269699	PEG3	1.00e+00	0	3462	protein_coding	zinc finger, imprinted 2	19	57285920	57352097
+ENSG00000179094	PER1	1.00e+00	0	2507	protein_coding	period circadian clock 1	17	8043790	8059824
+ENSG00000143842	SOX13	1.00e+00	0	2350	protein_coding	SRY (sex determining region Y)-box 13	1	204042243	204096863
+ENSG00000185513	L3MBTL1	1.00e+00	0	2328	protein_coding	l(3)mbt-like 1 (Drosophila)	20	42136320	42179590
+ENSG00000109906	ZBTB16	1.00e+00	0	2063	protein_coding	zinc finger and BTB domain containing 16	11	113930315	114121398
+ENSG00000118900	UBN1	1.00e+00	0	2412	protein_coding	ubinuclein 1	16	4896666	4932361
+ENSG00000067066	SP100	1.00e+00	0	3794	protein_coding	SP100 nuclear antigen	2	231280657	231408805
+ENSG00000163435	ELF3	1.00e+00	0	2431	protein_coding	E74-like factor 3 (ets domain transcription factor, epithelial-specific )	1	201977073	201986316
+ENSG00000120690	ELF1	1.00e+00	0	2990	protein_coding	E74-like factor 1 (ets domain transcription factor)	13	41506056	41635576
+ENSG00000125651	GTF2F1	1.00e+00	0	1011	protein_coding	general transcription factor IIF, polypeptide 1, 74kDa	19	6379580	6393992
+ENSG00000156127	BATF	1.00e+00	0	2283	protein_coding	basic leucine zipper transcription factor, ATF-like	14	75988768	76013358
+ENSG00000148400	NOTCH1	1.00e+00	0	2109	protein_coding	notch 1	9	139388896	139440314
+ENSG00000070476	ZXDC	1.00e+00	0	2907	protein_coding	ZXD family zinc finger C	3	126156444	126194762
+ENSG00000170802	FOXN2	1.00e+00	0	2678	protein_coding	forkhead box N2	2	48541776	48606433
+ENSG00000091010	POU4F3	1.00e+00	0	4649	protein_coding	POU class 4 homeobox 3	5	145718587	145720083
+ENSG00000156650	KAT6B	1.00e+00	0	2199	protein_coding	K(lysine) acetyltransferase 6B	10	76585340	76792380
+ENSG00000066427	ATXN3	1.00e+00	0	3151	protein_coding	ataxin 3	14	92524896	92572965
+ENSG00000196345	ZKSCAN7	1.00e+00	0	1540	protein_coding	zinc finger with KRAB and SCAN domains 7	3	44596685	44624975
+ENSG00000196233	LCOR	1.00e+00	0	2714	protein_coding	ligand dependent nuclear receptor corepressor	10	98592017	98740800
+ENSG00000129465	RIPK3	1.00e+00	0	2653	protein_coding	receptor-interacting serine-threonine kinase 3	14	24805227	24809251
+ENSG00000138083	SIX3	1.00e+00	0	1059	protein_coding	SIX homeobox 3	2	45168902	45173216
+ENSG00000170365	SMAD1	1.00e+00	0	2435	protein_coding	SMAD family member 1	4	146402346	146479231
+ENSG00000079263	SP140	1.00e+00	0	2950	protein_coding	SP140 nuclear body protein	2	231067826	231223762
+ENSG00000116833	NR5A2	1.00e+00	0	1585	protein_coding	nuclear receptor subfamily 5, group A, member 2	1	199996730	200146552
+ENSG00000142599	RERE	1.00e+00	0	2546	protein_coding	arginine-glutamic acid dipeptide (RE) repeats	1	8412457	8877702
+ENSG00000129654	FOXJ1	1.00e+00	0	1594	protein_coding	forkhead box J1	17	74132414	74137380
+ENSG00000099917	MED15	1.00e+00	0	2236	protein_coding	mediator complex subunit 15	22	20850200	20941919
+ENSG00000007968	E2F2	1.00e+00	0	1179	protein_coding	E2F transcription factor 2	1	23832922	23857712
+ENSG00000187987	ZSCAN23	1.00e+00	0	1478	protein_coding	zinc finger and SCAN domain containing 23	6	28399707	28411279
+ENSG00000064195	DLX3	1.00e+00	0	1154	protein_coding	distal-less homeobox 3	17	48067369	48072588
+ENSG00000176788	BASP1	1.00e+00	0	1829	protein_coding	brain abundant, membrane attached signal protein 1	5	17065707	17276943
+ENSG00000120075	HOXB5	1.00e+00	0	1187	protein_coding	homeobox B5	17	46668619	46671323
+ENSG00000168610	STAT3	1.00e+00	0	2863	protein_coding	signal transducer and activator of transcription 3 (acute-phase response factor)	17	40465342	40540586
+ENSG00000124920	MYRF	1.00e+00	0	1835	protein_coding	myelin regulatory factor	11	61520114	61555990
+ENSG00000068323	TFE3	1.00e+00	0	2859	protein_coding	transcription factor binding to IGHM enhancer 3	X	48886242	48901012
+ENSG00000144893	MED12L	1.00e+00	0	2420	protein_coding	mediator complex subunit 12-like	3	150803484	151154860
+ENSG00000177426	TGIF1	1.00e+00	0	2161	protein_coding	TGFB-induced factor homeobox 1	18	3411606	3458409
+ENSG00000198517	MAFK	1.00e+00	0	2460	protein_coding	v-maf avian musculoaponeurotic fibrosarcoma oncogene homolog K	7	1570350	1582679
+ENSG00000063515	GSC2	1.00e+00	0	2580	protein_coding	goosecoid homeobox 2	22	19136089	19137796
+ENSG00000116717	GADD45A	1.00e+00	0	2041	protein_coding	growth arrest and DNA-damage-inducible, alpha	1	68150744	68154021
+ENSG00000114166	KAT2B	1.00e+00	0	2717	protein_coding	K(lysine) acetyltransferase 2B	3	20081515	20195896
+ENSG00000167800	TBX10	1.00e+00	0	393	protein_coding	T-box 10	11	67398774	67407031
+ENSG00000140396	NCOA2	1.00e+00	0	3515	protein_coding	nuclear receptor coactivator 2	8	71021997	71316040
+ENSG00000198429	ZNF69	1.00e+00	0	1786	protein_coding	zinc finger protein 69	19	11998599	12025144
+ENSG00000176887	SOX11	1.00e+00	0	1914	protein_coding	SRY (sex determining region Y)-box 11	2	5832799	5841516
+ENSG00000073614	KDM5A	1.00e+00	0	2480	protein_coding	lysine (K)-specific demethylase 5A	12	389295	498620
+ENSG00000196781	TLE1	1.00e+00	0	2280	protein_coding	transducin-like enhancer of split 1 (E(sp1) homolog, Drosophila)	9	84198598	84304220
+ENSG00000130675	MNX1	1.00e+00	0	962	protein_coding	motor neuron and pancreas homeobox 1	7	156786745	156803345
+ENSG00000103241	FOXF1	1.00e+00	0	1802	protein_coding	forkhead box F1	16	86544133	86548076
+ENSG00000166526	ZNF3	1.00e+00	0	2489	protein_coding	zinc finger protein 3	7	99661656	99680171
+ENSG00000153207	AHCTF1	1.00e+00	0	2622	protein_coding	AT hook containing transcription factor 1	1	247002400	247095280
+ENSG00000148516	ZEB1	1.00e+00	0	2604	protein_coding	zinc finger E-box binding homeobox 1	10	31607424	31818742
+ENSG00000221869	CEBPD	1.00e+00	0	2720	protein_coding	CCAAT/enhancer binding protein (C/EBP), delta	8	48649471	48651648
+ENSG00000122779	TRIM24	1.00e+00	0	1938	protein_coding	tripartite motif containing 24	7	138145079	138274738
+ENSG00000177606	JUN	1.00e+00	0	1617	protein_coding	jun proto-oncogene	1	59246465	59249785
+ENSG00000115507	OTX1	1.00e+00	0	837	protein_coding	orthodenticle homeobox 1	2	63277192	63284971
+ENSG00000169136	ATF5	1.00e+00	0	1595	protein_coding	activating transcription factor 5	19	50431959	50437192
+ENSG00000155090	KLF10	1.00e+00	0	1754	protein_coding	Kruppel-like factor 10	8	103661007	103668130
+ENSG00000052850	ALX4	1.00e+00	0	930	protein_coding	ALX homeobox 4	11	44281994	44331716
+ENSG00000091656	ZFHX4	1.00e+00	0	3069	protein_coding	zinc finger homeobox 4	8	77593454	77779521
+ENSG00000141232	TOB1	1.00e+00	0	1604	protein_coding	transducer of ERBB2, 1	17	48939584	48945339
+ENSG00000106536	POU6F2	1.00e+00	0	897	protein_coding	POU class 6 homeobox 2	7	39017598	39532694
+ENSG00000136944	LMX1B	1.00e+00	0	1146	protein_coding	LIM homeobox transcription factor 1, beta	9	129376722	129463311
+ENSG00000164093	PITX2	1.00e+00	0	1253	protein_coding	paired-like homeodomain 2	4	111538579	111563279
+ENSG00000163346	PBXIP1	1.00e+00	0	1891	protein_coding	pre-B-cell leukemia homeobox interacting protein 1	1	154916552	154928599
+ENSG00000116990	MYCL	1.00e+00	0	1581	protein_coding	v-myc avian myelocytomatosis viral oncogene lung carcinoma derived homolog	1	40361098	40367928
+ENSG00000126368	NR1D1	1.00e+00	0	1752	protein_coding	nuclear receptor subfamily 1, group D, member 1	17	38249040	38256978
+ENSG00000008196	TFAP2B	1.00e+00	0	1235	protein_coding	transcription factor AP-2 beta (activating enhancer binding protein 2 beta)	6	50786436	50815326
+ENSG00000064393	HIPK2	1.00e+00	0	1709	protein_coding	homeodomain interacting protein kinase 2	7	139246316	139477577
+ENSG00000159123	DMRTC1	1.00e+00	0	9233		DMRT-like family C1	X	72091859	72163653
+ENSG00000137193	PIM1	1.00e+00	0	1472	protein_coding	pim-1 oncogene	6	37137979	37143202
+ENSG00000164379	FOXQ1	1.00e+00	0	1692	protein_coding	forkhead box Q1	6	1312675	1314992
+ENSG00000127616	SMARCA4	1.00e+00	0	2925	protein_coding	SWI/SNF related, matrix associated, actin dependent regulator of chromatin, subfamily a, member 4	19	11071598	11176071
+ENSG00000075426	FOSL2	1.00e+00	0	2538	protein_coding	FOS-like antigen 2	2	28615315	28640179
+ENSG00000012504	NR1H4	1.00e+00	0	2060	protein_coding	nuclear receptor subfamily 1, group H, member 4	12	100867486	100958191
+ENSG00000175592	FOSL1	1.00e+00	0	1635	protein_coding	FOS-like antigen 1	11	65659520	65668044
+ENSG00000136327	NKX2-8	1.00e+00	0	1211	protein_coding	NK2 homeobox 8	14	37049784	37051812
+ENSG00000142867	BCL10	1.00e+00	0	1508	protein_coding	B-cell CLL/lymphoma 10	1	85731931	85742773
+ENSG00000138685	FGF2	1.00e+00	0	2009	protein_coding	fibroblast growth factor 2 (basic)	4	123747863	123819391
+ENSG00000136826	KLF4	1.00e+00	0	1909	protein_coding	Kruppel-like factor 4 (gut)	9	110247133	110252763
+ENSG00000105722	ERF	1.00e+00	0	2851	protein_coding	Ets2 repressor factor	19	42751724	42759309
+ENSG00000085741	WNT11	1.00e+00	0	1855	protein_coding	wingless-type MMTV integration site family, member 11	11	75897369	75921780
+ENSG00000157557	ETS2	1.00e+00	0	2436	protein_coding	v-ets avian erythroblastosis virus E26 oncogene homolog 2	21	40177231	40196879
+ENSG00000169297	NR0B1	1.00e+00	0	1438	protein_coding	nuclear receptor subfamily 0, group B, member 1	X	30322323	30327715
+ENSG00000077522	ACTN2	1.00e+00	0	1789	protein_coding	actinin, alpha 2	1	236849754	236927931
+ENSG00000164107	HAND2	1.00e+00	0	1362	protein_coding	heart and neural crest derivatives expressed 2	4	174446120	174451380
+ENSG00000147488	ST18	1.00e+00	0	1496	protein_coding	suppression of tumorigenicity 18 (breast carcinoma) (zinc finger protein)	8	53023399	53373519
+ENSG00000085644	ZNF213	1.00e+00	0	2446	protein_coding	zinc finger protein 213	16	3179778	3192806
+ENSG00000100207	TCF20	1.00e+00	0	2781	protein_coding	transcription factor 20 (AR1)	22	42556019	42739622
+ENSG00000178163	ZNF518B	1.00e+00	0	1905	protein_coding	zinc finger protein 518B	4	10441498	10459034
+ENSG00000130338	TULP4	1.00e+00	0	2249	protein_coding	tubby like protein 4	6	158733692	158932860
+ENSG00000174429	ABRA	1.00e+00	0	1526	protein_coding	actin-binding Rho activating protein	8	107771711	107782473
+ENSG00000132382	MYBBP1A	1.00e+00	0	2690	protein_coding	MYB binding protein (P160) 1a	17	4442192	4458926
+ENSG00000080503	SMARCA2	1.00e+00	0	2261	protein_coding	SWI/SNF related, matrix associated, actin dependent regulator of chromatin, subfamily a, member 2	9	2015342	2193624
+ENSG00000120094	HOXB1	1.00e+00	0	484	protein_coding	homeobox B1	17	46605888	46608359
+ENSG00000124813	RUNX2	1.00e+00	0	1499	protein_coding	runt-related transcription factor 2	6	45295894	45632086
+ENSG00000183072	NKX2-5	1.00e+00	0	1423	protein_coding	NK2 homeobox 5	5	172659112	172662360
+ENSG00000187961	KLHL17	1.00e+00	0	2176	protein_coding	kelch-like family member 17	1	895967	901095
+ENSG00000177374	HIC1	1.00e+00	0	1218	protein_coding	hypermethylated in cancer 1	17	1957448	1962981
+ENSG00000173976	RAX2	1.00e+00	0	1194	protein_coding	retina and anterior neural fold homeobox 2	19	3769087	3772233
+ENSG00000144852	NR1I2	1.00e+00	0	937	protein_coding	nuclear receptor subfamily 1, group I, member 2	3	119499331	119537332
+ENSG00000177468	OLIG3	1.00e+00	0	589	protein_coding	oligodendrocyte transcription factor 3	6	137813336	137815531
+ENSG00000173039	RELA	1.00e+00	0	3201	protein_coding	v-rel avian reticuloendotheliosis viral oncogene homolog A	11	65421067	65430565
+ENSG00000197921	HES5	1.00e+00	0	1349	protein_coding	hes family bHLH transcription factor 5	1	2460184	2461684
+ENSG00000159184	HOXB13	1.00e+00	0	1551	protein_coding	homeobox B13	17	46802125	46806540
+ENSG00000106624	AEBP1	1.00e+00	0	1970	protein_coding	AE binding protein 1	7	44143960	44154161
+ENSG00000114251	WNT5A	1.00e+00	0	1668	protein_coding	wingless-type MMTV integration site family, member 5A	3	55499743	55523973
+ENSG00000170485	NPAS2	1.00e+00	0	2297	protein_coding	neuronal PAS domain protein 2	2	101436614	101613291
+ENSG00000215612	HMX1	1.00e+00	0	1758	protein_coding	H6 family homeobox 1	4	8847802	8873543
+ENSG00000109320	NFKB1	1.00e+00	0	2443	protein_coding	nuclear factor of kappa light polypeptide gene enhancer in B-cells 1	4	103422486	103538459
+ENSG00000132170	PPARG	1.00e+00	0	1839	protein_coding	peroxisome proliferator-activated receptor gamma	3	12328867	12475855
+ENSG00000140853	NLRC5	1.00e+00	0	3495	protein_coding	NLR family, CARD domain containing 5	16	57023397	57117443
+ENSG00000101216	GMEB2	1.00e+00	0	3047	protein_coding	glucocorticoid modulatory element binding protein 2	20	62218955	62258394
+ENSG00000131408	NR1H2	1.00e+00	0	2841	protein_coding	nuclear receptor subfamily 1, group H, member 2	19	50832910	50886239
+ENSG00000106410	NOBOX	1.00e+00	0	1098	protein_coding	NOBOX oogenesis homeobox	7	144094333	144107320
+ENSG00000215474	SKOR2	1.00e+00	0	785	protein_coding	SKI family transcriptional corepressor 2	18	44746293	44775554
+ENSG00000179588	ZFPM1	1.00e+00	0	2202	protein_coding	zinc finger protein, FOG family member 1	16	88519725	88603424
+ENSG00000186790	FOXE3	1.00e+00	0	781	protein_coding	forkhead box E3	1	47881744	47883723
+ENSG00000137486	ARRB1	1.00e+00	0	1146	protein_coding	arrestin, beta 1	11	74975226	75062873
+ENSG00000089775	ZBTB25	1.00e+00	0	2716	protein_coding	zinc finger and BTB domain containing 25	14	64915824	64971931
+ENSG00000068024	HDAC4	1.00e+00	0	604	protein_coding	histone deacetylase 4	2	239969864	240323348
+ENSG00000053747	LAMA3	1.00e+00	0	1235	protein_coding	laminin, alpha 3	18	21269407	21535030
+ENSG00000176909	MAMSTR	1.00e+00	0	1510	protein_coding	MEF2 activating motif and SAP domain containing transcriptional regulator	19	49215999	49222978
+ENSG00000138378	STAT4	1.00e+00	0	2538	protein_coding	signal transducer and activator of transcription 4	2	191894302	192016322
+ENSG00000107882	SUFU	1.00e+00	0	2327	protein_coding	suppressor of fused homolog (Drosophila)	10	104263744	104393292
+ENSG00000173801	JUP	1.00e+00	0	1649	protein_coding	junction plakoglobin	17	39775692	39943183
+ENSG00000143578	CREB3L4	1.00e+00	0	1986	protein_coding	cAMP responsive element binding protein 3-like 4	1	153940010	153946839
+ENSG00000227059	ANHX	1.00e+00	0	400	protein_coding	anomalous homeobox	12	133794898	133812681
+ENSG00000115297	TLX2	1.00e+00	0	940	protein_coding	T-cell leukemia homeobox 2	2	74740590	74744274
+ENSG00000182463	TSHZ2	1.00e+00	0	1604	protein_coding	teashirt zinc finger homeobox 2	20	51588946	52111869
+ENSG00000118260	CREB1	1.00e+00	0	1145	protein_coding	cAMP responsive element binding protein 1	2	208394461	208468155
+ENSG00000125492	BARHL1	1.00e+00	0	787	protein_coding	BarH-like homeobox 1	9	135457572	135465653
+ENSG00000122691	TWIST1	1.00e+00	0	1933	protein_coding	twist family bHLH transcription factor 1	7	19060614	19157295
+ENSG00000147421	HMBOX1	1.00e+00	0	2377	protein_coding	homeobox containing 1	8	28747911	28922281
+ENSG00000083838	ZNF446	1.00e+00	0	3878	protein_coding	zinc finger protein 446	19	58985384	58992597
+ENSG00000142611	PRDM16	1.00e+00	0	1345	protein_coding	PR domain containing 16	1	2985732	3355185
+ENSG00000171222	SCAND1	1.00e+00	0	2822	protein_coding	SCAN domain containing 1	20	34541539	34547394
+ENSG00000205250	E2F4	1.00e+00	0	2086	protein_coding	E2F transcription factor 4, p107/p130-binding	16	67226072	67232821
+ENSG00000126456	IRF3	1.00e+00	0	3514	protein_coding	interferon regulatory factor 3	19	50162826	50169132
+ENSG00000119760	SUPT7L	1.00e+00	0	1461	protein_coding	suppressor of Ty 7 (S. cerevisiae)-like	2	27873679	27886676
+ENSG00000243678	NME2	1.00e+00	0	2612	protein_coding	NME1-NME2 readthrough	17	49230920	49249108
+ENSG00000213676	ATF6B	1.00e+00	0	3570	protein_coding	activating transcription factor 6 beta	6	32065953	32096030
+ENSG00000170549	IRX1	1.00e+00	0	1224	protein_coding	iroquois homeobox 1	5	3596168	3601517
+ENSG00000154227	CERS3	1.00e+00	0	1171	protein_coding	ceramide synthase 3	15	100940600	101085200
+ENSG00000125846	ZNF133	1.00e+00	0	2228	protein_coding	zinc finger protein 133	20	18269121	18297640
+ENSG00000116819	TFAP2E	1.00e+00	0	2161	protein_coding	transcription factor AP-2 epsilon (activating enhancer binding protein 2 epsilon)	1	36038971	36060929
+ENSG00000073861	TBX21	1.00e+00	0	1819	protein_coding	T-box 21	17	45810610	45823485
+ENSG00000011590	ZBTB32	1.00e+00	0	2123	protein_coding	zinc finger and BTB domain containing 32	19	36195429	36207940
+ENSG00000124151	NCOA3	1.00e+00	0	1350	protein_coding	nuclear receptor coactivator 3	20	46130601	46285621
+ENSG00000185507	IRF7	1.00e+00	0	2332	protein_coding	interferon regulatory factor 7	11	612553	615999
+ENSG00000139083	ETV6	1.00e+00	0	2031	protein_coding	ets variant 6	12	11802788	12048336
+ENSG00000165804	ZNF219	1.00e+00	0	3364	protein_coding	zinc finger protein 219	14	21558205	21572881
+ENSG00000141579	ZNF750	1.00e+00	0	1298	protein_coding	zinc finger protein 750	17	80787311	80798454
+ENSG00000177045	SIX5	1.00e+00	0	3466	protein_coding	SIX homeobox 5	19	46268043	46272484
+ENSG00000220201	ZGLP1	1.00e+00	0	1585	protein_coding	zinc finger, GATA-like protein 1	19	10415479	10420556
+ENSG00000163481	RNF25	1.00e+00	0	2959	protein_coding	ring finger protein 25	2	219528587	219537134
+ENSG00000138744	NAAA	1.00e+00	0	2493	protein_coding	N-acylethanolamine acid amidase	4	76831809	76862204
+ENSG00000184492	FOXD4L1	1.00e+00	0	1871	protein_coding	forkhead box D4-like 1	2	114256661	114258728
+ENSG00000187626	ZKSCAN4	1.00e+00	0	1840	protein_coding	zinc finger with KRAB and SCAN domains 4	6	28212401	28227011
+ENSG00000034677	RNF19A	1.00e+00	0	2333	protein_coding	ring finger protein 19A, RBR E3 ubiquitin protein ligase	8	101269288	101348446
+ENSG00000119508	NR4A3	1.00e+00	0	1449	protein_coding	nuclear receptor subfamily 4, group A, member 3	9	102584137	102629173
+ENSG00000111049	MYF5	1.00e+00	0	998	protein_coding	myogenic factor 5	12	81110691	81113452
+ENSG00000123576	ESX1	1.00e+00	0	608	protein_coding	ESX homeobox 1	X	103494719	103499614
+ENSG00000122859	NEUROG3	1.00e+00	0	584	protein_coding	neurogenin 3	10	71331454	71332994
+ENSG00000043355	ZIC2	1.00e+00	0	1956	protein_coding	Zic family member 2	13	100634026	100639018
+ENSG00000155974	GRIP1	1.00e+00	0	1439	protein_coding	glutamate receptor interacting protein 1	12	66741211	67197966

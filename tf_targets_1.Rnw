@@ -1,0 +1,240 @@
+\documentclass[11pt]{article}
+\usepackage{graphicx, subfig}
+\usepackage{float}
+\usepackage{rotating}
+\pagenumbering{arabic}
+\usepackage{enumerate}
+\usepackage{Sweave}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{framed}
+\usepackage{longtable}
+\usepackage{tablefootnote}
+\usepackage{forloop}
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}m{#1}}
+\usepackage{multicol}
+\usepackage{enumitem}
+\setlist{nosep} % or \setlist{noitemsep} to leave space around whole list
+\usepackage{tabularx}
+\usepackage{hyperref}
+\usepackage{multicol}
+\usepackage{color, colortbl}
+\usepackage[utf8]{inputenc}
+\usepackage[most]{tcolorbox}
+\usepackage{sidecap}
+\graphicspath{/Volumes/Macintosh_HD_3/genetics/genenetwork/}
+\usepackage{pdflscape}
+
+
+% define colors
+\definecolor{mypink1}{rgb}{0.950,0.800,0.800}
+\definecolor{myblue1}{rgb}{0.800, 0.800, 0.970}
+\definecolor{myyellow1}{rgb}{0.980,0.980,0.500}
+
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{keep.source=TRUE} 
+
+
+<<echo=FALSE>>=
+library(ggplot2,ggthemes)
+library(ggExtra)
+library(psych)
+library(ggpubr)       ### Make sure this is installed
+library(knitr)
+library(Hmisc)
+library(openxlsx)
+library(xtable)
+library(magrittr)
+library(tables)
+library(plyr)
+library(rlist)
+library(qqman)
+library(manhattanly)
+library(Cairo)
+library(RColorBrewer)
+library(HGNChelper)
+library(tools)
+library(scales)
+library(devtools)
+library(gclus)
+library(kableExtra)
+library(dplyr)
+library(gtable)
+library(permute)
+library(biclust)
+library(GenomeInfoDb)
+library(hydroTSM)
+library(curl)
+library(biomaRt)
+
+source("https://bioconductor.org/biocLite.R")
+biocLite()
+#biocLite('GenomicRanges')
+biocLite("BiocGenerics")
+#biocLite(c("GenomicFeatures", "AnnotationDbi"))
+biocLite("GenomicFeatures")
+biocLite("org.Hs.eg.db")
+biocLite('AnnotationHub')
+library("AnnotationHub")
+library("GenomicFeatures")
+#biocLite("Rlibstree")
+biocLite("seqLogo")
+biocLite("TFBSTools")
+biocLite("JASPAR2014")
+# library('JASPAR2014')
+biocLite('motifStack')
+biocLite('rTRM')
+biocLite('BSgenome')
+library(BSgenome)
+biocLite('Biostrings')
+library('Biostrings')
+
+
+
+# library('rTRM')
+ library('TFBSTools')
+ library("seqLogo")
+# library('motifStack')
+
+
+source("https://bioconductor.org/workflows.R")
+workflowInstall("generegulation")
+workflowInstall('annotation')
+biocLite(c("MotifDb", 
+           "TxDb.Hsapiens.UCSC.hg38.knownGene",
+           "org.Hs.eg.db", "BSgenome.Hsapiens.UCSC.hg19",
+           "motifStack","seqLogo"))
+biocLite('TxDb.Hsapiens.UCSC.hg19.knownGene')
+biocLite('BSgenome.Hsapiens.UCSC.hg19')
+
+
+biocLite('meme')
+#library('meme')
+biocLite('mygene')
+#library('mygene')
+#library(DBI)
+
+
+biocLite("BiocUpgrade") 
+biocLite('MotifDb')
+
+library(MotifDb)
+library(S4Vectors)
+library(seqLogo)
+library(motifStack)
+library(Biostrings)
+library(GenomicFeatures)
+#library(org.Sc.sgd.db)
+library(org.Hs.eg.db)
+library(BSgenome.Hsapiens.UCSC.hg19)
+#library(TxDb.Hsapiens.UCSC.hg38.knownGene)
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+biocLite('Homo.sapiens')
+library(Homo.sapiens)
+library('JASPAR2014')
+biocLite('MotIV')
+library('MotIV')
+biocLite('rGADEM')
+library('rGADEM')
+
+devtools::install_github("slowkow/tftargets")
+library(tftargets)
+
+# workflowInstall("annotation")
+
+options(scipen = 3, digits = 4, width = 60, knitr.table.format = "latex")
+@
+
+\vspace{-2em}
+Gene Network\\
+ECH1 Expression Across Four Brain Tissue Types\\
+Fall, 2017\\
+\href{http://gn2.genenetwork.org/}{Data from Brain: Normal Gene Expression (NIH/Gibbs)}
+
+\begin{figure}[H]
+\begin{center}
+  \fbox{\includegraphics[width=0.50\textwidth]{genenetwork_screenshot}}
+\end{center}
+\end{figure}
+
+\vspace{1em}
+\begin{description}
+\item[Entrez Gene Summary for ECH1: Enoyl-CoA Hydratase 1]  \hfill \\ This gene encodes a member of the hydratase/isomerase superfamily. The gene product shows high sequence similarity to enoyl-coenzyme A (CoA) hydratases of several species, particularly within a conserved domain characteristic of these proteins. The encoded protein, which contains a C-terminal peroxisomal targeting sequence, localizes to the peroxisome. The rat ortholog, which localizes to the matrix of both the peroxisome and mitochondria, can isomerize 3-trans,5-cis-dienoyl-CoA to 2-trans,4-trans-dienoyl-CoA, indicating that it is a delta3,5-delta2,4-dienoyl-CoA isomerase. This enzyme functions in the auxiliary step of the fatty acid beta-oxidation pathway. Expression of the rat gene is induced by peroxisome proliferators. (provided by RefSeq, Jul 2008)
+
+\item[Entrez Gene Summary for COMT: Catechol-O-MethylTransferase]  \hfill \\ Catechol-O-methyltransferase catalyzes the transfer of a methyl group from S-adenosylmethionine to catecholamines, including the neurotransmitters dopamine, epinephrine, and norepinephrine. This O-methylation results in one of the major degradative pathways of the catecholamine transmitters. In addition to its role in the metabolism of endogenous substances, COMT is important in the metabolism of catechol drugs used in the treatment of hypertension, asthma, and Parkinson disease. COMT is found in two forms in tissues, a soluble form (S-COMT) and a membrane-bound form (MB-COMT). The differences between S-COMT and MB-COMT reside within the N-termini. Several transcript variants are formed through the use of alternative translation initiation sites and promoters. [provided by RefSeq, Sep 2008]
+
+\item[Entrez Gene Summary for CD81: CD81 Molecule]  \hfill \\ The protein encoded by this gene is a member of the transmembrane 4 superfamily, also known as the tetraspanin family. Most of these members are cell-surface proteins that are characterized by the presence of four hydrophobic domains. The proteins mediate signal transduction events that play a role in the regulation of cell development, activation, growth and motility. This encoded protein is a cell surface glycoprotein that is known to complex with integrins. This protein appears to promote muscle cell fusion and support myotube maintenance. Also it may be involved in signal transduction. This gene is localized in the tumor-suppressor gene region and thus it is a candidate gene for malignancies. Two transcript variants encoding different isoforms have been found for this gene. [provided by RefSeq, Jul 2014]
+
+\item[Entrez Gene Summary for MAOA]  \hfill \\ This gene is one of two neighboring gene family members that encode mitochondrial enzymes which catalyze the oxidative deamination of amines, such as dopamine, norepinephrine, and serotonin. Mutation of this gene results in Brunner syndrome. This gene has also been associated with a variety of other psychiatric disorders, including antisocial behavior. Alternatively spliced transcript variants encoding multiple isoforms have been observed.
+(provided by RefSeq, Jul 2012)
+
+\item[Entrez Gene Summary for SCAMP2: Secretory Carrier Membrane Protein 2]  \hfill \\ This gene product belongs to the SCAMP family of proteins which are secretory carrier membrane proteins. They function as carriers to the cell surface in post-golgi recycling pathways. Different family members are highly related products of distinct genes, and are usually expressed together. These findings suggest that the SCAMPs may function at the same site during vesicular transport rather than in separate pathways. Alternate splicing results in multiple transcript variants. [provided by RefSeq, Mar 2016]
+
+\end{description}
+
+
+
+
+<<echo=FALSE, results=hide>>=
+# RColorBrewer palette
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+workdir <- c('/Volumes/Macintosh_HD_3/genetics/genenetwork/')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork/histChrfunc.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork/onlycisChr.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork/squareAxes.R')
+source('/Volumes/Macintosh_HD_3/genetics/corrplot2.R')
+@
+
+The following site allows one to search for transcription factors by entering genes. I used the hg19 multiz46way_placental database.\\
+
+\href{http://motifmap.ics.uci.edu/}{MotifMap}\\
+
+Note: COMT is found in two isoforms: 
+
+\begin{enumerate}
+     \item COMT-MB: NM_000754 2304 bp mRNA transcript variants 1-3
+     \item COMT-S: NM_007310 2035 bp mRNA transcript variant 4
+\end{enumerate}
+
+\href{https://www.ncbi.nlm.nih.gov/taxonomy}{Taxonomy Database}\\
+
+The following website can be used to find the transcription factors for a particular gene. The analysis below used the gem clusters data from this site.
+
+\href{http://gtrd.biouml.org/}{Gene Transcription Regulation Database v18.01}\\
+
+This web site allows you to test results in very many ontology areas.\\
+\href{http://amp.pharm.mssm.edu/Enrichr/enrich}{Enrich}
+
+
+
+
+
+<<echo=FALSE,include=FALSE>>=
+### read the data files 
+
+gene.Names <- c('COMT','ECH1','CD81','SCAMP2')
+
+wpwm <- loadWorkbook('motifmap_output.xlsx')           # give the workbook a name in R like 'wb' or whatever you want
+comt.TF.data <- data.frame(read.xlsx(wpwm,         # now tell R to read that workbook and which sheet
+                                  sheet = "comt-alt"))
+
+@
+
+<<label=getTargets, echo=FALSE, include=FALSE, results=tex>>=
+
+
+
+
+@
+
+
+
+
+\end{document}
+
+
+

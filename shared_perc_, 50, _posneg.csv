@@ -1,0 +1,7 @@
+"Comparison" "Shared Genes (N)" "Percentage" "logp.valpos" "Shared Genes (N).1" "Percentage.1" "logp.valneg"
+"prefrontal cortex vs. cerebellum" "11 (50)" "22%" -18.6 "6 (50)" "12%" -8.6
+"prefrontal cortex vs. temporal cortex" "25 (50)" "50%" -54.1 "10 (50)" "20%" -16.5
+"prefrontal cortex vs. pons" "11 (50)" "22%" -18.6 "6 (50)" "12%" -8.6
+"cerebellum vs. temporal cortex" "11 (50)" "22%" -18.6 "0 (48)" "0%" -0.1
+"cerebellum vs. pons" "6 (50)" "12%" -8.6 "1 (50)" "2%" -1
+"temporal cortex vs. pons" "10 (48)" "21%" -16.5 "4 (49)" "8%" -5.1

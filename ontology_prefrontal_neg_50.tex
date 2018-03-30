@@ -1,0 +1,334 @@
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Tue Mar 13 20:00:08 2018
+
+% Use this file as an \include to put it at the top of Sweave/R generated latex tables.
+
+\documentclass[letterpaper,12pt]{article}
+
+%\usepackage{dgjournal}
+
+
+%%% Note: remove the next two lines to submit article %%%%%%%%%%
+\usepackage{setspace}
+%\linespread{2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%       
+
+%% The mathptmx package is recommended for Times compatible math symbols.
+%% Use mtpro2 or mathtime instead of mathptmx if you have the commercially
+%% available MathTime fonts.
+%% Other options are txfonts (free) or belleek (free) or TM-Math (commercial)
+\usepackage{mathptmx}
+\usepackage{tensor}
+\usepackage{nicefrac}
+\usepackage{units}
+\usepackage{mathtools}
+\usepackage{mathrsfs}
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+\usepackage{nth}
+\usepackage{epsfig}
+\usepackage[makeroom]{cancel}
+\newcommand\Ccancel[2][black]{\renewcommand\CancelColor{\color{#1}}\cancel{#2}}
+\newcommand\Bcancel[2][black]{\renewcommand\CancelColor{\color{#1}}\bcancel{#2}}
+
+\usepackage{geometry}
+\usepackage{changepage}
+
+
+
+\usepackage[T1]{fontenc}
+\usepackage{makecell}
+\newcolumntype{x}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{tikz}
+\newcommand\diag[4]{%
+  \multicolumn{1}{p{#2}|}{\hskip-\tabcolsep
+  $\vcenter{\begin{tikzpicture}[baseline=0,anchor=south west,inner sep=#1]
+  \path[use as bounding box] (0,0) rectangle (#2+2\tabcolsep,\baselineskip);
+  \node[minimum width={#2+2\tabcolsep},minimum height=\baselineskip+\extrarowheight] (box) {};
+  \draw (box.north west) -- (box.south east);
+  \draw (box.south west) -- (box.south west);
+  \node[anchor=south west] at (box.south west) {#3};
+  \node[anchor=north east] at (box.north east) {#4};
+ \end{tikzpicture}}$\hskip-\tabcolsep}}
+
+
+%% Use the graphics package to include figures
+%\usepackage{graphics}
+
+%% Use natbib with these recommended options
+%\usepackage[authoryear,comma,longnamesfirst,sectionbib]{natbib}
+\usepackage[authoryear,comma,sectionbib]{natbib} 
+
+%%%%%%%%%%% Dannemiller added 01/19/2015 - standard preamble
+\usepackage{fancyhdr} % Headers and footers
+
+\pagestyle{fancyplain} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+\fancyhead[RO,RE]{\thepage} % Custom header text
+\renewcommand{\headrulewidth}{0pt} %0pt for no rule, 2pt thicker etc...
+\setlength{\headheight}{15.0pt}
+
+\usepackage{url}   %this allows us to cite URLs in the text
+
+\usepackage{booktabs}
+\usepackage{pstricks}
+\let\clipbox\relax
+\usepackage{amssymb}
+\usepackage{afterpage}
+\usepackage{transparent}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{multicol}
+%\usepackage{chngpage}
+
+
+\usepackage{enumerate}
+\usepackage{xspace}
+
+\usepackage{abbrevs}
+% example: \newabbrev\ART{American Repetrory Theater (ART)}[ART]
+\newabbrev\ssb{Sum of Squares Between genotypes ($SS_{B}$)}[$SS_{B}$]
+\newabbrev\ssw{Sum of Squares Within genotypes ($SS_{W}$)}[$SS_{W}$]
+\newabbrev\sst{Sum of Squares Total ($SS_{T}$)}[$SS_{T}$]
+\newabbrev\ci{current, intermediate (CI)}[CI]
+\newabbrev\cim{current, intermediate matrix (CI matrix)}[CI matrix]
+\newabbrev\cims{current, intermediate matrices (CI matrices)}[CI matrices]
+\newabbrev\civ{current, intermediate vector (CI vector)}[CI vector]
+\newabbrev\civs{current, intermediate vectors (CI vectors)}[CI vectors]
+\newabbrev\cis{current, intermediate scalar (CI scalar)}[CI scalar]
+\newabbrev\maf{minor allele frequency (MAF)}[MAF]
+
+
+
+%%% The following correct for a flawed if statement in package abbrev
+\makeatletter
+\renewcommand\maybe@space@{%
+  % \@tempswatrue % <= this is in the original
+  \maybe@ictrue % <= this is new
+  \expandafter   \@tfor
+    \expandafter \reserved@a
+    \expandafter :%
+    \expandafter =%
+                 \nospacelist
+                 \do \t@st@ic
+  % \if@tempswa % <= this is in the original
+  \ifmaybe@ic % <= this is new
+    \space
+  \fi
+}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{ textcomp }
+\newcommand\dblquote[1]{\textquotedblleft #1\textquotedblright} 
+\newcommand{\apos}{$\text{'}$}
+\newcommand{\be}{\begin{enumerate}}
+\newcommand{\ee}{\end{enumerate}}
+\newcommand{\bes}{\begin{enumerate*}}
+\newcommand{\ees}{\end{enumerate*}}
+\newcommand{\mb}{\noindent\makebox[\textwidth] }
+\newcommand{\den}{\hspace{2pt}\textendash \,}
+\newcommand{\dem}{\textemdash \,}
+\newcommand{\Eq}{Equation }
+
+
+
+%specific hyphenation
+\hyphenation{e-pi-neph-rine}
+\hyphenation{mol-e-cules}
+%\hyphenation{}
+
+
+\providecommand\phantomsection{}
+
+
+%\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{ colorlinks=false,pdfborderstyle={/S/U/W 1},citebordercolor=0 0 1 }
+\colorlet{transpyellow}{white!10!yellow}
+
+\usepackage{rotate}
+\usepackage{rotating}
+\usepackage{rotfloat}
+
+\usepackage{fontspec}
+\usepackage[lofdepth,lotdepth]{subfig}
+\usepackage{threeparttable} 
+\usepackage{tablefootnote}
+\usepackage{footnote}
+
+\usepackage{array}
+%\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{threeparttablex}
+
+
+\usepackage{pdflscape} 
+\usepackage{tabulary}
+\usepackage{ltxtable}
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\setlength\LTleft{0pt}
+\setlength\LTright{0pt}
+
+
+
+\usepackage{colortbl}
+\definecolor{riceblue}{hsb}{0.6,0.1,0.9}
+\definecolor{greenish}{rgb}{0.3,0.6,0.0}
+\definecolor{myblue}{rgb}{0.3,0.3,0.8}
+\definecolor{kugray5}{RGB}{224,224,224}
+\definecolor{lightgray}{gray}{0.9}
+
+\usepackage{xltxtra}
+\usepackage{nicefrac}
+
+\usepackage{rotating}
+\usepackage{lscape}
+
+\usepackage{graphicx}
+%\usepackage{epstopdf}
+\graphicspath{/Users/dannemil/paperless/ase_manuscript/sagmb/}
+
+\usepackage[normal]{engord}
+
+\usepackage{enumitem}
+%\setlist[enumerate]{parsep=4pt}
+
+\usepackage [normalem] {ulem}
+
+\usepackage{tabularx}
+\newcolumntype{S}{@{\stepcounter{Definition}\theDefinition.~} >{\bfseries}l @{~--~}X@{}}
+\newcounter{Definition}[subsubsection]
+
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{caption}
+%\renewcommand{\tablename}{Table}
+\usepackage{threeparttable}
+
+\usepackage{setspace}% http://ctan.org/pkg/setspace
+\AtBeginEnvironment{tabular}{\singlespacing}% Single spacing in tabular environment
+
+%\usepackage{booktabs}
+\usepackage[detect-all]{siunitx}
+\robustify\bfseries
+
+\usepackage{tabularx,colortbl}
+\newcolumntype{Y}{>{\centering\arraybackslash} X}
+\renewcommand{\arraystretch}{1.5}
+
+\usepackage{amsmath, amsthm, amssymb}
+%\setlength{\mathindent}{0pt}
+
+\usepackage{etoolbox}
+\apptocmd\normalsize{%
+ \abovedisplayskip=12pt plus 3pt minus 9pt
+ \abovedisplayshortskip=0pt plus 3pt
+ \belowdisplayskip=12pt plus 3pt minus 9pt
+ \belowdisplayshortskip=7pt plus 3pt minus 4pt
+}{}{}
+
+
+%\numberwithin{figure}{section}
+
+\makeatletter
+\@addtoreset{footnote}{section}
+\makeatother
+
+\usepackage{mdwlist}
+
+
+\renewcommand*\thesubsection{\arabic{section}.\arabic{subsection}}
+\usepackage[title]{appendix}
+\newcounter{appendix}
+\numberwithin{equation}{appendix}
+\usepackage{tablefootnote}
+\usepackage{yhmath}
+\usepackage{ragged2e}
+
+\newcolumntype{C}[1]{>{\Centering\arraybackslash}p{#1}}
+
+\usepackage{makecell}
+\renewcommand\theadfont{\normalsize\bfseries}
+\renewcommand\theadalign{bc}
+\usepackage{cellspace}
+\setlength\cellspacetoplimit{5pt}
+\setlength\cellspacebottomlimit{5pt}
+
+\setlength{\LTpre}{0pt}
+\setlength{\LTpost}{12pt}
+%\setlength\LTleft\parindent
+%\setlength\LTright\fill
+
+
+%\setmainfont{Times}
+\setmainfont{Baskerville}
+%\setmainfont{Alegreya}
+%\setmainfont{Cardo}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\mtx}[1]{\mathbf{#1}}
+
+
+
+\DeclareMathSizes{12pt}{11pt}{8pt}{6pt}
+\everymath=\expandafter{\the\everymath\displaystyle}
+
+\setcounter{secnumdepth}{5}
+
+\usepackage{footnote}
+\makesavenoteenv{tabular}
+\makesavenoteenv{table}
+\usepackage{tablefootnote}
+\usepackage{adjustbox}
+
+
+\begin{document}
+
+\noindent
+
+\begin{landscape}
+{\small {
+
+\begin{longtable}{lrrrrrl}
+\caption{Ontology for the 50 most strongly negatively correlated genes in Prefrontal Cortex} \\ 
+  \toprule
+GOBPID & Pvalue & OddsRatio & ExpCount & Count & Size & Term \\ 
+  \midrule
+GO:0099504 & 0.000001036 & 21.31 & 0.34 & 6 & 106 & synaptic vesicle cycle \\ 
+  GO:0048489 & 0.000001672 & 19.54 & 0.37 & 6 & 115 & synaptic vesicle transport \\ 
+  GO:0097480 & 0.000001672 & 19.54 & 0.37 & 6 & 115 & establishment of synaptic vesicle localization \\ 
+  GO:0099003 & 0.000001672 & 19.54 & 0.37 & 6 & 115 & vesicle-mediated transport in synapse \\ 
+  GO:0097479 & 0.000002145 & 18.68 & 0.38 & 6 & 120 & synaptic vesicle localization \\ 
+  GO:0016079 & 0.000002423 & 27.58 & 0.22 & 5 & 68 & synaptic vesicle exocytosis \\ 
+  GO:0017156 & 0.000011380 & 19.71 & 0.30 & 5 & 93 & calcium ion regulated exocytosis \\ 
+  GO:0051656 & 0.000034954 & 7.47 & 1.28 & 8 & 400 & establishment of organelle localization \\ 
+  GO:0007269 & 0.000040720 & 14.92 & 0.39 & 5 & 121 & neurotransmitter secretion \\ 
+  GO:0099643 & 0.000040720 & 14.92 & 0.39 & 5 & 121 & signal release from synapse \\ 
+  GO:0099531 & 0.000055315 & 13.95 & 0.41 & 5 & 129 & presynaptic process involved in chemical synaptic transmission \\ 
+  GO:1990504 & 0.000060030 & 325.16 & 0.01 & 2 & 4 & dense core granule exocytosis \\ 
+  GO:0051650 & 0.000082787 & 9.52 & 0.73 & 6 & 228 & establishment of vesicle localization \\ 
+  GO:0010256 & 0.000091600 & 7.58 & 1.08 & 7 & 338 & endomembrane system organization \\ 
+  GO:0051648 & 0.000109795 & 9.02 & 0.77 & 6 & 240 & vesicle localization \\ 
+  GO:0001505 & 0.000162317 & 10.99 & 0.52 & 5 & 162 & regulation of neurotransmitter levels \\ 
+  GO:0006836 & 0.000167055 & 10.92 & 0.52 & 5 & 163 & neurotransmitter transport \\ 
+  GO:1990416 & 0.000277859 & 108.36 & 0.03 & 2 & 8 & cellular response to brain-derived neurotrophic factor stimulus \\ 
+  GO:1903008 & 0.000278121 & 14.25 & 0.32 & 4 & 99 & organelle disassembly \\ 
+  GO:0014049 & 0.000356518 & 92.87 & 0.03 & 2 & 9 & positive regulation of glutamate secretion \\ 
+  GO:0051640 & 0.000363433 & 5.24 & 1.80 & 8 & 561 & organelle localization \\ 
+  GO:0046928 & 0.000452400 & 22.62 & 0.15 & 3 & 47 & regulation of neurotransmitter secretion \\ 
+  GO:0048172 & 0.000542459 & 72.22 & 0.04 & 2 & 11 & regulation of short-term neuronal synaptic plasticity \\ 
+  GO:0016082 & 0.000649623 & 65.00 & 0.04 & 2 & 12 & synaptic vesicle priming \\ 
+  GO:0051588 & 0.000798281 & 18.42 & 0.18 & 3 & 57 & regulation of neurotransmitter transport \\ 
+  GO:0017158 & 0.000882961 & 17.76 & 0.19 & 3 & 59 & regulation of calcium ion-dependent exocytosis \\ 
+   \bottomrule
+\end{longtable}
+
+}}
+\end{landscape}
+\end{document}

@@ -1,0 +1,670 @@
+%%% New COMT MB-bound data
+
+\documentclass[11pt]{article}
+\usepackage{graphicx, subfig}
+\usepackage{float}
+\pagenumbering{arabic}
+\usepackage{enumerate}
+\usepackage{Sweave}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{framed}
+\usepackage{longtable}
+\usepackage{tablefootnote}
+\usepackage{forloop}
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}m{#1}}
+\usepackage{multicol}
+\usepackage{enumitem}
+\setlist{nosep} % or \setlist{noitemsep} to leave space around whole list
+\usepackage{tabularx}
+\usepackage{hyperref}
+\usepackage{multicol}
+\usepackage{color, colortbl}
+\usepackage[utf8]{inputenc}
+\usepackage[most]{tcolorbox}
+\usepackage{sidecap}
+\graphicspath{/Volumes/Macintosh_HD_3/genetics/genenetwork/}
+
+% define colors
+\definecolor{mypink1}{rgb}{0.950,0.800,0.800}
+\definecolor{myblue1}{rgb}{0.800, 0.800, 0.970}
+\definecolor{myyellow1}{rgb}{0.980,0.980,0.500}
+
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{keep.source=TRUE} 
+
+
+<<echo=FALSE>>=
+library(ggplot2,ggthemes)
+library(ggExtra)
+library(psych)
+library(ggpubr)       ### Make sure this is installed
+library(knitr)
+library(Hmisc)
+library(openxlsx)
+library(xtable)
+library(magrittr)
+library(tables)
+library(stargazer)
+library(plyr)
+library(rlist)
+library(qqman)
+library(manhattanly)
+library(Cairo)
+library(RColorBrewer)
+library(HGNChelper)
+library(tools)
+library(scales)
+library(devtools)
+install_github("drveera/ggman")
+library(ggman)
+library(GGally)
+library(car)
+library(gclus)
+library(kableExtra)
+library(dplyr)
+library(crayon)
+library(formattable)
+library(patchwork)
+library(grid)
+library(gtable)
+library(gridExtra)
+library(permute)
+
+
+
+options(scipen = 999, digits = 4, width = 60, knitr.table.format = "latex")
+@
+
+\vspace{-2em}
+Gene Network\\
+COMT Expression Across Four Brain Tissue Types\\
+Fall, 2017\\
+\href{http://gn2.genenetwork.org/}{Data from Brain: Normal Gene Expression (NIH/Gibbs)}
+
+\begin{figure}[H]
+\begin{center}
+  \fbox{\includegraphics[width=0.50\textwidth]{genenetwork_screenshot}}
+\end{center}
+\end{figure}
+
+\vspace{1em}
+\begin{description}
+\item[Entrez Gene Summary for ECH1: Enoyl-CoA Hydratase 1]  \hfill \\ This gene encodes a member of the hydratase/isomerase superfamily. The gene product shows high sequence similarity to enoyl-coenzyme A (CoA) hydratases of several species, particularly within a conserved domain characteristic of these proteins. The encoded protein, which contains a C-terminal peroxisomal targeting sequence, localizes to the peroxisome. The rat ortholog, which localizes to the matrix of both the peroxisome and mitochondria, can isomerize 3-trans,5-cis-dienoyl-CoA to 2-trans,4-trans-dienoyl-CoA, indicating that it is a delta3,5-delta2,4-dienoyl-CoA isomerase. This enzyme functions in the auxiliary step of the fatty acid beta-oxidation pathway. Expression of the rat gene is induced by peroxisome proliferators. (provided by RefSeq, Jul 2008)
+
+\item[Entrez Gene Summary for COMT: Catechol-O-MethylTransferase]  \hfill \\ Catechol-O-methyltransferase catalyzes the transfer of a methyl group from S-adenosylmethionine to catecholamines, including the neurotransmitters dopamine, epinephrine, and norepinephrine. This O-methylation results in one of the major degradative pathways of the catecholamine transmitters. In addition to its role in the metabolism of endogenous substances, COMT is important in the metabolism of catechol drugs used in the treatment of hypertension, asthma, and Parkinson disease. COMT is found in two forms in tissues, a soluble form (S-COMT) and a membrane-bound form (MB-COMT). The differences between S-COMT and MB-COMT reside within the N-termini. Several transcript variants are formed through the use of alternative translation initiation sites and promoters. [provided by RefSeq, Sep 2008]
+
+\end{description}
+
+
+
+
+<<echo=FALSE, results=hide>>=
+### to prepend filename strings to plots
+pre.Name <- c('comt_and_ech1_expression_individ_subj-') 
+# RColorBrewer palette
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+workdir <- c('/Volumes/Macintosh_HD_3/genetics/genenetwork/')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork/histChrfunc.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork/onlycisChr.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork/squareAxes.R')
+@
+
+
+
+<<echo=FALSE>>=
+### read the data file 
+# Data show expression of COMT for individual subjects in four different brain areas:
+## cerebellum, pons, prefrontal cortex, and temporal cerebral wall
+
+wb <- loadWorkbook(paste(workdir,'individ_subj_comt.xlsx',sep=''))           # give the workbook a name in R like 'wb' or whatever you want
+cerebell.comt.Data <- data.frame(read.xlsx(wb,         # now tell R to read that workbook and which sheet
+                                  sheet = "cerebellum"))
+pons.comt.Data <- data.frame(read.xlsx(wb,         # now tell R to read that workbook and which sheet
+                                  sheet = "pons"))
+prefront.comt.Data <- data.frame(read.xlsx(wb,         # now tell R to read that workbook and which sheet
+                                  sheet = "prefrontal_cortex"))
+tempcort.comt.Data <- data.frame(read.xlsx(wb,         # now tell R to read that workbook and which sheet
+                                  sheet = "temp_cort_wall"))
+
+# All data files have 147 rows and two columns, Missing data and outliers are indicated with an x
+
+comt.individ.Data <- cbind(cerebell.comt.Data,
+                           pons.comt.Data,
+                           prefront.comt.Data,
+                           tempcort.comt.Data)
+
+colnames(comt.individ.Data) <- c('idcerebell','exprcbell',
+                                 'idpons','exprpons',
+                                 'idprefront','expprefront',
+                                 'idctempcort','exprtempcort')
+
+comt.individ.Data$exprcbell[which(comt.individ.Data$exprcbell == 'x')] <- c(NA)
+comt.individ.Data$exprpons[which(comt.individ.Data$exprpons == 'x')] <- c(NA)
+comt.individ.Data$expprefront[which(comt.individ.Data$expprefront == 'x')] <- c(NA)
+comt.individ.Data$exprtempcort[which(comt.individ.Data$exprtempcort == 'x')] <- c(NA)
+
+comt.individ.Data$exprcbell <-    as.numeric(comt.individ.Data$exprcbell)
+comt.individ.Data$exprpons <-     as.numeric(comt.individ.Data$exprpons)
+comt.individ.Data$expprefront <- as.numeric(comt.individ.Data$expprefront)
+comt.individ.Data$exprtempcort <- as.numeric(comt.individ.Data$exprtempcort)
+
+comt.individ.Data <- na.omit(comt.individ.Data)   # eliminate all rows that have at least one NA
+
+@
+
+<<label=getcorrs, echo=FALSE, include=FALSE, results=HIDE>>=
+# first put numeric columns with expression data into a data.frame
+express.Data.comt <- data.frame(cerebell = comt.individ.Data$exprcbell,
+                           pons = comt.individ.Data$exprpons,
+                           prefront = comt.individ.Data$expprefront,
+                           tempcort = comt.individ.Data$exprtempcort)
+
+# cor.Out <- round(cor(express.Data),3)
+# cor.Out
+@
+
+<<echo=FALSE>>=
+### read the data file 
+# Data show expression of ech1 for individual subjects in four different brain areas:
+## cerebellum, pons, prefrontal cortex, and temporal cerebral wall
+
+wb <- loadWorkbook(paste(workdir,'individ_subj_ech1.xlsx',sep=''))           # give the workbook a name in R like 'wb' or whatever you want
+cerebell.ech1.Data <- data.frame(read.xlsx(wb,         # now tell R to read that workbook and which sheet
+                                  sheet = "cerebellum"))
+pons.ech1.Data <- data.frame(read.xlsx(wb,         # now tell R to read that workbook and which sheet
+                                  sheet = "pons"))
+prefront.ech1.Data <- data.frame(read.xlsx(wb,         # now tell R to read that workbook and which sheet
+                                  sheet = "prefrontal_cortex"))
+tempcort.ech1.Data <- data.frame(read.xlsx(wb,         # now tell R to read that workbook and which sheet
+                                  sheet = "temp_cort_wall"))
+
+# All data files have 147 rows and two columns, Missing data and outliers are indicated with an x
+
+ech1.individ.Data <- cbind(cerebell.ech1.Data,
+                           pons.ech1.Data,
+                           prefront.ech1.Data,
+                           tempcort.ech1.Data)
+
+colnames(ech1.individ.Data) <- c('idcerebell','exprcbell',
+                                 'idpons','exprpons',
+                                 'idprefront','expprefront',
+                                 'idctempcort','exprtempcort')
+
+ech1.individ.Data$exprcbell[which(ech1.individ.Data$exprcbell == 'x')] <- c(NA)
+ech1.individ.Data$exprpons[which(ech1.individ.Data$exprpons == 'x')] <- c(NA)
+ech1.individ.Data$expprefront[which(ech1.individ.Data$expprefront == 'x')] <- c(NA)
+ech1.individ.Data$exprtempcort[which(ech1.individ.Data$exprtempcort == 'x')] <- c(NA)
+
+ech1.individ.Data$exprcbell <- as.numeric(ech1.individ.Data$exprcbell)
+ech1.individ.Data$exprpons <- as.numeric(ech1.individ.Data$exprpons)
+ech1.individ.Data$expprefront <- as.numeric(ech1.individ.Data$expprefront)
+ech1.individ.Data$exprtempcort <- as.numeric(ech1.individ.Data$exprtempcort)
+
+ech1.individ.Data <- na.omit(ech1.individ.Data)   # eliminate all rows that have at least one NA
+
+@
+
+<<label=getcorrs, echo=FALSE, include=FALSE, results=HIDE>>=
+# first put numeric columns with expression data into a data.frame
+express.Data.ech1 <- data.frame(cerebell = ech1.individ.Data$exprcbell,
+                           pons = ech1.individ.Data$exprpons,
+                           prefront = ech1.individ.Data$expprefront,
+                           tempcort = ech1.individ.Data$exprtempcort)
+
+
+@
+
+
+<<label=matchIDs, echo=FALSE, include=FALSE, results=tex>>= # , fig=TRUE, pdf=FALSE, eps=TRUE
+# Only keep rows where both genes have the same subject IDs
+match.IDs1 <- comt.individ.Data[comt.individ.Data$idcerebell %in% ech1.individ.Data$idcerebell, ]
+match.IDs2 <- ech1.individ.Data[ech1.individ.Data$idcerebell %in% match.IDs1$idcerebell, ]
+
+both.Genes <- cbind(match.IDs1,match.IDs2)
+both.Genes.express.only <- both.Genes[c(2,4,6,8,10,12,14,16)]
+colnames(both.Genes.express.only) <- c('Cc','POc','PFc','Tc',
+                                       'Ce','POe','PFe','Te')
+
+# inter.Corr <- round(cor(both.Genes.express.only),3)
+inter.Corr <- round(cor(both.Genes.express.only),2)
+
+b.Genes <- both.Genes.express.only
+
+z.b.Genes <- scale(b.Genes,center=TRUE,scale=TRUE) # z-scored expression levels
+
+b.Genes <- as.data.frame(z.b.Genes)  ##### ******** Note: all expression levels have been z-scored
+
+@
+
+<<label=permutationCorrs, echo=FALSE, include=FALSE, results=tex>>=
+### Use permutations to assess the critical value of the correlation coefficient
+
+permSet <- c(10000)     # number of permutations to generate
+samp.Size <- nobs(b.Genes$Tc)    # number of observations
+corr.Rand <- c(rep(NA,permSet))
+perm.Ints <- shuffleSet(n = samp.Size, nset = permSet)
+for (ic in 1:permSet) {
+  
+    corr.Rand[ic] <- cor(b.Genes$Tc[1:samp.Size],b.Genes$Te[perm.Ints[ic,]])
+}
+hist(corr.Rand)
+crit.r <- quantile(corr.Rand,c(0.025,0.975,0.05,0.95,(1-1/20000),(1-1/100000000)))
+qvals <- c(0.025,0.975,0.05,0.95,(1-1/20000),(1-1/100000000))
+
+hold.Pvalue <- data.frame(pval=qvals,quant=crit.r)
+
+perm.Pvalue <- xtable(hold.Pvalue,
+                   caption = c("P values and Corresponding Quantiles for Correlations\n with Randomly Permuted Expression Levels"),
+                   digits = 10
+                   # align=c(rep('l',9)),
+                   # display=c('s',rep('f',8))
+                   )
+perm.Pvalue
+
+@
+
+
+\vspace{1em}
+\begin{figure}[H]
+\caption{Comparison of the z-scored expression levels for COMT and ECH1 in Cerebellum.}
+\begin{center}
+
+<<label=level_profiles, echo=FALSE, include=FALSE>>= # , fig=TRUE, pdf=FALSE, eps=TRUE
+
+# Combine COMT and ECH1 vertically stacked with Gene and Tissue columns
+
+stack.COMT.ECH1 <- stack(b.Genes)
+stack.COMT.ECH1$gene <- as.factor(c(rep(c('COMT','ECH1'),each=4*dim(b.Genes)[1])))
+colnames(stack.COMT.ECH1) <- c('mRNA','tissue','gene')
+stack.COMT.ECH1$tissue <- as.factor(c(rep(rep(c('CE','PO',
+                                  'PF','TE'),each=dim(b.Genes)[1]),2)))
+stack.COMT.ECH1$subj <- as.integer(c(rep(c(1:dim(b.Genes)[1]),8)))
+stack.COMT.ECH1$zed <- as.integer(c(rep(c(0),8*dim(b.Genes)[1])))
+subs <- as.factor(rep(c(1:dim(b.Genes)[1]),2))
+
+# Generate a two-panel plot with COMT and ECH1 in specific tissue by subject
+
+whi.Tissue <- as.factor(unique(stack.COMT.ECH1$tissue))
+name.Tissue <- data.frame(longN = c('Cerebellum',
+                 'Pons',
+                 'Prefrontal Cortex',
+                 'Temporal Cerebral Wall'),
+                 shortN = as.factor(unique(stack.COMT.ECH1$tissue)) 
+)
+
+fname <- c(rep(NA,4))
+temp.Plot <- list()
+
+for (wt in 1:length(unique(stack.COMT.ECH1$tissue))) {
+
+################# DEBUG #####################
+#  wt <- c(1)
+################# END DEBUG #################
+  
+range.Lims.y.Comt <- c(-4,3)   # units of standard deviation
+plot.Both.genes <- ggplot(stack.COMT.ECH1, aes(x=subj)) + 
+  geom_segment(data=subset(stack.COMT.ECH1,tissue == name.Tissue$shortN[wt]),aes(x=subj,y=zed,
+                                                               xend=subj,yend=(mRNA - mean(mRNA))),
+                                                               color='red',size=1.0) +
+      facet_grid(gene ~ ., scales = "free_y") + 
+  theme(legend.position = "none") +
+  scale_y_continuous(name='z-Scored Expression Level',
+                       limits=range.Lims.y.Comt,
+                       labels = comma) +
+  scale_x_continuous(name='Subject ID') +
+    ggtitle(paste('z-Scored Expression Levels by Subject\n for COMT and ECH1 in ',toString(name.Tissue$longN[wt]),sep='')) + 
+    #    theme_minimal() + 
+    theme_classic() + 
+    theme(aspect.ratio=0.4) + 
+    theme(plot.title = element_text(color="black",
+                                    size=10,
+                                    hjust=0.5)) +
+    theme(panel.background = element_rect(fill = "white", colour = "black",
+                                        size=1.0)) + 
+    theme(axis.title = element_text(color="black",
+                                    size=10)) +
+    theme(axis.text.x = element_text(size=8),
+          axis.text.y = element_text(size=8)) +
+#  theme(strip.background=element_rect(fill="#FFCC66")) +
+    theme(strip.background=element_rect(fill="#DDEEFF")) +     # light blue
+  theme(strip.text = element_text(color = 'black',face='bold',size=9))  +
+  theme(plot.margin = unit(c(1, 1.5, 1.0, 1.0), "lines"))
+#  theme(plot.margin = unit(c(1.0, 0.5, 1.0, 1.0), "in"))
+  
+  z <- ggplotGrob(plot.Both.genes)
+  z <- gtable_add_cols(z, unit(z$widths[[7]], 'cm'), 7)
+  z <- gtable_add_grob(z, 
+                     list(rectGrob(gp = gpar(col = 'black', fill = '#DDEEFF',lwd=2.0)),
+                          textGrob(c(paste('r = ',toString(round(inter.Corr[(wt+4),wt],3)),sep='')), rot = -90, gp = gpar(col = 'black',fontsize=10,fontface='bold'))),
+                     3, 9, 8, 9, name = paste(runif(2))
+                     )
+  
+  z <- gtable_add_cols(z, unit(1/8, "line"), 7)
+fname[wt] <- c(paste('comt_ech1_',name.Tissue$shortN[wt],'.pdf',sep=''))
+fname.Plot <- z
+
+
+# draw it
+grid.newpage()
+#grid.draw(z)
+grid.draw(fname.Plot)
+
+temp.Plot[[wt]] <- fname.Plot
+
+
+## Once plost are saved as pdfs this next line can be commented out
+# ggsave(fname[wt], plot = temp.Plot[[wt]], scale = 1, width = 6, height = 4, units = c("in"),
+#        dpi = 300, limitsize = FALSE)         # "cm", "mm")
+
+
+
+} # end tissue loop, wt
+  
+@
+
+
+\vspace{-2em}
+ \includegraphics[width=0.9\textwidth]{\Sexpr{fname[1]}}
+\end{center}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\caption{Comparison of the z-scored expression levels for COMT and ECH1 in Pons.}
+\vspace{-2em}
+ \includegraphics[width=0.9\textwidth]{\Sexpr{fname[2]}}
+\end{center}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\caption{Comparison of the z-scored expression levels for COMT and ECH1 in Prefrontal Cortex.}
+\vspace{-2em}
+ \includegraphics[width=0.9\textwidth]{\Sexpr{fname[3]}}
+\end{center}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\caption{Comparison of the z-scored expression levels for COMT and ECH1 in Temporal Cerebral Wall.}
+\vspace{-2em}
+ \includegraphics[width=0.9\textwidth]{\Sexpr{fname[4]}}
+\end{center}
+\end{figure}
+
+
+
+%\begin{absolutelynopagebreak}
+
+<<label=intercorrelations, echo=FALSE, include=FALSE, results=hide>>=
+### print the full intercorrelation matrix
+### Put into a latex table
+#intercorrs <- xtable(inter.Corr)
+color_cells <- function(df, row1,col1,cellcol){
+  out <-  c(paste0("\\cellcolor{",cellcol,"}",df[row1,col1]))
+}
+
+hold.Corr <- data.frame(matrix(rep(NA,64),nrow=8,ncol=8))
+hold.Corr <- data.frame(inter.Corr)
+# Same tissue/different genes - yellow
+rown <- c(5,6,7,8)
+coln <- c(1,2,3,4)
+for (irc in 1:length(rown)) {
+hold.Corr[rown[irc],coln[irc]] <- color_cells(df=hold.Corr, row1=rown[irc],col1=coln[irc],cellcol='myyellow1')
+}
+
+# Same gene/different tissue - pink
+rown <- c(2,3,4,3,4,4,6,7,8,7,8,8)
+coln <- c(1,1,1,2,2,3,5,5,5,6,6,7)
+for (irc in 1:length(rown)) {
+hold.Corr[rown[irc],coln[irc]] <- color_cells(df=hold.Corr, row1=rown[irc],col1=coln[irc],cellcol='mypink1')
+}
+
+#Different tissue/different genes - blue
+rown <- c(6,7,8,7,8,8,5,5,6,5,6,7)
+coln <- c(1,1,1,2,2,3,2,3,3,4,4,4)
+for (irc in 1:length(rown)) {
+hold.Corr[rown[irc],coln[irc]] <- color_cells(df=hold.Corr, row1=rown[irc],col1=coln[irc],cellcol='myblue1')
+}
+
+hold.Corr[rown[8],coln[8]] <- color_cells(df=hold.Corr, row1=rown[8],col1=coln[8],cellcol='white')
+@
+
+\vspace{2em}
+<<label=intercorrelations, echo=FALSE, include=FALSE, results=tex>>=
+# Show intercorrelation matrix
+intercorrs <- xtable(hold.Corr,
+                   caption = c("COMT and ECH1 Expression Correlations in Four Brain Areas"),
+                   digits = 4,
+                   align=c(rep('l',9)),
+                   display=c('s',rep('f',8))
+                   )
+names(intercorrs) <- c(rep(c('Ce','Po','Pf','Te'),2))
+
+intercorrs2 <- latex(intercorrs,file='',
+                     caption = c("COMT and ECH1 Expression Correlations in Four Brain Areas"),                                  caption.loc = c('top'),
+                     cgroup = c('COMT','ECH1'),
+                     n.cgroup = c(4,4),
+                     rgroup = c('COMT','ECH1'),
+                     n.rgroup = c(4,4),
+                     rowname = rep(c('Ce','Po','Pf','Te'),2),
+                     colname = rep(c('Ce','Po','Pf','Te'),2),
+                     rowlabel = c(''),
+                     rownamesTexCmd="bfseries",
+                     colnamesTexCmd="bfseries",
+                     booktabs=TRUE,
+                     label=c('tab:intercorrs'),
+                     na.blank = TRUE,
+                     vbar = FALSE,
+                     longtable=TRUE,
+                     table.env=TRUE,
+                     center=c('center'),
+                     continued=c('Correlation Between COMT and ECH1 Expression'),
+                     first.hline.double = TRUE,
+                     append=FALSE,
+                     insert.bottom=c('{\\footnotesize{\\colorbox{myyellow1}{Yellow}: different genes/same tissue;
+                                      \\colorbox{mypink1}{Pink}: same gene/different tissues;
+                                      \\colorbox{myblue1}{Blue}: different genes/different tissues}}'),
+                     insert.bottom.width=c('0.45\\textwidth')
+                     )
+print(intercorrs2)
+
+
+@
+
+{\small{{\bfseries {Table \ref{tab:intercorrs} abbreviations}}\\
+\vspace{-2em}
+\begin{multicols}{2}
+\begin{itemize}
+  \item {\bfseries{Brain Area}}
+      \begin{description}
+        \item[Ce] Cerebellum
+        \item[Po] Pons
+        \item[]
+        \item[Pf] Prefrontal Cortex
+        \item[Te] Temporal Cerebral Wall
+      \end{description}
+\end{itemize}
+\end{multicols}
+}}
+
+<<label=equicorr, echo=FALSE, include=FALSE, results=hide>>=
+# Test for equality of correlations in the correlation matrix
+# Use the test statistic in Lawley, D. N. (1963). On testing a set of correlation coefficients for equality. The Annals of Mathematical Statistics, 34(1), 149-151.
+
+p <- c(8)    # number of variates contributing to the correlation matrix
+nsub <- dim(b.Genes)[1] - 1   # This is the way that n is defined in Lawley (1963)
+deg.Free <- c(0.5*(p+1)*(p-2))   # Degrees of freedom of the test statistic below
+crit.ChiSq <- round(qchisq(.95, df=deg.Free),2)   # Get the 95th Percentile of the chi-squared
+
+sum.rk <- matrix(c(0),nrow=8)
+
+for (i in 1:p) {
+  for (k in 1:p) {
+    if (i == k) {
+      
+    } else {
+      sum.rk[k] <- sum.rk[k] + inter.Corr[i,k]
+    }
+    
+  }
+  
+}
+
+rk.Mean <- sum.rk[1:p]/(p-1)
+
+sum.rMean <- c(0)
+for (i in 1:(p-1)) {
+  for (j in (i+1):p) {
+      sum.rMean <- sum.rMean + inter.Corr[i,j]
+    }
+    
+  }
+r.Mean <- 2*(sum.rMean)/(p*(p-1))  
+lambda <- c(1-r.Mean)
+mu <- (((p-1)^2)*(1-lambda^2))/(p-(p-2)*lambda^2)
+
+ss.1 <- c(0)
+for (i in 1:(p-1)) {
+  for (j in (i+1):p) {
+      ss.1 <- ss.1 + (inter.Corr[i,j] - r.Mean)^2
+    }
+    
+}
+
+ss.2 <- c(0)
+for (k in 1:p) {
+  ss.2 <- ss.2 + mu*((rk.Mean[k] - r.Mean)^2)
+}
+
+test.stat.Corrs <- round((nsub/lambda^2)*(ss.1 - ss.2),2)
+
+if (test.stat.Corrs > crit.ChiSq) {
+  decision <- c(paste('The correlation coefficients in the intercorrelation matrix of COMT and ECH1 expression levels in four brain areas are not all equal; that is, they show significant variation from their mean correlation level. The critical value of the Chi-Squared Distribution with $\\alpha = 0.05$ was ',crit.ChiSq,' with ',deg.Free,' degrees of freedom. The observed Chi-Squared was ',test.stat.Corrs,'.',sep=''))
+} else {
+  decision <- c(paste('The correlation coefficients in the intercorrelation matrix of COMT and ECH1 expression levels in four brain areas do not show significant variation from their mean correlation level. The critical value of the Chi-Squared Distribution with $\\alpha = 0.05$ was ',crit.ChiSq,' with ',deg.Free,' degrees of freedom. The observed Chi-Squared was ',test.stat.Corrs,'.',sep=''))
+}
+@
+%\end{absolutelynopagebreak}
+
+
+\begin{figure}[H]
+\begin{center}
+<<label=matchIDs, echo=FALSE, include=FALSE>>= # , fig=TRUE, pdf=FALSE, eps=TRUE
+# Intercorrelation matrix graph
+cor.Mat <- ggcorr(b.Genes, palette='RdY1Bu',label=TRUE,limits=TRUE,
+                  label_round = 2) +
+  annotate("text", x = c(0.5),
+             y = c(7.0),
+             label = c('Brain Regions\n C: cerebellum\n PO: pons\n PF: prefrontal cortex\n T: temporal cerebral wall'),
+             color="black",
+             size=3,
+             hjust = 0) +
+annotate("text", x = c(1.5),
+             y = c(3.0),
+             label = c('COMT (c)'),
+             color="black",
+             size=5,
+             hjust = 0,
+             angle = 45) +
+annotate("text", x = c(5.0),
+             y = c(6.5),
+             label = c('ECH1 (e)'),
+             color="black",
+             size=5,
+             hjust = 0,
+             angle = 45) + 
+geom_segment(x=0,y=1.0,xend=3.4,yend=4.4) +
+geom_segment(x=4.0,y=5.0,xend=7.0,yend=8.0)
+
+  file.eps <- paste(pre.Name,'intercorr_plot.eps',sep='')
+  postscript(file=file.eps,horiz=FALSE,onefile=FALSE,width=6.0,height=6.0,paper='letter')
+  cor.Mat
+
+@
+
+
+\begin{raggedright}
+\Sexpr{decision}\\
+\end{raggedright}
+
+\vspace{3em}
+\fbox{\includegraphics[width=\textwidth]{\Sexpr{file.eps}}}
+\end{center}
+\end{figure}
+
+
+
+<<label=comtech1prefront, echo=FALSE, include=FALSE>>= #, fig=TRUE, pdf=FALSE, eps=TRUE
+# Plot COMT and ECH1 expressions within Prefrontal cortex
+xv <- both.Genes.express.only$PFc
+yv <- both.Genes.express.only$PFe
+title.txt <- c('Correlation of COMT and ECH1 Expression in Prefrontal Cortex')
+xlabel.txt <- c('COMT Expression')
+ylabel.txt <- c('ECH1 Expression')
+corr <- round(inter.Corr[7,3],3)
+pv <- c(0)
+nsamp <- c(dim(both.Genes.express.only)[1])
+out.t <- r.test(n = nsamp, r12 = corr)
+    pv <- round(2*pt(-abs(out.t$t),df=nsamp-2),6)
+comt.ech1.Prefrontal <- square.Axes(xv,yv,title.txt,xlabel.txt,ylabel.txt,corr,nsamp,pv)
+temp_pic1 <- c('comt_ech1_Prefrontal.eps')
+  postscript(file=temp_pic1,horiz=FALSE,onefile=FALSE,width=6.0,height=6.0,paper='letter')
+comt.ech1.Prefrontal
+
+
+@
+
+\begin{figure}[H]
+\begin{center}
+   \fbox{\includegraphics[width=\textwidth]{comt_ech1_Prefrontal}}
+\end{center}
+\end{figure}
+
+
+<<label=comtech1temp, echo=FALSE, include=FALSE>>= #, fig=TRUE, pdf=FALSE, eps=TRUE
+#Plot COMT and ECH1 expressions within Temporal Cerebral Wall
+xv <- both.Genes.express.only$Tc
+yv <- both.Genes.express.only$Te
+title.txt <- c('Correlation of COMT and ECH1 Expression in Temporal Cerebral Wall')
+xlabel.txt <- c('COMT Expression')
+ylabel.txt <- c('ECH1 Expression')
+corr <- round(inter.Corr[8,4],3)
+pv <- c(0)
+nsamp <- c(dim(both.Genes.express.only)[1])
+out.t <- r.test(n = nsamp, r12 = corr)
+    pv <- round(2*pt(-abs(out.t$t),df=nsamp-2),6)
+comt.ech1.Temporal <- square.Axes(xv,yv,title.txt,xlabel.txt,ylabel.txt,corr,nsamp,pv)
+temp_pic2 <- c('comt_ech1_Temporal.eps')
+  postscript(file=temp_pic2,horiz=FALSE,onefile=FALSE,width=6.0,height=6.0,paper='letter')
+comt.ech1.Temporal
+
+@
+
+\begin{figure}[H]
+\begin{center}
+    \fbox{\includegraphics[width=\textwidth]{comt_ech1_Temporal}}
+\end{center}
+\end{figure}
+
+{\bfseries{Possible gene regulatory networks with COMT and ECH1}}\\
+
+\href{http://rulai.cshl.edu/cgi-bin/TRED/tred.cgi?process=home}{Transcriptional Regulatory Element Database}\\
+
+SP1: Sequence Specific Transcription Fasctor in Rat\\
+COMT\\
+
+SP1: in humans\\
+STAT2: in humans\\
+USF1 + USF2: in humans\\
+APOE - among the genes most highly correlated with COMT
+
+\end{document}
+
+
+

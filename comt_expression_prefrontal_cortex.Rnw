@@ -1,0 +1,1598 @@
+\documentclass[11pt]{article}
+\usepackage{graphicx, subfig}
+\usepackage{float}
+\pagenumbering{arabic}
+\usepackage{enumerate}
+\usepackage{Sweave}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{framed}
+\usepackage{longtable}
+\usepackage{tablefootnote}
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{keep.source=TRUE} 
+
+
+\hspace{-1.5em}Gene Network\\
+COMT expression correlations Prefrontal cortext\\
+Fall, 2017\\
+
+<<echo=FALSE>>=
+library(ggplot2,ggthemes)
+library(ggExtra)
+library(psych)
+library(ggpubr)       ### Make sure this is installed
+library(knitr)
+library(Hmisc)
+library(openxlsx)
+library(xtable)
+library(magrittr)
+library(tables)
+library(stargazer)
+library(plyr)
+library(rlist)
+library(qqman)
+library(manhattanly)
+library(Cairo)
+library(RColorBrewer)
+library(HGNChelper)
+library(tools)
+library(scales)
+library(devtools)
+install_github("drveera/ggman")
+library(ggman)
+
+
+options(scipen = 1, digits = 5, width = 60)
+@
+
+<<echo=FALSE, results=hide >>=
+### to prepend filename strings to plots
+pre.Name <- c('comt_expression_frontal_cortex-') #pre-ppended to eps output files
+# RColorBrewer palette
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+source('histChrfunc.R')
+source('onlycisChr.R')
+@
+
+
+
+<<echo=FALSE>>=
+### read the data file 
+wb <- loadWorkbook('correlation_results_COMT_Prefrontal_cortex20000.xlsx')           # give the workbook a name in R like 'wb' or whatever you want
+comt.Data <- data.frame(read.xlsx(wb,         # now tell R to read that workbook and which sheet
+                                  sheet = "correlations"))
+chrom.Data <- data.frame(read.xlsx(wb,         # now tell R to read that workbook and which sheet
+                                  sheet = "chrom_length"))
+
+
+### Note to convert r correlations into p values use these transformations
+### store the results in a colun in the original data frame - without the print statements
+# example: r = 0.809, n = 138
+# r.test(n = , r12 = )
+# out.t <- r.test(n = 138, r12 = 0.809)
+# print(out.t$t,digits=10)
+# [1] 16.05025766
+# pval <- 2*pt(-abs(t),df=n-2)
+# pval <- 2*pt(-abs(print(out.t$t,digits=20)),df=136)
+# print(pval,digits=10)
+
+@
+
+<<label=getChr,echo=FALSE>>=
+### Strip all characters after : in Location
+comt.Data$loc <- sub("\\::*\\s[0-9]*\\.[0-9]*","",comt.Data$Location)
+substring(comt.Data$loc,1,3) <- "   "
+comt.Data$loc <- ordered(comt.Data$loc)
+### Get start locations from comt.Data$Location
+comt.Data$bp <- as.numeric(sub('.*\\:', '', comt.Data$Location))
+
+########### Check for step that loses data when selecting specific chromosomes ##############
+# comt.Data$loc contains the chromosome number as a factor stripped from location
+# comt.Data$bp is the base pair location of the probe/gene within the chromosome
+# head(comt.Data$loc)
+# head(comt.Data$bp)
+
+whichChr <- c(22)
+
+
+### Check and correct/update where possible gene symbols
+### Need to remove '-' because R interprets it as math mode and halts when it doesn't find $
+out.Symb <- checkGeneSymbols(comt.Data$Symbol, unmapped.as.na=FALSE, hgnc.table=NULL)
+comt.Data$Symbol <-  out.Symb$Suggested.Symbol
+comt.Data$Symbol[which(comt.Data$Symbol == '-')] <- c(".")
+
+#### Clean illegal characters from the gene names: -
+#grep('.*\\-',comt.Data$Symbol)
+comt.Data$Symbol <- gsub("-", ".", comt.Data$Symbol)
+
+@
+
+<<label=commaSep, echo=FALSE>>=
+### Function to take a vector of numbers, and turn it into a comma-separated string.
+
+comma.Sep <- function(in.vec) {
+  out.Sep <- c('')
+    out.Sep <- c(paste(out.Sep,as.character(in.vec[1]),sep=''))
+  
+  if (length(in.vec) > 1) {
+    
+    for (q in 2:length(in.vec)) {
+      out.Sep <- c(paste(out.Sep,', ',as.character(in.vec[q])))
+    }
+
+  } else {
+    
+  }
+        
+    return(out.Sep)
+}
+
+@
+
+
+
+<<label=square_axes, echo=FALSE, results=hide>>=
+### Function to plot on equal-SD scaled square axes.
+######################### Begin square.Axes function ###################################
+square.Axes <- function(xvar,yvar,title.Text,xlabel.Text,ylabel.Text,corval) {
+  
+  dat <- data.frame(x = c(xvar), y = c(yvar))
+  
+  range.Lims.x <- c(mean(xvar) - 4*sd(xvar), mean(xvar) + 4*sd(xvar))
+  range.Lims.y <- c(mean(yvar) - 4*sd(yvar), mean(yvar) + 4*sd(yvar))
+  
+  
+  
+  sq.Plt <-   ggplot(dat, aes(x=xvar,y=yvar)) +
+    geom_point(color = "blue",size=1.0) + 
+    geom_smooth(method=lm,   # Add linear regression line
+                se=FALSE,
+                color="yellow",
+                size = 1)  +  # Don't add shaded confidence region
+    #            theme(aspect.ratio=1) +
+    # This adds  the little lines to each axis that represent the densities of the variables
+    geom_rug() +    
+    geom_abline(intercept = mean(yvar)  + (-sign(corval))*(mean(xvar)/sd(xvar))*sd(yvar),
+                slope = sign(corval)*(sd(yvar)/sd(xvar)),
+                linetype='dashed',
+                size = 1) + 
+    scale_y_continuous(name=ylabel.Text,
+                       limits=range.Lims.y) +
+    scale_x_continuous(name=xlabel.Text,
+                       limits=range.Lims.x) +
+    ggtitle(title.Text) + 
+#    theme_minimal() + 
+    theme_classic() + 
+    theme(aspect.ratio=1) +
+    theme(axis.line = element_line(colour = "grey80",size=1.0),
+          panel.border = element_rect(colour = "grey80", fill=NA,
+                                      size=2.5)) +
+    theme(plot.title = element_text(color="black",
+                                    face="bold",
+                                    size=18,
+                                    hjust=0.5)) +
+    theme(axis.title = element_text(color="black",
+                                    size=15)) +
+    theme(axis.text.x = element_text(size=14),
+          axis.text.y = element_text(size=14)) +
+    geom_vline(xintercept = mean(xvar),
+               col='red',
+               size = 1) +
+    geom_hline(yintercept = mean(yvar),
+               col='red',
+               size = 1) +
+    annotate("text", x = mean(xvar)+3*sd(xvar),
+             y = mean(yvar)+3.8*sd(yvar),
+             label = c(paste('r = ',toString(corval),sep='')),
+             color="black",
+             size=5)
+  
+  return(sq.Plt) # This is what gets returned by the function. In this case it is an actual plot.
+}                # <<<< This is actually the last stement in the function.
+######
+@
+
+
+%%%%%%%%%%%%%%% Statistics
+\hspace{-1.5em}\bfseries{Expression Mean vs. Sample r Descriptive Statistics}\\
+<<label=descStat, echo=FALSE, results=tex>>=
+comt.Meanposr <- data.frame(mean=NA,corr=NA,chr=NA,gene=NA,bp=NA,pval=NA)
+comt.Meannegr <- data.frame(mean=NA,corr=NA,chr=NA,gene=NA,bp=NA,pval=NA)
+comt.Meanbothr <- data.frame(mean=comt.Data$Mean,corr=comt.Data$Sample.r,chr=comt.Data$loc,
+                             gene=comt.Data$Symbol,bp=comt.Data$bp,pval=comt.Data$Sample.p.r.)
+comt.Meanbothr$corsign <- as.factor(sign(comt.Data$Sample.r))
+comt.Meanbothr$chr[which(comt.Meanbothr$chr == '   Un')] <- c(NA)
+### Get rid of "Un/NA" chromosome rows
+comt.Meanbothr2 <- data.frame(na.omit(comt.Meanbothr))
+rm(comt.Meanbothr)
+comt.Meanbothr <- comt.Meanbothr2   # <--- This holds pos and neg corr data
+
+# Table of frequencies of pos and neg correlated genes per chromosome
+df2 <- data.frame(table(comt.Meanbothr$chr,comt.Meanbothr$corsign))
+df2 <- data.frame(df2,chr=c(1,10,11,12,13,14,15,16,17,18,19,2,20,21,22,3,4,5,6,7,8,9,25,23,24))
+colnames(df2) <- c('origchr','corsign','freq','chr')
+df2$chr <- as.numeric(df2$chr)
+dfsort <-df2[order(df2$corsign,df2$chr), ]
+
+
+### Need to eliminate the 'Un' Chr column
+dfsort <- dfsort[,2:4]
+dfsort <- cbind(dfsort[1:25,],dfsort[26:50,])
+dfsort <- dfsort[1:24,]
+dfsort <- rbind(dfsort[,1:3],dfsort[,4:6])
+
+posrmeans <- comt.Meanbothr$mean[which(comt.Meanbothr$corr > 0)]
+negrmeans <- comt.Meanbothr$mean[which(comt.Meanbothr$corr < 0)]
+posrcorrs <- comt.Meanbothr$corr[which(comt.Meanbothr$corr > 0)]
+negrcorrs <- comt.Meanbothr$corr[which(comt.Meanbothr$corr < 0)]
+posrchr <- as.factor(comt.Meanbothr$chr[which(comt.Meanbothr$corr > 0)])
+negrchr <- as.factor(comt.Meanbothr$chr[which(comt.Meanbothr$corr < 0)])
+posgene <- comt.Meanbothr$gene[which(comt.Meanbothr$corr > 0)]
+neggene <- comt.Meanbothr$gene[which(comt.Meanbothr$corr < 0)]
+posbp <- comt.Meanbothr$bp[which(comt.Meanbothr$corr > 0)]
+negbp <- comt.Meanbothr$bp[which(comt.Meanbothr$corr < 0)]
+pospval <- comt.Meanbothr$pval[which(comt.Meanbothr$corr > 0)]
+negpval <- comt.Meanbothr$pval[which(comt.Meanbothr$corr < 0)]
+
+
+comt.Meanposr <- data.frame(mean=posrmeans,corr=posrcorrs,chr=posrchr,gene=posgene,
+                            bp=posbp,pval=pospval)
+comt.Meannegr <- data.frame(mean=negrmeans,corr=negrcorrs,chr=negrchr,gene=neggene,
+                            bp=negbp,pval=negpval)
+comt.Meanposr$chr <- as.character(comt.Meanposr$chr)
+comt.Meannegr$chr <- as.character(comt.Meannegr$chr)
+
+
+#### Replace Chr 'X' with 23
+comt.Meanposr$chr[which(comt.Meanposr$chr == '   X')] <- as.character(c('   23'))
+comt.Meannegr$chr[which(comt.Meannegr$chr == '   X')] <- as.character(c('   23'))
+
+#### Replace Chr 'Y' with 24
+comt.Meanposr$chr[which(comt.Meanposr$chr == '   Y')] <- as.character(c('   24'))
+comt.Meannegr$chr[which(comt.Meannegr$chr == '   Y')] <- as.character(c('   24'))
+
+### Positive r only
+manhat.Posr <- data.frame(CHR=comt.Meanposr$chr, 
+                          BP=comt.Meanposr$bp,P=comt.Meanposr$pval,
+                          GENE=comt.Meanposr$gene,
+                          #EFFECTSIZE=comt.Meanposr$corr
+                          MEAN=comt.Meanposr$mean
+                          )
+manhat.Posr$CHR <- as.numeric(as.character(manhat.Posr$CHR))
+manhat.Posr$GENE <- as.character(manhat.Posr$GENE)
+# Save data including COMT for later analysis
+manhat.Posr.withCOMT <- manhat.Posr
+#### Exclude COMT because p = 0.000
+manhat.Posr <- manhat.Posr[2:dim(manhat.Posr)[1],]
+
+
+### Negative r only
+manhat.Negr <- data.frame(CHR=comt.Meannegr$chr, 
+                          BP=comt.Meannegr$bp,P=comt.Meannegr$pval,
+                          GENE=comt.Meannegr$gene,
+                          #EFFECTSIZE=comt.Meannegr$corr
+                          MEAN=comt.Meannegr$mean
+                          )
+manhat.Negr$CHR <- as.numeric(as.character(manhat.Negr$CHR))
+manhat.Negr$GENE <- as.character(manhat.Negr$GENE)
+
+@
+Get histogram of probe BP positions on the selected chromosome\\
+ 
+\begin{figure}[H]
+\begin{center}
+ 
+<<label=histpandn, echo = FALSE, include=FALSE, fig=TRUE>>= #, pdf=FALSE,eps=TRUE
+
+onlyChrzz <- rbind(manhat.Posr.withCOMT,manhat.Negr)
+# Select a specific chromosome; in this case Chr 22 the one with COMT
+onlyChrzz <- subset(onlyChrzz,onlyChrzz$CHR == whichChr)
+refLoc <- manhat.Posr.withCOMT[1,2]   ## <-- This has to be positive to get the COMT BP
+gene.Name <- as.character(manhat.Posr.withCOMT$GENE[1]) ## <--This has to be positive to get the COMT name
+numbins <- (max(onlyChrzz$BP) - min(onlyChrzz$BP))/2.1978
+#binwd <- 2.1978
+binwd <- c(2.25)
+
+
+histBP <- hist.by.Chr(onlyChrzz,whichChr,refLoc,gene.Name,numbins,binwd)
+histBP
+
+histpandn.eps <- paste(pre.Name,'histpandn.eps',sep='')
+
+@
+\includegraphics[width=\textwidth]{\Sexpr{histpandn.eps}}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+
+<<label=cisplot1pos, echo = FALSE, include=FALSE, fig=TRUE>>= #, pdf=FALSE, eps=TRUE 
+# First subset data to Chr 22 only
+onlyChr22pos <- subset(manhat.Posr.withCOMT,manhat.Posr.withCOMT == whichChr)
+
+# Plot histogram of base pair position on Chr 22 of all probes with positive correlations with COMT
+
+histBPpos <- ggplot(onlyChr22pos, aes(BP)) +
+  geom_histogram(bins=100,
+                 color=cbPalette[6],
+                 fill=cbPalette[6]) +
+    scale_x_continuous(name='Base Pair Position (Mb)',
+                       limits=c(0,50),
+                       breaks = pretty_breaks(n = 8)) +
+    scale_y_continuous(name='Count',
+                       limits=c(0,15),
+                       breaks = pretty_breaks(n = 5)) +
+#    scale_fill_brewer(palette="Set3") +
+    ggtitle('Base Pair Positions of Positively-Correlated Probes on Chromosome 22') + 
+#    theme_minimal() + 
+    theme_classic() + 
+    theme(aspect.ratio=0.618) +
+    theme(axis.line = element_line(colour = "black",size=0.25)) +
+    theme(plot.title = element_text(color="black",
+                                    face="bold",
+                                    size=10,
+                                    hjust=0)) +
+    theme(axis.title = element_text(color="black",
+                                    size=10,
+                                    margin = margin(t = 4, r = 4, b = 0, l = 0)
+                                    )) +
+    theme(axis.text.x = element_text(size=10,
+                                     margin = margin(t = 4, r = 0, b = 0, l = 0)),
+          axis.text.y = element_text(size=10,
+                                     margin = margin(t = 0, r = 2, b = 0, l = 0))) +
+    geom_vline(xintercept = onlyChr22pos$BP[1],
+               col='red',
+               size = 0.5) +
+    annotate("text", x = onlyChr22pos$BP[1] + 2.5,
+             y = 12,
+             label = c('COMT'),
+             color="red",
+             size=3)
+
+histBPpos
+
+cisplot1pos.eps <- paste(pre.Name,'cisplot1pos.eps',sep='')
+
+@
+
+\includegraphics[width=\textwidth]{\Sexpr{cisplot1pos.eps}}
+\end{center}
+\end{figure}
+
+
+
+\begin{figure}[H]
+\begin{center}
+<<label=cisplot1neg, echo = FALSE, include=FALSE, fig=TRUE>>= #, pdf=FALSE, eps=TRUE 
+# First subset data to Chr 22 only
+onlyChr22neg <- subset(manhat.Negr,manhat.Negr$CHR == whichChr)
+
+# Plot histogram of base pair position on Chr 22 of all probes with negative correlations with COMT
+
+histBPneg <- ggplot(onlyChr22neg, aes(BP)) +
+  geom_histogram(bins=100,
+                 color=cbPalette[6],
+                 fill=cbPalette[6]) +
+    scale_x_continuous(name='Base Pair Position (Mb)',
+                       limits=c(0,50),
+                       breaks = pretty_breaks(n = 8)) +
+    scale_y_continuous(name='Count',
+                       limits=c(0,15),
+                       breaks = pretty_breaks(n = 5)) +
+#    scale_fill_brewer(palette="Set3") +
+    ggtitle('Base Pair Positions of Negatively-Correlated Probes on Chromosome 22') + 
+#    theme_minimal() + 
+    theme_classic() + 
+    theme(aspect.ratio=0.618) +
+    theme(axis.line = element_line(colour = "black",size=0.25)) +
+    theme(plot.title = element_text(color="black",
+                                    face="bold",
+                                    size=10,
+                                    hjust=0)) +
+    theme(axis.title = element_text(color="black",
+                                    size=10,
+                                    margin = margin(t = 4, r = 4, b = 0, l = 0)
+                                    )) +
+    theme(axis.text.x = element_text(size=10,
+                                     margin = margin(t = 4, r = 0, b = 0, l = 0)),
+          axis.text.y = element_text(size=10,
+                                     margin = margin(t = 0, r = 2, b = 0, l = 0))) +
+    geom_vline(xintercept = onlyChr22pos$BP[1],
+               col='red',
+               size = 0.5) +
+    annotate("text", x = onlyChr22pos$BP[1] + 2.5,
+             y = 12,
+             label = c('COMT'),
+             color="red",
+             size=3)
+
+histBPneg
+
+cisplot1neg.eps <- paste(pre.Name,'cisplot1neg.eps',sep='')
+
+@
+\includegraphics[width=\textwidth]{\Sexpr{cisplot1neg.eps}}
+\end{center}
+\end{figure}
+
+Cis mRNA pvalues: distance from COMT probe for positively correlated probes\\
+
+\begin{figure}[H]
+\begin{center}
+
+<<label=cisplot2pos, echo = FALSE, include=FALSE, fig=TRUE>>= #, pdf=FALSE, eps=TRUE
+
+#Select only Chr 22
+onlyChr22pos <- subset(manhat.Posr.withCOMT,manhat.Posr.withCOMT == whichChr)
+
+# Compute distance from COMT in Mb
+cisdistpos <- (onlyChr22pos$BP[2:dim(onlyChr22pos)[1]] - onlyChr22pos$BP[1])
+cis.Data.pos <- data.frame(dist=cisdistpos,pval=-log10(onlyChr22pos$P[2:dim(onlyChr22pos)[1]]))
+
+# Plot base pair position on Chr 22 relative to COMT of all probes with positive correlations with COMT mRNA expression versus p-values
+
+cisBPpos <- ggplot(cis.Data.pos, aes(x=dist,y=pval)) +
+  geom_point(color=cbPalette[6],
+              size=0.75) +
+    scale_x_continuous(name='Base Pair Position Relative to COMT (Mb)',
+                       limits=c(-5,35),
+                       breaks = pretty_breaks(n = 8)) +
+    scale_y_continuous(name='-log10(P-value)') +
+                       # limits=c(0,15),
+                       # breaks = pretty_breaks(n = 5)) +
+#    scale_fill_brewer(palette="Set3") +
+    ggtitle('Base Pair Positions of Positively-Correlated Probes on Chromosome 22 \n Relative to COMT vs. -log10(P-value)') + 
+#    theme_minimal() + 
+    theme_classic() + 
+    theme(aspect.ratio=0.618) +
+    theme(axis.line = element_line(colour = "black",size=0.25)) +
+    theme(plot.title = element_text(color="black",
+                                    face="bold",
+                                    size=10,
+                                    hjust=0)) +
+    theme(axis.title = element_text(color="black",
+                                    size=10,
+                                    margin = margin(t = 0, r = 4, b = 4, l = 0)
+                                    )) +
+    theme(axis.text.x = element_text(size=10,
+                                     margin = margin(t = 4, r = 0, b = 0, l = 0)),
+          axis.text.y = element_text(size=10,
+                                     margin = margin(t = 0, r = 2, b = 0, l = 0))) +
+    geom_vline(xintercept = c(0),
+               col='darkgreen',
+               size = 0.5) +
+  # Put a line at 8 (-log10(10^(-8))) for genome-wide significance level
+    geom_hline(yintercept = c(8),
+               col='red',
+               size = 0.5,
+               linetype='dashed') +
+    annotate("text", x = c(2.5),
+             y = 12,
+             label = c('COMT'),
+             color="darkgreen",
+             size=3) +
+    annotate("text", x = c(-2.0),
+             y = -1,
+             label = c("5\'"),
+             color='black',
+             size=3) +
+    annotate("text", x = c(2.0),
+             y = -1,
+             label = c("3\'"),
+             color='black',
+             size=3)
+
+cisBPpos
+
+cisplot2pos.eps <- paste(pre.Name,'cisplot2pos.eps',sep='')
+
+@
+
+\includegraphics[width=\textwidth]{\Sexpr{cisplot2pos.eps}}
+\end{center}
+\end{figure}
+
+
+Cis--mRNA p--values: distance from COMT probe for negatively correlated probes\\
+
+\begin{figure}[H]
+\begin{center}
+
+<<label=cisplot2neg, echo = FALSE, include=FALSE, fig=TRUE>>= #, pdf=FALSE, eps=TRUE
+
+# Compute distance from COMT in Mb
+cisdistneg <- (onlyChr22neg$BP - onlyChr22pos$BP[1])
+
+cis.Data.neg <- data.frame(dist=cisdistneg,pval=-log10(onlyChr22neg$P))
+
+# Plot base pair position on Chr 22 relative to COMT of all probes with positive correlations with COMT mRNA expression versus p-values
+
+cisBPneg <- ggplot(cis.Data.neg, aes(x=dist,y=pval)) +
+  geom_point(color=cbPalette[6],
+              size=0.75) +
+    scale_x_continuous(name='Base Pair Position Relative to COMT (Mb)',
+                       limits=c(-5,35),
+                       breaks = pretty_breaks(n = 8)) +
+    scale_y_continuous(name='-log10(P-value)') +
+                       # limits=c(0,15),
+                       # breaks = pretty_breaks(n = 5)) +
+#    scale_fill_brewer(palette="Set3") +
+    ggtitle('Base Pair Positions of Negatively-Correlated Probes on Chromosome 22 \n Relative to COMT vs. -log10(P-value)') + 
+#    theme_minimal() + 
+    theme_classic() + 
+    theme(aspect.ratio=0.618) +
+    theme(axis.line = element_line(colour = "black",size=0.25)) +
+    theme(plot.title = element_text(color="black",
+                                    face="bold",
+                                    size=10,
+                                    hjust=0)) +
+    theme(axis.title = element_text(color="black",
+                                    size=10,
+                                    margin = margin(t = 0, r = 4, b = 4, l = 0)
+                                    )) +
+    theme(axis.text.x = element_text(size=10,
+                                     margin = margin(t = 4, r = 0, b = 0, l = 0)),
+          axis.text.y = element_text(size=10,
+                                     margin = margin(t = 0, r = 2, b = 0, l = 0))) +
+    geom_vline(xintercept = c(0),
+               col='darkgreen',
+               size = 0.5) +
+  # Put a line at 8 (-log10(10^(-8))) for genome-wide significance level
+    geom_hline(yintercept = c(8),
+               col='red',
+               size = 0.5,
+               linetype='dashed') +
+    annotate("text", x = c(2.5),
+             y = 12,
+             label = c('COMT'),
+             color="darkgreen",
+             size=3) +
+    annotate("text", x = c(-2.0),
+             y = -1,
+             label = c("5\'"),
+             color='black',
+             size=3) +
+    annotate("text", x = c(2.0),
+             y = -1,
+             label = c("3\'"),
+             color='black',
+             size=3)
+
+cisBPneg
+
+cisplot2neg.eps <- paste(pre.Name,'cisplot2neg.eps',sep='')
+
+@
+
+\includegraphics[width=\textwidth]{\Sexpr{cisplot2neg.eps}}
+\end{center}
+\end{figure}
+
+Plot both negatively and positively correlated probes on same plot with cis distance on x.\\
+
+\begin{figure}[H]
+\begin{center}
+
+<<label=cisplotboth, echo = FALSE, include=FALSE, fig=TRUE>>= #, pdf=FALSE, eps=TRUE
+
+cisalldata <- rbind(cis.Data.pos,cis.Data.neg)
+cisalldata$posneg <- as.factor(c(rep('positive',dim(cis.Data.pos)[1]),rep('negative',dim(cis.Data.neg)[1])))
+
+### There is an outlier in the positively correlated data set. It is a probe that is well outside the range of cis distances to COMT. Remove that row.
+
+cisalldata <- subset(cisalldata,cisalldata$dist > -15.0)
+
+# Plot base pair position on Chr 22 relative to COMT of all probes with correlations with COMT mRNA expression versus p-values
+
+cisBPboth <- ggplot(cisalldata, aes(x=dist,y=pval)) +
+  geom_point(aes(color=posneg),
+             size=0.75) +
+    scale_x_continuous(name='Base Pair Position Relative to COMT (Mb)',
+                       limits=c(-5,35),
+                       breaks = pretty_breaks(n = 8)) +
+    scale_y_continuous(name='-log10(P-value)') +
+                       # limits=c(0,15),
+                       # breaks = pretty_breaks(n = 5)) +
+        ggtitle('Base Pair Positions of Positively and Negatively-Correlated Probes \n on Chromosome 22 Relative to COMT vs. -log10(P-value)*') + 
+#    theme_minimal() + 
+    theme_classic() + 
+    theme(aspect.ratio=0.618) +
+#    theme(legend.position = c(0.70, 0.88)) +
+    theme(legend.position = c('top')) +
+    guides(color=guide_legend(title="Sign of Correlation")) +
+    theme(legend.title = element_text(colour="black", size=7, 
+                                      face="bold")) +
+    theme(legend.background = element_rect(color = 'white', 
+    fill = 'white', size = 0.01, linetype = "solid")) +
+# legend labels
+    theme(legend.text = element_text(colour="black", size=6)) +
+    theme(axis.line = element_line(colour = "black",size=0.25)) +
+    theme(plot.title = element_text(color="black",
+                                    face="bold",
+                                    size=10,
+                                    hjust=0)) +
+    theme(axis.title = element_text(color="black",
+                                    size=10,
+                                    margin = margin(t = 0, r = 4, b = 4, l = 0)
+                                    )) +
+    theme(axis.text.x = element_text(size=10,
+                                     margin = margin(t = 4, r = 0, b = 0, l = 0)),
+          axis.text.y = element_text(size=10,
+                                     margin = margin(t = 0, r = 2, b = 0, l = 0))) +
+    geom_vline(xintercept = c(0),
+               col='darkgreen',
+               size = 0.5) +
+  # Put a line at 8 (-log10(10^(-8))) for genome-wide significance level
+    geom_hline(yintercept = c(8),
+               col='red',
+               size = 0.5,
+               linetype='dashed') +
+    annotate("text", x = c(2.0),
+             y = 15,
+             label = c('COMT'),
+             color="darkgreen",
+             size=3) +
+    annotate("text", x = c(-2.0),
+             y = -1,
+             label = c("5\'"),
+             color='black',
+             size=3) +
+    annotate("text", x = c(2.0),
+             y = -1,
+             label = c("3\'"),
+             color='black',
+             size=3) +
+  annotate("text", x = c(-5),
+             y = c(3),
+             label = c('*negative\n outlier\n removed'),
+             color="black",
+             size=2)
+
+cisBPboth
+
+cisplotboth.eps <- paste(pre.Name,'cisplotboth.eps',sep='')
+
+@
+
+\includegraphics[width=\textwidth]{\Sexpr{cisplotboth.eps}}
+\end{center}
+\end{figure}
+
+
+
+
+How many probes are there for each chromosome?\\
+How does this compare to chromosome length?\\
+
+<<label=rawChromcount, echo=FALSE,include=FALSE,results=tex >>=
+raw.Chr.pos <- table(as.numeric(as.character(comt.Meanposr$chr)))
+raw.Chr.neg <- table(as.numeric(as.character(comt.Meannegr$chr)))
+raw.Chr.count <- data.frame(Chromosome = rep(NA,24),Probe.Count = rep(NA,24),Chromosome.Length = rep(NA,24))
+raw.Chr.count$Probe.Count <- c(raw.Chr.pos + raw.Chr.neg)
+raw.Chr.count$Chromosome <- as.numeric(c(1:24))
+raw.Chr.count$Chromosome.Length <- as.numeric(chrom.Data$chrom.Length/1000000.)
+colnames(raw.Chr.count) <- c('Chromosome','Probe.Count','Chromosome.Length')
+
+### Put into a latex table
+raw.Chrcount.ltx <- latex(raw.Chr.count,file='',
+                      insert.top=('Number of probes by chromosome and chromosome length'),
+                      booktabs=TRUE,
+                      collabel.just=c("l"),
+                      label=c('chrcount.raw'),
+#                      cgroup = c('Genes'),
+#                      n.cgroup = c(4),
+                      na.blank = TRUE,
+                      vbar = FALSE,
+                      longtable=TRUE,
+                      insert.bottom=c('Chr 23 = X and Chr 24 = Y'),
+                      table.env=FALSE,
+                      continued=c('Number of probes by chromosome and chromosome length'),
+                      first.hline.double = TRUE,
+                      size=c('small'),
+                      rowname=NULL,
+                      append=FALSE
+                      )
+raw.Chrcount.ltx
+
+@
+\vspace{-1em}\hspace{2em}
+{\tiny{Note: Chr 23 = X and Chr 24 = Y}}\\
+
+
+Plot of Number of probes per chromosome by chromosome length\\
+\begin{figure}[H]
+\begin{center}
+<<label=plotChrcountvsLength, fig=TRUE,  echo = FALSE, include=FALSE >>= , pdf=FALSE, eps=TRUE 
+
+raw.Chr.count$ChrLabel <- c(as.character(c(1:22)),'X','Y')
+colnames(raw.Chr.count) <- c('Chromosome','Probe.Count','Chromosome.Length','ChrLabel')
+
+numprobesvslength.Plt <-   ggplot(raw.Chr.count, aes(x=(Chromosome.Length),y=Probe.Count,
+                                                     label=ChrLabel)) +
+              geom_point(color = "blue",size=1.0) + 
+              geom_text(aes(label=ChrLabel),hjust=0, vjust=-1,
+                        size=2.5) +
+              stat_smooth(method=lm,   # Add linear regression line
+                se=FALSE,
+                color="red",
+                size = 0.5,
+                fullrange=TRUE)  +  # Don't add shaded confidence region
+    #            theme(aspect.ratio=1) +
+    scale_y_continuous(name='Number of Probes',
+                       limits=c(0,1.1*max(raw.Chr.count$Probe.Count))) +
+    scale_x_continuous(name='Length of Chromosome (Mb)',
+                       limits=c(25,275),
+                       breaks = pretty_breaks(n = 8)) +
+    ggtitle('Number of Probes by Chromosome versus Chromosome Length') + 
+#    theme_minimal() + 
+    theme_classic() + 
+    theme(aspect.ratio=0.618) +
+    theme(axis.line = element_line(colour = "black",size=0.25)) +
+    theme(plot.title = element_text(color="black",
+                                    face="bold",
+                                    size=10,
+                                    hjust=1)) +
+    theme(axis.title = element_text(color="black",
+                                    size=10,
+                                    margin = margin(t = 4, r = 4, b = 0, l = 0)
+                                    )) +
+    theme(axis.text.x = element_text(size=10,
+                                     margin = margin(t = 4, r = 0, b = 0, l = 0)),
+          axis.text.y = element_text(size=10,
+                                     margin = margin(t = 0, r = 2, b = 0, l = 0))) 
+    # annotate("text", x = mean(xvar)+3*sd(xvar),
+    #          y = mean(yvar)+3.8*sd(yvar),
+    #          label = c(paste('r = ',toString(corval),sep='')),
+    #          color="black",
+    #          size=5)
+  
+numprobesvslength.Plt
+
+probesvlength.eps <- paste(pre.Name,'plotChrcountvsLength.eps',sep='')
+
+@
+\includegraphics[width=\textwidth]{\Sexpr{probesvlength.eps}}
+\end{center}
+\end{figure}
+
+<<label=regressProbesonChrLength, echo=FALSE, include=FALSE, results=hide >>=
+# Regress the number of probes on each chromosome by chromosome length
+
+out.ProbesvLength <- lm(Probe.Count ~ Chromosome.Length, data=raw.Chr.count)
+adjust.By.fit <- out.ProbesvLength$fitted.values
+
+@
+
+<<label=top10percent, echo=FALSE, results=tex>>=
+################################################
+### Select the top 10% by p-value to determine which genes expression levels (by chromosome) are most highly correlated with COMT expression.
+### Done separately for positive and negative correlations
+### Inversely normalized by fitted number of probes from the regression on chr length, but weighted by proportion of each chromosome in the top 10%. 
+################################################
+
+##### Positive correlations with COMT expression only #####################
+full.Count <- table(manhat.Posr$CHR)
+order.by.P.pos <- manhat.Posr[order(manhat.Posr$P), ]
+num.Pos <- dim(order.by.P.pos)[1]
+ten.percent.Pos <- floor(0.10*num.Pos)
+top.10percent.pos <- order.by.P.pos[1:ten.percent.Pos, ]
+top10.pos.Count <- table(top.10percent.pos[,1])
+
+# scaled.Props <- as.numeric(full.Count)/num.Pos
+# scaled.top10.Props <- as.numeric(top10.pos.Count)/sum(as.numeric(top10.pos.Count))
+
+## This scales the number of probes in the top 10% inversely by the fitted number of probes from the regression of number of probes by chromosome length. It also preserves the absolute number of probes found in the top 10% (~886)
+fit.inverse.Scaled <- as.numeric(top10.pos.Count)/(adjust.By.fit[1:23]/sum(adjust.By.fit[1:23]))
+fit.inverse.Scaled <- round((fit.inverse.Scaled*(sum(top10.pos.Count)/sum(fit.inverse.Scaled))),0)
+
+
+# ratio.top10.pos <- data.frame(ratio=scaled.top10.Props/scaled.Props[1:23])
+# ratio.top10.pos$chr <- c(1:23)
+# ratio.top10.pos <- ratio.top10.pos[c(2,1)]
+# scaled.Ratio <- data.frame(prop=ratio.top10.pos[,2]/sum(ratio.top10.pos[,2]))
+# scaled.Ratio$chr <- c(1:23)
+# scaled.Ratio$chr <- scaled.Ratio[c(2,1)]
+# 
+# num2get <- top10.pos.Count*scaled.Ratio$prop
+num2get2 <- data.frame(n = as.numeric(fit.inverse.Scaled))
+num2get2$chr <- as.numeric(c(1:23))
+num2get2 <- num2get2[c(2,1)]
+
+hold.pos <- data.frame(CHR=rep(NA,sum(num2get2$n)),
+                       BP=rep(NA,sum(num2get2$n)),
+                       P=rep(NA,sum(num2get2$n)),
+                       GENE=rep(NA,sum(num2get2$n))
+)
+hold.pos$GENE <- as.character(hold.pos$GENE)
+hold.pos$CHR <- as.numeric(hold.pos$CHR)
+hold.pos$P <- as.numeric(hold.pos$P)
+
+### hold.pos holds the top 883 positively correlated genes inversely weighted for the number of probes per # chromosome
+### So the choice of the top genes is within chromosome, but the number of genes is inversely normalized by the fitted number of probes for that chromosome as regressed against chromosome length as well as the absolute rank of those genes against all the other genes
+lims.Count <- matrix(c(0,0),nrow=1)                               
+for (ig in 1:23) {
+  lims.Count[1] <- lims.Count[2] + 1
+  lims.Count[2] <- lims.Count[1] + num2get2$n[ig] - 1
+  hold.pos[lims.Count[1]:lims.Count[2],1:4] <-data.frame(subset(manhat.Posr,manhat.Posr$CHR == ig)[1:num2get2$n[ig], ])
+}
+
+colnames(hold.pos) <- c('CHR','BP','P','GENE')
+
+### Put this into a latex table sorted by chromosome number
+
+top.Pos.ltx <- latex(hold.pos,file='top.Pos_genes.tex',
+                      insert.top=('Top positively correlated genes normalized for number of probes per chromosome ordered by P value within chromosome'),
+                      booktabs=TRUE,
+                      label=c('top.Pos'),
+#                      cgroup = c('Genes'),
+#                      n.cgroup = c(4),
+                      na.blank = TRUE,
+                      vbar = FALSE,
+                      longtable=TRUE,
+                      table.env=FALSE,
+                      continued=c('Top positively correlated genes continued'),
+                      first.hline.double = TRUE,
+                      size=c('tiny'),
+                      append=FALSE
+                      )
+top.Pos.ltx
+
+### Put this into a latex table sorted by p-value
+hold.pos.byP <- hold.pos[order(hold.pos$P),]
+hold.pos.byP$GENE <- as.character(hold.pos.byP$GENE)
+
+top.PosbyP.ltx <- latex(hold.pos.byP,file='top.Pos_genes_by_P.tex',
+                      insert.top=('Top positively correlated genes normalized for number of probes per chromosome ordered by P-value'),
+                      booktabs=TRUE,
+                      label=c('top.PosP'),
+#                      cgroup = c('Genes'),
+#                      n.cgroup = c(4),
+                      na.blank = TRUE,
+                      vbar = FALSE,
+                      longtable=TRUE,
+                      table.env=FALSE,
+                      continued=c('Top positively correlated genes continued'),
+                      first.hline.double = TRUE,
+                      size=c('tiny'),
+                      append=FALSE
+                      )
+top.PosbyP.ltx
+
+############ End positive only ########################
+  
+##### Negative correlations with COMT expression only #####################
+full.Count <- table(manhat.Negr$CHR)
+order.by.P.neg <- manhat.Negr[order(manhat.Negr$P), ]
+num.Neg <- dim(order.by.P.neg)[1]
+ten.percent.Neg <- floor(0.10*num.Neg)
+top.10percent.neg <- order.by.P.neg[1:ten.percent.Neg, ]
+top10.neg.Count <- table(top.10percent.neg[,1])
+
+scaled.Props <- as.numeric(full.Count)/num.Pos
+scaled.top10.Props <- as.numeric(top10.neg.Count)/sum(as.numeric(top10.neg.Count))
+
+## This scales the number of probes in the top 10% inversely by the fitted number of probes from the regression of number of probes by chromosome length. It also preserves the absolute number of probes found in the top 10% (~886)
+fit.inverse.Scaled <- as.numeric(top10.neg.Count)/(adjust.By.fit[1:23]/sum(adjust.By.fit[1:23]))
+fit.inverse.Scaled <- round((fit.inverse.Scaled*(sum(top10.neg.Count)/sum(fit.inverse.Scaled))),0)
+
+
+# ratio.top10.neg <- data.frame(ratio=scaled.top10.Props/scaled.Props[1:23])
+# ratio.top10.neg$chr <- c(1:23)
+# ratio.top10.neg <- ratio.top10.neg[c(2,1)]
+# scaled.Ratio <- data.frame(prop=ratio.top10.neg[,2]/sum(ratio.top10.neg[,2]))
+# scaled.Ratio$chr <- c(1:23)
+# scaled.Ratio <- scaled.Ratio[c(2,1)]
+# 
+# num2get <- top10.neg.Count*scaled.Ratio$prop
+num2get2 <- data.frame(n = as.numeric(fit.inverse.Scaled))
+num2get2$chr <- as.numeric(c(1:23))
+num2get2 <- num2get2[c(2,1)]
+
+hold.neg <- data.frame(CHR=rep(NA,sum(num2get2$n)),
+                               BP=rep(NA,sum(num2get2$n)),
+                               P=rep(NA,sum(num2get2$n)),
+                               GENE=rep(NA,sum(num2get2$n))
+)
+hold.neg$GENE <- as.character(hold.neg$GENE)
+manhat.Negr$GENE <- as.character(manhat.Negr$GENE)
+hold.neg$CHR <- as.numeric(hold.neg$CHR)
+hold.neg$P <- as.numeric(hold.neg$P)
+
+### hold.neg holds the top 909 positively correlated genes weighted inversely for the number of probes per chromosome as determined from the fitted value when number of probes is regressed against chr length.
+### So the choice of the top genes is within chromosome, but the number of genes inversely reflects the fitted number of probes used for that chromosome as well as the absolute rank of those genes against all the other genes
+lims.Count <- matrix(c(0,0),nrow=1)                               
+for (ig in 1:23) {
+  lims.Count[1] <- lims.Count[2] + 1
+  lims.Count[2] <- lims.Count[1] + num2get2$n[ig] - 1
+  hold.neg[lims.Count[1]:lims.Count[2],1:4 ] <-data.frame(subset(manhat.Negr,manhat.Negr$CHR == ig)[1:num2get2$n[ig], ])
+}
+
+colnames(hold.neg) <- c('CHR','BP','P','GENE')
+
+
+### Put this into a latex table sorted by chromosome number
+top.Neg.ltx <- latex(hold.neg,file='top.Neg_genes.tex',
+                      insert.top=('Top negatively correlated genes normalized for number of probes per chromosome ordered by P-value within chromosome'),
+                      booktabs=TRUE,
+                      label=c('top.Neg'),
+#                      cgroup = c('Genes'),
+#                      n.cgroup = c(4),
+                      na.blank = TRUE,
+                      vbar = FALSE,
+                      longtable=TRUE,
+                      table.env=FALSE,
+                      continued=c('Top negatively correlated genes continued'),
+                      first.hline.double = TRUE,
+                      size=c('tiny'),
+                      append=FALSE
+                      )
+top.Neg.ltx
+
+### Put this into a latex table sorted by p-value
+hold.neg.byP <- hold.neg[order(hold.neg$P),]
+hold.neg.byP$GENE <- as.character(hold.neg.byP$GENE)
+
+top.NegbyP.ltx <- latex(hold.neg.byP,file='top.Neg_genes_by_P.tex',
+                      insert.top=('Top negatively correlated genes normalized for number of probes per chromosome ordered by P-value'),
+                      booktabs=TRUE,
+                      label=c('top.NegP'),
+#                      cgroup = c('Genes'),
+#                      n.cgroup = c(4),
+                      na.blank = TRUE,
+                      vbar = FALSE,
+                      longtable=TRUE,
+                      table.env=FALSE,
+                      continued=c('Top positively correlated genes continued'),
+                      first.hline.double = TRUE,
+                      size=c('tiny'),
+                      append=FALSE
+                      )
+top.NegbyP.ltx
+
+############ End negative only ########################
+
+@
+
+
+<<label=descStat2, echo=FALSE, results=tex>>=
+
+out.Stats <- psych::describe(comt.Meanposr[,1:2],fast=TRUE)
+xtab1<-xtable(out.Stats, caption="Expression Mean vs. Sample positive r Descriptive Statistics",  label="tab:descStat")
+print(xtab1,include.rownames = TRUE,table.placement="H")
+
+out.Stats2 <- psych::describe(comt.Meannegr[,1:2],fast=TRUE)
+xtab2<-xtable(out.Stats2, caption="Expression Mean vs. Sample negative r Descriptive Statistics",  label="tab:descStat2")
+print(xtab2,include.rownames = TRUE,table.placement="H")
+
+out.Stats3 <- psych::describeBy(comt.Meanposr[,1],group=comt.Meanposr$chr,mat=TRUE,digits=3,fast=TRUE)
+out.Stats3a <- out.Stats3[order(as.numeric(as.character(out.Stats3[,2]))),]
+xtab3<-xtable(out.Stats3a, caption="Expression Mean by Chromosome for (+) r only",  label="tab:descStat3")
+print(xtab3,include.rownames = TRUE,table.placement="H")
+
+out.Stats4 <- psych::describeBy(comt.Meanposr[,2],group=comt.Meanposr$chr,mat=TRUE,digits=3,fast=TRUE)
+out.Stats4a <- out.Stats4[order(as.numeric(as.character(out.Stats4[,2]))),]
+xtab4<-xtable(out.Stats4a, caption="Mean Correlation by Chromosome for (+) r only",  label="tab:descStat4")
+print(xtab4,include.rownames = TRUE,table.placement="H")
+
+out.Stats5 <- psych::describeBy(comt.Meannegr[,1],group=comt.Meannegr$chr,mat=TRUE,digits=3,fast=TRUE)
+out.Stats5a <- out.Stats5[order(as.numeric(as.character(out.Stats5[,2]))),]
+xtab5<-xtable(out.Stats5a, caption="Expression Mean by Chromosome for (-) r only",  label="tab:descStat5")
+print(xtab5,include.rownames = TRUE,table.placement="H")
+
+out.Stats6 <- psych::describeBy(comt.Meannegr[,2],group=comt.Meannegr$chr,mat=TRUE,digits=3,fast=TRUE)
+out.Stats6a <- out.Stats6[order(as.numeric(as.character(out.Stats6[,2]))),]
+xtab6<-xtable(out.Stats6a, caption="Mean Correlation by Chromosome for (-) r only",  label="tab:descStat6")
+print(xtab6,include.rownames = TRUE,table.placement="H")
+
+@
+
+<<label=posnegSplitlist, echo=FALSE >>=
+# Put the positive corr and negative corr dataframes into one list
+posneg.Splits <- list(comt.Meanposr,comt.Meannegr)
+posneg.Labels <- c(' Positive Correlations with COMT Expression: PrePrefrontal Cortex',
+                   ' Negative Correlations with COMT Expression: PrePrefrontal Cortex')
+
+@
+
+
+<<label=genesBychrom, echo = FALSE, results = tex>>=
+direct.Corr <- c('Positively','Negatively')
+chr.Labels <- as.character(c(1:22,'X','Y'))
+num.Genes <- matrix(rep(NA,48),nrow=24)
+
+############ DEBUG
+for (ng in 1:2) {
+#ng <- c(2)
+##################  
+  
+  my.Genes <- split(posneg.Splits[[ng]][,3:4], ordered(as.numeric(as.character(posneg.Splits[[ng]][,3]))))
+
+for (i in 1:length(my.Genes)) {
+  rownames(my.Genes[[i]]) <- NULL
+  num.Genes[i,ng] <- length(my.Genes[[i]][,2])
+}
+
+
+########## DEBUG
+#for (kc in 1:10) {
+for (j in 1:length(my.Genes)) {
+#for (j in 1:19) {
+#j <- c(23)
+  #################
+  
+  
+if (exists('hold.Col')) {
+        rm(hold.Col)
+} else {
+
+}
+
+  nRows <- c(0)
+  plusCol <- c(0)
+  padBlank <- c(0)
+  extraRow <- c(0)
+
+
+nRows <- floor(length(my.Genes[[j]][,2])/4)
+plusCol <- length(my.Genes[[j]][,2]) %% 4
+
+if (plusCol > 0) {
+      padBlank <- c(4 - plusCol)
+      extraRow <- 1
+} else {
+      padBlank <- 0
+      extraRow <- 0
+}
+
+
+hold.Col <- matrix(rep("",(length(my.Genes[[j]][,2])+padBlank)),nrow=nRows + extraRow,
+                       ncol=4,byrow = TRUE)
+
+
+if (nRows > 0) {
+  for (k in 1:nRows) {
+    limVals <- c(((k-1)*4 + 1),((k-1)*4 + 4))
+    hold.Col[k,1:4] <- as.character(my.Genes[[j]][limVals[1]:limVals[2],2])
+  }
+
+      if (plusCol > 0) {
+        limVals <- c((((nRows+1)-1)*4 + 1),(((nRows+1)-1)*4 + plusCol))
+        hold.Col[nRows+1,1:plusCol] <- as.character(my.Genes[[j]][limVals[1]:limVals[2],2])
+
+      } else {
+
+      }
+
+} else if (nRows == 0) {
+  if (plusCol > 0) {
+    limVals <- c((((nRows+1)-1)*4 + 1),(((nRows+1)-1)*4 + plusCol))
+    hold.Col[nRows+1,1:plusCol] <- as.character(my.Genes[[j]][limVals[1]:limVals[2],2])
+
+  } else {
+
+  }
+} else {
+
+}
+
+colnames(hold.Col) <- c(rep('',4))
+
+my.Genes.ltx <- latex(hold.Col,file='COMT_correlated_genes_by_chromosome.tex',
+#my.Genes.ltx <- latex(hold.Col,file='',
+                      insert.top=paste('Genes on Chromosome ',chr.Labels[j],' with Expression ',direct.Corr[ng],' Correlated with COMT Expression in Prefrontal Cortex',sep=c('')),
+                      booktabs=TRUE,
+                      label=paste('geneTable',as.character(j),sep=''),
+                      cgroup = c('Genes'),
+                      n.cgroup = c(4),
+                      na.blank = TRUE,
+                      vbar = FALSE,
+                      longtable=TRUE,
+                      table.env=FALSE,
+                      continued=c(paste('Genes on Chromosome ',chr.Labels[j],' continued',sep='')),
+                      first.hline.double = TRUE,
+                      size=c('tiny'),
+                      append=TRUE
+                      )
+my.Genes.ltx
+
+} # end chromosomes with n > 1 gene index (j)
+
+# } # end k debug loop  
+  
+} # end pos/neg split
+@
+
+
+<<label=countgenes.Chr, echo = FALSE, results=tex>>=
+genes.per.10Mb <- matrix(rep(NA,72),nrow=24,ncol=3)
+count.Tab <- data.frame(Sign=dfsort$corsign,Chr=dfsort$chr,Count=dfsort$freq)
+compact.Count <- data.frame(Chromosome=count.Tab$Chr[1:24],
+                            Positive=count.Tab$Count[25:48],
+                            Negative=count.Tab$Count[1:24]
+                            )
+#compact.Count$Chromosome[23] <- c('X')
+# compact.Count$Chromosome[24] <- c('Un')
+# compact.Count$Negative[22] <- c('')
+#compact.Count <- compact.Count[1:23,]
+#compact.Count[22,3] <- c(0)   # set to zero for next calculation
+compact.Count[,3] <- as.numeric(compact.Count[,3])
+compact.Count <- data.frame(compact.Count,chrom.Len=chrom.Data$chrom.Length)
+genes.per.10Mb[,1] <- round((compact.Count$Positive/compact.Count$chrom.Len)*10000000,2)
+genes.per.10Mb[,2] <- round((compact.Count$Negative/compact.Count$chrom.Len)*10000000,2)
+genes.per.10Mb[,3] <- round(genes.per.10Mb[,1]/genes.per.10Mb[,2],3)
+compact.Count <- data.frame(compact.Count,
+                            pos10Mb=genes.per.10Mb[,1],
+                            neg10Mb=genes.per.10Mb[,2],
+                            ratio.PtoN.per10Mb=genes.per.10Mb[,3])
+
+
+
+# compact.Count[22,3] <- c('')
+# compact.Count[22,6] <- c('')
+compact.Count$Positive <- as.numeric(compact.Count$Positive)
+compact.Count$pos10Mb <- as.numeric(compact.Count$pos10Mb)
+compact.Count$Negative <- as.numeric(compact.Count$Negative)
+compact.Count$neg10Mb <- as.numeric(compact.Count$neg10Mb)
+
+
+cell.Formats <- matrix(rep("",72),
+                       nrow=24,ncol=3,byrow = TRUE)
+# cell.Formats[22,3] <- 'framebox(12,12) {    }'
+
+
+
+gene.Tab <- latex(compact.Count[,c(1,5:6)],file='',
+                  title=c('Counts of Genes Per 10Mb by Chromosome and Sign of Correlation'),
+                      columnlabel.just=c('r'),
+                      booktabs=TRUE,
+                  insert.top=('Counts of Genes Per 10 Mb by Chromosome: Expression Correlated with COMT Expression in Prefrontal Cortex'),
+#                      caption=paste('Chromosome ',as.character(my.Genes[[j]][1,1]),sep=''),
+                      label=c('genecount'),
+                      colheads=c('Chromosome','Positive','Negative'),
+                      na.blank = TRUE,
+                      vbar = FALSE,
+#                      cgroup = c('','Correlation'),
+#                      n.cgroup = c(1,2),
+                      rowname=NULL,
+                      first.hline.double = TRUE,
+                      numeric.dollar=FALSE,
+                      col.just=c(">{\\centering}m{0.75in}",">{\\centering}m{0.75in}",">{\\centering}m{0.75in}"),
+                      cellTexCmds=cell.Formats
+
+)
+
+print(gene.Tab)
+
+
+
+@
+
+<<label=pos2negratio, echo=FALSE, include=FALSE, pdf=FALSE, eps=TRUE >>=
+### Plot the average correlation by chromosome for both positive and negative correlations
+
+
+
+@
+
+
+
+<<label=reportChr_null, echo=FALSE, results=hide >>=
+### Check only the positively correlated (with COMT) genes
+
+no.Genes.pos <- c('')
+no.Genes.neg <- c('')
+
+count.Pos <- c(0)
+count.Neg <- c(0)
+for (ib in 1:24) {
+
+  if (isTRUE(is.na(compact.Count$Positive[ib]))) {
+        no.Genes.pos <- c(paste('Chromosome(s) ',
+                                 as.character(ib),
+                                ' had no genes with expression levels positively correlated with                                               the expression of COMT in Prefrontal cortex.  COMT is on Chromosome 22.',sep=''))
+        count.Pos <- count.Pos +1
+
+  } else {
+    
+  }
+}   
+ if(count.Pos == 0) {
+        
+        no.Genes.pos <- c('All 22 autosomes plus X and Y had genes whose expression levels
+                          were positively correlated with the expression of COMT
+                          in Prefrontal cortex.')
+        
+        
+ } else {
+        
+}
+
+
+### Now check only the negatively correlated (with COMT) genes
+
+
+
+
+for (ib in 1:24) {
+
+  if (isTRUE(is.na(compact.Count$Negative[ib]))) {
+        no.Genes.neg <- c(paste('Chromosome ',
+                                 as.character(ib),
+                                ' had no genes with expression levels negatively correlated with                                               the expression of COMT in Prefrontal cortex. COMT is on Chromosome 22.',sep=''))
+        count.Neg <- count.Neg +1
+        
+  } else {
+    
+  }
+} 
+
+ if(count.Neg == 0) {
+        
+        no.Genes.neg <- c('All 22 autosomes plus X and Y had genes whose expression levels were negatively correlated with the expression of COMT in Prefrontal cortex.')
+        
+ } else {
+        
+ }
+
+@
+
+\hrule
+\vspace{0.5em}
+\textit{\Sexpr{no.Genes.pos}} \\
+
+
+\textit{\Sexpr{no.Genes.neg}} \\
+\vspace{0.5em}
+\hrule
+\vspace{1.0em}
+
+
+%%%%%%%%%%%%%%% Histograms
+\hspace{-1.5em}
+\hspace{-1.5em}
+\begin{figure}[H]
+\begin{center}
+\subfloat[Histogram of mean expression level +r only]{
+
+<<label=expr_Var_hist+r, fig=TRUE, echo=FALSE, include=FALSE>>= #,pdf=FALSE, eps=TRUE
+hist(comt.Meanposr$mean,xlab=c('Mean Expression positive r only'),
+     main=c(''),20
+     )
+
+hist1.eps <- paste(pre.Name,'expr_Var_hist+r.eps',sep='')
+@
+
+\includegraphics[width=0.4\textwidth]{\Sexpr{hist1.eps}}
+}
+\qquad
+\subfloat[Histogram of sample correlations +r only]{
+
+<<label=corr_Var_hist+r, fig=TRUE, echo=FALSE, include=FALSE>>= #,pdf=FALSE, eps=TRUE
+hist(comt.Meanposr$corr,xlab=c('Sample correlation positive r only'),
+    main=c(''),20
+    )
+
+hist2.eps <- paste(pre.Name,'corr_Var_hist+r.eps',sep='')
+@
+
+\includegraphics[width=0.4\textwidth]{\Sexpr{hist2.eps}}
+}
+\qquad
+\subfloat[Histogram of sample expression -r only]{
+
+<<label=expr_Var_hist-r, fig=TRUE, echo=FALSE, include=FALSE>>= #,pdf=FALSE, eps=TRUE
+hist(comt.Meannegr$mean,xlab=c('Mean Expression negative r only'),
+     main=c(''),20
+     )
+
+hist3.eps <- paste(pre.Name,'expr_Var_hist-r.eps',sep='')
+@
+
+\includegraphics[width=0.4\textwidth]{\Sexpr{hist3.eps}}
+}
+\qquad
+\subfloat[Histogram of sample correlations -r only]{
+
+<<label=corr_Var_hist-r, fig=TRUE, echo=FALSE, include=FALSE>>= #,pdf=FALSE, eps=TRUE
+#### Plot with x-axis reversed to keep the skew in line with the other histograms
+hist(comt.Meannegr$corr,xlab=c('Sample correlation negative r only'),
+    main=c(''),20, xlim = rev(range(comt.Meannegr$corr))
+    )
+
+hist4.eps <- paste(pre.Name,'corr_Var_hist-r.eps',sep='')
+@
+
+\includegraphics[width=0.4\textwidth]{\Sexpr{hist4.eps}}
+}
+
+\end{center}
+\end{figure}
+
+
+%%%%%%%%%%%%%%% Histograms
+\hspace{-1.5em}
+\hspace{-1.5em}
+\begin{figure}[H]
+\begin{center}
+\subfloat[Histogram of -log10(pval) +r only]{
+
+<<label=minuslogP+r, fig=TRUE, echo=FALSE, include=FALSE>>= #,pdf=FALSE, eps=TRUE
+hist(-log10(manhat.Posr$P),20,xlab=c('-log10(p-value)'),
+     main=c(''),20
+     )
+
+histp1.eps <- paste(pre.Name,'minuslogP+r.eps',sep='')
+@
+
+\includegraphics[width=0.4\textwidth]{\Sexpr{histp1.eps}}
+}
+\qquad
+\subfloat[Histogram of -log10(pval) -r only]{
+
+<<label=minuslogP-r, fig=TRUE, echo=FALSE, include=FALSE>>= #,pdf=FALSE, eps=TRUE
+hist(-log10(manhat.Negr$P),xlab=c('-log10(p-value)'),
+    main=c(''),20
+    )
+
+histp2.eps <- paste(pre.Name,'minuslogP-r.eps',sep='')
+@
+
+\includegraphics[width=0.4\textwidth]{\Sexpr{histp2.eps}}
+}
+
+\end{center}
+\end{figure}
+
+
+%%%%%%%%%%%%%%% Barcharts
+\hspace{-1.5em}
+\hspace{-1.5em}
+\begin{figure}[h]
+\begin{center}
+\subfloat[Barchart: Number of Genes Per Chromosome +r Only]{
+
+<<label=plotgenesperchrom+r, fig=TRUE, echo=FALSE, include=FALSE>>= #,pdf=FALSE, eps=TRUE
+
+barchart(ordered(as.numeric(as.character(posneg.Splits[[1]][,3]))),
+         xlab=c('Number of Genes'),
+         ylab=c('Chromosome'),
+         main=c('Number of Genes per Chromosome Whose Expression \n
+                Is Positively Correlated with COMT Expression'),
+         )
+
+bar1.eps <- paste(pre.Name,'plotgenesperchrom+r.eps',sep='')
+
+@
+
+\includegraphics[width=0.4\textwidth]{\Sexpr{bar1.eps}}
+}
+\qquad
+\subfloat[Barchart: Number of Genes Per Chromosome -r Only]{
+
+<<label=plotgenesperchrom-r, fig=TRUE, echo=FALSE, include=FALSE>>= #,pdf=FALSE, eps=TRUE
+
+barchart(ordered(as.numeric(as.character(posneg.Splits[[2]][,3]))),
+         xlab=c('Number of Genes'),
+         ylab=c('Chromosome'),
+         main=c('Number of Genes per Chromosome Whose Expression \n
+                Is Negatively Correlated with COMT Expression'))
+
+bar2.eps <- paste(pre.Name,'plotgenesperchrom-r.eps',sep='')
+@
+
+\includegraphics[width=0.4\textwidth]{\Sexpr{bar2.eps}}
+}
+\end{center}
+\end{figure}
+
+
+
+%%%%%%%%%%%%%%% Scatterplots
+\hspace{-1.5em}
+\hspace{-1.5em}
+\begin{figure}[ht]
+\begin{center}
+\subfloat[Scatterplot Expression Level vs. Correlation (+r) only]{
+
+<<label=corr_expr_posr, fig=TRUE, echo=FALSE, include=FALSE>>= #,pdf=FALSE, eps=TRUE
+xVar <- comt.Meanposr$mean
+yVar <- comt.Meanposr$corr
+title.Txt <- c('Correlation; Expression level vs. Sample correlation\n (positive r only)')
+xlabel.Txt <- c('Expression level')
+ylabel.Txt <- c('Sample r')
+corr1 <- round(cor(comt.Meanposr$mean,comt.Meanposr$corr),3)
+
+out.Plot1 <- square.Axes(xVar,yVar,title.Txt,xlabel.Txt,ylabel.Txt,corr1)
+out.Plot1
+
+scat1.eps <- paste(pre.Name,'corr_expr_posr.eps',sep='')
+
+@
+
+\includegraphics[width=0.4\textwidth]{\Sexpr{scat1.eps}}
+}
+\qquad
+\subfloat[Scatterplot Expression Level vs. Correlation (+r) only]{
+
+<<label=corr_expr_negr, fig=TRUE, echo=FALSE, include=FALSE>>= #,pdf=FALSE, eps=TRUE
+xVar <- comt.Meannegr$mean
+yVar <- comt.Meannegr$corr
+title.Txt <- c('Correlation; Expression level vs. Sample correlation\n (negative r only)')
+xlabel.Txt <- c('Expression level')
+ylabel.Txt <- c('Sample r')
+corr2 <- round(cor(comt.Meannegr$mean,comt.Meannegr$corr),3)
+
+out.Plot2 <- square.Axes(xVar,yVar,title.Txt,xlabel.Txt,ylabel.Txt,corr2)
+out.Plot2
+
+scat2.eps <- paste(pre.Name,'corr_expr_negr.eps',sep='')
+
+@
+
+\includegraphics[width=0.4\textwidth]{\Sexpr{scat2.eps}}
+}
+\end{center}
+\end{figure}
+
+<<label=count2Genes, echo=FALSE, results=hide >>=
+hold.Counts <- matrix(rep(NA,72),nrow=24)
+hold.Counts[,1] <- c(1:24)
+for (i in 1:24) {
+  hold.Counts[i,2] <- length(which(manhat.Posr$CHR == i))
+  hold.Counts[i,3] <- length(which(manhat.Negr$CHR == i))
+}
+
+@
+
+%%%%%%%%%%%%%%% Manhattan Plots
+\hspace{-1.5em}
+\hspace{-1.5em}
+\begin{figure}[ht]
+\begin{center}
+%\subfloat[Manhattan Plot positive r genes only]{
+
+<<label=Manhatt_posr, fig=TRUE, echo=FALSE, include=FALSE, results=hide>>= #,pdf=FALSE, eps=TRUE
+manhatt.Posr <- manhattan(manhat.Posr.withCOMT,
+                          main=c('Manhattan Plot: Expression Positive Correlations\n with Prefrontal Cortex COMT Expression'),
+                          chr = "CHR", bp = "BP", p = "P", snp = "SNP",
+                          cex.main = 0.75,
+                          cex = 0.25, cex.axis = 0.8,
+                          ylim=c(0,40),
+                          col = c("blue4", "blue1")
+#                          col=brewer.pal(1, "Set1") 
+)
+manhatt.Posr
+
+manh1.eps <- paste(pre.Name,'Manhatt_posr.eps',sep='')
+
+@
+
+\includegraphics[width=0.8\textwidth]{\Sexpr{manh1.eps}}
+\end{center}
+\end{figure}
+
+
+% }
+% \qquad
+% \subfloat[Manhattan Plot negative r genes only]{
+
+\begin{figure}[ht]
+\begin{center}
+<<label=Manhatt_negr, fig=TRUE, echo=FALSE, include=FALSE,results=hide>>= #,pdf=FALSE, eps=TRUE
+manhatt.Negr <- manhattan(manhat.Negr,
+                          main=c('Manhattan Plot Expression Negative Correlation\n with Prefrontal Cortex COMT Expression'),
+                          chr = "CHR", bp = "BP", p = "P", snp = "SNP",
+                          cex.main = 0.75,
+                          cex = 0.25, cex.axis = 0.8,
+                          ylim=c(0,30),
+                          col = c("blue4", "blue1")
+#                          col=brewer.pal(1, "Set1")
+)
+manhatt.Negr
+
+manh2.eps <- paste(pre.Name,'Manhatt_negr.eps',sep='')
+@
+
+
+\includegraphics[width=0.8\textwidth]{\Sexpr{manh2.eps}}
+% }
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+\begin{center}
+<<label=Manhatt_bothr, fig=TRUE, echo=FALSE, include=FALSE,results=hide>>= #,pdf=FALSE, eps=TRUE
+manhatt.Bothr <- manhattan(rbind(manhat.Posr,manhat.Negr),
+                          main=c('Manhattan Plot Expression Correlations\n with Prefrontal Cortex COMT Expression'),
+                          chr = "CHR", bp = "BP", p = "P", snp = "SNP",
+                          cex.main = 0.75,
+                          cex = 0.25, cex.axis = 0.8,
+                          ylim=c(0,40),
+                          col = c("blue4", "blue1")
+#                          col=brewer.pal(1, "Set1")
+)
+manhatt.Bothr
+
+manh3.eps <- paste(pre.Name,'Manhatt_bothr.eps',sep='')
+@
+
+
+\includegraphics[width=0.8\textwidth]{\Sexpr{manh3.eps}}
+% }
+\end{center}
+\end{figure}
+
+
+\begin{figure}
+\begin{center}
+<<label=ggmanhattan1, echo=FALSE, include=FALSE, fig=TRUE, pdf=FALSE, eps=TRUE>>=
+manhat.ggman.pos <- manhat.Posr.withCOMT
+colnames(manhat.ggman.pos) <- c('chrom','bp','pvalue','snp','expr')
+manhat.ggman.pos <- manhat.ggman.pos[c(4,1,2,3,5)]
+p1 <- ggman(manhat.ggman.pos[2:dim(manhat.ggman.pos)[1],],relative.positions = TRUE)
+
+p1
+ggmanp1.eps <- paste(pre.Name,'ggmanp1.eps',sep='')
+
+@
+
+%\includegraphics[width=0.8\textwidth]{\Sexpr{ggmanp1.eps}}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+<<label=ggmanhattan1, echo=FALSE, include=FALSE, fig=TRUE, pdf=FALSE, eps=TRUE>>=
+manhat.ggman.pos.sig <- manhat.ggman.pos[-log10(manhat.ggman.pos$pvalue)>25,]
+manhat.ggman.pos.sig <- manhat.ggman.pos.sig[2:dim(manhat.ggman.pos)[1],]
+p2 <- ggmanLabel(p1, labelDfm = manhat.ggman.pos.sig, snp = "snp", label = "snp",type='text',size=c(3))
+p2
+ggmanp2.eps <- paste(pre.Name,'ggmanp2.eps',sep='')
+
+@
+
+%\includegraphics[width=0.8\textwidth]{\Sexpr{ggmanp2.eps}}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+<<label=ggmanhattan1, echo=FALSE, include=FALSE, fig=TRUE, pdf=FALSE, eps=TRUE>>=
+### Zoom on Chromosome 22 that contains COMT
+p3 <- ggmanZoom(p2, chromosome = 22) + 
+  geom_vline(xintercept = manhat.ggman.pos$bp[1],
+               col='darkgreen',
+               size = 0.5) +
+  # Put a line at 8 (-log10(10^(-8))) for genome-wide significance level
+    geom_hline(yintercept = c(8),
+               col='red',
+               size = 0.5,
+               linetype='dashed') +
+    annotate("text", x = 1.1*manhat.ggman.pos$bp[1],
+             y = 23,
+             label = c('COMT'),
+             color="darkgreen",
+             size=3)
+  
+p3
+ggmanp3.eps <- paste(pre.Name,'ggmanp3.eps',sep='')
+
+@
+
+%\includegraphics[width=0.8\textwidth]{\Sexpr{ggmanp3.eps}}
+\end{center}
+\end{figure}
+
+
+
+
+\end{document}
+
+
+ 

@@ -1,0 +1,478 @@
+\documentclass[11pt]{article}
+\usepackage{graphicx, subfig}
+\usepackage{float}
+\pagenumbering{arabic}
+\usepackage{enumerate}
+\usepackage{Sweave}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{framed}
+\usepackage{longtable}
+\usepackage{tablefootnote}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{keep.source=TRUE} 
+
+\hspace{-1.5em}Gene Network\\
+COMT expression correlations in Four Bartin Areas\\
+Fall, 2017\\
+
+
+
+<<echo=FALSE>>=
+library(knitr)
+library(openxlsx)
+library(xtable)
+#library(magrittr)
+library(tables)
+library(plyr)
+library(scales)
+library(utils)
+# library(ggman)
+library(dplyr)
+library(biomaRt)
+library(stringr)
+library(curl)
+
+setwd('/Volumes/Macintosh_HD_3/genetics/genenetwork2/')
+
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/squareAxes.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork/histChrfunc.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork/onlycisChr.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork/hypergeom_plot.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/countNA.R') # function num.NA()
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_get_match_length.R') #len.match()
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func.chrom.names.R') # extract Chr names
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_get_start_pos.R') # extract and scale start positions
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/commaSep.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_myBioCLite.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/nums2genes.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_genes_are_nums.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_genes_are_locs.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_genes2chr.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_anyY.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_gene_start_end.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/raincloudPlots.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_chisq_genesBychr.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_mismatch_hgnc.R')
+
+
+stand.Col.names <- c('Prefrontal',
+                     'Cerebellum',
+                     'Temporal',
+                     'Pons')
+
+@
+
+<<init, include=FALSE >>=
+opts_chunk$set(include=FALSE,
+               echo=FALSE,
+               message=FALSE,
+               warning=FALSE)
+@
+
+
+
+<<include=FALSE, echo=FALSE, results=hide>>=
+# Generate a unique ID for this program by path and filename. This unique ID is attached to this file using a tag in the filesystem.
+source('unique_id_generator.R')
+
+fname <- c("/Volumes/Macintosh_HD_3/genetics/genenetwork2/gene_names_check_v1.Rnw")
+
+prog.Name <- unique.ID(fname)
+
+prog.Name
+
+sUs <- c(TRUE)  # Applies to biocLite installations sUs = suppress Update status
+sAUs <- c(TRUE)  # Applies to biocLite installations sAUs = suppress Auto Update status
+@
+
+This program has the unique ID: \Sexpr{prog.Name}.
+
+<<>>=
+#myBioCLite() # This function updates only the packages that need to be updated
+
+
+#biocLite('enrichR')
+library('enrichR')
+dbs.Enrichr <- listEnrichrDbs()
+
+source("https://bioconductor.org/biocLite.R")
+
+#   biocLite(c("GenomicFeatures"),suppressUpdates=sUs, suppressAutoUpdate=sAUs)   
+#   biocLite(c("AnnotationDbi"),suppressUpdates=sUs, suppressAutoUpdate=sAUs)   
+#   biocLite(c("org.Hs.eg.db"),suppressUpdates=sUs, suppressAutoUpdate=sAUs)   
+
+
+library("AnnotationHub")
+library("GenomicFeatures")
+library("org.Hs.eg.db")
+
+
+#      biocLite(c('hgu95av2.db'),suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+
+
+library('hgu95av2.db')
+
+
+#      biocLite("illuminaHumanv4.db",suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+
+
+#library("illuminaHumanv4.db")
+
+source("https://bioconductor.org/workflows.R")
+
+
+#  workflowInstall("annotation")   
+
+#  biocLite("TxDb.Hsapiens.UCSC.hg19.knownGene",suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene #shorthand (for convenience)   
+
+
+#      biocLite('EDASeq',suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+
+library('EDASeq')
+
+
+#      biocLite('lumi',suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+
+
+library(lumi)
+
+#      biocLite('lumiHumanIDMapping',suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+
+library(lumiHumanIDMapping)
+# 
+
+# #      biocLite('lumiHumanAll.db',suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+
+library('lumiHumanAll.db')
+
+#      biocLite('rBLAST',suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+
+# library(rBLAST)
+
+
+#      biocLite (c( "beadarray" , "limma" , "illuminaHumanv2.db"),
+#                suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+library(limma)
+library("illuminaHumanv2.db")
+
+# 
+
+#      biocLite('annotate',suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+
+library('annotate')
+
+library("beadarray","limma")
+
+entrez_object <- org.Hs.egGO    
+
+ensembl <- useMart("ENSEMBL_MART_ENSEMBL", dataset = "hsapiens_gene_ensembl")
+#ensembl = useEnsembl(biomart="ensembl",dataset = "hsapiens_gene_ensembl")
+
+normal.chroms <- c(1:22, "X", "Y", "M")
+
+ ah <- AnnotationHub()
+ 
+ orgs <- AnnotationHub::query(ah, "org.Hs.eg.db")
+
+ gene.DB <- orgs[["AH57973"]]
+
+
+# columns(gene.DB)
+# keytypes(gene.DB)
+ 
+ ## Bimap interface:
+x <- org.Hs.egCHR
+# Get the entrez gene identifiers that are mapped to a chromosome
+mapped_genes <- mappedkeys(x)
+# Convert to a list
+xx <- as.list(x[mapped_genes])
+
+chrom.Names <- c(as.character(seq(1,22,1)),'X','Y')
+
+# Use the hgu95av2.db and the hgu95av2CHRLENGTHS data to get the chromosome lengths
+
+# yy <- hgu95av2CHRLENGTHS
+# chrom.Data <- data.frame(chrom=chrom.Names,
+#                          chrom.Length=yy[chrom.Names]
+# )
+
+
+options(scipen = 999, digits = 5, width = 60, knitr.table.format = "latex")
+
+@
+<<echo=FALSE,include=FALSE,results=hide>>=
+### read the data file 
+
+
+wball <- loadWorkbook('comt_all_areas_correlation_results.xlsx')   
+
+# now tell R to read that workbook and which sheet
+  prefront.Data <- data.frame(read.xlsx(wball,sheet = "prefrontal"))
+  
+  cbell.Data <- data.frame(read.xlsx(wball,sheet = "cerebellum"))
+
+  tempor.Data <- data.frame(read.xlsx(wball,sheet = "temporal"))
+
+  pons.Data <- data.frame(read.xlsx(wball,sheet = "pons"))
+
+
+# create a list with these data frames to be used when the same operation is applied to all area
+  
+major.Area <- list(pf=prefront.Data,
+                   cb=cbell.Data,
+                   tm=tempor.Data,
+                   po=pons.Data)
+       
+
+# Get corrected start positions for all genes
+
+# pf.starts <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol",
+#                                          "chromosome_name", "start_position","end_position",
+#                                          "entrezgene"), filters = "illumina_humanref_8_v3", 
+#                           values = as.character(prefront.Data$Record), mart = ensembl)
+
+
+# Some of the gene Symbols have a period in them because they originally had '-' but that caused problems. Need to reinsert the '-' symbol, but have to escape it.
+
+# period.Indx.pf <- grep('\\.',prefront.Data$Symbol)
+# prefront.Data$Symbol[c(period.Indx.pf)] <- gsub('\\.','\\-',prefront.Data$Symbol[period.Indx.pf])
+# 
+# period.Indx.cb <- grep('\\.',cbell.Data$Symbol)
+# cbell.Data$Symbol[c(period.Indx.cb)] <- gsub('\\.','\\-',cbell.Data$Symbol[period.Indx.cb])
+# 
+# period.Indx.tm <- grep('\\.',tempor.Data$Symbol)
+# tempor.Data$Symbol[c(period.Indx.tm)] <- gsub('\\.','\\-',tempor.Data$Symbol[period.Indx.tm])
+# 
+# period.Indx.po <- grep('\\.',pons.Data$Symbol)
+# pons.Data$Symbol[c(period.Indx.po)] <- gsub('\\.','\\-',pons.Data$Symbol[period.Indx.po])
+
+
+@
+
+<<missing_genes >>=
+# Using the original data files, generate a table showing how many gene names are missing in each area
+  
+  missing.Data <- data.frame(geneSymb=c(rep(NA,4)),
+                             geneName=c(rep(NA,4)))
+
+
+  
+  missing.Data[,1] <- c(sum(is.na(prefront.Data$Symbol)),
+                    sum(is.na(cbell.Data$Symbol)),
+                    sum(is.na(tempor.Data$Symbol)),
+                    sum(is.na(pons.Data$Symbol)))
+  
+  func.sum.symb <- function(x,i) sum(is.na(x[i]$Symbol))
+  func.sum.gene <- function(x,i) sum(is.na(x[i]$Description))
+  
+  missing.Data[,1] <- sapply(major.Area,func.sum.symb,i=c(1:4))
+  missing.Data[,2] <- sapply(major.Area,func.sum.gene,i=c(1:4))
+  row.names(missing.Data) <- stand.Col.names
+
+  
+miss.tab <- xtable(missing.Data,
+                   caption=c('Missing gene symbols and gene names by brain area.'))  
+
+@
+
+This table shows that all 20,000 probes in each brain area have gene symbols.\\
+
+\Sexpr{\miss.tab}
+
+Unfortunately, not all of the gene symbols are official gene symbols. Some of them are even just numbers.
+
+
+
+<<>>=  
+# Determine how many genes appear more than once in an area because there were multiple Illumina probes used on the same gene.
+  
+temp.table <- list()
+
+i <- c(1:4)  
+
+  func.table <- function(x,i) table(x[i]$Symbol,useNA='no')
+  func.tabtab <- function(x,i) table(unlist(x))
+  func.add.row.names <- function(x,y,i) {row.names(x[i]) <- y[i]}
+  
+temp.table <- sapply(major.Area,func.table,i=c(1:4))
+temp.duplicated.genes <- sapply(temp.table[i],func.tabtab, i)
+
+temp.duplicated.genes <-matrix(unlist(temp.duplicated.genes))
+hold.temp <- temp.duplicated.genes[16:31]
+temp.duplicated.genes <- matrix(c(temp.duplicated.genes[1:15],0,hold.temp),ncol=4)
+
+temp.duplicated.genes <- data.frame(temp.duplicated.genes)
+colnames(temp.duplicated.genes) <- stand.Col.names
+row.names(temp.duplicated.genes) <- as.character(c(1:8))
+
+
+
+# Prefrontal, Temporal and Pons have a maximum of 8 for the number of times the same gene appears in the original data. Cerebellum has a maximum of 7.
+
+dup.genes.tab <- xtable(temp.duplicated.genes,
+                        caption=c('Frequency distribution of the number of probes per gene'))
+  
+@
+
+The next table shows the distribution of the number of probes per gene; that is, some genes had their expression level measured with only 1 probe, some with 2 probes, etc. to a maximum of 8 probes for the same gene.\\
+
+\Sexpr{dup.genes.tab}
+
+<<>>=
+# Read in the illumina_humanref_8_v2 excel file to get the entrez ids and gene symbols for all of the data from the 4 brain areas 
+
+wbillum <- loadWorkbook('illumina_human_ref_8_v2v3.xlsx')   
+
+# now tell R to read that workbook and which sheet
+  illumina8v2.Data <- data.frame(read.xlsx(wbillum,sheet = "illumina_v2"))
+  
+
+  illum.indx.v2 <- list()
+  
+
+for (j in 1:4) {
+  
+  illum.indx.v2[[j]] <- match(major.Area[[j]]$Record,illumina8v2.Data$ilmn)
+  major.Area[[j]]$ENTREZID <- illumina8v2.Data$entrez[illum.indx.v2[[j]]]
+  
+}
+
+  prefront.Data$ENTREZID <- major.Area[[1]]$ENTREZID
+  cbell.Data$ENTREZID <- major.Area[[2]]$ENTREZID
+  tempor.Data$ENTREZID <- major.Area[[3]]$ENTREZID
+  pons.Data$ENTREZID <- major.Area[[4]]$ENTREZID
+
+  
+@ 
+
+<<>>=
+# Only 6 or 7 ENTREZIDs are missing in each brain area. Find the missing ones, and use getBM with gene symbols to get the missing ENTREZIDs
+  
+  miss.entrez.indx <- list()
+  find.miss.entrez <- list()
+  where.miss.Symb <- list()
+  unique.miss.Symb <- list()
+  
+  miss.entrez.indx <- sapply(major.Area[i], function(x,i) which(is.na(x$ENTREZID)),i)
+  
+  find.miss.entrez <- sapply(major.Area[i], function (x,i,y) {getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol","chromosome_name", "start_position","end_position","entrezgene"), filters = 'hgnc_symbol', values = x$Symbol[unlist(y)], mart = ensembl)}, i, miss.entrez.indx[i]) 
+
+  
+   temp.found <- list()
+
+    for (l in 1:4)   {
+  
+      where.miss.Symb[[l]] <- sapply(major.Area[l], function(x,i,y,z) {match(as.character(x$Symbol[c(unlist(y))]),unique(unlist(z)))}, l, miss.entrez.indx[l],find.miss.entrez[2,l])
+  
+      temp.found[[l]] <- list(sapply(find.miss.entrez[6,l], function(x,i,y) {unique(unlist(x))[unlist(y)]},l,where.miss.Symb[l]))
+      
+      major.Area[[l]]$ENTREZID[miss.entrez.indx[[l]]] <- unlist(temp.found[[l]])
+
+    }
+   
+  prefront.Data$ENTREZID <- unlist(major.Area[[1]]$ENTREZID)
+  cbell.Data$ENTREZID <- unlist(major.Area[[2]]$ENTREZID)
+  tempor.Data$ENTREZID <-unlist(major.Area[[3]]$ENTREZID)
+  pons.Data$ENTREZID <- unlist(major.Area[[4]]$ENTREZID)
+  
+  
+  # Randomly sample 5 rows in each brain area, and check the ENTREZIDs by hand using gene cards
+  
+  hold.rand.rows <- matrix(rep(NA,100),ncol=5)
+  hold.rand.rows <- data.frame(hold.rand.rows)
+  colnames(hold.rand.rows) <- c('Brain Area', 'Row','Gene','fileENTREZID','genecardsENTREZID')
+  hold.rand.rows[,1] <- c('Prefrontal',rep('',4),
+                          'Cerebellum',rep('',4),
+                          'Temporal',rep('',4),
+                          'Pons',rep('',4))
+  hold.rand.rows[,2] <- c(as.integer(sample(1:20000,5,replace=FALSE)),
+                          as.integer(sample(1:20000,5,replace=FALSE)),
+                          as.integer(sample(1:20000,5,replace=FALSE)),
+                          as.integer(sample(1:20000,5,replace=FALSE)))
+  hold.rand.rows[,3] <-c(prefront.Data$Symbol[c(hold.rand.rows[1:5,2])],
+                         cbell.Data$Symbol[c(hold.rand.rows[6:10,2])],
+                         tempor.Data$Symbol[c(hold.rand.rows[11:15,2])],
+                         pons.Data$Symbol[c(hold.rand.rows[16:20,2])])
+  hold.rand.rows[,4] <-c(prefront.Data$ENTREZID[c(hold.rand.rows[1:5,2])],
+                         cbell.Data$ENTREZID[c(hold.rand.rows[6:10,2])],
+                         tempor.Data$ENTREZID[c(hold.rand.rows[11:15,2])],
+                         pons.Data$ENTREZID[c(hold.rand.rows[16:20,2])])
+  
+  
+ # All but MGC17330 were found by handf on Gene Cards and entered below. An internet lookup was used to try to find MGC17330.
+  
+  missing.Gene <- alias2SymbolTable('MGC17330', species = "Hs")   # Returns NA
+
+  # Use gene symbol for lookup  
+  missing.Gene <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol","chromosome_name", "start_position","end_position","entrezgene"), filters = 'hgnc_symbol', values = 'MGC17330', mart = ensembl)     # Also returns NA
+  
+  # Use entrezgene for lookup
+  # This returns PIK3IP1 as the gene symbol for this gene. It must be an alias.
+  missing.Gene <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol","chromosome_name", "start_position","end_position","entrezgene"), filters = 'entrezgene', values = '113791', mart = ensembl)     
+  
+# This is the correct entrezgene ID for PIK3IP1:  113791
+  
+  # Corrected in the primary data excel data file on March 23, 2018
+  # Corrected in illumina_human_ref_8_v2v3.xlsx March 23, 2018
+  # Corrected at this point in the program in cbell.Data$Symbol March 23, 2018
+  
+  cbell.Data$Symbol[19679] <- c('PIK3IP1')
+  
+  hold.rand.rows[,5] <- as.character(c(55540,
+                                       2617,
+                                       8890,
+                                       7106,
+                                       55246,
+                                       3249,
+                                       253152,
+                                       29895,
+                                       113791,         # not in gene cards MGC17330
+                                       9745,
+                                       284273,
+                                       220,
+                                       2897,
+                                       83879,
+                                       55850,
+                                       10383,
+                                       29103,
+                                       8639,
+                                       284443,
+                                       3178))
+  
+# Compare the two sets of ENTREZIDs: fileENTREZID, genecardsENTREZID
+  
+#  setdiff(hold.rand.rows[,4],hold.rand.rows[,5])  = numeric(0)
+
+@
+
+The ENTREZIDs from  n = 5 randomly sampled of rows from each brain area agree perfectly with the same entrezgene IDs looked up by hand using Gene Cards. 
+
+
+
+<<>>=
+# At this point, there are no missing Gene Symbols and no missing ENTREZIds in any of the brain area data.
+  
+# Next, need to get the Chromosome names (numbers, letters) & transcription start positions
+  
+# Before doing this, the gene Symbols that are purely numbers need to be converted to actual gene symbols and those that start with LOC also need to be converted.
+  
+# There are two functions sourced above for doing this.
+  
+  
+
+    
+  
+  
+@
+
+
+\end{document}

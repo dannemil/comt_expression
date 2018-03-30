@@ -1,0 +1,8 @@
+Running scratch pad and not on MB-COMT project
+
+  wball <- loadWorkbook('comt_correlations_20000_all_areas_augmented.xlsx')   
+
+# now tell R to read that workbook and which sheet
+  prefrontAug.Data <- data.frame(read.xlsx(wball,sheet = "prefrontal"))
+
+532

@@ -1,0 +1,354 @@
+\documentclass[letterpaper,12pt]{article}
+
+%\usepackage{dgjournal}
+
+
+%%% Note: remove the next two lines to submit article %%%%%%%%%%
+\usepackage{setspace}
+%\linespread{2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%       
+
+%% The mathptmx package is recommended for Times compatible math symbols.
+%% Use mtpro2 or mathtime instead of mathptmx if you have the commercially
+%% available MathTime fonts.
+%% Other options are txfonts (free) or belleek (free) or TM-Math (commercial)
+\usepackage{mathptmx}
+\usepackage{tensor}
+\usepackage{nicefrac}
+\usepackage{units}
+\usepackage{mathtools}
+\usepackage{mathrsfs}
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+\usepackage{nth}
+\usepackage{epsfig}
+\usepackage[makeroom]{cancel}
+\newcommand\Ccancel[2][black]{\renewcommand\CancelColor{\color{#1}}\cancel{#2}}
+\newcommand\Bcancel[2][black]{\renewcommand\CancelColor{\color{#1}}\bcancel{#2}}
+
+\usepackage{geometry}
+\usepackage{changepage}
+
+
+
+\usepackage[T1]{fontenc}
+\usepackage{makecell}
+\newcolumntype{x}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{tikz}
+\newcommand\diag[4]{%
+  \multicolumn{1}{p{#2}|}{\hskip-\tabcolsep
+  $\vcenter{\begin{tikzpicture}[baseline=0,anchor=south west,inner sep=#1]
+  \path[use as bounding box] (0,0) rectangle (#2+2\tabcolsep,\baselineskip);
+  \node[minimum width={#2+2\tabcolsep},minimum height=\baselineskip+\extrarowheight] (box) {};
+  \draw (box.north west) -- (box.south east);
+  \draw (box.south west) -- (box.south west);
+  \node[anchor=south west] at (box.south west) {#3};
+  \node[anchor=north east] at (box.north east) {#4};
+ \end{tikzpicture}}$\hskip-\tabcolsep}}
+
+
+%% Use the graphics package to include figures
+%\usepackage{graphics}
+
+%% Use natbib with these recommended options
+%\usepackage[authoryear,comma,longnamesfirst,sectionbib]{natbib}
+\usepackage[authoryear,comma,sectionbib]{natbib} 
+
+%%%%%%%%%%% Dannemiller added 01/19/2015 - standard preamble
+\usepackage{fancyhdr} % Headers and footers
+
+\pagestyle{fancyplain} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+\fancyhead[RO,RE]{\thepage} % Custom header text
+\renewcommand{\headrulewidth}{0pt} %0pt for no rule, 2pt thicker etc...
+\setlength{\headheight}{15.0pt}
+
+\usepackage{url}   %this allows us to cite URLs in the text
+
+\usepackage{booktabs}
+\usepackage{pstricks}
+\usepackage{amssymb}
+\usepackage{afterpage}
+\usepackage{transparent}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{multicol}
+%\usepackage{chngpage}
+
+
+\usepackage{enumerate}
+\usepackage{xspace}
+
+\usepackage{abbrevs}
+% example: \newabbrev\ART{American Repetrory Theater (ART)}[ART]
+\newabbrev\ssb{Sum of Squares Between genotypes ($SS_{B}$)}[$SS_{B}$]
+\newabbrev\ssw{Sum of Squares Within genotypes ($SS_{W}$)}[$SS_{W}$]
+\newabbrev\sst{Sum of Squares Total ($SS_{T}$)}[$SS_{T}$]
+\newabbrev\ci{current, intermediate (CI)}[CI]
+\newabbrev\cim{current, intermediate matrix (CI matrix)}[CI matrix]
+\newabbrev\cims{current, intermediate matrices (CI matrices)}[CI matrices]
+\newabbrev\civ{current, intermediate vector (CI vector)}[CI vector]
+\newabbrev\civs{current, intermediate vectors (CI vectors)}[CI vectors]
+\newabbrev\cis{current, intermediate scalar (CI scalar)}[CI scalar]
+\newabbrev\maf{minor allele frequency (MAF)}[MAF]
+
+
+
+%%% The following correct for a flawed if statement in package abbrev
+\makeatletter
+\renewcommand\maybe@space@{%
+  % \@tempswatrue % <= this is in the original
+  \maybe@ictrue % <= this is new
+  \expandafter   \@tfor
+    \expandafter \reserved@a
+    \expandafter :%
+    \expandafter =%
+                 \nospacelist
+                 \do \t@st@ic
+  % \if@tempswa % <= this is in the original
+  \ifmaybe@ic % <= this is new
+    \space
+  \fi
+}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{ textcomp }
+\newcommand\dblquote[1]{\textquotedblleft #1\textquotedblright} 
+\newcommand{\apos}{$\text{'}$}
+\newcommand{\be}{\begin{enumerate}}
+\newcommand{\ee}{\end{enumerate}}
+\newcommand{\bes}{\begin{enumerate*}}
+\newcommand{\ees}{\end{enumerate*}}
+\newcommand{\mb}{\noindent\makebox[\textwidth] }
+\newcommand{\den}{\hspace{2pt}\textendash \,}
+\newcommand{\dem}{\textemdash \,}
+\newcommand{\Eq}{Equation }
+
+
+
+%specific hyphenation
+\hyphenation{e-pi-neph-rine}
+\hyphenation{mol-e-cules}
+%\hyphenation{}
+
+
+\providecommand\phantomsection{}
+
+
+%\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{ colorlinks=false,pdfborderstyle={/S/U/W 1},citebordercolor=0 0 1 }
+\colorlet{transpyellow}{white!10!yellow}
+
+\usepackage{rotate}
+\usepackage{rotating}
+\usepackage{rotfloat}
+
+\usepackage{fontspec}
+\usepackage[lofdepth,lotdepth]{subfig}
+\usepackage{threeparttable} 
+\usepackage{tablefootnote}
+\usepackage{footnote}
+
+\usepackage{array}
+%\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{threeparttablex}
+
+
+\usepackage{pdflscape} 
+\usepackage{tabulary}
+\usepackage{ltxtable}
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\setlength\LTleft{0pt}
+\setlength\LTright{0pt}
+
+
+
+\usepackage{colortbl}
+\definecolor{riceblue}{hsb}{0.6,0.1,0.9}
+\definecolor{greenish}{rgb}{0.3,0.6,0.0}
+\definecolor{myblue}{rgb}{0.3,0.3,0.8}
+\definecolor{kugray5}{RGB}{224,224,224}
+\definecolor{lightgray}{gray}{0.9}
+\definecolor{pink}{rgb}{0.95,0.8,0.8}
+
+\usepackage{xltxtra}
+\usepackage{nicefrac}
+
+\usepackage{rotating}
+\usepackage{lscape}
+
+\usepackage{graphicx}
+%\usepackage{epstopdf}
+\graphicspath{/Users/dannemil/paperless/ase_manuscript/sagmb/}
+
+\usepackage[normal]{engord}
+
+\usepackage{enumitem}
+%\setlist[enumerate]{parsep=4pt}
+
+\usepackage [normalem] {ulem}
+
+\usepackage{tabularx}
+\newcolumntype{S}{@{\stepcounter{Definition}\theDefinition.~} >{\bfseries}l @{~--~}X@{}}
+\newcounter{Definition}[subsubsection]
+
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{caption}
+%\renewcommand{\tablename}{Table}
+\usepackage{threeparttable}
+
+\usepackage{setspace}% http://ctan.org/pkg/setspace
+\AtBeginEnvironment{tabular}{\singlespacing}% Single spacing in tabular environment
+
+%\usepackage{booktabs}
+\usepackage[detect-all]{siunitx}
+\robustify\bfseries
+
+\usepackage{tabularx,colortbl}
+\newcolumntype{Y}{>{\centering\arraybackslash} X}
+\renewcommand{\arraystretch}{1.5}
+
+\usepackage{amsmath, amsthm, amssymb}
+%\setlength{\mathindent}{0pt}
+
+\usepackage{etoolbox}
+\apptocmd\normalsize{%
+ \abovedisplayskip=12pt plus 3pt minus 9pt
+ \abovedisplayshortskip=0pt plus 3pt
+ \belowdisplayskip=12pt plus 3pt minus 9pt
+ \belowdisplayshortskip=7pt plus 3pt minus 4pt
+}{}{}
+
+
+%\numberwithin{figure}{section}
+
+\makeatletter
+\@addtoreset{footnote}{section}
+\makeatother
+
+\usepackage{mdwlist}
+
+
+\renewcommand*\thesubsection{\arabic{section}.\arabic{subsection}}
+\usepackage[title]{appendix}
+\newcounter{appendix}
+\numberwithin{equation}{appendix}
+\usepackage{tablefootnote}
+\usepackage{yhmath}
+\usepackage{ragged2e}
+
+\newcolumntype{C}[1]{>{\Centering\arraybackslash}p{#1}}
+
+\usepackage{makecell}
+\renewcommand\theadfont{\normalsize\bfseries}
+\renewcommand\theadalign{bc}
+\usepackage{cellspace}
+\setlength\cellspacetoplimit{5pt}
+\setlength\cellspacebottomlimit{5pt}
+
+\setlength{\LTpre}{6pt}
+\setlength{\LTpost}{6pt}
+
+
+
+%\setmainfont{Times}
+\setmainfont{Baskerville}
+%\setmainfont{Alegreya}
+%\setmainfont{Cardo}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\mtx}[1]{\mathbf{#1}}
+
+
+
+\DeclareMathSizes{12pt}{11pt}{8pt}{6pt}
+\everymath=\expandafter{\the\everymath\displaystyle}
+
+\setcounter{secnumdepth}{5}
+
+\usepackage{footnote}
+\makesavenoteenv{tabular}
+\makesavenoteenv{table}
+\usepackage{tablefootnote}
+
+
+\begin{document}
+
+\begin{landscape}
+\begin{longtable}{l >{\em}P{1.5in} >{\em}P{1.5in} >{\em}P{1.5in} >{\em}P{1.5in}}\caption{Fifty genes whose expression levels were most strongly negatively correlated with the expression of \textit{COMT} by brain area} \tabularnewline
+\toprule
+\multicolumn{1}{l}{\bfseries Rank}&\multicolumn{1}{c}{\bfseries Prefrontal}&\multicolumn{1}{c}{\bfseries Cerebellum}&\multicolumn{1}{c}{\bfseries Temporal}&\multicolumn{1}{c}{\bfseries Pons}\tabularnewline
+\midrule
+\endfirsthead\caption[]{\em (Top 50 negatively correlated genes continued)} \tabularnewline
+\midrule
+\multicolumn{1}{l}{\bfseries Rank}&\multicolumn{1}{c}{\bfseries Prefrontal}&\multicolumn{1}{c}{\bfseries Cerebellum}&\multicolumn{1}{c}{\bfseries Temporal}&\multicolumn{1}{c}{\bfseries Pons}\tabularnewline
+\midrule
+\endhead
+\midrule
+\endfoot
+\label{tab:top50neg}
+\hspace{-0.25em}1&UBP1&ARHGEF12&PSMC1&PRELID1\tabularnewline
+2&CADPS2&TMEM106C&CADPS2&EEF2K\tabularnewline
+3&NKRF&CNST&CCNB1&CAMSAP2\tabularnewline
+4&UBE3A&SNAP91&AGBL1&AAGAB\tabularnewline
+5&CCDC28A&CDS1&CYP4X1&ARHGEF12\tabularnewline
+6&RUSC1&GLE1&RAD1&FLOT2\tabularnewline
+7&CAMSAP1L1&MAP1B&RFC2&RARS\tabularnewline
+8&ABCA5&RUNDC3B&CCDC25&GPC5\tabularnewline
+9&GRSF1&RGS17&TRAF5&RAB11FIP5\tabularnewline
+10&ELOVL4&CELSR3&TMEM70&PRPF19\tabularnewline
+11&RAB11FIP5&RUSC1&INPP5A&HARS\tabularnewline
+12&RAB3GAP1&TTC19&IRX5&ARHGAP44\tabularnewline
+13&SCAMP1&CAMSAP2&SLC30A9&DNAJC5\tabularnewline
+14&LZTFL1&MSS51&RARS&BCAP31\tabularnewline
+15&SH3BGRL2&RNF150&HNRNPU&SRPRB\tabularnewline
+16&WDR69&PRKCE&PDE1A&CPEB3\tabularnewline
+17&KPNA4&SYT4&ZNF622&CDS1\tabularnewline
+18&RARS&SUZ12&SUPT16H&LUZP1\tabularnewline
+19&GABARAPL1&GFOD1&MPP3&NETO2\tabularnewline
+20&GPIAP1&FAM117B&TTC21B&ARPC5L\tabularnewline
+21&DENR&RIMKLB&CDKN3&AMER1\tabularnewline
+22&SDAD1&SERBP1&CAMSAP2&UBP1\tabularnewline
+23&PPP2CA&MYCBP2&ARL15&B4GALNT1\tabularnewline
+24&OPTN&CPEB3&UBP1&YAF2\tabularnewline
+25&DNAJA2&ZYG11B&RAD9B&ELOVL4\tabularnewline
+26&SH3GL2&ZNF398&DMAC1&ST3GAL3\tabularnewline
+27&PJA2&SCN2A&ABCA5&RALBP1\tabularnewline
+28&MYCBP2&ZNF540&FAM13B&AUNIP\tabularnewline
+29&NEFM&BSN&RUSC1&PRKCE\tabularnewline
+30&MGC35154&LIN9&BEST4&KIAA0319\tabularnewline
+31&CCNB1&EDC4&CUL3&RUNDC3B\tabularnewline
+32&NME5&RARS&USP15&PDXK\tabularnewline
+33&SMARCA2&NRIP3&LRCH1&INSM2\tabularnewline
+34&KIF21A&P3H3&LMO7&OPRL1\tabularnewline
+35&SPATA18&MMS19&CASC1&SUPV3L1\tabularnewline
+36&PSMC1&GPR135&SH3GL2&KIAA1217\tabularnewline
+37&MATR3&PLEKHA5&PLA2R1&TMEM74B\tabularnewline
+38&PREPL&SPIRE1&SHH&MTFP1\tabularnewline
+39&SEL1L&DENND1B&TLK1&FBXW7\tabularnewline
+40&VPS36&CNOT6&TCEAL4&CAPZA2\tabularnewline
+\newpage
+41&MCF2&WDFY1&HSF2&PSMC1\tabularnewline
+42&SAE1&CHD9&RET&CLASP1\tabularnewline
+43&HSF2&KDM2B&EIF2B3&TTC19\tabularnewline
+44&SNAP91&SNAPC4&UBE2D2&CNOT4\tabularnewline
+45&SYT4&STK36&POLR3C&C6orf106\tabularnewline
+46&C14ORF169&PHKA2&PDS5B&KIAA0100\tabularnewline
+47&ARHGEF3&CDK13&CHSY3&POLR3A\tabularnewline
+48&CADPS&ARPP21&WSCD2&PLCB1\tabularnewline
+49&PRR23B&SETDB2&GFM1&EMC9\tabularnewline
+50&IFITM5&FAM13A&CALB1&FBXO31\tabularnewline
+\bottomrule
+\end{longtable}
+\end{landscape}
+
+\end{document}

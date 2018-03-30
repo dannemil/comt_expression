@@ -1,0 +1,53 @@
+**** Re-run promoter queries
+
+Most strongly positively COMT-expression-correlated genes in each area in common with the 50 most strongly positively correlated genes in prefrontal cortex 
+
+cbell.Data$Symbol[which(cbell.Data$Record %in% probes.Common.50pos.cb)]
+"GPM6B"  
+"GPM6B"  
+"PMP22"  
+"SEC22C" 
+"CPQ"    
+"CAT"   
+"COMT"   
+"ATRAID" 
+"MYO6"   
+"PPIB"
+  
+> tempor.Data$Symbol[which(tempor.Data$Record %in% probes.Common.50pos.tm)]
+"GPM6B"   
+"GATM"    
+"GPM6B"   
+"MGLL"    
+"CAT"    
+"NTSR2"   
+"CDC14B"  
+"SEC22C"  
+"SLC3A2"  
+"PLPP3"  
+"PMP22"   
+"PTTG1IP" 
+"DTYMK"   
+"COMT"    
+"CLDN10" 
+"EDNRB"   
+"ECH1"    
+"TSPO"    
+"MEGF10"  
+"FGFR3"  
+"PKM"     
+"HSCB"    
+"CSTB"    
+"ACY1"
+   
+> pons.Data$Symbol[which(pons.Data$Record %in% probes.Common.50pos.po)]
+"GPM6B"   
+"C2ORF28" 
+"SEC22C"  
+"COMT"    
+"GPM6B"  
+"PMP22"   
+"GATM"    
+"CAT"     
+"CLU"     
+"MEGF10" 

@@ -1,0 +1,38 @@
+## load stuff
+
+> library(topGO)
+> data(geneList)
+> library(hgu95av2.db)
+
+## we need a vector like yours, so do some stuff
+> z <- select(hgu95av2.db, names(geneList), "SYMBOL")
+'select()' returned 1:many mapping between keys and columns
+> z <- z[!duplicated(z[,1]),]
+> geneList2 <- geneList
+> names(geneList2) <- z[,2]
+
+## the original geneList
+> head(geneList)
+1095_s_at   1130_at   1196_at 1329_s_at 1340_s_at 1342_g_at
+1.0000000 1.0000000 0.6223795 0.5412240 1.0000000 1.0000000
+
+## something similar to what you have
+> head(geneList2)
+      HGF    MAP2K1      RCC1     TERF1       HGF     TERF1
+1.0000000 1.0000000 0.6223795 0.5412240 1.0000000 1.0000000
+> sampleGOdata <- new("topGOdata", description = "whatevs",ontology = "BP", allGenes = geneList2, geneSel = topDiffGenes, nodeSize = 10, annot = annFUN.org, ID = "alias", mapping = "org.Hs.eg")
+
+Building most specific GOs .....    ( 1566 GO terms found. )
+
+Build GO DAG topology ..........    ( 4215 GO terms and 9916 relations. )
+
+Annotating nodes ...............    ( 225 genes annotated to the GO terms. )
+
+> resultFisher <- runTest(sampleGOdata, "classic","fisher")
+
+             -- Classic Algorithm --
+
+         the algorithm is scoring 776 nontrivial nodes
+         parameters:
+             test statistic:  fisher
+> resultFisher

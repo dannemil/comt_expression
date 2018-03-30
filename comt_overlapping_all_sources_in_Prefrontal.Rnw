@@ -1,0 +1,137 @@
+\documentclass[11pt]{article}
+\usepackage{graphicx, subfig}
+\usepackage{float}
+\pagenumbering{arabic}
+\usepackage{enumerate}
+\usepackage{Sweave}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{framed}
+\usepackage{longtable}
+\usepackage{tablefootnote}
+\usepackage[authoryear,comma,sectionbib]{natbib}
+\usepackage{hyperref}
+
+
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{keep.source=TRUE} 
+
+
+\hspace{-1.5em}Gene Network\\
+COMT expression correlations Prefrontal cortext\\
+Fall, 2017\\
+
+<<echo=FALSE>>=
+library(ggplot2,ggthemes)
+library(ggExtra)
+library(psych)
+library(ggpubr)       ### Make sure this is installed
+library(knitr)
+library(Hmisc)
+library(openxlsx)
+library(xtable)
+library(magrittr)
+library(tables)
+library(stargazer)
+library(plyr)
+library(rlist)
+library(qqman)
+library(manhattanly)
+library(Cairo)
+library(RColorBrewer)
+library(HGNChelper)
+library(tools)
+library(scales)
+library(devtools)
+install_github("drveera/ggman")
+library(ggman)
+library(dplyr)
+library(biomaRt)
+library(data.table)
+
+source("https://bioconductor.org/biocLite.R")
+# biocLite(c("GenomicFeatures", "AnnotationDbi"))
+# biocLite("org.Hs.eg.db")
+library("AnnotationHub")
+#library("GenomicFeatures")
+library("org.Hs.eg.db")
+
+source("https://bioconductor.org/workflows.R")
+# workflowInstall("annotation")
+
+
+options(scipen = 3, digits = 5, width = 60)
+@
+
+<<echo=FALSE, results=hide >>=
+### to prepend filename strings to plots
+pre.Name <- c('comt_overlapping_all_sources_in_Prefrontal-') #pre-ppended to eps output files
+# RColorBrewer palette
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+workdir <- getwd()
+source('histChrfunc.R')
+source('onlycisChr.R')
+
+coexpress.URL <- data.frame(site=NA,addr=NA)
+coexpress.URL[1,1:2] <- c('COXPRESdb','http://coxpresdb.jp/')
+coexpress.URL[2,1:2] <- c('OMICtools','https://omictools.com/')
+coexpress.URL[3,1:2] <- c('Coexpedia','http://www.coexpedia.org/search.php')
+coexpress.URL[4,1:2] <- c('GeneFriends','http://www.genefriends.org/RNAseq/')
+coexpress.URL[5,1:2] <- c('GeneNetwork','http://gn2.genenetwork.org/')
+
+tissue <- c('Cerebellum','Pons','Prefrontal Cortex','Temporal Cerebral Wall')
+tissue.num <- c(3)
+
+tab1 <- c(paste(workdir,'/sourcedb_url_table.tex',sep=''))
+tab2 <- c(paste(workdir,'/top10_pos_Prefrontal_Cortex.tex',sep=''))
+tab3 <- c(paste(workdir,'/top10_neg_Prefrontal_Cortex.tex',sep=''))
+tab4 <- c(paste(workdir,'/comt_overlapping_poscorr_source1_in_Prefrontal_Cortex.tex',sep=''))
+tab5 <- c(paste(workdir,'/comt_overlapping_poscorr_source4_in_Prefrontal_Cortex.tex',sep=''))
+
+@
+\begin{center}
+{\bfseries{COMT Expression in Prefrontal Cortex: Genes with Correlated Expression}}\\
+\end{center}
+
+Data were obtained from the GeneNetwork. All of the data came from the data set Human (hg19), Brain: Normal Gene Expression (NIH/Gibbs). Information on the data set can be found here: \href{http://genenetwork.org/webqtl/main.py?FormID=sharinginfo&GN_AccessionId=482}{Brain: Normal Gene Expression (NIH/Gibbs)}. A paper with the description of the data is %\citet{Hernandez2012}.
+
+
+
+Search was on COMT. The expression levels of 20,000 genes in Prefrontal Cortex were correlated across 138 Subjects with the expression of COMT in that tissue. Genes were separated into those that correlated positively with COMT and those that correlated negatively. The gene with the highest positive correlation with COMT was ECH1.
+
+The individual subject data for 138 subjects both for COMT and ECH1 expression were obtained in four different tissues: Cerebellum, Pons, Prefrontal Cortex and Temporal Cerebral Wall.
+
+The sources of the matching or coexpression data were at:\\
+
+\input{\Sexpr{tab1}}
+
+The ten most highly positively correlated genes with COMT expression in \Sexpr{c(tissue[tissue.num])} were:\\
+
+\input{\Sexpr{tab2}}
+
+The ten most highly negatively correlated genes with COMT expression in \Sexpr{c(tissue[tissue.num])} were:\\
+
+\input{\Sexpr{tab3}}
+
+Next, several co-expression data sets were examined to determine whether any of the genes known to coexpress with COMT overlapped with the top 10 genes listed above. Only COMT-coexpressed genes that correlated at greater than 0.3 (or less than -0.3) were retained. The r = 0.3 threshold was determined using 10,000 permutations of the individual subject data to generate an empirical distribution of random correlations. The value of approximately 0.3 is significant at $p < 1~x~10^{-8}$.\\  
+
+
+{\textit{\Sexpr{coexpress.URL[1,1]}}}\\
+Three genes that are co-expressed with COMT are among the top 10 positively COMT-correlated genes:
+
+\input{\Sexpr{tab4}}
+
+{\textit{\Sexpr{coexpress.URL[4,1]}}}\\
+The same three genes that are co-expressed with COMT are among the top 10 positively COMT-correlated genes:
+
+\input{\Sexpr{tab5}}
+
+Several of the negatively correlated COMT-coexpressed genes from these other sources overlapped with the top 10 negatively correlated genes above, but none of them survived the $|r| < -0.3$.
+
+% \nextpage
+% \bibliography{/Users/dannemil/paperless/ase_manuscript/sagmb/refs_all.bib}
+
+\end{document}

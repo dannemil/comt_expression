@@ -1,0 +1,12 @@
+GO:0051343,0.0000648032845872124,442.181818181818,0.0141176470588235,2,3,positive regulation of cyclic-nucleotide phosphodiesterase activity,CALM1,CALM3
+GO:0060315,0.000321109337285411,110.511363636364,0.0282352941176471,2,6,negative regulation of ryanodine-sensitive calcium-release channel activity,CALM1,CALM3
+GO:0060316,0.000321109337285411,110.511363636364,0.0282352941176471,2,6,positive regulation of ryanodine-sensitive calcium-release channel activity,CALM1,CALM3
+GO:2000659,0.000321109337285411,110.511363636364,0.0282352941176471,2,6,regulation of interleukin-1-mediated signaling pathway,IL1RN,VRK2
+GO:0051342,0.000448205373952735,88.4,0.0329411764705882,2,7,regulation of cyclic-nucleotide phosphodiesterase activity,CALM1,CALM3
+GO:1901844,0.000448205373952735,88.4,0.0329411764705882,2,7,regulation of cell communication by electrical coupling involved in cardiac conduction,CALM1,CALM3
+GO:0005513,0.000595816161283328,73.6590909090909,0.0376470588235294,2,8,detection of calcium ion,CALM1,CALM3
+GO:0051280,0.000595816161283328,73.6590909090909,0.0376470588235294,2,8,negative regulation of release of sequestered calcium ion into cytosol,CALM1,CALM3
+GO:0010649,0.000763754225050869,63.1298701298701,0.0423529411764706,2,9,regulation of cell communication by electrical coupling,CALM1,CALM3
+GO:0010801,0.000763754225050869,63.1298701298701,0.0423529411764706,2,9,negative regulation of peptidyl-threonine phosphorylation,CALM1,CALM3
+GO:0032516,0.000763754225050869,63.1298701298701,0.0423529411764706,2,9,positive regulation of phosphoprotein phosphatase activity,CALM1,CALM3
+GO:0051284,0.000763754225050869,63.1298701298701,0.0423529411764706,2,9,positive regulation of sequestering of calcium ion,CALM1,CALM3

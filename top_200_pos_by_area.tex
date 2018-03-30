@@ -1,0 +1,507 @@
+\documentclass[letterpaper,12pt]{article}
+
+%\usepackage{dgjournal}
+
+
+%%% Note: remove the next two lines to submit article %%%%%%%%%%
+\usepackage{setspace}
+%\linespread{2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%       
+
+%% The mathptmx package is recommended for Times compatible math symbols.
+%% Use mtpro2 or mathtime instead of mathptmx if you have the commercially
+%% available MathTime fonts.
+%% Other options are txfonts (free) or belleek (free) or TM-Math (commercial)
+\usepackage{mathptmx}
+\usepackage{tensor}
+\usepackage{nicefrac}
+\usepackage{units}
+\usepackage{mathtools}
+\usepackage{mathrsfs}
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+\usepackage{nth}
+\usepackage{epsfig}
+\usepackage[makeroom]{cancel}
+\newcommand\Ccancel[2][black]{\renewcommand\CancelColor{\color{#1}}\cancel{#2}}
+\newcommand\Bcancel[2][black]{\renewcommand\CancelColor{\color{#1}}\bcancel{#2}}
+
+\usepackage{geometry}
+\usepackage{changepage}
+
+
+
+\usepackage[T1]{fontenc}
+\usepackage{makecell}
+\newcolumntype{x}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{tikz}
+\newcommand\diag[4]{%
+  \multicolumn{1}{p{#2}|}{\hskip-\tabcolsep
+  $\vcenter{\begin{tikzpicture}[baseline=0,anchor=south west,inner sep=#1]
+  \path[use as bounding box] (0,0) rectangle (#2+2\tabcolsep,\baselineskip);
+  \node[minimum width={#2+2\tabcolsep},minimum height=\baselineskip+\extrarowheight] (box) {};
+  \draw (box.north west) -- (box.south east);
+  \draw (box.south west) -- (box.south west);
+  \node[anchor=south west] at (box.south west) {#3};
+  \node[anchor=north east] at (box.north east) {#4};
+ \end{tikzpicture}}$\hskip-\tabcolsep}}
+
+
+%% Use the graphics package to include figures
+%\usepackage{graphics}
+
+%% Use natbib with these recommended options
+%\usepackage[authoryear,comma,longnamesfirst,sectionbib]{natbib}
+\usepackage[authoryear,comma,sectionbib]{natbib} 
+
+%%%%%%%%%%% Dannemiller added 01/19/2015 - standard preamble
+\usepackage{fancyhdr} % Headers and footers
+
+\pagestyle{fancyplain} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+\fancyhead[RO,RE]{\thepage} % Custom header text
+\renewcommand{\headrulewidth}{0pt} %0pt for no rule, 2pt thicker etc...
+\setlength{\headheight}{15.0pt}
+
+\usepackage{url}   %this allows us to cite URLs in the text
+
+\usepackage{booktabs}
+\usepackage{pstricks}
+\usepackage{amssymb}
+\usepackage{afterpage}
+\usepackage{transparent}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{multicol}
+%\usepackage{chngpage}
+
+
+\usepackage{enumerate}
+\usepackage{xspace}
+
+\usepackage{abbrevs}
+% example: \newabbrev\ART{American Repetrory Theater (ART)}[ART]
+\newabbrev\ssb{Sum of Squares Between genotypes ($SS_{B}$)}[$SS_{B}$]
+\newabbrev\ssw{Sum of Squares Within genotypes ($SS_{W}$)}[$SS_{W}$]
+\newabbrev\sst{Sum of Squares Total ($SS_{T}$)}[$SS_{T}$]
+\newabbrev\ci{current, intermediate (CI)}[CI]
+\newabbrev\cim{current, intermediate matrix (CI matrix)}[CI matrix]
+\newabbrev\cims{current, intermediate matrices (CI matrices)}[CI matrices]
+\newabbrev\civ{current, intermediate vector (CI vector)}[CI vector]
+\newabbrev\civs{current, intermediate vectors (CI vectors)}[CI vectors]
+\newabbrev\cis{current, intermediate scalar (CI scalar)}[CI scalar]
+\newabbrev\maf{minor allele frequency (MAF)}[MAF]
+
+
+
+%%% The following correct for a flawed if statement in package abbrev
+\makeatletter
+\renewcommand\maybe@space@{%
+  % \@tempswatrue % <= this is in the original
+  \maybe@ictrue % <= this is new
+  \expandafter   \@tfor
+    \expandafter \reserved@a
+    \expandafter :%
+    \expandafter =%
+                 \nospacelist
+                 \do \t@st@ic
+  % \if@tempswa % <= this is in the original
+  \ifmaybe@ic % <= this is new
+    \space
+  \fi
+}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{ textcomp }
+\newcommand\dblquote[1]{\textquotedblleft #1\textquotedblright} 
+\newcommand{\apos}{$\text{'}$}
+\newcommand{\be}{\begin{enumerate}}
+\newcommand{\ee}{\end{enumerate}}
+\newcommand{\bes}{\begin{enumerate*}}
+\newcommand{\ees}{\end{enumerate*}}
+\newcommand{\mb}{\noindent\makebox[\textwidth] }
+\newcommand{\den}{\hspace{2pt}\textendash \,}
+\newcommand{\dem}{\textemdash \,}
+\newcommand{\Eq}{Equation }
+
+
+
+%specific hyphenation
+\hyphenation{e-pi-neph-rine}
+\hyphenation{mol-e-cules}
+%\hyphenation{}
+
+
+\providecommand\phantomsection{}
+
+
+%\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{ colorlinks=false,pdfborderstyle={/S/U/W 1},citebordercolor=0 0 1 }
+\colorlet{transpyellow}{white!10!yellow}
+
+\usepackage{rotate}
+\usepackage{rotating}
+\usepackage{rotfloat}
+
+\usepackage{fontspec}
+\usepackage[lofdepth,lotdepth]{subfig}
+\usepackage{threeparttable} 
+\usepackage{tablefootnote}
+\usepackage{footnote}
+
+\usepackage{array}
+%\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{threeparttablex}
+
+
+\usepackage{pdflscape} 
+\usepackage{tabulary}
+\usepackage{ltxtable}
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\setlength\LTleft{0pt}
+\setlength\LTright{0pt}
+
+
+
+\usepackage{colortbl}
+\definecolor{riceblue}{hsb}{0.6,0.1,0.9}
+\definecolor{greenish}{rgb}{0.3,0.6,0.0}
+\definecolor{myblue}{rgb}{0.3,0.3,0.8}
+\definecolor{kugray5}{RGB}{224,224,224}
+\definecolor{lightgray}{gray}{0.9}
+\definecolor{pink}{rgb}{0.95,0.8,0.8}
+
+\usepackage{xltxtra}
+\usepackage{nicefrac}
+
+\usepackage{rotating}
+\usepackage{lscape}
+
+\usepackage{graphicx}
+%\usepackage{epstopdf}
+\graphicspath{/Users/dannemil/paperless/ase_manuscript/sagmb/}
+
+\usepackage[normal]{engord}
+
+\usepackage{enumitem}
+%\setlist[enumerate]{parsep=4pt}
+
+\usepackage [normalem] {ulem}
+
+\usepackage{tabularx}
+\newcolumntype{S}{@{\stepcounter{Definition}\theDefinition.~} >{\bfseries}l @{~--~}X@{}}
+\newcounter{Definition}[subsubsection]
+
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{caption}
+%\renewcommand{\tablename}{Table}
+\usepackage{threeparttable}
+
+\usepackage{setspace}% http://ctan.org/pkg/setspace
+\AtBeginEnvironment{tabular}{\singlespacing}% Single spacing in tabular environment
+
+%\usepackage{booktabs}
+\usepackage[detect-all]{siunitx}
+\robustify\bfseries
+
+\usepackage{tabularx,colortbl}
+\newcolumntype{Y}{>{\centering\arraybackslash} X}
+\renewcommand{\arraystretch}{1.5}
+
+\usepackage{amsmath, amsthm, amssymb}
+%\setlength{\mathindent}{0pt}
+
+\usepackage{etoolbox}
+\apptocmd\normalsize{%
+ \abovedisplayskip=12pt plus 3pt minus 9pt
+ \abovedisplayshortskip=0pt plus 3pt
+ \belowdisplayskip=12pt plus 3pt minus 9pt
+ \belowdisplayshortskip=7pt plus 3pt minus 4pt
+}{}{}
+
+
+%\numberwithin{figure}{section}
+
+\makeatletter
+\@addtoreset{footnote}{section}
+\makeatother
+
+\usepackage{mdwlist}
+
+
+\renewcommand*\thesubsection{\arabic{section}.\arabic{subsection}}
+\usepackage[title]{appendix}
+\newcounter{appendix}
+\numberwithin{equation}{appendix}
+\usepackage{tablefootnote}
+\usepackage{yhmath}
+\usepackage{ragged2e}
+
+\newcolumntype{C}[1]{>{\Centering\arraybackslash}p{#1}}
+
+\usepackage{makecell}
+\renewcommand\theadfont{\normalsize\bfseries}
+\renewcommand\theadalign{bc}
+\usepackage{cellspace}
+\setlength\cellspacetoplimit{5pt}
+\setlength\cellspacebottomlimit{5pt}
+
+\setlength{\LTpre}{6pt}
+\setlength{\LTpost}{6pt}
+
+
+
+%\setmainfont{Times}
+\setmainfont{Baskerville}
+%\setmainfont{Alegreya}
+%\setmainfont{Cardo}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\mtx}[1]{\mathbf{#1}}
+
+
+
+\DeclareMathSizes{12pt}{11pt}{8pt}{6pt}
+\everymath=\expandafter{\the\everymath\displaystyle}
+
+\setcounter{secnumdepth}{5}
+
+\usepackage{footnote}
+\makesavenoteenv{tabular}
+\makesavenoteenv{table}
+\usepackage{tablefootnote}
+
+
+\begin{document}
+
+\begin{landscape}
+\begin{longtable}{l >{\em}P{1.5in} >{\em}P{1.5in} >{\em}P{1.5in} >{\em}P{1.5in}}\caption{Two hundred genes whose expression levels were most strongly positively correlated with the expression of \textit{COMT} by brain area} \tabularnewline
+\toprule
+\multicolumn{1}{l}{\bfseries Rank}&\multicolumn{1}{c}{\bfseries Prefrontal}&\multicolumn{1}{c}{\bfseries Cerebellum}&\multicolumn{1}{c}{\bfseries Temporal}&\multicolumn{1}{c}{\bfseries Pons}\tabularnewline
+\midrule
+\endfirsthead\caption[]{\em (Top 200 positively correlated genes continued)} \tabularnewline
+\midrule
+\multicolumn{1}{l}{\bfseries Rank}&\multicolumn{1}{c}{\bfseries Prefrontal}&\multicolumn{1}{c}{\bfseries Cerebellum}&\multicolumn{1}{c}{\bfseries Temporal}&\multicolumn{1}{c}{\bfseries Pons}\tabularnewline
+\midrule
+\endhead
+\midrule
+\endfoot
+\label{tab:top200pos}
+\hspace{-0.25em}1&RPL18&CPQ&GATM&KLK3\tabularnewline
+2&CAT&CAT&CAT&TMEM189-UBE2V1\tabularnewline
+3&COMT&PCCB&MMP28&COMT\tabularnewline
+4&ACY1&FUCA2&SNAP23&HIST1H2AC\tabularnewline
+5&CHCHD8&TMEM170A&CDC14B&SYPL1\tabularnewline
+6&GATM&RAB9A&THSD1&FNTA\tabularnewline
+7&MYO6&MBOAT2&PTTG1IP&TMEM170A\tabularnewline
+8&RPL18A&COMT&DTYMK&PRDX4\tabularnewline
+9&C1ORF122&CYB5D2&PLPP3&GATM\tabularnewline
+10&YBX1&ACTG1&COMT&CAT\tabularnewline
+11&CDC14B&SELENOP&ALDH2&PSEN1\tabularnewline
+12&EDNRB&TMEM189-UBE2V1&EDNRB&CLU\tabularnewline
+13&PDLIM3&CBR1&ECH1&SLCO3A1\tabularnewline
+14&C6ORF48&VPS41&ARL6IP6&SPAG9\tabularnewline
+15&PGCP&PIGT&SLC25A20&KIF16B\tabularnewline
+16&PPIB&GRHPR&GLUL&MEGF10\tabularnewline
+17&ECH1&PFN1&MEGF10&HSPA2\tabularnewline
+18&DTYMK&MARCKSL1&IL17RB&AGPS\tabularnewline
+19&HSCB&PYCR2&GSTM2&B3GAT1\tabularnewline
+20&TTLL4&FNTA&HSCB&QKI\tabularnewline
+21&CSTB&MYO6&PIR&ADIPOR1\tabularnewline
+22&MEGF10&C3orf70&DPY19L3&PIGM\tabularnewline
+23&PNKD&DIRC2&PNPO&PIGT\tabularnewline
+24&H3F3C&PDE6D&SLC39A12&ARL6IP6\tabularnewline
+25&POLR2F&GRM3&HIST1H2AC&GSN\tabularnewline
+26&RPS2&PDE4B&MTM1&MOG\tabularnewline
+27&ZFAND3&B3GAT1&CSTB&MTM1\tabularnewline
+28&CLU&QKI&LRP4&SEC22C\tabularnewline
+29&PKM2&PLPP3&CLDN10&LGALS3BP\tabularnewline
+30&PTTG1IP&PPIB&ACY1&MED30\tabularnewline
+31&RPL19&ABCA9&RGCC&TMBIM4\tabularnewline
+32&SERF2&TYW1&ASRGL1&MPLKIP\tabularnewline
+33&COPE&TIMMDC1&CRB1&UGT8\tabularnewline
+34&AASS&PTPRZ1&LRRC3B&PPIB\tabularnewline
+35&RPS14&WLS&PGM1&SPTLC2\tabularnewline
+36&C12ORF39&SYPL1&ARHGAP24&GATB\tabularnewline
+37&SPAG9&FAXDC2&CYP2J2&POLR2F\tabularnewline
+38&LIMS1&CPT2&WDFY2&TP53TG1\tabularnewline
+39&SNAP23&FGFR2&CAMKMT&CD9\tabularnewline
+40&PABPC1&PLPP1&RAB9A&PFN1\tabularnewline
+\newpage
+41&PPAP2B&CLN8&AASS&HIST1H4H\tabularnewline
+42&ZMAT5&HIP1&AQP4&PCSK6\tabularnewline
+43&RPS5&ISOC1&PTPRZ1&DTYMK\tabularnewline
+44&SCNM1&LRRC8D&MLC1&TJP2\tabularnewline
+45&BCAN&TP53TG1&PON2&Septin 10\tabularnewline
+46&RPL13A&DAD1&SASH1&SFT2D1\tabularnewline
+47&C20ORF58&SLC31A2&ZFAND3&CBR1\tabularnewline
+48&C3orf70&CD9&RIT1&ABHD17B\tabularnewline
+49&ELP4&DFFA&MERTK&MPC1\tabularnewline
+50&RPL12&HHLA3&DOCK7&RAB9A\tabularnewline
+51&PDE6D&ATP6V0E1&MYO6&COA4\tabularnewline
+52&GSN&EDNRB&QKI&KLHL4\tabularnewline
+53&THSD1&LYPLAL1&RANBP3L&BVES\tabularnewline
+54&MMP28&CRTAP&LIMS1&ACTL6A\tabularnewline
+55&LRRC3B&LYRM2&C3orf70&STX2\tabularnewline
+56&ALDH2&PEX2&ETNPPL&BTD\tabularnewline
+57&IDH2&SPAG9&IQCK&CPQ\tabularnewline
+58&ADA&MOG&APCDD1&FNTB\tabularnewline
+59&IVD&PPP2R5C&HIP1&ATG3\tabularnewline
+60&PGLS&SERPINI1&THBS4&CCDC167\tabularnewline
+61&QKI&TMEM165&HSD17B6&SLC9A9\tabularnewline
+62&HSD17B6&TMEM42&RGN&PIR\tabularnewline
+63&PGM1&NCAM2&SPAG9&MARCKSL1\tabularnewline
+64&APOE&PRMT2&ITPR2&SFR1\tabularnewline
+65&PIR&PRTFDC1&TNFSF13&TLE4\tabularnewline
+66&RGC32&MAPRE1&SGPL1&CLN8\tabularnewline
+67&OLIG1&ABCA8&ACAA2&EDIL3\tabularnewline
+68&ACP6&FANCL&NR2E1&HIP1\tabularnewline
+69&CPT2&CDC14B&TPD52L1&SCHIP1\tabularnewline
+70&DFFA&COA4&EMX2&SSR4\tabularnewline
+71&CHCHD5&HSPA2&WLS&FA2H\tabularnewline
+72&APCDD1&OMG&ATP1B2&LRRC8D\tabularnewline
+73&GPSN2&ARMC10&BBS2&MYO1D\tabularnewline
+74&MLC1&CLDN11&ACP6&SNAP23\tabularnewline
+75&RPL35&CNPY3&ADGRV1&DYNC1I2\tabularnewline
+76&SLC25A20&HNMT&TTLL4&MOB3B\tabularnewline
+77&RPS3&PLPPR1&CBR1&DYNLT1\tabularnewline
+78&ARHGAP24&SFR1&PEX2&STXBP3\tabularnewline
+79&ARL6IP6&CKS1B&MGST1&AASS\tabularnewline
+80&HSD17B8&SEC22C&CHDH&DAD1\tabularnewline
+\newpage
+81&IQCK&TPPP3&RAB5C&PPP2R5C\tabularnewline
+82&ZHX2&NSDHL&ALDH6A1&SELENOP\tabularnewline
+83&PIK3C2A&SUMF1&C4orf19&PTTG1IP\tabularnewline
+84&ACAA2&SPTLC2&RELA&ABCA9\tabularnewline
+85&ABTB2&FEZ1&PITPNC1&PXK\tabularnewline
+86&BGLAP&PXK&TP53BP2&ACTG1\tabularnewline
+87&RAG1AP1&COPE&DGLUCY&AFMID\tabularnewline
+88&YIF1A&GSN&PSAT1&C1orf122\tabularnewline
+89&PRDX4&PEPD&PXMP2&KCTD3\tabularnewline
+90&PCCB&LLPH&LAMA1&SLC31A2\tabularnewline
+91&ALAD&IQCK&ATP6V0E1&TIMP2\tabularnewline
+92&FAM36A&MPC1&LRIG1&USH1C\tabularnewline
+93&RHBDD1&GALNT10&PPP2R5C&STAMBP\tabularnewline
+94&SCAMP2&FAM213A&SLC1A2&HSCB\tabularnewline
+95&STAT3&AASS&CHST7&ATRAID\tabularnewline
+96&HIST1H2AC&LAMP2&LHX2&CDKN1C\tabularnewline
+97&S100A16&PRDX4&PCDHGC3&PRKCSH\tabularnewline
+98&CIB1&IGSF11&COQ9&DAZAP2\tabularnewline
+99&DIRC2&PIR&APOE&DHRS4L2\tabularnewline
+100&PMF1&FAM177A1&CA2&KRT10\tabularnewline
+101&TTYH1&KIF16B&COA4&PAPSS1\tabularnewline
+102&WIPI1&NLGN3&IDH1&HINT3\tabularnewline
+103&ATP6V0E1&PAOX&TSC22D4&JADE3\tabularnewline
+104&RBP1&HSD17B6&AGPAT3&MYLK\tabularnewline
+105&CLCN2&PMF1&CHPT1&RHBDD1\tabularnewline
+106&MAPRE1&YBX1&FYN&ATP8A1\tabularnewline
+107&TPT1&TUBA1A&LGALS3&DIXDC1\tabularnewline
+108&GPR17&ATG3&SLCO1C1&ELOVL6\tabularnewline
+109&S100A13&RNF13&TJP2&GPR27\tabularnewline
+110&CBR1&SLC44A1&CLU&MAPRE2\tabularnewline
+111&ELOVL2&KLHL4&VPS72&CKS1B\tabularnewline
+112&WDFY2&ATP5S&LARS2&MYO6\tabularnewline
+113&&GPR27&POLR2F&PIGG\tabularnewline
+114&CYP2J2&TMEM59&CPT2&TALDO1\tabularnewline
+115&GALNT10&SH3BGR&DFFA&TMEM87A\tabularnewline
+116&GLUL&RNH1&HEXIM1 /// S1PR1&TMEM116\tabularnewline
+117&SGPL1&TMEM87A&DDR1&ALDH3A2\tabularnewline
+118&PLA2G5&SFT2D1&MARCKSL1&DICER1\tabularnewline
+119&KRT10&SMIM7&CLCC1&MPDZ\tabularnewline
+120&THRA&JADE3&ZFHX4&IGSF11\tabularnewline
+\newpage
+121&C6ORF72&SLC25A26&DBI&PQLC3\tabularnewline
+122&CRB1&DTD1&PDLIM3&NRBP2\tabularnewline
+123&EEF1D&C6orf48&BCAN&SLC44A1\tabularnewline
+124&EIF3S4&ACO2&IDH2&AGPAT3\tabularnewline
+125&FAU&GATM&SYPL1&KLK6\tabularnewline
+126&RELA&SLCO3A1&SCRG1&ANXA5\tabularnewline
+127&SASH1&ZMAT5&SLC15A2&SCCPDH\tabularnewline
+128&MON1B&ABTB2&ZNF22&ABCA8\tabularnewline
+129&PHGDH&RHBDD1&TMEM136&EMILIN2\tabularnewline
+130&GNG5&SGPL1&ACSBG1&AAR2\tabularnewline
+131&PTPRZ1&ALG14&PIPOX&FBXO32\tabularnewline
+132&PFN1&GTDC1&ZHX2&PLA2G16\tabularnewline
+133&NT5C&TTYH2&ACOX2&RNH1\tabularnewline
+134&CHDH&TYMS&DVL3&BTG3\tabularnewline
+135&TNFSF13&SLC24A2&GRN&NFE2L3\tabularnewline
+136&NME6&LGALS3BP&ZMAT5&POLR2G\tabularnewline
+137&NSMCE1&CREG1&ACTL6A&MED8\tabularnewline
+138&PCDHGC3&MAPRE2&CDKN2C&TIA1\tabularnewline
+139&CTNNA1&SLC50A1&ATPAF1&CTNNA1\tabularnewline
+140&CXORF38&SLC9A9&ELOVL2&DHRS4\tabularnewline
+141&CECR1&SPCS1&PNKD&TSPAN8\tabularnewline
+142&FER&C12orf76&SOX21&ENPP2\tabularnewline
+143&LRP4&STOM&ETFDH&ENPP6\tabularnewline
+144&RPS17&C1orf122&GNG12&SALL1\tabularnewline
+145&FTL&GMPR2&IL33&CTTNBP2\tabularnewline
+146&GNAI2&ACBD5&PRDX4&MEX3D\tabularnewline
+147&HIP1&DSCAML1&FAM89A&TMEM38B\tabularnewline
+148&NUBP1&PTTG1IP&GPAM&WDFY2\tabularnewline
+149&TST&TMBIM4&RHBDD1&ATP5S\tabularnewline
+150&AGPAT3&TTLL7&RIDA&FAXDC2\tabularnewline
+151&ALDH1A1&USP54&AK4P3&SASH1\tabularnewline
+152&ATPAF1&FBXO7&DYNLT1&ST18\tabularnewline
+153&DYNLT1&MLYCD&EPB41L5&ATP6V0E1\tabularnewline
+154&RAB9A&PSEN1&RPL18&DSCAML1\tabularnewline
+155&AKR7A3&PSMB2&CTSH&EXD2\tabularnewline
+156&C9ORF23&WBP1L&COPE&TMEM184B\tabularnewline
+157&CLK3&DHRS7&PHLPP1&CERS2\tabularnewline
+158&EIF4EBP3&GINM1&PPIB&CRYL1\tabularnewline
+159&LGALS3BP&NCSTN&ETFA&NLN\tabularnewline
+160&CINP&PDGFRA&GINM1&PDE4B\tabularnewline
+\newpage
+161&IGFBP7&UGT8&KRT10&MIF4GD\tabularnewline
+162&RPS9&FA2H&MAPRE1&MYO1E\tabularnewline
+163&CD302&SCRG1&MIF4GD&ELOVL1\tabularnewline
+164&PSME1&APBB2&SOX9&MLH1\tabularnewline
+165&C9ORF140&CNDP1&FBXO8&PLPP1\tabularnewline
+166&DAG1&DOCK10&SPX&SEC23B\tabularnewline
+167&KUA-UEV&CTSL&PLPP5&EIF2B1\tabularnewline
+168&C1ORF61&CXorf57&ACAA1&CDC14B\tabularnewline
+169&DPY19L3&DYNC1I2&COX20&MTSS1\tabularnewline
+170&HSD17B10&MRPL24&GALNT10&BORCS7\tabularnewline
+171&LDHD&POLR2G&PCCB&CYP27A1\tabularnewline
+172&GRHPR&DESI1&SLC9A9&LITAF\tabularnewline
+173&TMEM136&DHRS7B&APPL2&REEP3\tabularnewline
+174&VPS72&RFFL&ABHD3&FAM208A\tabularnewline
+175&CST3&MTM1&GNA12&SGCE\tabularnewline
+176&HLA-A&NRBP2&OLIG1&FBXO7\tabularnewline
+177&GM2A&YIF1B&RGS20&BRD7\tabularnewline
+178&GRN&ACOT8&FAM198B&BRMS1\tabularnewline
+179&ACO2&KNOP1&PCDHGA12&POC5\tabularnewline
+180&PHPT1&ARL6IP6&PIK3C2A&TFCP2\tabularnewline
+181&TFPT&NSMCE1&ACO2&GLTP\tabularnewline
+182&VPS52&C10orf90&GPR37L1&HMGCL\tabularnewline
+183&TP53AP1&POLD4&PFN1&PDE6D\tabularnewline
+184&MTM1&DAZAP2&PSD2&SNRNP40\tabularnewline
+185&PARP4&EIF2AK1&YBX1&C3orf70\tabularnewline
+186&RPL36&HSD17B12&LDHD&MTUS1\tabularnewline
+187&GSTM2&GAPDH&NKX2.2&PSPH\tabularnewline
+188&SYPL1&GBA&NPL&TMEM5\tabularnewline
+189&C11ORF48&EIF3I&TMEM123&AK2\tabularnewline
+190&MRPL53&LGMN&TNIK&NSMCE1\tabularnewline
+191&RPL8&POTEKP&BCKDHA&PARP4\tabularnewline
+192&RPS11&TMCO1&C1orf122&SCRG1\tabularnewline
+193&FAM102A&TMED10&CST3&MFSD14A\tabularnewline
+194&MGST1&WASHC5&CXorf38&CA14\tabularnewline
+195&PXMP2&ECH1&EIF4EBP3&DDRGK1\tabularnewline
+196&OACT2&IVD&GLI3&APBB2\tabularnewline
+197&C16ORF14&LIPA&HSPA2&PADI2\tabularnewline
+198&GNG12&ASPA&IL10RB&RFFL\tabularnewline
+199&PECR&DYNLT1&SCAMP2&CRIPT\tabularnewline
+200&PON2&PLIN3&IRF2BP2&PCCB\tabularnewline
+\bottomrule
+\end{longtable}
+\end{landscape}
+
+\end{document}

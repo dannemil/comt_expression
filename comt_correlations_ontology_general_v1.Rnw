@@ -1,0 +1,2739 @@
+% NEW based on COMT-MB data
+<<include=FALSE, echo=FALSE, results=hide>>=
+# Generate a uinique ID for this program by path and filename. This unique ID is attached to this file using a tag in the filesystem.
+source('unique_id_generator.R')
+
+fname <- c("/Volumes/Macintosh_HD_3/genetics/genenetwork2/comt_correlations_ontology_200_v2.Rnw")
+
+prog.Name <- unique.ID(fname)
+
+prog.Name
+
+start.Status <- c(TRUE)   # FALSE   # True means load again
+
+@
+
+This program has the unique ID: \Sexpr{prog.Name}.
+
+
+\documentclass[11pt]{article}
+\usepackage{graphicx, subfig}
+\usepackage{float}
+\pagenumbering{arabic}
+\usepackage{enumerate}
+\usepackage{Sweave}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{framed}
+\usepackage{longtable}
+\usepackage{tablefootnote}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{keep.source=TRUE} 
+
+
+\hspace{-1.5em}Gene Network\\
+COMT expression correlations Prefrontal cortext\\
+Fall, 2017\\
+
+<<echo=FALSE>>=
+library(ggplot2,ggthemes)
+library(ggExtra)
+library(psych)
+library(ggpubr)       ### Make sure this is installed
+library(knitr)
+library(Hmisc)
+library(openxlsx)
+library(xtable)
+library(magrittr)
+library(tables)
+library(stargazer)
+library(plyr)
+library(rlist)
+library(qqman)
+library(manhattanly)
+library(Cairo)
+library(RColorBrewer)
+library(HGNChelper)
+library(tools)
+library(scales)
+library(devtools)
+library(utils)
+library(ggman)
+library(dplyr)
+library(biomaRt)
+library(combinat)
+library(Rmpfr)
+library(stats)
+library(stringr)
+library(mvtnorm)
+library(miscFuncs)
+library(reporttools)
+
+
+if (start.Status) {
+  install_github("drveera/ggman")   
+}
+library(ggman)
+
+
+
+source("https://bioconductor.org/biocLite.R")
+if (start.Status) {
+  biocLite(c("GenomicFeatures"))   
+}
+
+if (start.Status) {
+  biocLite(c("AnnotationDbi"))   
+}
+
+if (start.Status) {
+  biocLite(c("org.Hs.eg.db"))   
+}
+
+library("AnnotationHub")
+library("GenomicFeatures")
+library("org.Hs.eg.db")
+
+
+if (start.Status) {
+     biocLite(c('hgu95av2.db'))
+}
+
+library('hgu95av2.db')
+
+if (start.Status) {
+     biocLite("illuminaHumanv4.db")
+}
+
+library("illuminaHumanv4.db")
+
+source("https://bioconductor.org/workflows.R")
+
+if (start.Status) {
+ workflowInstall("annotation")   
+}
+
+if (start.Status) {
+ biocLite("TxDb.Hsapiens.UCSC.hg19.knownGene")
+ library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+ txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene #shorthand (for convenience)    
+}
+
+if (start.Status) {
+biocLite("GO.db")
+}
+
+if (start.Status) {
+biocLite("topGO")
+}     
+
+if (start.Status) {
+biocLite("GOstats")
+} 
+     
+library("GO.db")
+library("topGO")
+library("GOstats")
+
+if (start.Status) {
+     biocLite('EDASeq')
+}
+
+library('EDASeq')
+
+
+
+
+if (start.Status) {
+     biocLite('lumi')
+}
+
+library(lumi)
+
+if (start.Status) {
+     biocLite('lumiHumanIDMapping')
+}
+
+library(lumiHumanIDMapping)
+
+if(start.Status) {
+     biocLite('lumiHumanAll.db')
+}
+
+library('lumiHumanAll.db')
+
+if(start.Status) {
+     biocLite('rBLAST')
+}
+
+library(rBLAST)
+
+if(start.Status) {
+     biocLite('illuminaHumanv4.db')
+}
+
+library('illuminaHumanv4.db')
+
+
+
+if (start.Status) {
+     biocLite (c( "beadarray" , "limma" , "GEOquery" , "illuminaHumanv2.db"))
+}
+
+if (start.Status) {
+     biocLite('annotate')
+}
+
+library('annotate')
+
+library("illuminaHumanv2.db")
+library("beadarray","limma","GEOquery")
+
+options(scipen = 999, digits = 5, width = 60, knitr.table.format = "latex")
+@
+
+<<echo=FALSE, results=hide >>=
+### to prepend filename strings to plots
+#pre.Name <- c('comt_expression-') #pre-ppended to eps output files
+# RColorBrewer palette
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork/histChrfunc.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork/onlycisChr.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork/hypergeom_plot.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/countNA.R') # function num.NA()
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_get_match_length.R') #len.match()
+
+samp.Size <- c(50,200)
+cut.Part <- samp.Size[1]
+@
+
+<<echo=FALSE, include=FALSE, results=tex>>=
+coexpress.URL <- data.frame(site=NA,addr=NA)
+coexpress.URL[1,1:2] <- c('COXPRESdb','http://coxpresdb.jp/')
+coexpress.URL[2,1:2] <- c('OMICtools','https://omictools.com/')
+coexpress.URL[3,1:2] <- c('Coexpedia','http://www.coexpedia.org/search.php')
+coexpress.URL[4,1:2] <- c('GeneFriends','http://www.genefriends.org/RNAseq/')
+coexpress.URL[5,1:2] <- c('Illumina Probes','http://www.genomequebec.mcgill.ca/compgen/integrated_vervet_genomics/transcriptome/Illumina/allprobes.html')
+coexpress.URL[6,1:2] <- c('Gibbs Expression Data','https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE15745')
+coexpress.URL[6,1:2] <- c('Train Online','https://www.ebi.ac.uk/training/online/course/arrayexpress-discover-functional-genomics-data-qui/references')
+
+
+url.Tab <- xtable(coexpress.URL)
+url.Table <- latex(url.Tab,file='',
+                   caption = c("Gene Co-expression Databases"),
+                   caption.loc = c('top'),
+                     colname = c('Name','URL'),
+                     rowlabel = c(''),
+                     colnamesTexCmd="bfseries",
+                     booktabs=TRUE,
+                     label=c('tab:coexpressurls'),
+                     na.blank = TRUE,
+                     vbar = FALSE,
+                     longtable=TRUE,
+                     table.env=TRUE,
+                     center=c('center'),
+                     continued=c('Gene Co-expression Databases Continued'),
+                     first.hline.double = TRUE,
+                     append=FALSE
+                     )
+print(url.Table)
+
+
+@
+
+\Sexpr{print(url.Table)}
+
+<<echo=FALSE>>=
+### read the data file 
+
+if (start.Status) {
+  wb <- loadWorkbook('comt_all_areas_correlation_results.xlsx')   
+}
+
+if (start.Status) {
+  prefront.Data <- data.frame(read.xlsx(wb,  # now tell R to read that workbook and which sheet
+                                  sheet = "prefrontal"))
+
+  # chrom.Data <- data.frame(read.xlsx(wb,  # now tell R to read that workbook and which sheet
+  #                        sheet = "chrom_length"))   
+}
+
+# Replace any NULL entries in the Location columns with NA
+## Location looks like "Chr22: 18.328774" "ChrX: 13.866617"  "ChrUn: 1.000000" 
+## I will eventually extract bothe the Chromosome name and starting position of the gene
+
+     prefront.Data$Location[prefront.Data$Location =="NULL"] <- NA
+
+
+
+# if (start.Status) {
+#   wpr <- loadWorkbook('mb_comt_top_pos_r_prefrontal.xlsx')   
+# }
+# if (start.Status) {
+#   topplusr.Data <- data.frame(read.xlsx(wpr,  # now tell R to read that workbook and which sheet
+#                                   sheet = "posr_prefront"))
+# }
+# 
+# if (start.Status) {
+#   wnr <- loadWorkbook('mb_comt_top_neg_r_prefrontal.xlsx')   
+# }
+# if (start.Status) {
+#   topminusr.Data <- data.frame(read.xlsx(wnr,  # now tell R to read that workbook and which sheet
+#                                   sheet = "negr_prefront"))
+# }
+
+
+if (start.Status) {
+
+cbell.Data <- data.frame(read.xlsx(wb,         # now tell R to read that workbook and which sheet
+                                  sheet = "cerebellum"))
+}
+     
+# Replace any NULL entries in the Location columns with NA
+## Location looks like "Chr22: 18.328774" "ChrX: 13.866617"  "ChrUn: 1.000000" 
+## I will eventually extract bothe the Chromosome name and starting position of the gene
+
+     cbell.Data$Location[cbell.Data$Location =="NULL"] <- NA
+
+     
+     
+
+if (start.Status) {
+
+tempor.Data <- data.frame(read.xlsx(wb,         # now tell R to read that workbook and which sheet
+                                  sheet = "temporal"))
+}
+
+# Replace any NULL entries in the Location columns with NA
+## Location looks like "Chr22: 18.328774" "ChrX: 13.866617"  "ChrUn: 1.000000" 
+## I will eventually extract bothe the Chromosome name and starting position of the gene
+
+     tempor.Data$Location[tempor.Data$Location =="NULL"] <- NA
+     
+     
+     
+if (start.Status) {
+
+pons.Data <- data.frame(read.xlsx(wb,         # now tell R to read that workbook and which sheet
+                                  sheet = "pons"))
+}
+
+# Replace any NULL entries in the Location columns with NA
+## Location looks like "Chr22: 18.328774" "ChrX: 13.866617"  "ChrUn: 1.000000" 
+## I will eventually extract bothe the Chromosome name and starting position of the gene
+
+     pons.Data$Location[pons.Data$Location =="NULL"] <- NA
+     
+     
+     
+
+if (start.Status) {
+  ilmn <- loadWorkbook('illumina_human_ref_8_v2.xlsx')   
+}
+
+if (start.Status) {
+
+illumina.Data <- data.frame(read.xlsx(ilmn,         # now tell R to read that workbook and which sheet
+                                  sheet = "illumina"))
+}
+
+chrom.Names <- c(as.character(seq(1,22,1)),'X','Y')
+
+# Use the hgu95av2.db and the hgu95av2CHRLENGTHS data to get the chromosome lengths
+
+yy <- hgu95av2CHRLENGTHS
+chrom.Data <- data.frame(chrom=chrom.Names,
+                         chrom.Length=yy[chrom.Names]
+)
+
+
+### Note to convert r correlations into p values use these transformations
+### store the results in a column in the original data frame - without the print statements
+# example: r = 0.809, n = 138
+# r.test(n = , r12 = )
+# out.t <- r.test(n = 138, r12 = 0.809)
+# print(out.t$t,digits=10)
+# [1] 16.05025766
+# pval <- 2*pt(-abs(t),df=n-2)
+# pval <- 2*pt(-abs(print(out.t$t,digits=20)),df=136)
+# print(pval,digits=10)
+
+@
+
+<<include=FALSE, echo=TRUE, results=tex>>=
+# Sort largest positive and largest negative correlations (of expression with COMT) in 
+# prefrontal cortex. Determine which of the top n genes were also in the panel for the other
+# brain areas. This at least means that if all n of then were in brain area A, then the top
+# n in brain area A could have at least in principle included those in the top n in prefrontal.
+
+sorted.Pos.pf <- prefront.Data[order(prefront.Data$Sample.r,decreasing=TRUE),]
+# remove COMT from the top; other COMT transcript can remain
+# Do this by starting the top at 2 instead of at 1 to preserve length of prefront.Data
+
+sorted.Neg.pf <- sorted.Pos.pf[c(seq(20000,1,-1)),]
+
+# Get the probe IDs of top 50 and 200 +/- COMT-correlations in prefrontal
+
+cut.Num <- c(50,200)
+
+probe.Pos.50.pf <- sorted.Pos.pf$Record[2:(cut.Num[1]+1)]  # start at 2 to eliminate COMT
+probe.Neg.50.pf <- sorted.Neg.pf$Record[1:cut.Num[1]]
+probe.Pos.200.pf <- sorted.Pos.pf$Record[2:(cut.Num[2]+1)]  # start at 2 to eliminate COMT
+probe.Neg.200.pf <- sorted.Neg.pf$Record[1:cut.Num[2]]
+
+num.Match <- data.frame(pos50=rep(NA,3),
+                        basepos50=rep(NA,3),
+                        pos200=rep(NA,3),
+                        basepos200=rep(NA,3),
+                        neg50=rep(NA,3),
+                        baseneg50=rep(NA,3),
+                        neg200=rep(NA,3),
+                        baseneg200=rep(NA,3))
+
+
+# Cerebellum
+sorted.Pos.cb <- cbell.Data[order(cbell.Data$Sample.r,decreasing=TRUE),]
+# remove COMT from the top; other COMT transcript can remain
+# Do this by starting the top at 2 instead of at 1 to preserve length of prefront.Data
+
+sorted.Neg.cb <- sorted.Pos.cb[c(seq(20000,1,-1)),]
+
+# Get the probe IDs of top 50 and 200 +/- COMT-correlations in cerebellum
+
+probe.Pos.50.cb <- sorted.Pos.cb$Record[2:(cut.Num[1]+1)]  # start at 2 to eliminate COMT
+probe.Neg.50.cb <- sorted.Neg.cb$Record[1:cut.Num[1]]
+probe.Pos.200.cb <- sorted.Pos.cb$Record[2:(cut.Num[2]+1)]  # start at 2 to eliminate COMT
+probe.Neg.200.cb <- sorted.Neg.cb$Record[1:cut.Num[2]]
+
+# Temporal Cerebral Wall
+sorted.Pos.tm <- tempor.Data[order(tempor.Data$Sample.r,decreasing=TRUE),]
+# remove COMT from the top; other COMT transcript can remain
+# Do this by starting the top at 2 instead of at 1 to preserve length of prefront.Data
+
+sorted.Neg.tm <- sorted.Pos.tm[c(seq(20000,1,-1)),]
+
+# Get the probe IDs of top 50 and 200 +/- COMT-correlations in temporal
+
+probe.Pos.50.tm <- sorted.Pos.tm$Record[2:(cut.Num[1]+1)]  # start at 2 to eliminate COMT
+probe.Neg.50.tm <- sorted.Neg.tm$Record[1:cut.Num[1]]
+probe.Pos.200.tm <- sorted.Pos.tm$Record[2:(cut.Num[2]+1)]  # start at 2 to eliminate COMT
+probe.Neg.200.tm <- sorted.Neg.tm$Record[1:cut.Num[2]]
+
+# Pons
+sorted.Pos.po <- pons.Data[order(pons.Data$Sample.r,decreasing=TRUE),]
+# remove COMT from the top; other COMT transcript can remain
+# Do this by starting the top at 2 instead of at 1 to preserve length of prefront.Data
+
+sorted.Neg.po <- sorted.Pos.po[c(seq(20000,1,-1)),]
+
+# Get the probe IDs of top 50 and 200 +/- COMT-correlations in pons
+
+probe.Pos.50.po <- sorted.Pos.po$Record[2:(cut.Num[1]+1)]  # start at 2 to eliminate COMT
+probe.Neg.50.po <- sorted.Neg.po$Record[1:cut.Num[1]]
+probe.Pos.200.po <- sorted.Pos.po$Record[2:(cut.Num[2]+1)]  # start at 2 to eliminate COMT
+probe.Neg.200.po <- sorted.Neg.po$Record[1:cut.Num[2]]
+
+# Given the top 50 or 200 +/- correlations in prefrontal, how many of those probes
+# appear in the other three brain areas' data? In other words, how many of those 50
+# or 200 could possibly have shown up in the top 50 or 200 in each of the other three areas?
+
+# Get the indices of the top prefrontal probes that were also available in the other 3 areas
+# 50 +r
+indx.Set50.pospf.cb <- which(probe.Pos.50.pf %in% cbell.Data$Record)
+indx.Set50.pospf.tm <- which(probe.Pos.50.pf %in% tempor.Data$Record)
+indx.Set50.pospf.po <- which(probe.Pos.50.pf %in% pons.Data$Record)
+
+# 200 +r
+indx.Set200.pospf.cb <- which(probe.Pos.200.pf %in% cbell.Data$Record)
+indx.Set200.pospf.tm <- which(probe.Pos.200.pf %in% tempor.Data$Record)
+indx.Set200.pospf.po <- which(probe.Pos.200.pf %in% pons.Data$Record)
+
+# 50 -r
+indx.Set50.negpf.cb <- which(probe.Neg.50.pf %in% cbell.Data$Record)
+indx.Set50.negpf.tm <- which(probe.Neg.50.pf %in% tempor.Data$Record)
+indx.Set50.negpf.po <- which(probe.Neg.50.pf %in% pons.Data$Record)
+
+# 200 -r
+indx.Set200.negpf.cb <- which(probe.Neg.200.pf %in% cbell.Data$Record)
+indx.Set200.negpf.tm <- which(probe.Neg.200.pf %in% tempor.Data$Record)
+indx.Set200.negpf.po <- which(probe.Neg.200.pf %in% pons.Data$Record)
+
+
+
+# Positive correlations first: 50
+# Get probes in common with top 50 or top 200 in prefrontal corext and each of the other
+# three brain areas
+
+probes.Common.50pos.cb <- probe.Pos.50.pf[c(indx.Set50.pospf.cb)][c(which(probe.Pos.50.pf[c(indx.Set50.pospf.cb)] %in% probe.Pos.50.cb))]
+probes.Common.50pos.tm <- probe.Pos.50.pf[c(indx.Set50.pospf.tm)][c(which(probe.Pos.50.pf[c(indx.Set50.pospf.tm)] %in% probe.Pos.50.tm))]
+probes.Common.50pos.po <- probe.Pos.50.pf[c(indx.Set50.pospf.po)][c(which(probe.Pos.50.pf[c(indx.Set50.pospf.po)] %in% probe.Pos.50.po))]
+
+probes.Common.200pos.cb <- probe.Pos.200.pf[c(indx.Set200.pospf.cb)][c(which(probe.Pos.200.pf[c(indx.Set200.pospf.cb)] %in% probe.Pos.200.cb))]
+probes.Common.200pos.tm <- probe.Pos.200.pf[c(indx.Set200.pospf.tm)][c(which(probe.Pos.200.pf[c(indx.Set200.pospf.tm)] %in% probe.Pos.200.tm))]
+probes.Common.200pos.po <- probe.Pos.200.pf[c(indx.Set200.pospf.po)][c(which(probe.Pos.200.pf[c(indx.Set200.pospf.po)] %in% probe.Pos.200.po))]
+
+probes.Common.50neg.cb <- probe.Neg.50.pf[c(indx.Set50.negpf.cb)][c(which(probe.Neg.50.pf[c(indx.Set50.negpf.cb)] %in% probe.Neg.50.cb))]
+probes.Common.50neg.tm <- probe.Neg.50.pf[c(indx.Set50.negpf.tm)][c(which(probe.Neg.50.pf[c(indx.Set50.negpf.tm)] %in% probe.Neg.50.tm))]
+probes.Common.50neg.po <- probe.Neg.50.pf[c(indx.Set50.negpf.po)][c(which(probe.Neg.50.pf[c(indx.Set50.negpf.po)] %in% probe.Neg.50.po))]
+
+probes.Common.200neg.cb <- probe.Neg.200.pf[c(indx.Set200.negpf.cb)][c(which(probe.Neg.200.pf[c(indx.Set200.negpf.cb)] %in% probe.Neg.200.cb))]
+probes.Common.200neg.tm <- probe.Neg.200.pf[c(indx.Set200.negpf.tm)][c(which(probe.Neg.200.pf[c(indx.Set200.negpf.tm)] %in% probe.Neg.200.tm))]
+probes.Common.200neg.po <- probe.Neg.200.pf[c(indx.Set200.negpf.po)][c(which(probe.Neg.200.pf[c(indx.Set200.negpf.po)] %in% probe.Neg.200.po))]
+
+
+
+# Get lengths and percentage matches
+# 50 +
+num.Match$pos50[1] <- paste(length(probes.Common.50pos.cb),' (',round(100*(length(probes.Common.50pos.cb)/length(indx.Set50.pospf.cb)),0),'%)',sep='')
+num.Match$pos50[2] <- paste(length(probes.Common.50pos.tm),' (',round(100*(length(probes.Common.50pos.tm)/length(indx.Set50.pospf.tm)),0),'%)',sep='')
+num.Match$pos50[3] <- paste(length(probes.Common.50pos.po),' (',round(100*(length(probes.Common.50pos.po)/length(indx.Set50.pospf.po)),0),'%)',sep='')
+
+num.Match$basepos50[1] <- length(indx.Set50.pospf.cb)
+num.Match$basepos50[2] <- length(indx.Set50.pospf.tm)
+num.Match$basepos50[3] <- length(indx.Set50.pospf.po)
+
+
+# 200 +
+num.Match$pos200[1] <- paste(length(probes.Common.200pos.cb),' (',round(100*(length(probes.Common.200pos.cb)/length(indx.Set200.pospf.cb)),0),'%)',sep='')
+num.Match$pos200[2] <- paste(length(probes.Common.200pos.tm),' (',round(100*(length(probes.Common.200pos.tm)/length(indx.Set200.pospf.tm)),0),'%)',sep='')
+num.Match$pos200[3] <- paste(length(probes.Common.200pos.po),' (',round(100*(length(probes.Common.200pos.po)/length(indx.Set200.pospf.po)),0),'%)',sep='')
+
+num.Match$basepos200[1] <- length(indx.Set200.pospf.cb)
+num.Match$basepos200[2] <- length(indx.Set200.pospf.tm)
+num.Match$basepos200[3] <- length(indx.Set200.pospf.po)
+
+# 50 -
+num.Match$neg50[1] <- paste(length(probes.Common.50neg.cb),' (',round(100*(length(probes.Common.50neg.cb)/length(indx.Set50.negpf.cb)),0),'%)',sep='')
+num.Match$neg50[2] <- paste(length(probes.Common.50neg.tm),' (',round(100*(length(probes.Common.50neg.tm)/length(indx.Set50.negpf.tm)),0),'%)',sep='')
+num.Match$neg50[3] <- paste(length(probes.Common.50neg.po),' (',round(100*(length(probes.Common.50neg.po)/length(indx.Set50.negpf.po)),0),'%)',sep='')
+
+num.Match$baseneg50[1] <- length(indx.Set50.negpf.cb)
+num.Match$baseneg50[2] <- length(indx.Set50.negpf.tm)
+num.Match$baseneg50[3] <- length(indx.Set50.pospf.po)
+
+# 200 -
+num.Match$neg200[1] <- paste(length(probes.Common.200neg.cb),' (',round(100*(length(probes.Common.200neg.cb)/length(indx.Set200.negpf.cb)),0),'%)',sep='')
+num.Match$neg200[2] <- paste(length(probes.Common.200neg.tm),' (',round(100*(length(probes.Common.200neg.tm)/length(indx.Set200.negpf.tm)),0),'%)',sep='')
+num.Match$neg200[3] <- paste(length(probes.Common.200neg.po),' (',round(100*(length(probes.Common.200neg.po)/length(indx.Set200.negpf.po)),0),'%)',sep='')
+
+num.Match$baseneg200[1] <- length(indx.Set200.negpf.cb)
+num.Match$baseneg200[2] <- length(indx.Set200.negpf.tm)
+num.Match$baseneg200[3] <- length(indx.Set200.negpf.po)
+
+
+row.names(num.Match) <- c('Cerebellum','Temporal Cerebral Wall','Pons')
+col.Groups <- c('Positive','Negative')
+add.col.Groups <- c('','50','','200','','50','','200')
+extra.Col.names <- rep(c('Shared','Base PFC'),4)
+
+shared.Probes.tab <- xtable(num.Match)
+
+shared.Probes.ltx <- latex(shared.Probes.tab,file='',
+                   caption = c('Number of genes shared across brain areas with the 50 or 200 most strongly positively and negatively COMT-correlated probes in prefrontal cortex'),
+                     caption.loc = c('top'),
+                    cgroup = col.Groups,
+                   n.cgroup = c(4,4),
+                     colheads = add.col.Groups,
+                   extracolheads = extra.Col.names,
+                     rowlabel = '\n Brain Area',
+                     colnamesTexCmd="bfseries",
+                     booktabs=TRUE,
+                     label=c('tab:numsharedprobes'),
+                     na.blank = TRUE,
+                     vbar = FALSE,
+                     longtable=TRUE,
+                     table.env=TRUE,
+#                     center=c('center'),
+                     continued=c('Number of Probes in Common Continued'),
+                     first.hline.double = FALSE,
+                     append=FALSE,
+                     insert.bottom=c('The number in parentheses is the percentage of genes in common across Prefrontal Cortex and the indicated brain area.')
+                     )
+                  
+print(shared.Probes.ltx)
+
+
+@
+
+\Sexpr{print(shared.Probes.ltx)}
+
+The data show that\\
+\begin{enumerate}
+     \item The proportion of highly correlated genes in common between prefrontal cortex and the other three brain areas is approximately twice as large for positively correlated genes as for negatively correlated genes.
+     \item Regardless of the sign of the correlation, there are approximately twice as many genes in common between prefrontal cortex and the temnportal cerebral wall as between the other two areas.
+     \item The proportion of genes in common between PFC and cerebellum and pons is approximately the same.
+     \end{enumerate}
+
+
+<<echo=FALSE>>=
+### Strip all characters after : in Location
+prefront.Data$loc <- sub("\\::*\\s[0-9]*\\.[0-9]*","",prefront.Data$Location)
+# Results look like: "Chr22" "ChrX"  "ChrUn" "Chr11" "Chr11"
+substring(prefront.Data$loc,1,3) <- "   "
+#prefront.Data$loc <- ordered(prefront.Data$loc)
+### Get start locations from prefront.Data$Location
+prefront.Data$bp <- as.numeric(sub('.*\\:', '', prefront.Data$Location))
+
+
+
+########### Check for step that loses data when selecting specific chromosomes ##############
+# prefront.Data$loc contains the chromosome number as a factor stripped from location
+# prefront.Data$bp is the base pair location of the probe/gene within the chromosome
+# head(prefront.Data$loc)
+# head(prefront.Data$bp)
+
+
+### Check and correct/update where possible gene symbols
+### Need to remove '-' because R interprets it as math mode and halts when it doesn't find $
+out.Symb <- checkGeneSymbols(prefront.Data$Symbol, unmapped.as.na=FALSE, hgnc.table=NULL)
+prefront.Data$Symbol <-  out.Symb$Suggested.Symbol
+prefront.Data$Symbol[which(prefront.Data$Symbol == '-')] <- c(".")
+
+#### Clean illegal characters from the gene names: -
+#grep('.*\\-',prefront.Data$Symbol)
+prefront.Data$Symbol <- gsub("-", ".", prefront.Data$Symbol)
+
+@
+
+<<echo=FALSE>>=
+### Strip all characters after : in Location
+cbell.Data$loc <- sub("\\::*\\s[0-9]*\\.[0-9]*","",cbell.Data$Location)
+substring(cbell.Data$loc,1,3) <- "   "
+#cbell.Data$loc <- ordered(cbell.Data$loc)
+### Get start locations from cbell.Data$Location
+cbell.Data$bp <- as.numeric(sub('.*\\:', '', cbell.Data$Location))
+
+
+### Check and correct/update where possible gene symbols
+### Need to remove '-' because R interprets it as math mode and halts when it doesn't find $
+out.Symb <- checkGeneSymbols(cbell.Data$Symbol, unmapped.as.na=FALSE, hgnc.table=NULL)
+cbell.Data$Symbol <-  out.Symb$Suggested.Symbol
+cbell.Data$Symbol[which(cbell.Data$Symbol == '-')] <- c(".")
+
+#### Clean illegal characters from the gene names: -
+#grep('.*\\-',cbell.Data$Symbol)
+cbell.Data$Symbol <- gsub("-", ".", cbell.Data$Symbol)
+
+@
+
+<<echo=FALSE, include=FALSE, results=hide>>=
+########### Clean up cbell data ##############
+# tempor.Data$loc contains the chromosome number as a factor stripped from location
+# tempor.Data$bp is the base pair location of the probe/gene within the chromosome
+# head(tempor.Data$loc)
+# head(tempor.Data$bp)
+### Strip all characters after : in Location
+tempor.Data$loc <- sub("\\::*\\s[0-9]*\\.[0-9]*","",tempor.Data$Location)
+substring(tempor.Data$loc,1,3) <- "   "
+#tempor.Data$loc <- ordered(tempor.Data$loc)
+### Get start locations from tempor.Data$Location
+tempor.Data$bp <- as.numeric(sub('.*\\:', '', tempor.Data$Location))
+
+
+### Check and correct/update where possible gene symbols
+### Need to remove '-' because R interprets it as math mode and halts when it doesn't find $
+out.Symb <- checkGeneSymbols(tempor.Data$Symbol, unmapped.as.na=FALSE, hgnc.table=NULL)
+tempor.Data$Symbol <-  out.Symb$Suggested.Symbol
+tempor.Data$Symbol[which(tempor.Data$Symbol == '-')] <- c(".")
+
+#### Clean illegal characters from the gene names: -
+#grep('.*\\-',tempor.Data$Symbol)
+tempor.Data$Symbol <- gsub("-", ".", tempor.Data$Symbol)
+
+@
+
+<<echo=FALSE, include=FALSE, results=hide>>=
+########### Clean up cbell data ##############
+# pons.Data$loc contains the chromosome number as a factor stripped from location
+# pons.Data$bp is the base pair location of the probe/gene within the chromosome
+# head(pons.Data$loc)
+# head(pons.Data$bp)
+pons.Data$loc <- sub("\\::*\\s[0-9]*\\.[0-9]*","",pons.Data$Location)
+substring(pons.Data$loc,1,3) <- "   "
+#pons.Data$loc <- ordered(pons.Data$loc)
+### Get start locations from pons.Data$Location
+pons.Data$bp <- as.numeric(sub('.*\\:', '', pons.Data$Location))
+
+
+### Check and correct/update where possible gene symbols
+### Need to remove '-' because R interprets it as math mode and halts when it doesn't find $
+out.Symb <- checkGeneSymbols(pons.Data$Symbol, unmapped.as.na=FALSE, hgnc.table=NULL)
+pons.Data$Symbol <-  out.Symb$Suggested.Symbol
+pons.Data$Symbol[which(pons.Data$Symbol == '-')] <- c(".")
+
+#### Clean illegal characters from the gene names: -
+#grep('.*\\-',pons.Data$Symbol)
+pons.Data$Symbol <- gsub("-", ".", pons.Data$Symbol)
+
+@
+
+
+<<echo=FALSE>>=
+### Function to take a vector of numbers, and turn it into a comma-separated string.
+
+comma.Sep <- function(in.vec) {
+  out.Sep <- c('')
+    out.Sep <- c(paste(out.Sep,as.character(in.vec[1]),sep=''))
+  
+  if (length(in.vec) > 1) {
+    
+    for (q in 2:length(in.vec)) {
+      out.Sep <- c(paste(out.Sep,', ',as.character(in.vec[q])))
+    }
+
+  } else {
+    
+  }
+        
+    return(out.Sep)
+}
+
+@
+
+
+
+<<echo=FALSE, results=hide>>=
+### Function to plot on equal-SD scaled square axes.
+######################### Begin square.Axes function ###################################
+square.Axes <- function(xvar,yvar,title.Text,xlabel.Text,ylabel.Text,corval) {
+  
+  dat <- data.frame(x = c(xvar), y = c(yvar))
+  
+  range.Lims.x <- c(mean(xvar) - 4*sd(xvar), mean(xvar) + 4*sd(xvar))
+  range.Lims.y <- c(mean(yvar) - 4*sd(yvar), mean(yvar) + 4*sd(yvar))
+  
+  
+  
+  sq.Plt <-   ggplot(dat, aes(x=xvar,y=yvar)) +
+    geom_point(color = "blue",size=1.0) + 
+    geom_smooth(method=lm,   # Add linear regression line
+                se=FALSE,
+                color="yellow",
+                size = 1)  +  # Don't add shaded confidence region
+    #            theme(aspect.ratio=1) +
+    # This adds  the little lines to each axis that represent the densities of the variables
+    geom_rug() +    
+    geom_abline(intercept = mean(yvar)  + (-sign(corval))*(mean(xvar)/sd(xvar))*sd(yvar),
+                slope = sign(corval)*(sd(yvar)/sd(xvar)),
+                linetype='dashed',
+                size = 1) + 
+    scale_y_continuous(name=ylabel.Text,
+                       limits=range.Lims.y) +
+    scale_x_continuous(name=xlabel.Text,
+                       limits=range.Lims.x) +
+    ggtitle(title.Text) + 
+#    theme_minimal() + 
+    theme_classic() + 
+    theme(aspect.ratio=1) +
+    theme(axis.line = element_line(colour = "grey80",size=1.0),
+          panel.border = element_rect(colour = "grey80", fill=NA,
+                                      size=2.5)) +
+    theme(plot.title = element_text(color="black",
+                                    face="bold",
+                                    size=18,
+                                    hjust=0.5)) +
+    theme(axis.title = element_text(color="black",
+                                    size=15)) +
+    theme(axis.text.x = element_text(size=14),
+          axis.text.y = element_text(size=14)) +
+    geom_vline(xintercept = mean(xvar),
+               col='red',
+               size = 1) +
+    geom_hline(yintercept = mean(yvar),
+               col='red',
+               size = 1) +
+    annotate("text", x = mean(xvar)+3*sd(xvar),
+             y = mean(yvar)+3.8*sd(yvar),
+             label = c(paste('r = ',toString(corval),sep='')),
+             color="black",
+             size=5)
+  
+  return(sq.Plt) # This is what gets returned by the function. In this case it is an actual plot.
+}                # <<<< This is actually the last stement in the function.
+######
+@
+
+
+%%%%%%%%%%%%%%% Statistics
+
+<<echo=FALSE, results=tex>>=
+# prefront.Meanposr <- data.frame(mean=NA,corr=NA,chr=NA,gene=NA,bp=NA,pval=NA,record=NA)
+# prefront.Meannegr <- data.frame(mean=NA,corr=NA,chr=NA,gene=NA,bp=NA,pval=NA,record=NA)
+# prefront.Meanbothr <- data.frame(mean=prefront.Data$Mean,corr=prefront.Data$Sample.r,chr=prefront.Data$loc,
+#                              gene=prefront.Data$Symbol,bp=prefront.Data$bp,pval=prefront.Data$Sample.p.r.,record=prefront.Data$Record)
+# prefront.Meanbothr$corsign <- as.factor(sign(prefront.Data$Sample.r))
+
+entrez_object <- org.Hs.egGO    # 
+
+# Add a column with the sign of the correlation top each areal data.frame
+prefront.Data$corsign <- as.factor(sign(prefront.Data$Sample.r))
+cbell.Data$corsign <- as.factor(sign(cbell.Data$Sample.r))
+tempor.Data$corsign <- as.factor(sign(tempor.Data$Sample.r))
+pons.Data$corsign <- as.factor(sign(pons.Data$Sample.r))
+
+
+
+
+############## **** Very important ****: To compare top correlations across areas, it is 
+####### necessary that all areas share the same probes (and ENTREZIDs). For example,
+####### to compare the top positive and negative correlations across areas to see which
+####### (+ or -) shows the most consistency, all of the probes that were in the top
+####### 50 positive correlations in prefrontal, have to also be in set of probes that
+####### have correlations available in cerebellum, temporal and pons, and the same
+####### holds for the top negative correlations.
+####### **** Thus it is necessary to restrict the analysis to only those probes that are
+####### in common across all four brain regions. The following code (down to the intersect)
+####### statements determines which probes that also all have ENTREZIDs were shared
+####### among the four brain areas
+
+
+# Two ways to check for missing chromosome names and starting positions:
+# prefront.Data$loc == 'Un' measn the chromosome name is unknown.
+# prefront.Data$bp == 1.000 means that the starting position of the transcript is unknown.
+
+# The Illumina probe IDs that are in the original correlation data files by area can be used to retrieve both the chromosome name as well as the starting position of the transcript
+
+
+# Recover missing 'Un' chromosomes
+if (!exists('ensembl')) {
+ ensembl <- useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+}
+
+if (!exists('entrezg')) {
+ entrezg <- useMart("entrezgene", dataset = "hsapiens_gene_ensembl")
+}
+
+normal.chroms <- c(1:22, "X", "Y", "M")
+
+if (!exists('ah')) {
+ ah <- AnnotationHub()
+}
+
+if (!exists('orgs')) {
+ orgs <- AnnotationHub::query(ah, "org.Hs.eg.db")
+}
+
+if (!exists('gene.DB')) {
+ gene.DB <- orgs[["AH57973"]]
+}
+
+
+
+# columns(gene.DB)
+# keytypes(gene.DB)
+
+############### Start: find and fill in missing CHR and probe start positions (bp)######
+### USE ENTREZIDs to find the missing chromosomes
+############### prefrontal #############################################################
+## Bimap interface:
+x <- org.Hs.egCHR
+# Get the entrez gene identifiers that are mapped to a chromosome
+mapped_genes <- mappedkeys(x)
+# Convert to a list
+xx <- as.list(x[mapped_genes])
+
+@
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+# Before getting the probes in common across all four brain areas, try finding the missing
+# Chromosome names and gene starting positions in each area separately
+# Next, try to get the Chromosomes for the entries that have 'Un' as the loc column.
+# Note: these entries are not necessarily the same in all four data sets
+# First, eliminate the 3 spaces in front of every chromosome (loc)
+prefront.Data$loc <- gsub('   ','',as.character(prefront.Data$loc))  # n = 2055
+cbell.Data$loc <- gsub('   ','',as.character(cbell.Data$loc))        # n = 247
+tempor.Data$loc <- gsub('   ','',as.character(tempor.Data$loc))      # n = 2042
+pons.Data$loc <- gsub('   ','',as.character(pons.Data$loc))          # n = 2027
+
+#Need to convert all NULL values to NA
+prefront.Data$loc[prefront.Data$loc =="NULL"] <- NA
+cbell.Data$loc[cbell.Data$loc =="NULL"] <- NA
+tempor.Data$loc[tempor.Data$loc =="NULL"] <- NA
+pons.Data$loc[pons.Data$loc =="NULL"] <- NA
+
+# Do the same for NULL values in bp position
+prefront.Data$bp[prefront.Data$bp =="NULL"] <- NA
+cbell.Data$bp[cbell.Data$bp =="NULL"] <- NA
+tempor.Data$bp[tempor.Data$bp =="NULL"] <- NA
+pons.Data$bp[pons.Data$bp =="NULL"] <- NA
+
+
+
+where.Un.pf <- which(prefront.Data$loc == 'Un')   # n = 2055 missing
+where.Un.cb <- which(cbell.Data$loc == 'Un')                    # n = 2047 missing
+where.Un.tm <- which(tempor.Data$loc == 'Un')                   # n = 2043 missing
+where.Un.po <- which(pons.Data$loc == 'Un')                     # n = 2027 missing
+
+# do the same for missing start locations
+# This stores the indices of each data.frame that has 1 as the starting location of the probe
+# 1.000 corresponds to an unknown starting location
+where.1.bp.pf <- which(prefront.Data$bp == 1.000)   # n = 2113
+where.1.bp.cb <- which(cbell.Data$bp == 1.000)      # n = 2010
+where.1.bp.tm <- which(tempor.Data$bp == 1.000)     # n = 2098
+where.1.bp.po <- which(pons.Data$bp == 1.000)       # n = 2084
+
+common.df <- data.frame(matrix(c(unpf=length(where.Un.pf),
+                        uncb=length(where.Un.cb),
+                        untm=length(where.Un.tm),
+                        unpo=length(where.Un.po),
+                        bpmisspf=length(where.1.bp.pf),
+                        bpmisscb=length(where.1.bp.cb),
+                        bpmisstm=length(where.1.bp.tm),
+                        bpmisspo=length(where.1.bp.po)),
+                        nrow=4,ncol=2,byrow=FALSE
+                        ))
+colnames(common.df) <- c('n Missing Chr ','n Missing start loc')
+row.names(common.df) <- c('prefrontal cortex','cerebellum','temporal cortex','pons')
+
+@
+
+\Sexpr{print(common.df)}\\
+
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+########### ************ Everything in this chunk only applies to Chr name not to start position
+complete.Chr.StartPos <- data.frame(pf=rep(NA,3),
+                                    cb=rep(NA,3),
+                                    tm=rep(NA,3),
+                                    po=rep(NA,3)
+                                    )
+
+complete.Chr.StartPos[1,1] <- dim(prefront.Data)[1]
+complete.Chr.StartPos[1,2] <- dim(cbell.Data)[1]
+complete.Chr.StartPos[1,3] <- dim(tempor.Data)[1]
+complete.Chr.StartPos[1,4] <- dim(pons.Data)[1]
+
+length(where.Un.pf)    # n = 2055 missing Chr names
+
+prefront.From.illumquery <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol", "chromosome_name", "start_position","end_position", "band","entrezgene"), filters = "illumina_humanref_8_v3", values = as.character(prefront.Data$Record[c(where.Un.pf)]), mart = ensembl)
+
+# n = 1969 returned from query in which illumina probe IDs from prefront.Data corresponding to # 
+# missing Chr were found using the getBM query
+dim(prefront.From.illumquery)[1]  
+
+# But n = 340 of these 1969 were duplicated illumina probes in returned query
+temp.indx.nodup.pf <- which(!duplicated(prefront.From.illumquery$illumina_humanref_8_v3))
+
+# n = 1629 unique illumina probes from query that matched those in 
+# prefront.Data$Record[c(where.Un.pf)]
+map.Query.Un.pf <- match(prefront.From.illumquery$illumina_humanref_8_v3[c(temp.indx.nodup.pf)],
+                         prefront.Data$Record
+                         )
+
+# This query returns some Chr names that are formatted as CHR_HSCHR5 etc. They need to be reformatted.
+
+prefront.From.illumq <- sub('CHR_HSCHR','',prefront.From.illumquery$chromosome_name[c(temp.indx.nodup.pf)])
+temp.Init <- grep('^[X-Y]|^[1-9]?|^[1]{1}[0-9]{1}|^[2]{1}[0-2]{1}[^:punct:]',prefront.From.illumq,value=TRUE)
+temp.Init.pf <- substr(temp.Init,1,2)
+temp.Init.pf <- sub('\\_','',temp.Init.pf)
+temp.Init.pf[which(temp.Init.pf == 'CH')] <- NA
+temp.Init.pf[which(temp.Init.pf == 'KI')] <- NA
+num.NA(temp.Init.pf)    # n = 1 for which the chromosome name could not be retrieved
+
+# This leaves 1628 usable Chr names that can be used to fill in missing ones in prefront.Data
+
+#There is one other option for getting Chr names. Relying on the illumina.Data file that has the probe sequence used for each probe. If this could be run through BLAST and the genomic coordinates of the match obtained, then it might be possible to retrieve the remainder of the missing information.
+
+# This argues that the Chromosome names that are returned by the server
+# query are the ones to use to augment the original prefront.Data on Chr.
+# The file that holds the information from the server query is:
+##### prefront.From.illumquery     It is only 1969 long so NAs must have been dropped.
+##### Have to use the probe ID to sync this data frame with the rows in prefront.Data
+##### that are missing Chr and start position
+
+# Put the information from the server query into the prefront.Data frame to reduce the missing Chrs and start positions.
+
+
+prefront.Data$loc[c(map.Query.Un.pf)] <- temp.Init.pf
+
+# Re-run check on number of NA missing Chr in prefront.Data$loc. It should now only be 426. The
+# steo above replaced the 'Un' entries with NA.
+
+prefront.Data$loc[which(prefront.Data$loc == 'Un')] <- NA
+num.NA(prefront.Data$loc)      # n = 427  19,573 of 20,000 probes have Chromosome names
+
+
+complete.Chr.StartPos$pf[2] <- dim(prefront.Data)[1] - num.NA(prefront.Data$loc)
+@
+
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+########### ************ Everything in this chunk only applies to start position not to Chr name
+########### ************ start_position and end_position refer to the start and end base pairs
+########### ************ of the GENE, or possibly of the mRNA transcript
+
+length(where.1.bp.pf)   # n = 2113 missing start positions
+
+prefront.From.illumquery <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol", "chromosome_name", "start_position","end_position", "band","entrezgene"), filters = "illumina_humanref_8_v3", values = as.character(prefront.Data$Record[c(where.1.bp.pf)]), mart = ensembl)
+
+# n = 1999 returned from query mtaching on illumina probe IDs
+dim(prefront.From.illumquery)[1]
+
+# But n = 348 of these 1999 were duplicated illumina probes in returned query
+temp.indx.nodup.pf <- which(!duplicated(prefront.From.illumquery$illumina_humanref_8_v3))
+length(temp.indx.nodup.pf)
+
+# n = 1651 unique illumina probes from query that matched those in 
+# prefront.Data$Record[c(where.1.bp.pf)]
+map.Query.bp.pf <- match(prefront.From.illumquery$illumina_humanref_8_v3[c(temp.indx.nodup.pf)],
+                         prefront.Data$Record
+                         )
+
+# Put the information from the server query into the prefront.Data frame to reduce the missing start positions.
+
+prefront.Data$bp[c(map.Query.bp.pf)] <- round(prefront.From.illumquery$start_position[c(temp.indx.nodup.pf)]/1000000,4)
+
+# Re-run check on number of NA missing Chr in prefront.Data$loc. It should now only be 426. The
+# steo above replaced the 'Un' entries with NA.
+
+prefront.Data$bp[which(prefront.Data$bp == 1.000)] <- NA
+num.NA(prefront.Data$bp)      # n = 462  19,538 of 20,000 probes have starting positions
+
+complete.Chr.StartPos$pf[3] <- dim(prefront.Data)[1] - num.NA(prefront.Data$bp)
+@
+
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+# Now do the same for the cerebellum
+########### ************ Everything in this chunk only applies to Chr name not to start position
+
+length(where.Un.cb)    # n = 2047 missing Chr names
+
+cbell.From.illumquery <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol", "chromosome_name", "start_position","end_position", "band","entrezgene"), filters = "illumina_humanref_8_v3", values = as.character(cbell.Data$Record[c(where.Un.cb)]), mart = ensembl)
+
+# n = 1926 returned from query in which illumina probe IDs from cbell.Data corresponding to # 
+# missing Chr were found using the getBM query
+dim(cbell.From.illumquery)[1]  
+
+# But n = 310 of these 1926 were duplicated illumina probes in returned query
+temp.indx.nodup.cb <- which(!duplicated(cbell.From.illumquery$illumina_humanref_8_v3))
+
+# n = 1616 unique illumina probes from query that matched those in 
+# cbell.Data$Record[c(where.Un.cb)]
+map.Query.Un.cb <- match(cbell.From.illumquery$illumina_humanref_8_v3[c(temp.indx.nodup.cb)],
+                         cbell.Data$Record
+                         )
+
+# This query returns some Chr names that are formatted as CHR_HSCHR5 etc. They need to be reformatted.
+# Only use the rows that have non-duplicated illumina probes from the query
+cbell.From.illumq <- sub('CHR_HSCHR','',cbell.From.illumquery$chromosome_name[c(temp.indx.nodup.cb)])
+temp.Init <- grep('^[X-Y]|^[1-9]?|^[1]{1}[0-9]{1}|^[2]{1}[0-2]{1}[^:punct:]',cbell.From.illumq,value=TRUE)
+temp.Init.cb <- substr(temp.Init,1,2)
+temp.Init.cb <- sub('\\_','',temp.Init.cb)
+temp.Init.cb[which(temp.Init.cb == 'CH')] <- NA
+temp.Init.cb[which(temp.Init.cb == 'KI')] <- NA
+num.NA(temp.Init.cb)    # n = 1 for which the chromosome name could not be retrieved
+
+# This leaves 1615 usable Chr names that can be used to fill in missing ones in cbell.Data
+
+#There is one other option for getting Chr names. Relying on the illumina.Data file that has the probe sequence used for each probe. If this could be run through BLAST and the genomic coordinates of the match obtained, then it might be possible to retrieve the remainder of the missing information.
+
+# This argues that the Chromosome names that are returned by the server
+# query are the ones to use to augment the original cbell.Data on Chr.
+# The file that holds the information from the server query is:
+##### cbell.From.illumquery     It is only 1969 long so NAs must have been dropped.
+##### Have to use the probe ID to sync this data frame with the rows in cbell.Data
+##### that are missing Chr and start position
+
+# Put the information from the server query into the cbell.Data frame to reduce the missing Chrs and start positions.
+
+
+cbell.Data$loc[c(map.Query.Un.cb)] <- temp.Init.cb
+
+# Re-run check on number of NA missing Chr in cbell.Data$loc. It should now only be 426. The
+# steo above replaced the 'Un' entries with NA.
+
+cbell.Data$loc[which(cbell.Data$loc == 'Un')] <- NA
+num.NA(cbell.Data$loc)      # n = 432  19,568 of 20,000 probes have Chromosome names
+
+complete.Chr.StartPos$cb[2] <- dim(cbell.Data)[1] - num.NA(cbell.Data$loc)
+@
+
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+########### ************ Everything in this chunk only applies to start position not to Chr name
+########### ************ start_position and end_position refer to the start and end base pairs
+########### ************ of the GENE, or possibly of the mRNA transcript
+
+length(where.1.bp.cb)    # n = 2101 without start positions
+
+cbell.From.illumquery <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol", "chromosome_name", "start_position","end_position", "band","entrezgene"), filters = "illumina_humanref_8_v3", values = as.character(cbell.Data$Record[c(where.1.bp.cb)]), mart = ensembl)
+
+dim(cbell.From.illumquery)[1]
+# n = 1950 results returned
+
+# But n = 315 of these 1999 were duplicated illumina probes in returned query
+temp.indx.nodup.cb <- which(!duplicated(cbell.From.illumquery$illumina_humanref_8_v3))
+length(temp.indx.nodup.cb)
+
+# n = 1635 unique illumina probes from query that matched those in 
+# cbell.Data$Record[c(where.1.bp.cb)]
+map.Query.bp.cb <- match(cbell.From.illumquery$illumina_humanref_8_v3[c(temp.indx.nodup.cb)],
+                         cbell.Data$Record
+                         )
+
+
+# Put the information from the server query into the cbell.Data frame to reduce the missing start positions.
+
+cbell.Data$bp[c(map.Query.bp.cb)] <- round(cbell.From.illumquery$start_position[c(temp.indx.nodup.cb)]/1000000,4)
+
+# Re-run check on number of NA missing Chr in cbell.Data$loc. It should now only be 426. The
+# steo above replaced the 'Un' entries with NA.
+
+cbell.Data$bp[which(cbell.Data$bp == 1.000)] <- NA
+num.NA(cbell.Data$bp)      # n = 466  19,534 of 20,000 probes have starting positions
+
+complete.Chr.StartPos$cb[3] <- dim(cbell.Data)[1] - num.NA(cbell.Data$bp)
+@
+
+%%%%%%%%%%%%%% for tempor and pons below use the code for recovering Chr ans start positions
+%%%%%%%%%%%%%% immeditately above for cbell
+
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+# Now do the same for the temporal cerebral wall
+########### ************ Everything in this chunk only applies to Chr name not to start position
+
+length(where.Un.tm)    # n = 2043 missing Chr names
+
+tempor.From.illumquery <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol", "chromosome_name", "start_position","end_position", "band","entrezgene"), filters = "illumina_humanref_8_v3", values = as.character(tempor.Data$Record[c(where.Un.tm)]), mart = ensembl)
+
+# n = 1947 returned from query in which illumina probe IDs from tempor.Data corresponding to # 
+# missing Chr were found using the getBM query
+dim(tempor.From.illumquery)[1]  
+
+# But n = 329 of these 1947 were duplicated illumina probes in returned query
+temp.indx.nodup.tm <- which(!duplicated(tempor.From.illumquery$illumina_humanref_8_v3))
+
+# n = 1618 unique illumina probes from query that matched those in 
+# tempor.Data$Record[c(where.Un.tm)]
+map.Query.Un.tm <- match(tempor.From.illumquery$illumina_humanref_8_v3[c(temp.indx.nodup.tm)],
+                         tempor.Data$Record
+                         )
+
+# This query returns some Chr names that are formatted as CHR_HSCHR5 etc. They need to be reformatted.
+# Only use the rows that have non-duplicated illumina probes from the query
+tempor.From.illumq <- sub('CHR_HSCHR','',tempor.From.illumquery$chromosome_name[c(temp.indx.nodup.tm)])
+temp.Init <- grep('^[X-Y]|^[1-9]?|^[1]{1}[0-9]{1}|^[2]{1}[0-2]{1}[^:punct:]',tempor.From.illumq,value=TRUE)
+temp.Init.tm <- substr(temp.Init,1,2)
+temp.Init.tm <- sub('\\_','',temp.Init.tm)
+temp.Init.tm[which(temp.Init.tm == 'CH')] <- NA
+temp.Init.tm[which(temp.Init.tm == 'KI')] <- NA
+num.NA(temp.Init.tm)    # n = 1 for which the chromosome name could not be retrieved
+
+# This leaves 1617 usable Chr names that can be used to fill in missing ones in tempor.Data
+
+#There is one other option for getting Chr names. Relying on the illumina.Data file that has the probe sequence used for each probe. If this could be run through BLAST and the genomic coordinates of the match obtained, then it might be possible to retrieve the remainder of the missing information.
+
+# This argues that the Chromosome names that are returned by the server
+# query are the ones to use to augment the original tempor.Data on Chr.
+# The file that holds the information from the server query is:
+##### tempor.From.illumquery     It is only 1969 long so NAs must have been dropped.
+##### Have to use the probe ID to sync this data frame with the rows in tempor.Data
+##### that are missing Chr and start position
+
+# Put the information from the server query into the tempor.Data frame to reduce the missing Chrs and start positions.
+
+
+tempor.Data$loc[c(map.Query.Un.tm)] <- temp.Init.tm
+
+# Re-run check on number of NA missing Chr in tempor.Data$loc. It should now only be 426. The
+# steo above replaced the 'Un' entries with NA.
+
+tempor.Data$loc[which(tempor.Data$loc == 'Un')] <- NA
+num.NA(tempor.Data$loc)      # n = 426  19,574 of 20,000 probes have Chromosome names
+
+complete.Chr.StartPos$tm[2] <- dim(tempor.Data)[1] - num.NA(tempor.Data$loc)
+@
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+########### ************ Everything in this chunk only applies to start position not to Chr name
+########### ************ start_position and end_position refer to the start and end base pairs
+########### ************ of the GENE, or possibly of the mRNA transcript
+
+length(where.1.bp.tm)    # n = 2098 without start positions
+
+tempor.From.illumquery <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol", "chromosome_name", "start_position","end_position", "band","entrezgene"), filters = "illumina_humanref_8_v3", values = as.character(tempor.Data$Record[c(where.1.bp.tm)]), mart = ensembl)
+
+dim(tempor.From.illumquery)[1]
+# n = 1975 results returned
+
+# But n = 337 of these 1999 were duplicated illumina probes in returned query
+temp.indx.nodup.tm <- which(!duplicated(tempor.From.illumquery$illumina_humanref_8_v3))
+length(temp.indx.nodup.tm)
+
+# n = 1638 unique illumina probes from query that matched those in 
+# tempor.Data$Record[c(where.1.bp.tm)]
+map.Query.bp.tm <- match(tempor.From.illumquery$illumina_humanref_8_v3[c(temp.indx.nodup.tm)],
+                         tempor.Data$Record
+                         )
+
+
+# Put the information from the server query into the tempor.Data frame to reduce the missing start positions.
+
+tempor.Data$bp[c(map.Query.bp.tm)] <- round(tempor.From.illumquery$start_position[c(temp.indx.nodup.tm)]/1000000,4)
+
+# Re-run check on number of NA missing Chr in tempor.Data$loc. It should now only be 426. The
+# steo above replaced the 'Un' entries with NA.
+
+tempor.Data$bp[which(tempor.Data$bp == 1.000)] <- NA
+num.NA(tempor.Data$bp)      # n = 460  19,540 of 20,000 probes have starting positions
+
+complete.Chr.StartPos$tm[3] <- dim(tempor.Data)[1] - num.NA(tempor.Data$bp)
+@
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+# Now do the same for the pons
+########### ************ Everything in this chunk only applies to Chr name not to start position
+
+length(where.Un.po)    # n = 2027 missing Chr names
+
+pons.From.illumquery <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol", "chromosome_name", "start_position","end_position", "band","entrezgene"), filters = "illumina_humanref_8_v3", values = as.character(pons.Data$Record[c(where.Un.po)]), mart = ensembl)
+
+# n = 1934 returned from query in which illumina probe IDs from pons.Data corresponding to # 
+# missing Chr were found using the getBM query
+dim(pons.From.illumquery)[1]  
+
+# But n = 325 of these 1934 were duplicated illumina probes in returned query
+temp.indx.nodup.po <- which(!duplicated(pons.From.illumquery$illumina_humanref_8_v3))
+
+# n = 1609 unique illumina probes from query that matched those in 
+# pons.Data$Record[c(where.Un.po)]
+map.Query.Un.po <- match(pons.From.illumquery$illumina_humanref_8_v3[c(temp.indx.nodup.po)],
+                         pons.Data$Record
+                         )
+
+# This query returns some Chr names that are formatted as CHR_HSCHR5 etc. They need to be reformatted.
+# Only use the rows that have non-duplicated illumina probes from the query
+pons.From.illumq <- sub('CHR_HSCHR','',pons.From.illumquery$chromosome_name[c(temp.indx.nodup.po)])
+temp.Init <- grep('^[X-Y]|^[1-9]?|^[1]{1}[0-9]{1}|^[2]{1}[0-2]{1}[^:punct:]',pons.From.illumq,value=TRUE)
+temp.Init.po <- substr(temp.Init,1,2)
+temp.Init.po <- sub('\\_','',temp.Init.po)
+temp.Init.po[which(temp.Init.po == 'CH')] <- NA
+temp.Init.po[which(temp.Init.po == 'KI')] <- NA
+num.NA(temp.Init.po)    # n = 1 for which the chromosome name could not be retrieved
+
+# This leaves 1608 usable Chr names that can be used to fill in missing ones in pons.Data
+
+#There is one other option for getting Chr names. Relying on the illumina.Data file that has the probe sequence used for each probe. If this could be run through BLAST and the genomic coordinates of the match obtained, then it might be possible to retrieve the remainder of the missing information.
+
+# This argues that the Chromosome names that are returned by the server
+# query are the ones to use to augment the original pons.Data on Chr.
+# The file that holds the information from the server query is:
+##### pons.From.illumquery     It is only 1969 long so NAs must have been dropped.
+##### Have to use the probe ID to sync this data frame with the rows in pons.Data
+##### that are missing Chr and start position
+
+# Put the information from the server query into the pons.Data frame to reduce the missing Chrs and start positions.
+
+
+pons.Data$loc[c(map.Query.Un.po)] <- temp.Init.po
+
+# Re-run check on number of NA missing Chr in pons.Data$loc. It should now only be 426. The
+# steo above replaced the 'Un' entries with NA.
+
+pons.Data$loc[which(pons.Data$loc == 'Un')] <- NA
+num.NA(pons.Data$loc)      # n = 419  19,581 of 20,000 probes have Chromosome names
+
+complete.Chr.StartPos$po[2] <- dim(pons.Data)[1] - num.NA(pons.Data$loc)
+@
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+########### ************ Everything in this chunk only applies to start position not to Chr name
+########### ************ start_position and end_position refer to the start and end base pairs
+########### ************ of the GENE, or possibly of the mRNA transcript
+
+length(where.1.bp.po)    # n = 2084 without start positions
+
+pons.From.illumquery <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol", "chromosome_name", "start_position","end_position", "band","entrezgene"), filters = "illumina_humanref_8_v3", values = as.character(pons.Data$Record[c(where.1.bp.po)]), mart = ensembl)
+
+dim(pons.From.illumquery)[1]
+# n = 1963 results returned
+
+# But n = 333 of these 1963 were duplicated illumina probes in returned query
+temp.indx.nodup.po <- which(!duplicated(pons.From.illumquery$illumina_humanref_8_v3))
+length(temp.indx.nodup.po)
+
+# n = 1630 unique illumina probes from query that matched those in 
+# pons.Data$Record[c(where.1.bp.po)]
+map.Query.bp.po <- match(pons.From.illumquery$illumina_humanref_8_v3[c(temp.indx.nodup.po)],
+                         pons.Data$Record
+                         )
+
+
+# Put the information from the server query into the pons.Data frame to reduce the missing start positions.
+
+pons.Data$bp[c(map.Query.bp.po)] <- round(pons.From.illumquery$start_position[c(temp.indx.nodup.po)]/1000000,4)
+
+# Re-run check on number of NA missing Chr in pons.Data$loc. It should now only be 426. The
+# steo above replaced the 'Un' entries with NA.
+
+pons.Data$bp[which(pons.Data$bp == 1.000)] <- NA
+num.NA(pons.Data$bp)      # n = 460  19,540 of 20,000 probes have starting positions
+
+complete.Chr.StartPos$po[3] <- dim(pons.Data)[1] - num.NA(pons.Data$bp)
+@
+
+<<include=FALSE, echoFALSE, results=tex>>=
+# Gather stats on Chr name completeness
+
+
+
+cols.ChrStart.stats <- c('Prefrontal Cortex',
+                         'Cerebellum',
+                         'Temporal Cerebral Wall',
+                         'Pons')
+
+rowname.ChrStart.stats <- c('Total Probes',
+                            'Probes with Chromosome Name',
+                            'Probes with Start Position')
+
+colnames(complete.Chr.StartPos) <- cols.ChrStart.stats
+row.names(complete.Chr.StartPos) <- rowname.ChrStart.stats
+
+chr.start.stats.tab <- xtable(complete.Chr.StartPos,
+                             caption=c('Probes with Chromosome Names or Start Positions'),
+                             row.names=rowname.ChrStart.stats,
+                             colnames=cols.ChrStart.stats)
+
+print(chr.start.stats.tab,rotate.colnames = TRUE,booktabs = TRUE)
+
+@
+
+<<include=FALSE,echo=FALSE,results=tex>>=
+# Generate tables with the top 50/200 +/- correlations in each area with areas as columns
+
+# First, need to convert the illumina probe IDs into genes
+# 50 +
+top50pos.Genes.pf <- noquote(prefront.Data$Symbol[c(which(prefront.Data$Record %in%  probe.Pos.50.pf))])
+top50pos.Genes.cb <- noquote(cbell.Data$Symbol[c(which(cbell.Data$Record %in%  probe.Pos.50.cb))])
+top50pos.Genes.tm <- noquote(tempor.Data$Symbol[c(which(tempor.Data$Record %in%  probe.Pos.50.tm))])
+top50pos.Genes.po <- noquote(pons.Data$Symbol[c(which(pons.Data$Record %in%  probe.Pos.50.po))])
+
+# 200 +
+top200pos.Genes.pf <- noquote(prefront.Data$Symbol[c(which(prefront.Data$Record %in%  probe.Pos.200.pf))])
+top200pos.Genes.cb <- noquote(cbell.Data$Symbol[c(which(cbell.Data$Record %in%  probe.Pos.200.cb))])
+top200pos.Genes.tm <- noquote(tempor.Data$Symbol[c(which(tempor.Data$Record %in%  probe.Pos.200.tm))])
+top200pos.Genes.po <- noquote(pons.Data$Symbol[c(which(pons.Data$Record %in%  probe.Pos.200.po))])
+
+# 50 -
+top50neg.Genes.pf <- noquote(prefront.Data$Symbol[c(which(prefront.Data$Record %in%  probe.Neg.50.pf))])
+top50neg.Genes.cb <- noquote(cbell.Data$Symbol[c(which(cbell.Data$Record %in%  probe.Neg.50.cb))])
+top50neg.Genes.tm <- noquote(tempor.Data$Symbol[c(which(tempor.Data$Record %in%  probe.Neg.50.tm))])
+top50neg.Genes.po <- noquote(pons.Data$Symbol[c(which(pons.Data$Record %in%  probe.Neg.50.po))])
+
+# 200 -
+top200neg.Genes.pf <- noquote(prefront.Data$Symbol[c(which(prefront.Data$Record %in%  probe.Neg.200.pf))])
+top200neg.Genes.cb <- noquote(cbell.Data$Symbol[c(which(cbell.Data$Record %in%  probe.Neg.200.cb))])
+top200neg.Genes.tm <- noquote(tempor.Data$Symbol[c(which(tempor.Data$Record %in%  probe.Neg.200.tm))])
+top200neg.Genes.po <- noquote(pons.Data$Symbol[c(which(pons.Data$Record %in%  probe.Neg.200.po))])
+
+# Now construct two data frames with areas as columns. Only need to show the top 200 in each
+# area because the top 50s are subsets of the top 200s
+
+top.200.pos.Genes <- data.frame(PFC=top200pos.Genes.pf,
+                               Cerebellum=top200pos.Genes.cb,
+                               TemporalCW=top200pos.Genes.tm,
+                               Pons=top200pos.Genes.po)
+
+
+top.200.neg.Genes <- data.frame(PFC=top200neg.Genes.pf,
+                               Cerebellum=top200neg.Genes.cb,
+                               TemporalCW=top200neg.Genes.tm,
+                               Pons=top200neg.Genes.po)
+
+top.200.pos.Genes.tab <- xtable(top.200.pos.Genes,
+                                caption=c('Two-hundred genes whose expression levels were most strongly positively correlated with COMT expression levels by brain area.'))
+
+top.200.neg.Genes.tab <- xtable(top.200.neg.Genes,
+                                caption=c('Two-hundred genes whose expression levels were most strongly negatively correlated with COMT expression levels by brain area.'))
+
+top.200.pos.Genes.ltx <- latex(top.200.pos.Genes.tab,file='',
+                   caption = c('Two-hundred genes whose expression levels were most strongly positively correlated with COMT expression levels by brain area.'),
+                     caption.loc = c('top'),
+#                     colname = c('Name','URL'),
+                     rowlabel = NULL,
+                     colnamesTexCmd="bfseries",
+                     booktabs=TRUE,
+                     label=c('tab:topposgenes'),
+                     na.blank = TRUE,
+                     vbar = FALSE,
+                     longtable=TRUE,
+                     table.env=TRUE,
+                     center=c('center'),
+                     continued=c('Top Positively Correlated Genes'),
+                     first.hline.double = TRUE,
+                     append=FALSE
+                     )
+                  
+@
+
+\Sexpr{print(top.200.pos.Genes.ltx,justify='l')}
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+# For the top 50 and top 200 determine exactly which genes appear in common between
+# prefrontal cortex and each of the other three brain areas
+
+# Cerebellum
+# Top ~50 +
+
+# Use the shared Illumina probe IDs to convert them into genes in common
+
+genes.Shared50.pfcb <- cbell.Data$Symbol[c(which(cbell.Data$Record %in% probes.Common.50pos.cb))]
+entrez.Shared50.pfcb <- cbell.Data$ENTREZID[c(which(cbell.Data$Record %in% probes.Common.50pos.cb))]
+
+# also get -1000 (upstream) to +600 (downstream) promoter sequences of shared genes
+entrez=entrez.Shared50.pfcb
+promoterUp.Shared50.pfcb <- getSequence(id = entrez, 
+            type="entrezgene",
+            seqType="coding_gene_flank",
+            upstream=1000,
+            mart=ensembl)
+promoterDown.Shared50.pfcb <- getSequence(id = entrez, 
+            type="entrezgene",
+            seqType="coding_gene_flank",
+            downstream=600,
+            mart=ensembl)
+promoter.Shared50.pfcb <- paste(promoterUp.Shared50.pfcb$coding_gene_flank,
+                                promoterDown.Shared50.pfcb$coding_gene_flank,sep='')
+
+# Temporal Cerebral Wall
+
+genes.Shared50.pftm <- tempor.Data$Symbol[c(which(tempor.Data$Record %in% probes.Common.50pos.tm))]
+entrez.Shared50.pftm <- tempor.Data$ENTREZID[c(which(tempor.Data$Record %in% probes.Common.50pos.tm))]
+
+# also get -1000 (upstream) to +600 (downstream) promoter sequences of shared genes
+entrez=entrez.Shared50.pftm
+promoterUp.Shared50.pftm <- getSequence(id = entrez, 
+            type="entrezgene",
+            seqType="coding_gene_flank",
+            upstream=1000,
+            mart=ensembl)
+promoterDown.Shared50.pftm <- getSequence(id = entrez, 
+            type="entrezgene",
+            seqType="coding_gene_flank",
+            downstream=600,
+            mart=ensembl)
+promoter.Shared50.pftm <- paste(promoterUp.Shared50.pftm$coding_gene_flank,
+                                promoterDown.Shared50.pftm$coding_gene_flank,sep='')
+
+
+# Pons
+
+genes.Shared50.pfpo <- pons.Data$Symbol[c(which(pons.Data$Record %in% probes.Common.50pos.po))]
+entrez.Shared50.pfpo <- pons.Data$ENTREZID[c(which(pons.Data$Record %in% probes.Common.50pos.po))]
+
+# also get -1000 (upstream) to +600 (downstream) promoter sequences of shared genes
+entrez=entrez.Shared50.pfpo
+promoterUp.Shared50.pfpo <- getSequence(id = entrez, 
+            type="entrezgene",
+            seqType="coding_gene_flank",
+            upstream=1000,
+            mart=ensembl)
+promoterDown.Shared50.pfpo <- getSequence(id = entrez, 
+            type="entrezgene",
+            seqType="coding_gene_flank",
+            downstream=600,
+            mart=ensembl)
+promoter.Shared50.pfpo <- paste(promoterUp.Shared50.pfpo$coding_gene_flank,
+                                promoterDown.Shared50.pfpo$coding_gene_flank,sep='')
+
+@
+
+
+
+
+
+
+
+
+
+
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+dim.areas <- matrix(c(dim(prefront.Data)[1],
+                    dim(cbell.Data)[1],
+                    dim(tempor.Data)[1],
+                    dim(pons.Data)[1]),
+                    nrow=4)
+
+have.ENTREZ <- data.frame(indpf=c(1:dim.areas[1]),
+                          ENTREZIDpf=rep(NA,dim.areas[1]),
+                          ILMNpf=prefront.Data$Record,
+                          indcb=c(1:dim.areas[1]),
+                          ENTREZIDcb=rep(NA,dim.areas[2]),
+                          ILMNcb=cbell.Data$Record,
+                          indtm=c(1:dim.areas[1]),
+                          ENTREZIDtm=rep(NA,dim.areas[3]),
+                          ILMNtm=tempor.Data$Record,
+                          indpo=c(1:dim.areas[1]),
+                          ENTREZIDpo=rep(NA,dim.areas[4]),
+                          ILMNpo=pons.Data$Record
+                          )
+
+# First determine which rows have the loc(Chromosome) listed as 'Un'. That is done below with
+# the variables where.Un.pf, where.Un.cb, where.Un.tm, where.Un.po
+
+# On an area by area basis separately, retrieve the ENTREZIDs for each Illumina probe.
+have.Ent.pf <-na.omit(unlist(mget(x = prefront.Data$Record,envir=illuminaHumanv2ENTREZID)))   # n = 18724 of 20,000
+have.Ent.cb <- na.omit(unlist(mget(x = cbell.Data$Record,envir=illuminaHumanv2ENTREZID)))      # n = 18726 of 20,000
+have.Ent.tm <- na.omit(unlist(mget(x = tempor.Data$Record,envir=illuminaHumanv2ENTREZID)))     # n = 18698 of 20,000
+have.Ent.po <- na.omit(unlist(mget(x = pons.Data$Record,envir=illuminaHumanv2ENTREZID)))       # n = 18713 of 20,000
+
+# eliminate duplicates - these vectors show the unique ENTREZIDs in each brain area's data
+# There are duplicates because there can be multiple ILMN probes for the same gene (ENTREZID)
+
+############# Don't eliminate duplicates because the retention of rows will be done on the basis
+############# of Illumina probe IDs which are unique
+# notdups.pf <- which(!duplicated(have.Ent.pf))
+# have.Ent.pf <- have.Ent.pf[c(notdups.pf),1]     
+# 
+# notdups.cb <- which(!duplicated(have.Ent.cb))
+# have.Ent.cb <- have.Ent.cb[c(notdups.cb),1]
+# 
+# notdups.tm <- which(!duplicated(have.Ent.tm))
+# have.Ent.tm <- have.Ent.tm[c(notdups.tm),1]
+# 
+# notdups.po <- which(!duplicated(have.Ent.po))
+# have.Ent.po <- have.Ent.po[c(notdups.po),1]
+
+entrez.By.area <- data.frame(num.entrez=c(length(have.Ent.pf),
+                                          length(have.Ent.cb),
+                                          length(have.Ent.tm),
+                                          length(have.Ent.po)),
+                             miss.entrez=c((20000 - length(have.Ent.pf)),
+                                           (20000 -length(have.Ent.cb)),
+                                           (20000 -length(have.Ent.tm)),
+                                           (20000 -length(have.Ent.po)))
+)
+
+colnames(entrez.By.area) <- c('Number of Rows with ENTREZIDs','Number of Rows Missing ENTREZIDs')
+row.names(entrez.By.area) <- c('Prefrontal Cortex',
+                              'Cerebellum',
+                              'Temporal Cortical Wall',
+                              'Pons')
+
+entrez.Area.tab <- xtable(entrez.By.area,
+                         caption='Number of Unique ENTREZIDs in the Expression data\n for Each Brain Area. ENTREZIDs retrieved using ILMN identifiers.')
+
+print(entrez.Area.tab)
+@
+
+\Sexpr{entrez.Area.tab}\\
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+
+# The vectors above hold only the rows with ENTREZIDs in each area.
+# NAs have been eliminated, and there are no duplicates.
+
+# Attach a column with the ENTREZIDs to each of the 20,000 rows data frames
+# Don't eliminate the NAs
+prefront.Data$ENTREZID <- unlist(mget(x = prefront.Data$Record,envir=illuminaHumanv2ENTREZID))   # n = 18724 without NA; 1276 with NA
+cbell.Data$ENTREZID <- unlist(mget(x = cbell.Data$Record,envir=illuminaHumanv2ENTREZID))      # n = 18726 withput NA, 1274 with NA
+tempor.Data$ENTREZID <- unlist(mget(x = tempor.Data$Record,envir=illuminaHumanv2ENTREZID))     # n = 18698 without NA, 1302 with NA
+pons.Data$ENTREZID <- unlist(mget(x = pons.Data$Record,envir=illuminaHumanv2ENTREZID))       # n = 18713 without NA, 1287 with NA
+
+# Use the Illumina Huamn ref 8 v 2 bead chip reference file to try to find additional ENTREZIDs
+# data.frame illumina.Data
+
+# Get the list of ILMN probes for each data.frame that do not have ENTREZIDs
+no.Entrez.pf <- prefront.Data$Record[c(which(is.na(prefront.Data$ENTREZID)))]
+no.Entrez.pf.indx <- which(is.na(prefront.Data$ENTREZID))
+
+no.Entrez.cb <- cbell.Data$Record[c(which(is.na(cbell.Data$ENTREZID)))]
+no.Entrez.cb.indx <- which(is.na(cbell.Data$ENTREZID))
+
+no.Entrez.tm <- tempor.Data$Record[c(which(is.na(tempor.Data$ENTREZID)))]
+no.Entrez.tm.indx <- which(is.na(tempor.Data$ENTREZID))
+
+no.Entrez.po <- pons.Data$Record[c(which(is.na(pons.Data$ENTREZID)))]
+no.Entrez.po.indx <- which(is.na(pons.Data$ENTREZID))
+
+# Get the indices in the illumina.Data$ilmn vector for which the entry matches a probe in 
+# no.Entrez.xx that does not have an ENTREZID attached
+
+extra.ILMN.pf <- match(no.Entrez.pf,illumina.Data$ilmn)
+extra.ILMN.cb <- match(no.Entrez.cb,illumina.Data$ilmn)
+extra.ILMN.tm <- match(no.Entrez.tm,illumina.Data$ilmn)
+extra.ILMN.po <- match(no.Entrez.po,illumina.Data$ilmn)
+
+
+# The lengths of these vactors show that every ILMN with a missing ENTREZID has a match
+# in the ilumina.Data$ilmn vector. This doesn't necessarily mean that the ENTREZID is there
+# as well
+
+# These hold the ENTREZIDs that were missing from the original data set, but were found in the Illumina data set
+extra.Entrez.pf <- illumina.Data$entrez[c(extra.ILMN.pf)]
+# num.NA(extra.Entrez.pf) = 0; all of the missing ENTREZIDs were recovered for prefrontal
+extra.Entrez.cb <- illumina.Data$entrez[c(extra.ILMN.cb)]
+# num.NA(extra.Entrez.cb) = 0; all of the missing ENTREZIDs were recovered for cerebellum
+extra.Entrez.tm <- illumina.Data$entrez[c(extra.ILMN.tm)]
+# num.NA(extra.Entrez.cb) # = 0; all of the missing ENTREZIDs were recovered for temporal
+extra.Entrez.po <- illumina.Data$entrez[c(extra.ILMN.po)]
+# num.NA(extra.Entrez.cb) # = 0; all of the missing ENTREZIDs were recovered for pons
+
+# a. Set up a correspondence matrix that holds the index in the Illumina file of the probes for which there was not an ENTREZID in the <area>.Data$ENTREZID column
+# b. With the index in the Illumina data file that has a probe ID that matches one listed as not having an ENTREZID (a.)
+correspond.Data.ILMN.pf <- matrix(c(no.Entrez.pf.indx,extra.ILMN.pf),
+                               ncol=2)
+correspond.Data.ILMN.cb <- matrix(c(no.Entrez.cb.indx,extra.ILMN.cb),
+                               ncol=2)
+correspond.Data.ILMN.tm <- matrix(c(no.Entrez.tm.indx,extra.ILMN.tm),
+                               ncol=2)
+correspond.Data.ILMN.po <- matrix(c(no.Entrez.po.indx,extra.ILMN.po),
+                               ncol=2)
+corresp.Data.ILM <- list(correspond.Data.ILMN.pf,
+                         correspond.Data.ILMN.cb,
+                         correspond.Data.ILMN.tm,
+                         correspond.Data.ILMN.po)
+
+
+# For example, corresp.Data.ILM[[1]][1,1] = 7
+# corresp.Data.ILM[[1]][1,2] = 6147
+# Thus, prefront.Data$ENTREZID[7] has an ILMN of "ILMN_1683883" and is missing and ENTREZID
+# illumina.Data[6147,] has an ILMN of "ILMN_1683883" and it has a corresponding entrez = 95
+# The illumina.Data$entrez[6147] = 95 can be used to fill in the missing ENTREZID in
+# prefront.Data$ENTREZID[7]
+
+# use the indices in extra.ILMN.xx to fill in the missing ENTREZID values
+#Both sides have lengths of 20000. There are NAs in te ENTREZID columns
+prefront.Data$ENTREZID <- as.character(prefront.Data$ENTREZID)
+illumina.Data$entrez <- as.character(illumina.Data$entrez)
+
+prefront.Data$ENTREZID[c(corresp.Data.ILM[[1]][,1])] <- illumina.Data$entrez[c(corresp.Data.ILM[[1]][,2])]
+
+cbell.Data$ENTREZID <- as.character(cbell.Data$ENTREZID)
+cbell.Data$ENTREZID[c(corresp.Data.ILM[[2]][,1])] <- illumina.Data$entrez[c(corresp.Data.ILM[[2]][,2])]
+
+tempor.Data$ENTREZID <- as.character(tempor.Data$ENTREZID)
+tempor.Data$ENTREZID[c(corresp.Data.ILM[[3]][,1])] <- illumina.Data$entrez[c(corresp.Data.ILM[[3]][,2])]
+
+pons.Data$ENTREZID <- as.character(pons.Data$ENTREZID)
+pons.Data$ENTREZID[c(corresp.Data.ILM[[4]][,1])] <- illumina.Data$entrez[c(corresp.Data.ILM[[4]][,2])]
+
+# All 20,000 rows in each areal data.frame have ENTREZIDs (no NAs)
+# This means also that all Illumina probe IDs also have identifiers that are mapped to a gene (ENTREZID)
+# All of the ENTREZIDs are unique - not duplicated.
+# This doesn't mean that the set of ENTREZIDs for each <area>.Data data.frame is the same
+# In other words, because the <area>.Data correlation files with 20,000 correlations were
+# obtained ranked by the p-values of the correlations, and because there are more than
+# 20,000 Illumina probes, the sets of probes do not have to correspond
+num.NA(prefront.Data$ENTREZID)    # n = 0 NA
+num.NA(cbell.Data$ENTREZID)   # n = 0 NA
+num.NA(tempor.Data$ENTREZID)  # n = 0 NA
+num.NA(pons.Data$ENTREZID)    # n = 0 NA
+
+
+# Next, intersect on the basis of ENTREZID (which is necessary to look up missing chromosomes;
+# the ones that are listed as 'Un'). This will store only the ENTREZIDs that are in common
+# across all four brain areas
+
+
+all.areas.ENTREZID <- intersect(pons.Data$ENTREZID,intersect(tempor.Data$ENTREZID,intersect(prefront.Data$ENTREZID,cbell.Data$ENTREZID)))    # length = 13027
+
+# all.areas.ENTREZID now holds all of the ENTREZIDs shared across all four brain areas
+
+
+# Before finding the set of common Illumina probes across all areas, first try to find the 
+# missing Chromosomes for each <area>.Data separately.
+# Leverage the fact that the set of Illumina probes differs across areas, and some could be
+# missing a chromosome name in one area while the same probe has the Chromosome in another area.
+
+# Get the union of all Illumina probes across areas. First extract the probes, entrezids 
+# and chromosomes into a data frame for each area
+
+illum.entr.chr.pf <- data.frame(illum=prefront.Data$Record,
+                                entrez=prefront.Data$ENTREZID,
+                                chr=prefront.Data$loc)
+illum.entr.chr.cb <- data.frame(illum=cbell.Data$Record,
+                                entrez=cbell.Data$ENTREZID,
+                                chr=cbell.Data$loc)
+illum.entr.chr.tm <- data.frame(illum=tempor.Data$Record,
+                                entrez=tempor.Data$ENTREZID,
+                                chr=tempor.Data$loc)
+illum.entr.chr.po <- data.frame(illum=pons.Data$Record,
+                                entrez=pons.Data$ENTREZID,
+                                chr=pons.Data$loc)
+
+# Next get the union of all Illumina probes across the four areas
+
+union.Illum.pfcb <- union(illum.entr.chr.pf$illum,illum.entr.chr.cb$illum)   # length 22016
+union.Illum.pfcbtm <- union(union.Illum.pfcb,illum.entr.chr.tm$illum)     # length 22151
+union.Illum.all <- union(union.Illum.pfcbtm,illum.entr.chr.po$illum)   # length 22180
+# There are 22180 different probes across all four areas
+
+diff.Probe.num <- matrix(c(rep(0,6)),nrow=6)
+# Get the number of probe differences between each area
+diff.Probe.num[1] <- length(setdiff(illum.entr.chr.pf$illum,illum.entr.chr.cb$illum))
+diff.Probe.num[2] <- length(setdiff(illum.entr.chr.pf$illum,illum.entr.chr.tm$illum))
+diff.Probe.num[3] <- length(setdiff(illum.entr.chr.pf$illum,illum.entr.chr.po$illum))
+diff.Probe.num[4] <- length(setdiff(illum.entr.chr.cb$illum,illum.entr.chr.tm$illum))
+diff.Probe.num[5] <- length(setdiff(illum.entr.chr.cb$illum,illum.entr.chr.po$illum))
+diff.Probe.num[6] <- length(setdiff(illum.entr.chr.tm$illum,illum.entr.chr.po$illum))
+
+row.names(diff.Probe.num) <- c('Prefrontal Cortex vs. Ceberebellum',
+                               'Prefrontal Cortex vs. Temporal Cerebral Wall',
+                               'Prefrontal Cortex vs. Pons',
+                               'Cerebellum vs. Temporal Cerebral Wall',
+                               'Cerebellum vs. Pons',
+                               'Temporal Cerebral Wall vs. Pons'
+                               )
+colnames(diff.Probe.num) <- c('Number of Illumina Probe Differences')
+
+diff.Probe.tab <- xtable(diff.Probe.num,
+                         caption='Number of Illumina Probe Differences Between Brain Areas:\n Base of 20,000 Probes per Area',digits=0)
+
+print(diff.Probe.tab)
+
+@
+
+\Sexpr{diff.Probe.tab}\\
+
+
+<<include=FALSE,echo=FALSE,results=tex>>=
+############# ********** Compare the top 50 and top 200 +/- correlations in Prefrontal with those
+### in the other three areas
+
+
+
+
+
+
+@
+
+
+
+
+
+
+
+
+<<echo=FALSE, include=FALSE, results=hide>>=
+### Create a data.frame with all areas, but only those variables necessary to find the top N genes averaged across all four areas. Use Alexander's (1990) method for averaging correlations.
+
+### The relevant variables are:
+#### area: prefront, cbell, tempcort, pons
+#### Chr number
+#### Gene Symbol
+#### Correlation of expression with COMT expressiomn in that area
+#### P-value of correlation
+
+# dimensions of data sets
+dim.Area <- data.frame(area=c('prefront', 'cbell','tempor','pons'),
+                       len=rep(0,4), wid=rep(0,4))
+# prefrontal
+dim.Area$len[1] <- dim(prefront.Meanbothr)[1]
+dim.Area$wid[1] <- dim(prefront.Meanbothr)[2]
+
+#cerebellum
+dim.Area$len[2] <- dim(cbell.Data)[1]
+dim.Area$wid[2] <- dim(cbell.Data)[2]
+
+#temporal cortex
+dim.Area$len[3] <- dim(tempor.Data)[1]
+dim.Area$wid[3] <- dim(tempor.Data)[2]
+
+#pons
+dim.Area$len[4] <- dim(pons.Data)[1]
+dim.Area$wid[4] <- dim(pons.Data)[2]
+
+@
+
+<<include=FALSE,echo=FALSE,results=hide>>=
+
+all.Area.dat <- data.frame(areapf=rep(NA,dim.Area$len[1]),
+                           chrpf=rep(NA,dim.Area$len[1]),
+                           genepf=rep(NA,dim.Area$len[1]),
+                           corrpf=as.numeric(rep(NA,dim.Area$len[1])),
+                           pvalpf=as.numeric(rep(NA,dim.Area$len[1])),
+                           illumpf=rep(NA,dim.Area$len[1]),
+                           areacb=rep(NA,dim.Area$len[1]),
+                           chrcb=rep(NA,dim.Area$len[1]),
+                           genecb=rep(NA,dim.Area$len[1]),
+                           corrcb=as.numeric(rep(NA,dim.Area$len[1])),
+                           pvalcb=as.numeric(rep(NA,dim.Area$len[1])),
+                           illumcb=rep(NA,dim.Area$len[1]),
+                           areatc=rep(NA,dim.Area$len[1]),
+                           chrtc=rep(NA,dim.Area$len[1]),
+                           genetc=rep(NA,dim.Area$len[1]),
+                           corrtc=as.numeric(rep(NA,dim.Area$len[1])),
+                           pvaltc=as.numeric(rep(NA,dim.Area$len[1])),
+                           illumtc=rep(NA,dim.Area$len[1]),
+                           areapo=rep(NA,dim.Area$len[1]),
+                           chrpo=rep(NA,dim.Area$len[1]),
+                           genepo=rep(NA,dim.Area$len[1]),
+                           corrpo=as.numeric(rep(NA,dim.Area$len[1])),
+                           pvalpo=as.numeric(rep(NA,dim.Area$len[1])),
+                           illumpo=rep(NA,dim.Area$len[1])
+                           )
+
+
+
+
+prefront.Ess <- data.frame(area=rep('prefront',dim.Area$len[1]),
+                      loc=prefront.Meanbothr$chr,
+                      Symbol=prefront.Meanbothr$gene,
+                      Sample.r=prefront.Meanbothr$corr,
+                      Sample.p.r=prefront.Meanbothr$pval,
+                      Record=prefront.Meanbothr$record)
+
+# Sort by sign and magnitude of correlation
+sort.Ind <- sort(prefront.Ess$Sample.r,decreasing=TRUE,index.return=TRUE)
+prefront.Ess <- prefront.Ess[c(sort.Ind$ix),]
+
+
+cbell.Ess <- data.frame(area=rep('cbell',dim.Area$len[1]),
+                      loc=cbell.Data$loc,
+                      Symbol=cbell.Data$Symbol,
+                      Sample.r=cbell.Data$Sample.r,
+                      Sample.p.r=cbell.Data$Sample.p.r.,
+                      Record=cbell.Data$Record)
+
+# Sort by sign and magnitude of correlation
+sort.Ind <- sort(cbell.Ess$Sample.r,decreasing=TRUE,index.return=TRUE)
+cbell.Ess <- cbell.Ess[c(sort.Ind$ix),]
+
+
+tempor.Ess <- data.frame(area=rep('tempor',dim.Area$len[1]),
+                      loc=tempor.Data$loc,
+                      Symbol=tempor.Data$Symbol,
+                      Sample.r=tempor.Data$Sample.r,
+                      Sample.p.r=tempor.Data$Sample.p.r.,
+                      Record=tempor.Data$Record)
+
+# Sort by sign and magnitude of correlation
+sort.Ind <- sort(tempor.Ess$Sample.r,decreasing=TRUE,index.return=TRUE)
+tempor.Ess <- tempor.Ess[c(sort.Ind$ix),]
+
+
+pons.Ess <- data.frame(area=rep('pons',dim.Area$len[1]),
+                      loc=pons.Data$loc,
+                      Symbol=pons.Data$Symbol,
+                      Sample.r=pons.Data$Sample.r,
+                      Sample.p.r=pons.Data$Sample.p.r.,
+                      Record=pons.Data$Record)
+
+# Sort by sign and magnitude of correlation
+sort.Ind <- sort(pons.Ess$Sample.r,decreasing=TRUE,index.return=TRUE)
+pons.Ess <- pons.Ess[c(sort.Ind$ix),]
+
+all.Area.dat[,1:6] <- prefront.Ess
+all.Area.dat[,7:12] <- cbell.Ess
+all.Area.dat[,13:18] <- tempor.Ess
+all.Area.dat[,19:24] <- pons.Ess
+
+cols.Corr <- c(4,10,16,22)
+cols.Gene <- c(3,9,15,21)
+
+ind.Ill <- matrix(rep(NA,4*dim.Area$len[1]),ncol=4)
+for (i in 1:dim.Area$len[1]) {
+     
+     if (as.character(all.Area.dat$illumpf[i]) %in% as.character(all.Area.dat$illumcb)) {
+               ind.Ill[i,2] <- which(as.character(all.Area.dat$illumcb)  == as.character(all.Area.dat$illumpf[i]))
+     } else {
+               ind.Ill[i,2] <- c(NA)
+     }         
+               
+     if (as.character(all.Area.dat$illumpf[i]) %in% as.character(all.Area.dat$illumtc)) {            ind.Ill[i,3] <- which(as.character(all.Area.dat$illumtc)  == as.character(all.Area.dat$illumpf[i]))
+     } else {
+               ind.Ill[i,3] <- c(NA)
+     }         
+               
+     if (as.character(all.Area.dat$illumpf[i]) %in% as.character(all.Area.dat$illumpo)) {
+          ind.Ill[i,4] <- which(as.character(all.Area.dat$illumpo)  == as.character(all.Area.dat$illumpf[i]))
+     } else {
+               ind.Ill[i,4] <- c(NA)
+     } 
+          
+          }
+
+ind.Ill[,1] <- seq(1,dim.Area$len[1],1)     
+
+#### ******* In all.Area.dat, each area's columns, are sorted separately by area on the correlation. ind.Ill shows where each probe is (index) by area
+
+
+# This orders the data independently in each brain area by a particular variable
+# all.Area.dat[,1:6] <- all.Area.dat[order(as.character(all.Area.dat[,cols.Gene[1]]),decreasing=FALSE),c(1:6)]
+# all.Area.dat[,7:12] <- all.Area.dat[order(as.character(all.Area.dat[,cols.Gene[2]]),decreasing=FALSE),c(7:12)]
+# all.Area.dat[,13:18] <- all.Area.dat[order(as.character(all.Area.dat[,cols.Gene[3]]),decreasing=FALSE),c(13:18)]
+# all.Area.dat[,19:24] <- all.Area.dat[order(as.character(all.Area.dat[,cols.Gene[4]]),decreasing=FALSE),c(19:24)]
+
+@
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+# Calculate average correlation with COMT expression of each probe's expression
+# Use Alexander (1990) to average correlations
+# ind.Ill holds the indices for cerebellum, temporal cortex and pons of each probe on prefrontal cortex.
+
+hold.Corrs <- data.frame(illum=rep(NA,dim.Area$len[1]),
+                         gene=rep(NA,dim.Area$len[1]),
+                         corpf=rep(0,dim.Area$len[1]),
+                         corcb=rep(0,dim.Area$len[1]),
+                         cortc=rep(0,dim.Area$len[1]),
+                         corpo=rep(0,dim.Area$len[1])
+                         )
+
+##### ***** The next code sorts hold.Corrs by the sorted correlations in the prefrontal cortex
+##### ***** In other words, the correlations are no longer sorted separately by area, but ###### instead the probeID order in prefrontal cortex after having been sorted by pf
+##### correlation determines the correlations shown in that row in the other three areas
+# For example, just making up a scenario, whatever probeID has the second strongest expression correlation with COMT in prefrontal cortex might have a correlation of r=.65 in the cerebellum. That is the correlation that would show up in the second row for the cerebellum
+
+hold.Corrs$illum <- all.Area.dat$illumpf
+hold.Corrs$gene <- all.Area.dat$genepf
+hold.Corrs$corpf <- all.Area.dat$corrpf
+hold.Corrs$corcb <- all.Area.dat$corrcb[c(ind.Ill[,2])]
+hold.Corrs$cortc <- all.Area.dat$corrtc[c(ind.Ill[,3])]
+hold.Corrs$corpo <- all.Area.dat$corrpo[c(ind.Ill[,4])]
+
+# average these four correlations and put them into a new column
+# Use Alexander (1990) to average
+
+ki <- c(4)
+n.subj <- c(144,144,144,144)
+
+# Calculate in parts then put together
+
+sum.corr <- matrix(rep(0,dim.Area$len[1]),ncol=1)
+for (l in 1:dim.Area$len[1]) {
+     
+     sum.corr[l] <-sum((((n.subj[1:4] - 1))/(sum(n.subj) - ki))*(hold.Corrs[l,3:6] + (hold.Corrs[l,3:6]*(1 - hold.Corrs[l,3:6]^2))/(2*(n.subj[1:4] - 3))))
+     
+hold.Corrs$avgCorr[l] <- sum.corr[l]
+}
+
+@
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+
+## Leave columns sorted by correlation in prefrontal cortex
+
+top200_pos_ordered_by_pf_corr <- xtable(hold.Corrs[1:cut.Part,],
+                           caption=paste('Correlations of expression with COMT in each brain area for the ',cut.Part,' probes that show the strongest positive correlations in prefrontal cortex',sep=''))
+
+
+write.table(hold.Corrs[1:cut.Part,],file=paste('top',cut.Part,'_pos_ordered_by_pf_corr.csv',sep=''),sep=', ',row.names = FALSE,
+            quote=FALSE)
+write.table(hold.Corrs[1:cut.Part,1:3],file=paste('top',cut.Part,'_pos_ordered_by_pf_corr.csv',sep=''),sep=', ',row.names = FALSE,
+            quote=FALSE)
+
+
+
+top200_neg_ordered_by_pf_corr <- xtable(hold.Corrs[dim(hold.Corrs)[1]:(dim(hold.Corrs)[1]-200),],
+                           caption=paste('Correlations of expression with COMT in each brain area for the ',cut.Part,' probes that show the strongest negative correlations in prefrontal cortex',sep=''))
+
+# Note that these are written in reverse order because they are negative: 20,000:19800
+write.table(hold.Corrs[dim(hold.Corrs)[1]:(dim(hold.Corrs)[1]-200),],file=paste('top',cut.Part,'_neg_ordered_by_pf_corr.csv',sep=''),sep=', ',row.names = FALSE,quote=FALSE)
+write.table(hold.Corrs[dim(hold.Corrs)[1]:(dim(hold.Corrs)[1]-200),1:3],file=paste('top',cut.Part,'_neg_ordered_by_pf_corr.csv',sep=''),sep=', ',row.names = FALSE,quote=FALSE)
+
+
+@
+
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+# Tally the chromosome numbers of the top 200 + and top 200 - in each brain area separately
+# Are (+) correlated genes more likely to be on the same chromosome than (-) correlated genes?
+# Do this both for the top 200 as well as for all 20000 probes.
+# Use the data.frame dfsort
+# colnames(dfsort)
+#[1] "chr"     "corsign" "freq"
+# dfsort is already in tabular form
+
+corsign.By.chr <- dfsort
+corsign.By.chr$pm <- factor(rep(c('minus','plus'),each=24))
+corsign.By.chr <- corsign.By.chr[,c(1,4,3)]
+
+colnames(corsign.By.chr) <- c('chr','corsign','count')
+
+xtabs.ChrCorsign <- xtabs(count ~ chr + corsign,data=corsign.By.chr)
+
+chisq.ChrCorsign.out <- chisq.test(xtabs.ChrCorsign)
+print(chisq.ChrCorsign.out)
+
+@
+
+The chi-square test of independence shows that the number of genes showing positive versus negative correlations with COMT is not independent of Chromosome number in prefrontal cortex.\\
+
+Next, use the binomial distribution to determine if the distribution on Chr 22 where COMT is differs from the distribution on all other chromosomes.\\
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+# First get the numbers of plus and minus correlations aggregated across all chromosomes except Chr 22.
+# Get total probes/genes on Chr 22
+
+pm.Sans22 <- c(rep(0,2))
+pm.Sans22[1] <- sum(xtabs.ChrCorsign[,1]) - xtabs.ChrCorsign[22,1]
+pm.Sans22[2] <- sum(xtabs.ChrCorsign[,2]) - xtabs.ChrCorsign[22,2]
+
+counts.22 <- sum(xtabs.ChrCorsign[22,])
+counts.Sans22 <- sum(pm.Sans22)
+
+obs.Minus.22 <- xtabs.ChrCorsign[22,1]
+
+p.minus.22 <- obs.Minus.22/counts.22
+
+
+# probability of negative correlations across all chromosomes except Chr 22
+p.minus <- pm.Sans22[1]/counts.Sans22
+
+# get the binomial distribution with p = p.minus and the sample size of the number of probes on Chr 22
+d.minus <- dbinom(seq(0,counts.22,1),counts.22,p.minus)
+
+d.minus <- data.frame(num.minus = seq(0,counts.22,1),prob=d.minus)
+
+# Now get the probability of xtabs.ChrCorsign[22,1] minuses or fewer given counts.22 probes. In this case
+# p(k <= 286 minuses) with Binomial(N=19171, p = 0.63888)
+
+cumul.d.minus <- sum(d.minus[1:(obs.Minus.22 + 1),2])
+
+binom.test(obs.Minus.22, counts.22, p = p.minus,
+           alternative = c("less"),
+           conf.level = 0.95)
+
+binom.test(obs.Minus.22, counts.22, p = p.minus,
+           alternative = c("two.sided"),
+           conf.level = 0.95)
+
+
+# The proportion of negatively COMT-correlated genes in prefrontal cortex, 0.54806, is significantly lower than the proportion aggregated across all the other chromosomes, 0.63888.
+@
+
+The proportion genes with negative correlations mwith MB-COMT on Chr 22, \Sexpr{p.minus.22}, is signficantly lower than the proportion aggregated across all of the other chromosomes, \Sexpr{p.minus}.\\ 
+
+<<include=FALSE, echo=FALSE, fig=TRUE, pdf=TRUE>>=
+gold.R <- c(1.61803398875)
+
+vcut <- data.frame(x1=(obs.Minus.22 + 0.5), x2=(obs.Minus.22 + 0.5), y1=-0.00075, y2=0.02)
+p.low.d.minus <- subset(d.minus,d.minus$num.minus < (obs.Minus.22 + 1))
+
+minus.plot <- ggplot() +
+          
+          geom_point(data=d.minus, aes(x=num.minus,y=prob,group=1),
+                     size=0.6,color='blue',shape=1) +
+     
+          geom_point(data=p.low.d.minus, aes(x=num.minus,y=prob,group=1),
+                     size=0.6,color='red',shape=1) +
+     
+          geom_segment(data=vcut, aes(x=x1,xend=x2,y=y1,yend=y2), color='red',size=0.5)  +
+          
+          scale_y_continuous(breaks = seq(0,0.05,0.01),
+                             labels = comma(seq(0,0.05,0.01), digits = 2)) +
+          
+          scale_x_continuous(name='Number of Negative Correlations (k)',
+                             limits=c(0,round((counts.22 + 5),0)),
+                             breaks=seq(0,round((counts.22 + 5),0),200)) +
+          
+          theme_classic() +
+          
+          
+          ggtitle('Probability of Negative Correlations Based on All Chromosomes Except Chr 22' ) +
+          
+          ylab('Probability density') + 
+          theme(aspect.ratio=1/gold.R) + 
+          theme(plot.title = element_text(color="black",
+                                          size=8.5,
+                                          hjust=0.5)) +
+          theme(axis.title = element_text(color="black",
+                                          size=10,
+                                          vjust=1
+          )) +
+
+               theme(axis.text.x = element_text(size=8),
+                axis.text.y = element_text(size=8)) +
+          
+          annotate("text", x = (obs.Minus.22 - 65),
+                   y = 0.005,
+                   label = c(paste('p(k < ',(obs.Minus.22 + 1),') = ',
+                                   round(cumul.d.minus,8),sep='')),
+                   color="black",
+                   size=3.0)    +
+     
+          annotate("text", x = 0.10*(round((counts.22 + 5),0)),
+                   y = 1.10*max(d.minus$prob),
+                   label = c(paste('unique ID: ',prog.Name,sep='')),
+                   parse=FALSE,
+                   color="gray20",
+                   size=1.5) 
+
+file1.pdf <- c('p_binomial_mb_comt.pdf')
+   ggsave(file1.pdf, plot = minus.plot, width = 8, height = 5.5)
+
+minus.plot
+
+@
+
+%\includegraphics[width=0.5\textwidth]{p_binomial_comt_s.eps}\\
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+#Get the mean and sd of the top 200 positives and negatives in each area
+
+mean.sd.By.areaPos <- psych::describe(all.Area.dat[2:(cut.Part+1),cols.Corr])
+mean.sd.By.areaNeg <- psych::describe(all.Area.dat[dim(hold.Corrs)[1]:(dim(hold.Corrs)[1]- cut.Part),cols.Corr])
+
+
+@
+
+
+
+
+
+<<include=FALSE, echo=FALSE, results=TEX>>= 
+# Test the hypothesis that the rank order of the most negatively correlated genes changes more across brain area than do the rank orders of the most highly positively correlated genes.
+
+# Rank the genes on their correlations separately by area, then compare the ranks of specific genes across areas to determine if there are greater differences among negatively correlated genes than among positively correlated genes.
+
+### Do this with the all.Area.dat which has the strongest correlations in each brain area separately. Have to use ind.Ill to find out what those probes are in each area.
+
+hold.Area.dat <- data.frame(areapf=rep(NA,dim.Area$len[1]),
+                           chrpf=rep(NA,dim.Area$len[1]),
+                           genepf=rep(NA,dim.Area$len[1]),
+                           corrpf=as.numeric(rep(NA,dim.Area$len[1])),
+                           pvalpf=as.numeric(rep(NA,dim.Area$len[1])),
+                           illumpf=rep(NA,dim.Area$len[1]),
+                           areacb=rep(NA,dim.Area$len[1]),
+                           chrcb=rep(NA,dim.Area$len[1]),
+                           genecb=rep(NA,dim.Area$len[1]),
+                           corrcb=as.numeric(rep(NA,dim.Area$len[1])),
+                           pvalcb=as.numeric(rep(NA,dim.Area$len[1])),
+                           illumcb=rep(NA,dim.Area$len[1]),
+                           areatc=rep(NA,dim.Area$len[1]),
+                           chrtc=rep(NA,dim.Area$len[1]),
+                           genetc=rep(NA,dim.Area$len[1]),
+                           corrtc=as.numeric(rep(NA,dim.Area$len[1])),
+                           pvaltc=as.numeric(rep(NA,dim.Area$len[1])),
+                           illumtc=rep(NA,dim.Area$len[1]),
+                           areapo=rep(NA,dim.Area$len[1]),
+                           chrpo=rep(NA,dim.Area$len[1]),
+                           genepo=rep(NA,dim.Area$len[1]),
+                           corrpo=as.numeric(rep(NA,dim.Area$len[1])),
+                           pvalpo=as.numeric(rep(NA,dim.Area$len[1])),
+                           illumpo=rep(NA,dim.Area$len[1])
+                           )
+     
+cols.Corr <- c(4,10,16,22)
+cols.Gene <- c(3,9,15,21)     
+     
+hold.Area.dat[,1:6] <- all.Area.dat[order(all.Area.dat[,cols.Corr[1]],decreasing=TRUE),c(1:6)]
+hold.Area.dat[,7:12] <- all.Area.dat[order(all.Area.dat[,cols.Corr[2]],decreasing=TRUE),c(7:12)]
+hold.Area.dat[,13:18] <- all.Area.dat[order(all.Area.dat[,cols.Corr[3]],decreasing=TRUE),c(13:18)]
+hold.Area.dat[,19:24] <- all.Area.dat[order(all.Area.dat[,cols.Corr[4]],decreasing=TRUE),c(19:24)]
+
+@
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+# now for the 200 genes with the largest negative correlations in Prefrontal Cortex, find their ranks in the other three areas
+
+
+
+rank.Stab.neg <- matrix(rep(0,4*cut.Part),ncol=4)
+
+# First do negative correlations
+for (h in 1:cut.Part) {
+     
+     rank.Stab.neg[h,1] <-(20000 - (cut.Part -h))
+     
+     if (as.character(hold.Area.dat$illumpf[(20000 - (cut.Part -h))]) %in% as.character(hold.Area.dat$illumcb)) {
+          rank.Stab.neg[h,2] <- which(as.character(hold.Area.dat$illumcb) == as.character(hold.Area.dat$illumpf[(20000 - (cut.Part -h))]))
+     
+     } else {
+       
+          rank.Stab.neg[h,2] <-  c(NA)  
+          
+     }    
+     
+     if (as.character(hold.Area.dat$illumpf[(20000 - (cut.Part -h))]) %in% as.character(hold.Area.dat$illumtc)) {
+          rank.Stab.neg[h,3] <- which(as.character(hold.Area.dat$illumtc) == as.character(hold.Area.dat$illumpf[(20000 - (cut.Part -h))]))
+     
+     } else {
+       
+          rank.Stab.neg[h,3] <-  c(NA)  
+          
+     }
+     
+    if (as.character(hold.Area.dat$illumpf[(20000 - (cut.Part -h))]) %in% as.character(hold.Area.dat$illumpo)) {
+          rank.Stab.neg[h,4] <- which(as.character(hold.Area.dat$illumpo) == as.character(hold.Area.dat$illumpf[(20000 - (cut.Part -h))]))
+     
+     } else {
+       
+          rank.Stab.neg[h,4] <-  c(NA)  
+          
+     }
+     
+}
+
+colnames(rank.Stab.neg) <- c('rankpf','rankcb','ranktc','rankpo')
+rank.Stab.neg <- data.frame(rank.Stab.neg)
+rank.Stab.neg$illum <- hold.Area.dat$illumpf[(20000 - (cut.Part -1)):20000]
+rank.Stab.neg$gene <- hold.Area.dat$genepf[(20000 - (cut.Part -1)):20000]
+rank.Stab.neg <- rank.Stab.neg[,c(5,6,1:4)]
+
+overlap.Area <- list()
+
+# [[1]] pf vs cb
+# [[2]] pf vs tc
+# [[3]] pf vs po
+# [[4]] cb vs tc
+# [[5]] cb vs po
+# [[6]] tc vs po
+
+overlap.Area[[1]] <- intersect(rank.Stab.neg$rankpf,rank.Stab.neg$rankcb)
+overlap.Area[[2]] <- intersect(rank.Stab.neg$rankpf,rank.Stab.neg$ranktc)
+overlap.Area[[3]] <- intersect(rank.Stab.neg$rankpf,rank.Stab.neg$rankpo)
+overlap.Area[[4]] <- intersect(rank.Stab.neg$rankcb,rank.Stab.neg$ranktc)
+overlap.Area[[5]] <- intersect(rank.Stab.neg$rankcb,rank.Stab.neg$rankpo)
+overlap.Area[[6]] <- intersect(rank.Stab.neg$ranktc,rank.Stab.neg$rankpo)
+
+perc.Overlap <- data.frame(compare=(rep(NA,6)),num=c(rep(0,6)),percentage=c(rep(0,6)),
+                           n.base=c(rep(0,6)),ofn=c(rep(NA,6)))
+perc.Overlap$compare <- c('prefrontal cortex vs. cerebellum',
+                         'prefrontal cortex vs. temporal cortex',
+                         'prefrontal cortex vs. pons',
+                         'cerebellum vs. temporal cortex',
+                         'cerebellum vs. pons',
+                         'temporal cortex vs. pons')
+
+for (g in 1:6) {
+     
+    perc.Overlap$n.base[g]  <- cut.Part - length(which(is.na(rank.Stab.neg[,g])))
+     perc.Overlap$num[g]  <- length(overlap.Area[[g]]) 
+    perc.Overlap$percentage[g]  <- paste(round(100*(perc.Overlap$num[g])/(perc.Overlap$n.base[g]),0),'%',sep='')
+}
+
+perc.Overlap.neg <- perc.Overlap
+perc.Overlap.neg$ofn <- paste(perc.Overlap$num,' (',perc.Overlap$n.base,')',sep='')
+
+colnames(perc.Overlap.neg) <- c('Comparison','number shared','Percentage','base n',
+                                'Shared Genes (N)')
+overlap.Neg <- xtable(perc.Overlap.neg[,c(1,5,3)],
+                         caption=c('Of the genes with the strongest negative correlations with COMT expression,\n the percentage of genes found in both areas'))
+
+overlap.Neg
+
+
+@
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+# now for the 200 genes with the largest positive correlations in Prefrontal Cortex, find their ranks in the other three areas
+
+
+#cut.Part <- c(200)
+rank.Stab.pos <- matrix(rep(0,4*cut.Part),ncol=4)
+
+# Now do positive correlations
+for (h in 1:cut.Part) {
+     
+     rank.Stab.pos[h,1] <- h
+     
+     if (as.character(hold.Area.dat$illumpf[h]) %in% as.character(hold.Area.dat$illumcb)) {
+          rank.Stab.pos[h,2] <- which(as.character(hold.Area.dat$illumcb) == as.character(hold.Area.dat$illumpf[h]))
+     
+     } else {
+       
+          rank.Stab.pos[h,2] <-  c(NA)  
+          
+     }    
+     
+     if (as.character(hold.Area.dat$illumpf[h]) %in% as.character(hold.Area.dat$illumtc)) {
+          rank.Stab.pos[h,3] <- which(as.character(hold.Area.dat$illumtc) == as.character(hold.Area.dat$illumpf[h]))
+     
+     } else {
+       
+          rank.Stab.pos[h,3] <-  c(NA)  
+          
+     }
+     
+    if (as.character(hold.Area.dat$illumpf[h]) %in% as.character(hold.Area.dat$illumpo)) {
+          rank.Stab.pos[h,4] <- which(as.character(hold.Area.dat$illumpo) == as.character(hold.Area.dat$illumpf[h]))
+     
+     } else {
+       
+          rank.Stab.pos[h,4] <-  c(NA)  
+          
+     }
+     
+}
+
+
+
+colnames(rank.Stab.pos) <- c('rankpf','rankcb','ranktc','rankpo')
+rank.Stab.pos <- data.frame(rank.Stab.pos)
+rank.Stab.pos$illum <- hold.Area.dat$illumpf[1:cut.Part]
+rank.Stab.pos$gene <- hold.Area.dat$genepf[1:cut.Part]
+rank.Stab.pos <- rank.Stab.pos[,c(5,6,1:4)]
+
+overlap.Area <- list()
+
+# [[1]] pf vs cb
+# [[2]] pf vs tc
+# [[3]] pf vs po
+# [[4]] cb vs tc
+# [[5]] cb vs po
+# [[6]] tc vs po
+
+overlap.Area[[1]] <- intersect(rank.Stab.pos$rankpf,rank.Stab.pos$rankcb)
+overlap.Area[[2]] <- intersect(rank.Stab.pos$rankpf,rank.Stab.pos$ranktc)
+overlap.Area[[3]] <- intersect(rank.Stab.pos$rankpf,rank.Stab.pos$rankpo)
+overlap.Area[[4]] <- intersect(rank.Stab.pos$rankcb,rank.Stab.pos$ranktc)
+overlap.Area[[5]] <- intersect(rank.Stab.pos$rankcb,rank.Stab.pos$rankpo)
+overlap.Area[[6]] <- intersect(rank.Stab.pos$ranktc,rank.Stab.pos$rankpo)
+
+
+perc.Overlap <- data.frame(compare=(rep(NA,6)),num=c(rep(0,6)),percentage=c(rep(0,6)),
+                           n.base=c(rep(0,6)),ofn=c(rep(NA,6)))
+perc.Overlap$compare <- c('prefrontal cortex vs. cerebellum',
+                         'prefrontal cortex vs. temporal cortex',
+                         'prefrontal cortex vs. pons',
+                         'cerebellum vs. temporal cortex',
+                         'cerebellum vs. pons',
+                         'temporal cortex vs. pons')
+
+for (g in 1:6) {
+     
+    perc.Overlap$n.base[g]  <- cut.Part - length(which(is.na(rank.Stab.pos[,g])))
+     perc.Overlap$num[g]  <- length(overlap.Area[[g]]) 
+    perc.Overlap$percentage[g]  <- paste(round(100*(perc.Overlap$num[g])/(perc.Overlap$n.base[g]),0),'%',sep='')
+}
+
+perc.Overlap.pos <- perc.Overlap
+perc.Overlap.pos$ofn <- paste(perc.Overlap$num,' (',perc.Overlap$n.base,')',sep='')
+
+colnames(perc.Overlap.pos) <- c('Comparison','number shared','Percentage','base n',
+                                'Shared Genes (N)')
+overlap.Pos <- xtable(perc.Overlap.pos[,c(1,5,3)],
+                         caption=c('Of the genes with the strongest positive correlations with COMT expression,\n the percentage of genes found in both areas'))
+
+overlap.Pos
+
+
+@
+
+
+% {\bfseries {Using the hypergeometric distribution to test for randomness in the number of probes shared in common between the reference area and another area.}}\\
+% 
+% Testing for probe matches between a reference and a test brain area involves the {\bfseries {hypergeometric}} distribution.\\ The computation of probabilities when sampling without replacement is based on the following pdf:
+% 
+% \href{http://people.wku.edu/david.neal/109/Unit2/SamplingWO.pdf}{c('MATH 109 Sampling without Replacement)}
+% 
+% Here is the description of the calculation: \\
+% 
+% {\bfseries {Sampling Without Regard to Order}}\\
+% Now  suppose  we  have  a  population  of N elements  that  are  divided  into  two  types: Type I  which has A elements,  and Type II which has B elements, where $A + B == N$.\\  
+% 
+% For  example,  a  standard  deck  of  $N == 52$  playing  cards  can  be  divided  in  many  ways. Type  I  could  be  “Hearts”  and  Type  II    could  be  “All  Others.”    Then  there  are   $A == 13$ Hearts and  $B == 39$ Others.\\
+% 
+% In analogy to the genes/probes problem, $N == 20,000$ probes,  $A == 50$ or 200, as in the top 50 or the top 200 most strongly positively/negatively {\textit {COMT}}-correlated probes. Thus B is either 19,950 ($A == 50 $) or B is 19,800 ( $A == 200$). 
+% 
+% There are two other parameters: $n == $the number of probes randomnly sampled without replacement, and  $k = $ the number of probes in the sample of size n that also are contained in A. The calculation for the probability that a sample of size n will contain k probes in common with the set in A is:\\
+% $$
+% p = \frac{\binom{A,k}*\binom{B,(n-k)}}{\binom{N,n}}
+% $$
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+# Conditional on the 50 probes with expression levels most strongly positively and negatively correlated with COMT expression, find the probability of n of 50 matching
+
+# Sampling without replacement
+
+
+     num.Probes <- length(unique(hold.Area.dat$illumpf))
+     N <- num.Probes
+     A <- cut.Part   # number of probes in the reference area that could be matched
+     B <- N - A         # number of prtobes not in slected set in reference area
+n <- A     # sample of 50 probes
+# then k ranges from 0 to A matches
+
+###*** Note ***#####
+# The average NUMBER of matches to the top 50 probes expected with a sample of 50 randomly
+# selected genes in another area will be n x A/N or 200(200/20000) = 0.125 <- This is not a proportion; it is the expected number of matches - much less than 1 probe should match by chance.
+
+# prob.N will hold the discrete probability distribution for k matches from a sample size either of 50 or 200.
+
+prob.N <- mpfr(matrix(rep(0,(A+1))),precBits=50)
+for (k in 1:A) {
+     
+     prob.N[k+1] <- (chooseMpfr(A,k)*chooseMpfr(B,(n-k)))/chooseMpfr(N,n)
+}
+
+
+prob.N[1] <- 1.0 - sum(prob.N[2:(A+1)])
+
+
+     prob.N.200 <- data.frame(n.match=seq(0,cut.Part,1),prob=as.numeric(log10(prob.N)))
+     write.table(prob.N.200,file=paste('hypergeometric_probability_table_',cut.Part,'.csv',sep=''),sep=', ',row.names=FALSE)
+
+
+
+@
+
+
+<<include=FALSE, echo=FALSE>>=  # , fig=TRUE, pdf=TRUE
+# For plotting purposes, the last probability in each frame is 0, so leave that out
+# also because it is a discrete distribution, only plot every 5th or 10th point
+
+     
+# Using <<- instead of <- allows the variable to used globally
+     # Do this when prob.N.200 is first set up in another program
+#prob.N.200.plot <- prob.N.200[c(seq(1,200,10)),]
+     # Call the hyperplot.R function to plot the hypergeometric distributions
+loLim <- c(50)
+hiLim <- c(200)
+limitseq <- c(0,200,25)
+
+# Using <<- instead of <- allows the variable to used globally
+     # Do this when prob.N.200 is first set up in another program
+
+#     p.plot <- hyper.plot(prob.N.50,prob.N.200,loLim,hiLim,limitseq,prog.Name)     
+
+
+
+# file.eps <- c('hypergeometric_distributions_50_200.pdf')
+#   postscript(file=file.eps,horiz=FALSE,onefile=FALSE,width=8.0,height=5.5,paper='letter')
+# 
+# p.plot
+
+@
+
+The hypergeometric distributions using the parameters described above are shown in the next figure.\\
+
+%\includegraphics[width=0.5\textwidth]{hypergeometric_matching_genes_diagram.pdf}\\
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+############## This needs to be changed to reflect the two prob.N as prob.N.50 and prob.N.200 and the fact that the probabilities are already represented as log10
+
+genes.In.common <- cbind(perc.Overlap.pos[,c(1,5,3)],perc.Overlap.neg[,c(5,3)])
+
+
+
+     genes.In.common$logp.valpos <- round(as.numeric(prob.N.200[(perc.Overlap.pos[,2]+1),2]),1)
+     genes.In.common$logp.valneg <- round(as.numeric(prob.N.200[(perc.Overlap.neg[,2]+1),2]),1)
+
+     
+genes.In.common <- genes.In.common[,c(1:3,6,4,5,7)]
+
+genes.In.common.tab <- xtable(genes.In.common,
+                   caption = c(paste("Percentages of the ",cut.Part," Most Strongly Correlated Genes Shared in Common Between Two Brain Areas",sep="")))
+
+
+genes.In.common.ltx <- latex(genes.In.common.tab,file='',
+                   caption = c(paste("Percentages of the ",cut.Part," Most Strongly Correlated Genes Shared in Common Between Two Brain Areas",sep="")),
+                     caption.loc = c('top'),
+#                     colname = c('Name','URL'),
+                     rowlabel = NULL,
+                     colnamesTexCmd="bfseries",
+                     booktabs=TRUE,
+                     label=c('tab:sharedgenes'),
+                     na.blank = TRUE,
+                     vbar = FALSE,
+                     longtable=TRUE,
+                     table.env=TRUE,
+                     center=c('center'),
+                     continued=c('Genes Shared Across Areas Continued'),
+                     first.hline.double = TRUE,
+                     append=FALSE
+                     )
+                  
+print(genes.In.common.ltx)
+
+write.table(genes.In.common,paste('shared_perc_',cut.Part,'_posneg.csv',sep=', '),row.names = FALSE)
+
+@
+
+
+<<echo=FALSE, results=tex>>=
+################################################
+### Select the top 200 by p-value to determine which genes expression levels (by chromosome) are most highly correlated with COMT expression.
+### Done separately for positive and negative correlations
+### Inversely normalized by fitted number of probes from the regression on chr length, but weighted by proportion of each chromosome in the top 200. 
+################################################
+
+##### Positive correlations with COMT expression only #####################
+num.Sel <- cut.Part
+full.Count <- table(manhat.Posr.pf$CHR)
+order.by.P.pos <- manhat.Posr.pf[order(manhat.Posr.pf$P), ]
+
+order.by.P.pos$P <- -log10(order.by.P.pos$P)
+colnames(order.by.P.pos)[3] <- c('-log10p')
+xtable(order.by.P.pos[1:num.Sel,],caption=c(paste(cut.Part,' Genes with Strongest Positive Correlations with COMT in Prefrontal Cortex',sep='')))
+
+############ End positive only ########################
+  
+##### Negative correlations with COMT expression only #####################
+full.Count <- table(manhat.Negr.pf$CHR)
+order.by.P.neg <- manhat.Negr.pf[order(manhat.Negr.pf$P), ]
+order.by.P.neg$P <- -log10(order.by.P.neg$P)
+colnames(order.by.P.neg)[3] <- c('-log10p')
+
+xtable(order.by.P.neg[1:num.Sel,],caption=c(paste(cut.Part,' Genes with Strongest Negative Correlations with COMT in Prefrontal Cortex',sep='')))
+
+############ End negative only ########################
+
+@
+
+{\bfseries {Gene ontology analysis}}\\
+
+<<echo=FALSE, include=FALSE, results=tex>>=
+
+if (!exists('ensembl')) {
+ ensembl <- useMart("ensembl", dataset = "hsapiens_gene_ensembl")   
+}
+
+normal.chroms <- c(1:22, "X", "Y", "M")
+
+if (!exists('ah')) {
+ ah <- AnnotationHub()   
+}
+
+if (!exists('orgs')) {
+ orgs <- AnnotationHub::query(ah, "org.Hs.eg.db")   
+}
+
+if (!exists('gene.DB')) {
+ gene.DB <- orgs[["AH57973"]]   
+}
+
+# columns(gene.DB)
+# keytypes(gene.DB)
+
+
+
+
+# input entrez ID output gene symbol
+# temp.Gene <- c('COMT',   'PHGDH',  'DDR1',   'SCAMP2', 'ZFAND3', 'NECAP2', 'HDAC1',  'FTL', 'TST',    'CRYL1')
+# 
+
+topplusr.Data$GENE <- gsub(" ", "", topplusr.Data$GENE)
+topminusr.Data$GENE <- gsub(" ", "", topminusr.Data$GENE)
+
+twohundred_comt_plus <- na.omit(biomaRt::select(gene.DB,keys=as.character(topplusr.Data$GENE[2:51]),columns=c('GENENAME','SYMBOL','ENTREZID'                    ),keytype=c('SYMBOL')))
+
+write.table(twohundred_comt_plus,file='twohundred_comt_plus_corr.csv',sep=', ',quote=FALSE)
+
+
+twohundred_comt_minus <- na.omit(biomaRt::select(gene.DB,keys=as.character(topminusr.Data$GENE[2:51]),columns=c('GENENAME','SYMBOL','ENTREZID'                    ),keytype=c('SYMBOL')))
+
+write.table(twohundred_comt_minus,file='twohundred_comt_minus_corr.csv',sep=', ',quote=FALSE)
+
+
+     
+
+     top200.Pos <- biomaRt::select(gene.DB,keys=order.by.P.pos$GENE[1:num.Sel],columns=c('GENENAME','SYMBOL','ENTREZID'),keytype=c('SYMBOL'))
+     
+#          top.Pos <- top200.Pos
+     top.Pos <- twohundred_comt_plus
+          
+     top200.Neg <- biomaRt::select(gene.DB,keys=order.by.P.neg$GENE[1:num.Sel],columns=c('GENENAME','SYMBOL','ENTREZID'                    ),keytype=c('SYMBOL'))
+     
+
+
+#          top.Neg <- top200.Neg
+          top.Neg <- twohundred_comt_minus
+
+
+pos.Tab <- xtable(top.Pos,caption=c(paste('Top ',cut.Part,' Positively Correlated Genes with COMT in Prefrontal Cortex',sep='')))
+
+pos.Tab
+
+neg.Tab <- xtable(top.Neg,caption=c(paste('Top ',cut.Part,' Negatively Correlated Genes with COMT in Prefrontal Cortex',sep='')))
+
+neg.Tab
+
+@
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+# Ontology
+
+#org.Hs.egGO is an R object that provides
+#mappings between entrez gene identifers and the GO
+#identifers that they are directly associated with
+entrez_object <- org.Hs.egGO    # 
+
+# Get the entrez gene identifiers that are mapped to a GO ID
+#mapped_genes <- mappedkeys(entrez_object)
+
+# Instead, use the actual Illumina probes converted to ENTREZIDs in the data set
+# Get the ENTREZ ID for all of the probes in the original data
+universe.Probes <- data.frame(ENTREZID=na.omit(unlist(mget(x = prefront.Data$Record,envir=illuminaHumanv2ENTREZID))))
+
+universe.Probes$ENTREZID <- as.character(universe.Probes$ENTREZID)
+
+# universe.Probes$ENTREZID now holds all of the ENTREZIDs for all of the ILMN probes
+
+# Convert to a list
+#entrez_to_go <- as.list(entrez_object[mapped_genes])
+entrez_to_go <- as.list(entrez_object[universe.Probes$ENTREZID])
+
+
+#map GO terms to Entrez gene ids
+go_object <- as.list(org.Hs.egGO2EG)
+
+
+# axon_gene <- go_object['GO:0007411']
+# length(unlist(axon_gene, use.names=F))
+# 
+# axon_gene <- unique(unlist(axon_gene, use.names=F))
+# head(axon_gene)
+
+my_genes_plus <- unique(top.Pos$ENTREZID)
+my_genes_minus <- unique(top.Neg$ENTREZID)
+#universe <- mapped_genes
+universe <- universe.Probes$ENTREZID
+length(universe)
+
+params <- new('GOHyperGParams',
+              geneIds=my_genes_plus,
+              universeGeneIds=universe,
+              ontology='BP',
+              pvalueCutoff=0.001,
+              conditional=F,
+              testDirection='over',
+              annotation="org.Hs.eg.db"
+             )
+hgOver.plus <- hyperGTest(params)
+ontology.results.200Plus <- summary(hgOver.plus)
+
+ontology.200.plusA <- xtable(ontology.results.200Plus[,1:6],
+                            caption='Ontology analysis results with top 200 positive correlations (p less than .001)')
+
+ontology.200.plusB <- xtable(data.frame(ontology.results.200Plus[,7]),
+                            caption='Ontology analysis significantly enriched GO terms with top 200 positive correlations (p less than .001)')
+
+# results_GO <- go_object[results$GOBPID]
+# go_object['GO:0051589']
+
+
+params <- new('GOHyperGParams',
+              geneIds=my_genes_minus,
+              universeGeneIds=universe,
+              ontology='BP',
+              pvalueCutoff=0.001,
+              conditional=F,
+              testDirection='over',
+              annotation="org.Hs.eg.db"
+             )
+hgOver.minus <- hyperGTest(params)
+ontology.results.200Minus <- summary(hgOver.minus)
+
+ontology.200.minusA <- xtable(ontology.results.200Minus[,1:6],
+                            caption='Ontology analysis results with top 200 positive correlations (p less than .001)')
+
+ontology.200.minusB <- xtable(data.frame(ontology.results.200Minus[,7]),
+                            caption='Ontology analysis significantly enriched GO terms with top 200 positive correlations (p less than .001)')
+
+
+# results_GO <- go_object[results$GOBPID]
+# intersect(my_genes_plus$ENTREZID,unlist(results_GO[[1]]))
+
+
+@
+
+
+
+
+
+{\bfseries {Mutual rank:}} co-expression Pearson correlation coefficient RANK with gene A as target and gene B as co-expressed, and vice versa. The two ranks are then geometrically averaged. Smaller MR scores mean stronger co-expression.\\
+
+<<echo=FALSE, include=FALSE, results=tex>>=
+print(xtable(coexpress.URL[1,],caption=c('The next co-expression analysis used the database at this URL to find the top 500 genes coexpressed with COMT. That list was then checked against the top 200 genes (+ and - separately) from the comt-prefrontal data to find agreement between the two lists.')))
+
+
+### read the COMT coexpression data file 
+hold.Matchpos <- matrix(c(rep(NA,cut.Part)),ncol=1)
+hold.Matchneg <- matrix(c(rep(NA,cut.Part)),ncol=1)
+hold.Chrompos <- matrix(c(rep(NA,cut.Part)),ncol=1)
+hold.Chromneg <- matrix(c(rep(NA,cut.Part)),ncol=1)
+
+wbhsa <- loadWorkbook('comt_coex_list_500_hsa.xlsx')
+# wbhsa2 <- loadWorkbook('comt_coex_list_500_hsa2.xlsx')
+# wbhsa3 <- loadWorkbook('comt_coex_list_500_hsa3.xlsx')
+
+coexpress.Data <- data.frame(read.xlsx(wbhsa,         # now tell R to read that workbook and which sheet
+                                  sheet = "coex500"))
+
+
+coexpress.Data$Entrez.Gene.ID <- as.character(coexpress.Data$Entrez.Gene.ID)
+
+for (ma in 1:num.Sel) {
+
+  if (isTRUE(which(coexpress.Data$Entrez.Gene.ID == as.character(top.Pos$ENTREZID[ma])) != 0)) {
+    hold.Matchpos[ma] <- coexpress.Data$Gene[which(coexpress.Data$Entrez.Gene.ID == as.character(top.Pos$ENTREZID[ma]))]
+  } else {
+    
+  }
+     
+  
+  if (isTRUE(which(coexpress.Data$Entrez.Gene.ID == as.character(top.Neg$ENTREZID[ma])) != 0)) {
+    hold.Matchneg[ma] <- coexpress.Data$Gene[which(coexpress.Data$Entrez.Gene.ID == as.character(top.Neg$ENTREZID[ma]))]
+  } else {
+    
+  } 
+}
+
+
+pos.Matches <- na.omit(hold.Matchpos)
+
+neg.Matches <- na.omit(hold.Matchneg)
+
+if (length(pos.Matches) > 0) {
+my.symbols <- pos.Matches
+my.regions <- getBM(c("hgnc_symbol", "chromosome_name", "start_position", "end_position", "band"),
+                    filters = c("hgnc_symbol", "chromosome_name"),
+                    values = list(hgnc_symbol=my.symbols, chromosome_name=normal.chroms),
+                    mart = ensembl)
+my.regions$chromosome_name
+
+posmatch.DF <- data.frame(geneSymbol=pos.Matches,chromosome=my.regions$chromosome_name)
+
+
+} else {posmatch.DF <- data.frame(geneSymbol=NA,chromosome=NA)
+}
+
+xtable(posmatch.DF,caption=c(paste('Genes matching the top ',cut.Part,' positively COMT - correlated genes in Prefrontal',sep='')))
+
+
+if (length(neg.Matches) > 0) {
+my.symbols <- neg.Matches
+my.regions <- getBM(c("hgnc_symbol", "chromosome_name", "start_position", "end_position", "band"),
+                    filters = c("hgnc_symbol", "chromosome_name"),
+                    values = list(hgnc_symbol=my.symbols, chromosome_name=normal.chroms),
+                    mart = ensembl)
+my.regions$chromosome_name
+
+negmatch.DF <- data.frame(geneSymbol=neg.Matches,chromosome=my.regions$chromosome_name)
+
+
+} else {negmatch.DF <- data.frame(geneSymbol=NA,chromosome=NA)
+}
+
+xtable(negmatch.DF,caption=paste('Genes matching the top ',cut.Part,' negatively COMT - correlated genes in Prefrontal',sep=''))
+
+@
+
+% Genes from \Sexpr{print(coexpress.URL[1,])} that overlap with the 10 most highly positively correlated genes with COMT in Prefrontal Cortex:\\
+% \Sexpr{pos.Matches[1:length(pos.Matches)]}\\
+% 
+% (Note: this database most likely only shows positively correlated coexpression genes.)\\
+% Genes from \Sexpr{print(coexpress.URL[1,])} that overlap with the 10 most highly negatively correlated genes with COMT in Prefrontal Cortex:\\
+% \Sexpr{neg.Matches[1:length(neg.Matches)]}\\
+
+
+\end{document}
+
+
+ 

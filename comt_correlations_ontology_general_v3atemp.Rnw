@@ -1,0 +1,1494 @@
+% NEW based on MB-COMT data
+
+\documentclass[11pt]{article}
+\usepackage{graphicx, subfig}
+\usepackage{float}
+\pagenumbering{arabic}
+\usepackage{enumerate}
+\usepackage{Sweave}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{framed}
+\usepackage{longtable}
+\usepackage{tablefootnote}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{keep.source=TRUE} 
+
+This program has the unique ID: \Sexpr{prog.Name}.
+
+\hspace{-1.5em}Gene Network\\
+COMT expression correlations in Four Bartin Areas\\
+Fall, 2017\\
+
+
+<<echo=FALSE>>=
+library(ggplot2,ggthemes)
+library(ggExtra)
+library(psych)
+library(ggpubr)       ### Make sure this is installed
+library(knitr)
+library(Hmisc)
+library(openxlsx)
+library(xtable)
+library(magrittr)
+library(tables)
+library(stargazer)
+library(plyr)
+library(rlist)
+library(qqman)
+library(manhattanly)
+library(Cairo)
+library(RColorBrewer)
+library(HGNChelper)
+library(tools)
+library(scales)
+library(devtools)
+library(utils)
+library(ggman)
+library(dplyr)
+library(biomaRt)
+library(combinat)
+library(Rmpfr)
+library(stats)
+library(stringr)
+library(mvtnorm)
+library(miscFuncs)
+library(reporttools)
+library(glm2)
+
+
+### to prepend filename strings to plots
+#pre.Name <- c('comt_expression-') #pre-ppended to eps output files
+# RColorBrewer palette
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/squareAxes.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork/histChrfunc.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork/onlycisChr.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork/hypergeom_plot.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/countNA.R') # function num.NA()
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_get_match_length.R') #len.match()
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func.chrom.names.R') # extract Chr names
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_get_start_pos.R') # extract and scale start positions
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/commaSep.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_myBioCLite.R')
+
+@
+
+<<include=FALSE, echo=FALSE, results=hide>>=
+# Generate a unique ID for this program by path and filename. This unique ID is attached to this file using a tag in the filesystem.
+source('unique_id_generator.R')
+
+fname <- c("/Volumes/Macintosh_HD_3/genetics/genenetwork2/comt_correlations_ontology_200_v3atemp.Rnw")
+
+prog.Name <- unique.ID(fname)
+
+prog.Name
+
+start.Status <- c(TRUE)   # FALSE   # True means load again
+
+sUs <- c(TRUE)  # Applies to biocLite installations sUs = suppress Update status
+sAUs <- c(TRUE)  # Applies to biocLite installations sAUs = suppress Auto Update status
+@
+
+
+
+<<include=FALSE,echo=FALSE,results=hide>>=
+# if (start.Status) {
+#   install_github("drveera/ggman")   
+# }
+library(ggman)
+
+# myBioCLite() # This function updates only the packages that need to be updated
+
+source("https://bioconductor.org/biocLite.R")
+# if (start.Status) {
+#   biocLite(c("GenomicFeatures"),suppressUpdates=sUs, suppressAutoUpdate=sAUs)   
+#   biocLite(c("AnnotationDbi"),suppressUpdates=sUs, suppressAutoUpdate=sAUs)   
+#   biocLite(c("org.Hs.eg.db"),suppressUpdates=sUs, suppressAutoUpdate=sAUs)   
+# }
+
+library("AnnotationHub")
+library("GenomicFeatures")
+library("org.Hs.eg.db")
+
+
+# if (start.Status) {
+#      biocLite(c('hgu95av2.db'),suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+# }
+
+library('hgu95av2.db')
+
+# if (start.Status) {
+#      biocLite("illuminaHumanv4.db",suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+# }
+
+library("illuminaHumanv4.db")
+
+source("https://bioconductor.org/workflows.R")
+
+# if (start.Status) {
+#  workflowInstall("annotation")   
+# }
+
+# if (start.Status) {
+#  biocLite("TxDb.Hsapiens.UCSC.hg19.knownGene",suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+# }
+
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene #shorthand (for convenience)   
+
+# if (start.Status) {
+# biocLite("GO.db",suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+# }
+# 
+# if (start.Status) {
+# biocLite("topGO",suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+# }     
+# 
+# if (start.Status) {
+# biocLite("GOstats",suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+# } 
+     
+library("GO.db")
+library("topGO")
+library("GOstats")
+
+# if (start.Status) {
+#      biocLite('EDASeq',suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+# }
+
+library('EDASeq')
+
+
+
+
+# if (start.Status) {
+#      biocLite('lumi',suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+# }
+
+library(lumi)
+
+# if (start.Status) {
+#      biocLite('lumiHumanIDMapping',suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+# }
+
+library(lumiHumanIDMapping)
+
+# if(start.Status) {
+#      biocLite('lumiHumanAll.db',suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+# }
+
+library('lumiHumanAll.db')
+
+# if(start.Status) {
+#      biocLite('rBLAST',suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+# }
+
+library(rBLAST)
+
+# if (start.Status) {
+#      biocLite (c( "beadarray" , "limma" , "GEOquery" , "illuminaHumanv2.db"),
+#                suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+# }
+# 
+# if (start.Status) {
+#      biocLite('annotate',suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+# }
+
+ if (start.Status) {
+      biocLite("GEOquery",suppressUpdates=sUs, suppressAutoUpdate=sAUs)
+ }
+
+library('annotate')
+
+library("illuminaHumanv2.db")
+library("beadarray","limma","GEOquery")
+
+options(scipen = 999, digits = 5, width = 60, knitr.table.format = "latex")
+@
+
+
+
+{\textit {COMT}} catalyzes degradation of catecholamines including dopamine, norepinephrine and epinephrine.\\ 
+<<echo=FALSE, include=FALSE, results=tex>>=
+coexpress.URL <- data.frame(site=NA,addr=NA)
+coexpress.URL[1,1:2] <- c('COXPRESdb','http://coxpresdb.jp/')
+coexpress.URL[2,1:2] <- c('OMICtools','https://omictools.com/')
+coexpress.URL[3,1:2] <- c('Coexpedia','http://www.coexpedia.org/search.php')
+coexpress.URL[4,1:2] <- c('GeneFriends','http://www.genefriends.org/RNAseq/')
+coexpress.URL[5,1:2] <- c('Illumina Probes','http://www.genomequebec.mcgill.ca/compgen/integratedvervetgenomics/transcriptome/Illumina/allprobes.html')
+coexpress.URL[6,1:2] <- c('Gibbs Expression Data','https://www.ncbi.nlm.nih.gov/geo/query')
+coexpress.URL[7,1:2] <- c('Train Online','https://www.ebi.ac.uk/training/online/course/arrayexpressdiscoverfunctionalgenomicsdataqui/references')
+
+
+url.Tab <- xtable(coexpress.URL)
+url.Table <- latex(url.Tab,file='',
+                   caption = c("Gene Coexpression Databases"),
+                   caption.loc = c('top'),
+                     colname = c('Name','URL'),
+                     rowlabel = c(''),
+                     colnamesTexCmd="bfseries",
+                     booktabs=TRUE,
+                     label=c('tabcoexpressurls'),
+                     na.blank = TRUE,
+                     vbar = FALSE,
+                     longtable=TRUE,
+                     table.env=TRUE,
+                     center=c('center'),
+                     continued=c('Gene Coexpression Databases Continued'),
+                     first.hline.double = TRUE,
+                     append=FALSE
+                     )
+
+@
+
+
+\Sexpr{url.Table}
+
+<<echo=FALSE,include=FALSE,results=hide>>=
+### read the data file 
+
+if (start.Status) {
+  wb <- loadWorkbook('comt_all_areas_correlation_results.xlsx')   
+}
+
+if (start.Status) {
+  prefront.Data <- data.frame(read.xlsx(wb,  # now tell R to read that workbook and which sheet
+                                  sheet = "prefrontal"))
+
+  # chrom.Data <- data.frame(read.xlsx(wb,  # now tell R to read that workbook and which sheet
+  #                        sheet = "chrom_length"))   
+}
+
+
+# Replace any NULL entries in the Location columns with NA
+## Location looks like "Chr22: 18.328774" "ChrX: 13.866617"  "ChrUn: 1.000000" 
+## I will eventually extract bothe the Chromosome name and starting position of the gene
+
+     prefront.Data$Location[prefront.Data$Location =="NULL"] <- NA
+
+
+
+# if (start.Status) {
+#   wpr <- loadWorkbook('mb_comt_top_pos_r_prefrontal.xlsx')   
+# }
+# if (start.Status) {
+#   topplusr.Data <- data.frame(read.xlsx(wpr,  # now tell R to read that workbook and which sheet
+#                                   sheet = "posr_prefront"))
+# }
+# 
+# if (start.Status) {
+#   wnr <- loadWorkbook('mb_comt_top_neg_r_prefrontal.xlsx')   
+# }
+# if (start.Status) {
+#   topminusr.Data <- data.frame(read.xlsx(wnr,  # now tell R to read that workbook and which sheet
+#                                   sheet = "negr_prefront"))
+# }
+
+
+if (start.Status) {
+
+cbell.Data <- data.frame(read.xlsx(wb,         # now tell R to read that workbook and which sheet
+                                  sheet = "cerebellum"))
+}
+     
+# Replace any NULL entries in the Location columns with NA
+## Location looks like "Chr22: 18.328774" "ChrX: 13.866617"  "ChrUn: 1.000000" 
+## I will eventually extract bothe the Chromosome name and starting position of the gene
+
+     cbell.Data$Location[cbell.Data$Location =="NULL"] <- NA
+
+     
+     
+
+if (start.Status) {
+
+tempor.Data <- data.frame(read.xlsx(wb,         # now tell R to read that workbook and which sheet
+                                  sheet = "temporal"))
+}
+
+# Replace any NULL entries in the Location columns with NA
+## Location looks like "Chr22: 18.328774" "ChrX: 13.866617"  "ChrUn: 1.000000" 
+## I will eventually extract bothe the Chromosome name and starting position of the gene
+
+     tempor.Data$Location[tempor.Data$Location =="NULL"] <- NA
+     
+     
+     
+if (start.Status) {
+
+pons.Data <- data.frame(read.xlsx(wb,         # now tell R to read that workbook and which sheet
+                                  sheet = "pons"))
+}
+
+# Replace any NULL entries in the Location columns with NA
+## Location looks like "Chr22: 18.328774" "ChrX: 13.866617"  "ChrUn: 1.000000" 
+## I will eventually extract bothe the Chromosome name and starting position of the gene
+
+     pons.Data$Location[pons.Data$Location =="NULL"] <- NA
+     
+     
+if (start.Status) {
+  ilmn <- loadWorkbook('illumina_human_ref_8_v2.xlsx')   
+}
+
+if (start.Status) {
+
+illumina.Data <- data.frame(read.xlsx(ilmn,         # now tell R to read that workbook and which sheet
+                                  sheet = "illumina"))
+}
+
+chrom.Names <- c(as.character(seq(1,22,1)),'X','Y')
+
+# Use the hgu95av2.db and the hgu95av2CHRLENGTHS data to get the chromosome lengths
+
+yy <- hgu95av2CHRLENGTHS
+chrom.Data <- data.frame(chrom=chrom.Names,
+                         chrom.Length=yy[chrom.Names]
+)
+
+
+### Note to convert r correlations into p values use these transformations
+### store the results in a column in the original data frame - without the print statements
+# example: r = 0.809, n = 138
+# r.test(n = , r12 = )
+# out.t <- r.test(n = 138, r12 = 0.809)
+# print(out.t$t,digits=10)
+# [1] 16.05025766
+# pval <- 2*pt(-abs(t),df=n-2)
+# pval <- 2*pt(-abs(print(out.t$t,digits=20)),df=136)
+# print(pval,digits=10)
+
+@
+
+
+
+<<echo=FALSE>>=
+### Strip all characters after : in Location
+prefront.Data$loc <- sub("\\::*\\s[0-9]*\\.[0-9]*","",prefront.Data$Location)
+# Results look like: "Chr22" "ChrX"  "ChrUn" "Chr11" "Chr11"
+substring(prefront.Data$loc,1,3) <- "   "
+#prefront.Data$loc <- ordered(prefront.Data$loc)
+### Get start locations from prefront.Data$Location
+prefront.Data$bp <- as.numeric(sub('.*\\:', '', prefront.Data$Location))
+
+
+
+########### Check for step that loses data when selecting specific chromosomes ##############
+# prefront.Data$loc contains the chromosome number as a factor stripped from location
+# prefront.Data$bp is the base pair location of the probe/gene within the chromosome
+# head(prefront.Data$loc)
+# head(prefront.Data$bp)
+
+
+### Check and correct/update where possible gene symbols
+### Need to remove '-' because R interprets it as math mode and halts when it doesn't find $
+out.Symb <- checkGeneSymbols(prefront.Data$Symbol, unmapped.as.na=FALSE, hgnc.table=NULL)
+prefront.Data$Symbol <-  out.Symb$Suggested.Symbol
+prefront.Data$Symbol[which(prefront.Data$Symbol == '-')] <- c(".")
+
+#### Clean illegal characters from the gene names: -
+#grep('.*\\-',prefront.Data$Symbol)
+prefront.Data$Symbol <- gsub("-", ".", prefront.Data$Symbol)
+
+@
+
+<<echo=FALSE>>=
+### Strip all characters after : in Location
+cbell.Data$loc <- sub("\\::*\\s[0-9]*\\.[0-9]*","",cbell.Data$Location)
+substring(cbell.Data$loc,1,3) <- "   "
+#cbell.Data$loc <- ordered(cbell.Data$loc)
+### Get start locations from cbell.Data$Location
+cbell.Data$bp <- as.numeric(sub('.*\\:', '', cbell.Data$Location))
+
+
+### Check and correct/update where possible gene symbols
+### Need to remove '-' because R interprets it as math mode and halts when it doesn't find $
+out.Symb <- checkGeneSymbols(cbell.Data$Symbol, unmapped.as.na=FALSE, hgnc.table=NULL)
+cbell.Data$Symbol <-  out.Symb$Suggested.Symbol
+cbell.Data$Symbol[which(cbell.Data$Symbol == '-')] <- c(".")
+
+#### Clean illegal characters from the gene names: -
+#grep('.*\\-',cbell.Data$Symbol)
+cbell.Data$Symbol <- gsub("-", ".", cbell.Data$Symbol)
+
+@
+
+<<echo=FALSE, include=FALSE, results=hide>>=
+########### Clean up cbell data ##############
+# tempor.Data$loc contains the chromosome number as a factor stripped from location
+# tempor.Data$bp is the base pair location of the probe/gene within the chromosome
+# head(tempor.Data$loc)
+# head(tempor.Data$bp)
+### Strip all characters after : in Location
+tempor.Data$loc <- sub("\\::*\\s[0-9]*\\.[0-9]*","",tempor.Data$Location)
+substring(tempor.Data$loc,1,3) <- "   "
+#tempor.Data$loc <- ordered(tempor.Data$loc)
+### Get start locations from tempor.Data$Location
+tempor.Data$bp <- as.numeric(sub('.*\\:', '', tempor.Data$Location))
+
+
+### Check and correct/update where possible gene symbols
+### Need to remove '-' because R interprets it as math mode and halts when it doesn't find $
+out.Symb <- checkGeneSymbols(tempor.Data$Symbol, unmapped.as.na=FALSE, hgnc.table=NULL)
+tempor.Data$Symbol <-  out.Symb$Suggested.Symbol
+tempor.Data$Symbol[which(tempor.Data$Symbol == '-')] <- c(".")
+
+#### Clean illegal characters from the gene names: -
+#grep('.*\\-',tempor.Data$Symbol)
+tempor.Data$Symbol <- gsub("-", ".", tempor.Data$Symbol)
+
+@
+
+<<echo=FALSE, include=FALSE, results=hide>>=
+########### Clean up cbell data ##############
+# pons.Data$loc contains the chromosome number as a factor stripped from location
+# pons.Data$bp is the base pair location of the probe/gene within the chromosome
+# head(pons.Data$loc)
+# head(pons.Data$bp)
+pons.Data$loc <- sub("\\::*\\s[0-9]*\\.[0-9]*","",pons.Data$Location)
+substring(pons.Data$loc,1,3) <- "   "
+#pons.Data$loc <- ordered(pons.Data$loc)
+### Get start locations from pons.Data$Location
+pons.Data$bp <- as.numeric(sub('.*\\:', '', pons.Data$Location))
+
+
+### Check and correct/update where possible gene symbols
+### Need to remove '-' because R interprets it as math mode and halts when it doesn't find $
+out.Symb <- checkGeneSymbols(pons.Data$Symbol, unmapped.as.na=FALSE, hgnc.table=NULL)
+pons.Data$Symbol <-  out.Symb$Suggested.Symbol
+pons.Data$Symbol[which(pons.Data$Symbol == '-')] <- c(".")
+
+#### Clean illegal characters from the gene names: -
+#grep('.*\\-',pons.Data$Symbol)
+pons.Data$Symbol <- gsub("-", ".", pons.Data$Symbol)
+
+@
+
+
+%%%%%%%%%%%%%%% Statistics
+
+<<echo=FALSE, results=tex>>=
+# prefront.Meanposr <- data.frame(mean=NA,corr=NA,chr=NA,gene=NA,bp=NA,pval=NA,record=NA)
+# prefront.Meannegr <- data.frame(mean=NA,corr=NA,chr=NA,gene=NA,bp=NA,pval=NA,record=NA)
+# prefront.Meanbothr <- data.frame(mean=prefront.Data$Mean,corr=prefront.Data$Sample.r,chr=prefront.Data$loc,
+#                              gene=prefront.Data$Symbol,bp=prefront.Data$bp,pval=prefront.Data$Sample.p.r.,record=prefront.Data$Record)
+# prefront.Meanbothr$corsign <- as.factor(sign(prefront.Data$Sample.r))
+
+entrez_object <- org.Hs.egGO    # 
+
+# Add a column with the sign of the correlation to each areal data.frame
+prefront.Data$corsign <- as.factor(sign(prefront.Data$Sample.r))
+cbell.Data$corsign <- as.factor(sign(cbell.Data$Sample.r))
+tempor.Data$corsign <- as.factor(sign(tempor.Data$Sample.r))
+pons.Data$corsign <- as.factor(sign(pons.Data$Sample.r))
+
+
+
+
+############## **** Very important ****: To compare top correlations across areas, it is 
+####### necessary that all areas share the same probes (and ENTREZIDs). For example,
+####### to compare the top positive and negative correlations across areas to see which
+####### (+ or -) shows the most consistency, all of the probes that were in the top
+####### 50 positive correlations in prefrontal, have to also be in set of probes that
+####### have correlations available in cerebellum, temporal and pons, and the same
+####### holds for the top negative correlations.
+####### **** Thus it is necessary to restrict the analysis to only those probes that are
+####### in common across all four brain regions. The following code (down to the intersect)
+####### statements determines which probes that also all have ENTREZIDs were shared
+####### among the four brain areas
+
+
+# Two ways to check for missing chromosome names and starting positions:
+# prefront.Data$loc == 'Un' measn the chromosome name is unknown.
+# prefront.Data$bp == 1.000 means that the starting position of the transcript is unknown.
+
+# The Illumina probe IDs that are in the original correlation data files by area can be used to retrieve both the chromosome name as well as the starting position of the transcript
+
+
+# Recover missing 'Un' chromosomes
+if (!exists('ensembl')) {
+ensembl <- useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+#ensembl = useEnsembl(biomart="ensembl",dataset = "hsapiens_gene_ensembl")
+}
+
+# if (!exists('entrezg')) {
+#  entrezg <- useMart("entrezgene", dataset = "hsapiens_gene_ensembl")
+# }
+
+normal.chroms <- c(1:22, "X", "Y", "M")
+
+if (!exists('ah')) {
+ ah <- AnnotationHub()
+}
+
+if (!exists('orgs')) {
+ orgs <- AnnotationHub::query(ah, "org.Hs.eg.db")
+}
+
+if (!exists('gene.DB')) {
+ gene.DB <- orgs[["AH57973"]]
+}
+
+
+
+# columns(gene.DB)
+# keytypes(gene.DB)
+
+############### Start: find and fill in missing CHR and probe start positions (bp)######
+### USE ENTREZIDs to find the missing chromosomes
+############### prefrontal #############################################################
+## Bimap interface:
+x <- org.Hs.egCHR
+# Get the entrez gene identifiers that are mapped to a chromosome
+mapped_genes <- mappedkeys(x)
+# Convert to a list
+xx <- as.list(x[mapped_genes])
+
+@
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+
+samp.Size <- c(50,200)
+cut.Part <- samp.Size[1]
+
+# Before getting the probes in common across all four brain areas, try finding the missing
+# Chromosome names and gene starting positions in each area separately
+# Next, try to get the Chromosomes for the entries that have 'Un' as the loc column.
+# Note: these entries are not necessarily the same in all four data sets
+# First, eliminate the 3 spaces in front of every chromosome (loc)
+# prefront.Data$loc <- gsub('   ','',as.character(prefront.Data$loc))  # n = 2055
+# cbell.Data$loc <- gsub('   ','',as.character(cbell.Data$loc))        # n = 247
+# tempor.Data$loc <- gsub('   ','',as.character(tempor.Data$loc))      # n = 2042
+# pons.Data$loc <- gsub('   ','',as.character(pons.Data$loc))          # n = 2027
+
+#Need to convert all NULL values to NA
+prefront.Data$loc[prefront.Data$loc =="NULL"] <- NA
+cbell.Data$loc[cbell.Data$loc =="NULL"] <- NA
+tempor.Data$loc[tempor.Data$loc =="NULL"] <- NA
+pons.Data$loc[pons.Data$loc =="NULL"] <- NA
+
+# Do the same for NULL values in bp position
+prefront.Data$bp[prefront.Data$bp =="NULL"] <- NA
+cbell.Data$bp[cbell.Data$bp =="NULL"] <- NA
+tempor.Data$bp[tempor.Data$bp =="NULL"] <- NA
+pons.Data$bp[pons.Data$bp =="NULL"] <- NA
+
+
+
+where.Un.pf <- which(prefront.Data$loc == 'Un')   # n = 2055 missing
+where.Un.cb <- which(cbell.Data$loc == 'Un')                    # n = 2047 missing
+where.Un.tm <- which(tempor.Data$loc == 'Un')                   # n = 2043 missing
+where.Un.po <- which(pons.Data$loc == 'Un')                     # n = 2027 missing
+
+# do the same for missing start locations
+# This stores the indices of each data.frame that has 1 as the starting location of the probe
+# 1.000 corresponds to an unknown starting location
+where.1.bp.pf <- which(prefront.Data$bp == 1.000)   # n = 2113
+where.1.bp.cb <- which(cbell.Data$bp == 1.000)      # n = 2010
+where.1.bp.tm <- which(tempor.Data$bp == 1.000)     # n = 2098
+where.1.bp.po <- which(pons.Data$bp == 1.000)       # n = 2084
+
+common.df <- data.frame(matrix(c(unpf=length(where.Un.pf),
+                        uncb=length(where.Un.cb),
+                        untm=length(where.Un.tm),
+                        unpo=length(where.Un.po),
+                        bpmisspf=length(where.1.bp.pf),
+                        bpmisscb=length(where.1.bp.cb),
+                        bpmisstm=length(where.1.bp.tm),
+                        bpmisspo=length(where.1.bp.po)),
+                        nrow=4,ncol=2,byrow=FALSE
+                        ))
+colnames(common.df) <- c('n Missing Chr ','n Missing start loc')
+row.names(common.df) <- c('prefrontal cortex','cerebellum','temporal cortex','pons')
+
+common.df.tab <- xtable(common.df,
+     caption=c('Missing Chromosome names and Starting Positions'))
+
+
+@
+
+\Sexpr{common.df.tab}\\
+
+<<include=FALSE,echo=FALSE,results=hide>>=
+# Attach a column with the ENTREZIDs to each of the 20,000 rows data frames
+# Don't eliminate the NAs
+prefront.Data$ENTREZID <- unlist(mget(x = prefront.Data$Record,envir=illuminaHumanv2ENTREZID))   
+num.NA(prefront.Data$ENTREZID)
+# n = 18724 without NA; 1276 with NA
+
+cbell.Data$ENTREZID <- unlist(mget(x = cbell.Data$Record,envir=illuminaHumanv2ENTREZID))      
+num.NA(cbell.Data$ENTREZID)
+# n = 18726 withput NA, 1274 with NA
+
+
+tempor.Data$ENTREZID <- unlist(mget(x = tempor.Data$Record,envir=illuminaHumanv2ENTREZID))     
+num.NA(tempor.Data$ENTREZID)
+#n = 18698 without NA, 1302 with NA
+
+
+pons.Data$ENTREZID <- unlist(mget(x = pons.Data$Record,envir=illuminaHumanv2ENTREZID))       
+num.NA(pons.Data$ENTREZID)
+# n = 18713 without NA, 1287 with NA
+
+@
+
+
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+########### This next 8 chunks use illumina probe IDs to recover missing Chr names and start positions
+########### ************ Everything in this chunk only applies to Chr name not to start position
+complete.Chr.StartPos <- data.frame(pf=rep(NA,3),
+                                    cb=rep(NA,3),
+                                    tm=rep(NA,3),
+                                    po=rep(NA,3)
+                                    )
+
+complete.Chr.StartPos[1,1] <- dim(prefront.Data)[1]
+complete.Chr.StartPos[1,2] <- dim(cbell.Data)[1]
+complete.Chr.StartPos[1,3] <- dim(tempor.Data)[1]
+complete.Chr.StartPos[1,4] <- dim(pons.Data)[1]
+
+length(where.Un.pf)    # n = 2055 missing Chr names
+
+prefront.From.illumquery <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol", "chromosome_name", "start_position","end_position", "band","entrezgene"), filters = "illumina_humanref_8_v3", values = as.character(prefront.Data$Record[c(where.Un.pf)]), mart = ensembl)
+
+
+# n = 1969 returned from query in which illumina probe IDs from prefront.Data corresponding to # 
+# missing Chr were found using the getBM query
+dim(prefront.From.illumquery)[1]  
+
+# But n = 340 of these 1969 were duplicated illumina probes in returned query
+temp.indx.nodup.pf <- which(!duplicated(prefront.From.illumquery$illumina_humanref_8_v3))
+
+# n = 1629 unique illumina probes from query that matched those in 
+# prefront.Data$Record[c(where.Un.pf)]
+map.Query.Un.pf <- match(prefront.From.illumquery$illumina_humanref_8_v3[c(temp.indx.nodup.pf)],
+                         prefront.Data$Record
+                         )
+
+# This query returns some Chr names that are formatted as CHR_HSCHR5 etc. They need to be reformatted.
+
+prefront.From.illumq <- sub('CHR_HSCHR','',prefront.From.illumquery$chromosome_name[c(temp.indx.nodup.pf)])
+temp.Init <- grep('^[X-Y]|^[1-9]?|^[1]{1}[0-9]{1}|^[2]{1}[0-2]{1}[^:punct:]',prefront.From.illumq,value=TRUE)
+temp.Init.pf <- substr(temp.Init,1,2)
+temp.Init.pf <- sub('\\_','',temp.Init.pf)
+temp.Init.pf[which(temp.Init.pf == 'CH')] <- NA
+temp.Init.pf[which(temp.Init.pf == 'KI')] <- NA
+num.NA(temp.Init.pf)    # n = 1 for which the chromosome name could not be retrieved
+
+# This leaves 1628 usable Chr names that can be used to fill in missing ones in prefront.Data
+
+#There is one other option for getting Chr names. Relying on the illumina.Data file that has the probe sequence used for each probe. If this could be run through BLAST and the genomic coordinates of the match obtained, then it might be possible to retrieve the remainder of the missing information.
+
+# This argues that the Chromosome names that are returned by the server
+# query are the ones to use to augment the original prefront.Data on Chr.
+# The file that holds the information from the server query is:
+##### prefront.From.illumquery     It is only 1969 long so NAs must have been dropped.
+##### Have to use the probe ID to sync this data frame with the rows in prefront.Data
+##### that are missing Chr and start position
+
+# Put the information from the server query into the prefront.Data frame to reduce the missing Chrs and start positions.
+
+
+prefront.Data$loc[c(map.Query.Un.pf)] <- temp.Init.pf
+
+# Re-run check on number of NA missing Chr in prefront.Data$loc. It should now only be 426. The
+# steo above replaced the 'Un' entries with NA.
+
+prefront.Data$loc[which(prefront.Data$loc == 'Un')] <- NA
+num.NA(prefront.Data$loc)      # n = 427  19,573 of 20,000 probes have Chromosome names
+
+
+complete.Chr.StartPos$pf[2] <- dim(prefront.Data)[1] - num.NA(prefront.Data$loc)
+@
+
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+########### ************ Everything in this chunk only applies to start position not to Chr name
+########### ************ start_position and end_position refer to the start and end base pairs
+########### ************ of the GENE, or possibly of the mRNA transcript
+
+length(where.1.bp.pf)   # n = 2113 missing start positions
+
+prefront.From.illumquery <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol", "chromosome_name", "start_position","end_position", "band","entrezgene"), filters = "illumina_humanref_8_v3", values = as.character(prefront.Data$Record[c(where.1.bp.pf)]), mart = ensembl)
+
+# n = 1999 returned from query mtaching on illumina probe IDs
+dim(prefront.From.illumquery)[1]
+
+# But n = 348 of these 1999 were duplicated illumina probes in returned query
+temp.indx.nodup.pf <- which(!duplicated(prefront.From.illumquery$illumina_humanref_8_v3))
+length(temp.indx.nodup.pf)
+
+# n = 1651 unique illumina probes from query that matched those in 
+# prefront.Data$Record[c(where.1.bp.pf)]
+map.Query.bp.pf <- match(prefront.From.illumquery$illumina_humanref_8_v3[c(temp.indx.nodup.pf)],
+                         prefront.Data$Record
+                         )
+
+# Put the information from the server query into the prefront.Data frame to reduce the missing start positions.
+
+prefront.Data$bp[c(map.Query.bp.pf)] <- round(prefront.From.illumquery$start_position[c(temp.indx.nodup.pf)]/1000000,4)
+
+# Re-run check on number of NA missing Chr in prefront.Data$loc. It should now only be 426. The
+# steo above replaced the 'Un' entries with NA.
+
+prefront.Data$bp[which(prefront.Data$bp == 1.000)] <- NA
+num.NA(prefront.Data$bp)      # n = 462  19,538 of 20,000 probes have starting positions
+
+complete.Chr.StartPos$pf[3] <- dim(prefront.Data)[1] - num.NA(prefront.Data$bp)
+@
+
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+# Now do the same for the cerebellum
+########### ************ Everything in this chunk only applies to Chr name not to start position
+
+length(where.Un.cb)    # n = 2047 missing Chr names
+
+cbell.From.illumquery <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol", "chromosome_name", "start_position","end_position", "band","entrezgene"), filters = "illumina_humanref_8_v3", values = as.character(cbell.Data$Record[c(where.Un.cb)]), mart = ensembl)
+
+# n = 1926 returned from query in which illumina probe IDs from cbell.Data corresponding to # 
+# missing Chr were found using the getBM query
+dim(cbell.From.illumquery)[1]  
+
+# But n = 310 of these 1926 were duplicated illumina probes in returned query
+temp.indx.nodup.cb <- which(!duplicated(cbell.From.illumquery$illumina_humanref_8_v3))
+
+# n = 1616 unique illumina probes from query that matched those in 
+# cbell.Data$Record[c(where.Un.cb)]
+map.Query.Un.cb <- match(cbell.From.illumquery$illumina_humanref_8_v3[c(temp.indx.nodup.cb)],
+                         cbell.Data$Record
+                         )
+
+# This query returns some Chr names that are formatted as CHR_HSCHR5 etc. They need to be reformatted.
+# Only use the rows that have non-duplicated illumina probes from the query
+cbell.From.illumq <- sub('CHR_HSCHR','',cbell.From.illumquery$chromosome_name[c(temp.indx.nodup.cb)])
+temp.Init <- grep('^[X-Y]|^[1-9]?|^[1]{1}[0-9]{1}|^[2]{1}[0-2]{1}[^:punct:]',cbell.From.illumq,value=TRUE)
+temp.Init.cb <- substr(temp.Init,1,2)
+temp.Init.cb <- sub('\\_','',temp.Init.cb)
+temp.Init.cb[which(temp.Init.cb == 'CH')] <- NA
+temp.Init.cb[which(temp.Init.cb == 'KI')] <- NA
+num.NA(temp.Init.cb)    # n = 1 for which the chromosome name could not be retrieved
+
+# This leaves 1615 usable Chr names that can be used to fill in missing ones in cbell.Data
+
+#There is one other option for getting Chr names. Relying on the illumina.Data file that has the probe sequence used for each probe. If this could be run through BLAST and the genomic coordinates of the match obtained, then it might be possible to retrieve the remainder of the missing information.
+
+# This argues that the Chromosome names that are returned by the server
+# query are the ones to use to augment the original cbell.Data on Chr.
+# The file that holds the information from the server query is:
+##### cbell.From.illumquery     It is only 1969 long so NAs must have been dropped.
+##### Have to use the probe ID to sync this data frame with the rows in cbell.Data
+##### that are missing Chr and start position
+
+# Put the information from the server query into the cbell.Data frame to reduce the missing Chrs and start positions.
+
+
+cbell.Data$loc[c(map.Query.Un.cb)] <- temp.Init.cb
+
+# Re-run check on number of NA missing Chr in cbell.Data$loc. It should now only be 426. The
+# steo above replaced the 'Un' entries with NA.
+
+cbell.Data$loc[which(cbell.Data$loc == 'Un')] <- NA
+num.NA(cbell.Data$loc)      # n = 432  19,568 of 20,000 probes have Chromosome names
+
+complete.Chr.StartPos$cb[2] <- dim(cbell.Data)[1] - num.NA(cbell.Data$loc)
+@
+
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+########### ************ Everything in this chunk only applies to start position not to Chr name
+########### ************ start_position and end_position refer to the start and end base pairs
+########### ************ of the GENE, or possibly of the mRNA transcript
+
+length(where.1.bp.cb)    # n = 2101 without start positions
+
+cbell.From.illumquery <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol", "chromosome_name", "start_position","end_position", "band","entrezgene"), filters = "illumina_humanref_8_v3", values = as.character(cbell.Data$Record[c(where.1.bp.cb)]), mart = ensembl)
+
+dim(cbell.From.illumquery)[1]
+# n = 1950 results returned
+
+# But n = 315 of these 1999 were duplicated illumina probes in returned query
+temp.indx.nodup.cb <- which(!duplicated(cbell.From.illumquery$illumina_humanref_8_v3))
+length(temp.indx.nodup.cb)
+
+# n = 1635 unique illumina probes from query that matched those in 
+# cbell.Data$Record[c(where.1.bp.cb)]
+map.Query.bp.cb <- match(cbell.From.illumquery$illumina_humanref_8_v3[c(temp.indx.nodup.cb)],
+                         cbell.Data$Record
+                         )
+
+
+# Put the information from the server query into the cbell.Data frame to reduce the missing start positions.
+
+cbell.Data$bp[c(map.Query.bp.cb)] <- round(cbell.From.illumquery$start_position[c(temp.indx.nodup.cb)]/1000000,4)
+
+# Re-run check on number of NA missing Chr in cbell.Data$loc. It should now only be 426. The
+# steo above replaced the 'Un' entries with NA.
+
+cbell.Data$bp[which(cbell.Data$bp == 1.000)] <- NA
+num.NA(cbell.Data$bp)      # n = 466  19,534 of 20,000 probes have starting positions
+
+complete.Chr.StartPos$cb[3] <- dim(cbell.Data)[1] - num.NA(cbell.Data$bp)
+@
+
+%%%%%%%%%%%%%% for tempor and pons below use the code for recovering Chr ans start positions
+%%%%%%%%%%%%%% immeditately above for cbell
+
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+# Now do the same for the temporal cerebral wall
+########### ************ Everything in this chunk only applies to Chr name not to start position
+
+length(where.Un.tm)    # n = 2043 missing Chr names
+
+tempor.From.illumquery <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol", "chromosome_name", "start_position","end_position", "band","entrezgene"), filters = "illumina_humanref_8_v3", values = as.character(tempor.Data$Record[c(where.Un.tm)]), mart = ensembl)
+
+# n = 1947 returned from query in which illumina probe IDs from tempor.Data corresponding to # 
+# missing Chr were found using the getBM query
+dim(tempor.From.illumquery)[1]  
+
+# But n = 329 of these 1947 were duplicated illumina probes in returned query
+temp.indx.nodup.tm <- which(!duplicated(tempor.From.illumquery$illumina_humanref_8_v3))
+
+# n = 1618 unique illumina probes from query that matched those in 
+# tempor.Data$Record[c(where.Un.tm)]
+map.Query.Un.tm <- match(tempor.From.illumquery$illumina_humanref_8_v3[c(temp.indx.nodup.tm)],
+                         tempor.Data$Record
+                         )
+
+# This query returns some Chr names that are formatted as CHR_HSCHR5 etc. They need to be reformatted.
+# Only use the rows that have non-duplicated illumina probes from the query
+tempor.From.illumq <- sub('CHR_HSCHR','',tempor.From.illumquery$chromosome_name[c(temp.indx.nodup.tm)])
+temp.Init <- grep('^[X-Y]|^[1-9]?|^[1]{1}[0-9]{1}|^[2]{1}[0-2]{1}[^:punct:]',tempor.From.illumq,value=TRUE)
+temp.Init.tm <- substr(temp.Init,1,2)
+temp.Init.tm <- sub('\\_','',temp.Init.tm)
+temp.Init.tm[which(temp.Init.tm == 'CH')] <- NA
+temp.Init.tm[which(temp.Init.tm == 'KI')] <- NA
+num.NA(temp.Init.tm)    # n = 1 for which the chromosome name could not be retrieved
+
+# This leaves 1617 usable Chr names that can be used to fill in missing ones in tempor.Data
+
+#There is one other option for getting Chr names. Relying on the illumina.Data file that has the probe sequence used for each probe. If this could be run through BLAST and the genomic coordinates of the match obtained, then it might be possible to retrieve the remainder of the missing information.
+
+# This argues that the Chromosome names that are returned by the server
+# query are the ones to use to augment the original tempor.Data on Chr.
+# The file that holds the information from the server query is:
+##### tempor.From.illumquery     It is only 1969 long so NAs must have been dropped.
+##### Have to use the probe ID to sync this data frame with the rows in tempor.Data
+##### that are missing Chr and start position
+
+# Put the information from the server query into the tempor.Data frame to reduce the missing Chrs and start positions.
+
+
+tempor.Data$loc[c(map.Query.Un.tm)] <- temp.Init.tm
+
+# Re-run check on number of NA missing Chr in tempor.Data$loc. It should now only be 426. The
+# steo above replaced the 'Un' entries with NA.
+
+tempor.Data$loc[which(tempor.Data$loc == 'Un')] <- NA
+num.NA(tempor.Data$loc)      # n = 426  19,574 of 20,000 probes have Chromosome names
+
+complete.Chr.StartPos$tm[2] <- dim(tempor.Data)[1] - num.NA(tempor.Data$loc)
+@
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+########### ************ Everything in this chunk only applies to start position not to Chr name
+########### ************ start_position and end_position refer to the start and end base pairs
+########### ************ of the GENE, or possibly of the mRNA transcript
+
+length(where.1.bp.tm)    # n = 2098 without start positions
+
+tempor.From.illumquery <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol", "chromosome_name", "start_position","end_position", "band","entrezgene"), filters = "illumina_humanref_8_v3", values = as.character(tempor.Data$Record[c(where.1.bp.tm)]), mart = ensembl)
+
+dim(tempor.From.illumquery)[1]
+# n = 1975 results returned
+
+# But n = 337 of these 1999 were duplicated illumina probes in returned query
+temp.indx.nodup.tm <- which(!duplicated(tempor.From.illumquery$illumina_humanref_8_v3))
+length(temp.indx.nodup.tm)
+
+# n = 1638 unique illumina probes from query that matched those in 
+# tempor.Data$Record[c(where.1.bp.tm)]
+map.Query.bp.tm <- match(tempor.From.illumquery$illumina_humanref_8_v3[c(temp.indx.nodup.tm)],
+                         tempor.Data$Record
+                         )
+
+
+# Put the information from the server query into the tempor.Data frame to reduce the missing start positions.
+
+tempor.Data$bp[c(map.Query.bp.tm)] <- round(tempor.From.illumquery$start_position[c(temp.indx.nodup.tm)]/1000000,4)
+
+# Re-run check on number of NA missing Chr in tempor.Data$loc. It should now only be 426. The
+# steo above replaced the 'Un' entries with NA.
+
+tempor.Data$bp[which(tempor.Data$bp == 1.000)] <- NA
+num.NA(tempor.Data$bp)      # n = 460  19,540 of 20,000 probes have starting positions
+
+complete.Chr.StartPos$tm[3] <- dim(tempor.Data)[1] - num.NA(tempor.Data$bp)
+@
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+# Now do the same for the pons
+########### ************ Everything in this chunk only applies to Chr name not to start position
+
+length(where.Un.po)    # n = 2027 missing Chr names
+
+pons.From.illumquery <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol", "chromosome_name", "start_position","end_position", "band","entrezgene"), filters = "illumina_humanref_8_v3", values = as.character(pons.Data$Record[c(where.Un.po)]), mart = ensembl)
+
+# n = 1934 returned from query in which illumina probe IDs from pons.Data corresponding to # 
+# missing Chr were found using the getBM query
+dim(pons.From.illumquery)[1]  
+
+# But n = 325 of these 1934 were duplicated illumina probes in returned query
+temp.indx.nodup.po <- which(!duplicated(pons.From.illumquery$illumina_humanref_8_v3))
+
+# n = 1609 unique illumina probes from query that matched those in 
+# pons.Data$Record[c(where.Un.po)]
+map.Query.Un.po <- match(pons.From.illumquery$illumina_humanref_8_v3[c(temp.indx.nodup.po)],
+                         pons.Data$Record
+                         )
+
+# This query returns some Chr names that are formatted as CHR_HSCHR5 etc. They need to be reformatted.
+# Only use the rows that have non-duplicated illumina probes from the query
+pons.From.illumq <- sub('CHR_HSCHR','',pons.From.illumquery$chromosome_name[c(temp.indx.nodup.po)])
+temp.Init <- grep('^[X-Y]|^[1-9]?|^[1]{1}[0-9]{1}|^[2]{1}[0-2]{1}[^:punct:]',pons.From.illumq,value=TRUE)
+temp.Init.po <- substr(temp.Init,1,2)
+temp.Init.po <- sub('\\_','',temp.Init.po)
+temp.Init.po[which(temp.Init.po == 'CH')] <- NA
+temp.Init.po[which(temp.Init.po == 'KI')] <- NA
+num.NA(temp.Init.po)    # n = 1 for which the chromosome name could not be retrieved
+
+# This leaves 1608 usable Chr names that can be used to fill in missing ones in pons.Data
+
+#There is one other option for getting Chr names. Relying on the illumina.Data file that has the probe sequence used for each probe. If this could be run through BLAST and the genomic coordinates of the match obtained, then it might be possible to retrieve the remainder of the missing information.
+
+# This argues that the Chromosome names that are returned by the server
+# query are the ones to use to augment the original pons.Data on Chr.
+# The file that holds the information from the server query is:
+##### pons.From.illumquery     It is only 1969 long so NAs must have been dropped.
+##### Have to use the probe ID to sync this data frame with the rows in pons.Data
+##### that are missing Chr and start position
+
+# Put the information from the server query into the pons.Data frame to reduce the missing Chrs and start positions.
+
+
+pons.Data$loc[c(map.Query.Un.po)] <- temp.Init.po
+
+# Re-run check on number of NA missing Chr in pons.Data$loc. It should now only be 426. The
+# steo above replaced the 'Un' entries with NA.
+
+pons.Data$loc[which(pons.Data$loc == 'Un')] <- NA
+num.NA(pons.Data$loc)      # n = 419  19,581 of 20,000 probes have Chromosome names
+
+complete.Chr.StartPos$po[2] <- dim(pons.Data)[1] - num.NA(pons.Data$loc)
+@
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+########### ************ Everything in this chunk only applies to start position not to Chr name
+########### ************ start_position and end_position refer to the start and end base pairs
+########### ************ of the GENE, or possibly of the mRNA transcript
+
+length(where.1.bp.po)    # n = 2084 without start positions
+
+pons.From.illumquery <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol", "chromosome_name", "start_position","end_position", "band","entrezgene"), filters = "illumina_humanref_8_v3", values = as.character(pons.Data$Record[c(where.1.bp.po)]), mart = ensembl)
+
+dim(pons.From.illumquery)[1]
+# n = 1963 results returned
+
+# But n = 333 of these 1963 were duplicated illumina probes in returned query
+temp.indx.nodup.po <- which(!duplicated(pons.From.illumquery$illumina_humanref_8_v3))
+length(temp.indx.nodup.po)
+
+# n = 1630 unique illumina probes from query that matched those in 
+# pons.Data$Record[c(where.1.bp.po)]
+map.Query.bp.po <- match(pons.From.illumquery$illumina_humanref_8_v3[c(temp.indx.nodup.po)],
+                         pons.Data$Record
+                         )
+
+
+# Put the information from the server query into the pons.Data frame to reduce the missing start positions.
+
+pons.Data$bp[c(map.Query.bp.po)] <- round(pons.From.illumquery$start_position[c(temp.indx.nodup.po)]/1000000,4)
+
+# Re-run check on number of NA missing Chr in pons.Data$loc. It should now only be 426. The
+# steo above replaced the 'Un' entries with NA.
+
+pons.Data$bp[which(pons.Data$bp == 1.000)] <- NA
+num.NA(pons.Data$bp)      # n = 454  19,546 of 20,000 probes have starting positions
+
+complete.Chr.StartPos$po[3] <- dim(pons.Data)[1] - num.NA(pons.Data$bp)
+@
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+# Gather stats on Chr name completeness
+
+
+
+cols.ChrStart.stats <- c('PfCx',
+                         'Cbell',
+                         'Temporal',
+                         'Pons')
+
+rowname.ChrStart.stats <- c('Total Probes',
+                            'Probes with Chromosome Name',
+                            'Probes with Start Position')
+
+colnames(complete.Chr.StartPos) <- cols.ChrStart.stats
+row.names(complete.Chr.StartPos) <- rowname.ChrStart.stats
+
+chr.start.stats.tab <- xtable(complete.Chr.StartPos,
+                             caption=c('Probes with Chromosome Names or Start Positions'))
+
+#print(chr.start.stats.tab,booktabs = TRUE)
+
+@
+
+\Sexpr{chr.start.stats.tab}
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+########### The next 4 chunks use ENTREZIDs to recover additional Chr names and start positions
+########### Try to recover additional missing chromosome names and starting positions 
+########### Prefrontal ##############################################################
+
+# Track all of the coumnts involved in recovering additional Chr and start positions
+
+track.Recovery.chr <- data.frame(PF=rep(0,9),
+                             CB=rep(0,9),
+                             TM=rep(0,9),
+                             PO=rep(0,9))
+
+row.names(track.Recovery.chr) <- c('A. number missing Chr names',
+                                   'B. number of those with ENTREZIDs',
+                                   'C. number rows returned by online query',
+                                   'D. number from query with unique entrezgene',
+                                   'E. unique from query missing Chr names in original data',
+                                   'F. number for which useable Chr names extracted',
+                                   'G. number remaining from original data sans Chr names',
+                                   'H. number from original data now with valid Chr names',
+                                   'I. number from original data with valid Start positions'
+                                   )
+
+# How many rows in prefront.Data have NA for Chr name (loc)?
+num.A <- num.NA(prefront.Data$loc)    # 427
+
+# Put these into a separate data frame
+no.Chr.pf <- prefront.Data[which(is.na(prefront.Data$loc)),]
+
+# How many of these 427 have ENTREZIDs?
+num.B <- num.A - num.NA(no.Chr.pf$ENTREZID)   
+# 375 of them: try to use ENTREZIDs to recover remaining missing Chr name and starting position
+
+# Note: because additional Chr names were recovered above using Illumina IDs, all of the Illumina IDs left in prefront.Data do not return any new records (only 1 does)
+recov.Miss.pf <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol", "chromosome_name", "start_position","end_position", "band","entrezgene"), filters = "entrezgene", values = as.character(no.Chr.pf$ENTREZID), mart = ensembl)
+
+num.C <- dim(recov.Miss.pf)[1]
+
+# This returns 906 rows: some of the ENTREZIDs have more than one probe
+# How many of the returned illumina probes from the query match Illumina probes in the 427 that are missing Chr names? Map to origional data.
+
+map.Query.to.original.pf <- match(unique(recov.Miss.pf$entrezgene),prefront.Data$ENTREZID)
+length(unique(recov.Miss.pf$entrezgene))
+# map.Query.to.original.pf contains the indices in prefront.Data of the 359 unique entrezgene entries in the returned query.
+num.D <- length(unique(recov.Miss.pf$entrezgene))
+
+# Here are the 359 indices from the 906 that have unique entrezgene entries
+indx.unique.entrezgene.from.query <- match(unique(recov.Miss.pf$entrezgene),recov.Miss.pf$entrezgene)
+
+
+# When only the unique entrezgene entries from the query are mapped to prefront.Data$ENTREZID, there are 359 unique entrezgenes from the query, and all of them map back to prefront.Data.
+
+#Verify that all of the entries to which they map in profront.Data are lacking Chr names.
+num.E <- num.NA(prefront.Data$loc[c(map.Query.to.original.pf)])
+
+# Surprisingly, all 359 of these ENTREZID entries in prefront.Data are not lacking Chr names 
+# 321 of the unique 359 are lacking chromosome names (38 have Chr names)
+
+# The indices (in the 906 ndata frame) of the 321 unique entrezgene also missing Chr names in prefront.Data 
+
+indx.Local.pf <- which(is.na(prefront.Data$loc[c(map.Query.to.original.pf)]))
+
+# Get the indices in terms of prefront.Data of the 321 that lack Chr names 
+
+unique.miss.Chrname.pf <- map.Query.to.original.pf[c(indx.Local.pf)]
+
+# unique.miss.Chrname.pf holds the 321 indices in prefront.Data that are missing Chr names and that can be potentially filled in with Chr names from the query
+
+# Verify that all 321 of these prefront.Data$loc are lacking Chr names
+
+print(num.NA(prefront.Data$loc[c(unique.miss.Chrname.pf)])) # 321 - yes, all lack Chr names
+
+# Now get the Chr names from the query to use to fill in the 321 missing ones in prefront.Data
+# Some of these Chr names are formatted oddly, so use the function get.Chr.names to extract
+# the correctly formatted Chr names from those that are formatted oddly
+
+extracted.Chr.names <- get.Chr.names(recov.Miss.pf$chromosome_name[indx.Local.pf])
+
+# How many useable Chr names were extracted?   318 can be used
+num.F <- num.E - num.NA(extracted.Chr.names)
+
+# extracted.Chr.names has 321 entries 318 of which have valid Chr names
+
+# Add these names to the original prefront.Data$loc
+prefront.Data$loc[c(unique.miss.Chrname.pf)] <- extracted.Chr.names
+
+###### Use these indices to add the starting positions to these same entries in prefront.Data
+prefront.Data$bp[c(unique.miss.Chrname.pf)] <- round((recov.Miss.pf$start_position[indx.Local.pf]/1000000),3)
+
+no.Chrname.pf <- num.NA(prefront.Data$loc)   # Only 109 now do not have Chr names
+no.Startpos.pf <- num.NA(prefront.Data$bp)   # Only 141 do not have start positions
+num.G <- no.Chrname.pf
+
+# Verify these numbers
+num.H <- length(na.omit(prefront.Data$loc))           # 19891 have Chr names
+num.I <- length(na.omit(prefront.Data$bp))            # 19858 have start positions
+
+
+track.Recovery.chr[,1] <- c(num.A,
+                            num.B,
+                            num.C,
+                            num.D,
+                            num.E,
+                            num.F,
+                            num.G,
+                            num.H,
+                            num.I)
+
+@
+
+There are \Sexpr{no.Chrname.pf} entries from among the original 20,000 that do not have valid Chromosome names, and \Sexpr{no.Startpos.pf} that do not have valid start positions.
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+########### Try to recover additional missing chromosome names and starting positions 
+########### Cerebellum ##############################################################
+
+# How many rows in prefront.Data have NA for Chr name (loc)?
+num.A <- num.NA(cbell.Data$loc)    # 427
+
+# Put these into a separate data frame
+no.Chr.cb <- cbell.Data[which(is.na(cbell.Data$loc)),]
+
+
+# How many of these 427 have ENTREZIDs?
+num.B <- num.A - num.NA(no.Chr.cb$ENTREZID)   
+# 375 of them: try to use ENTREZIDs to recover remaining missing Chr name and starting position
+
+# Note: because additional Chr names were recovered above using Illumina IDs, all of the Illumina IDs left in cbell.Data do not return any new records (only 1 does)
+recov.Miss.cb <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol", "chromosome_name", "start_position","end_position", "band","entrezgene"), filters = "entrezgene", values = as.character(no.Chr.cb$ENTREZID), mart = ensembl)
+
+num.C <- dim(recov.Miss.cb)[1]
+
+# This returns 906 rows: some of the ENTREZIDs have more than one probe
+# How many of the returned illumina probes from the query match Illumina probes in the 427 that are missing Chr names? Map to origional data.
+
+map.Query.to.original.cb <- match(unique(recov.Miss.cb$entrezgene),cbell.Data$ENTREZID)
+length(unique(recov.Miss.cb$entrezgene))
+# map.Query.to.original.cb contains the indices in cbell.Data of the 359 unique entrezgene entries in the returned query.
+num.D <- length(unique(recov.Miss.cb$entrezgene))
+
+# Here are the 359 indices from the 906 that have unique entrezgene entries
+indx.unique.entrezgene.from.query <- match(unique(recov.Miss.cb$entrezgene),recov.Miss.cb$entrezgene)
+
+
+# When only the unique entrezgene entries from the query are mapped to cbell.Data$ENTREZID, there are 359 unique entrezgenes from the query, and all of them map back to cbell.Data.
+
+#Verify that all of the entries to which they map in profront.Data are lacking Chr names.
+num.E <- num.NA(cbell.Data$loc[c(map.Query.to.original.cb)])
+
+# Surprisingly, all 359 of these ENTREZID entries in cbell.Data are not lacking Chr names 
+# 321 of the unique 359 are lacking chromosome names (38 have Chr names)
+
+# The indices (in the 906 ndata frame) of the 321 unique entrezgene also missing Chr names in cbell.Data 
+
+indx.Local.cb <- which(is.na(cbell.Data$loc[c(map.Query.to.original.cb)]))
+
+# Get the indices in terms of cbell.Data of the 321 that lack Chr names 
+
+unique.miss.Chrname.cb <- map.Query.to.original.cb[c(indx.Local.cb)]
+
+
+# unique.miss.Chrname.cb holds the 321 indices in cbell.Data that are missing Chr names and that can be potentially filled in with Chr names from the query
+
+# Verify that all 321 of these cbell.Data$loc are lacking Chr names
+
+print(num.NA(cbell.Data$loc[c(unique.miss.Chrname.cb)])) # 321 - yes, all lack Chr names
+
+# Now get the Chr names from the query to use to fill in the 321 missing ones in cbell.Data
+# Some of these Chr names are formatted oddly, so use the function get.Chr.names to extract
+# the correctly formatted Chr names from those that are formatted oddly
+
+extracted.Chr.names <- get.Chr.names(recov.Miss.cb$chromosome_name[indx.Local.cb])
+
+# How many useable Chr names were extracted?   318 can be used
+num.F <- num.E - num.NA(extracted.Chr.names)
+
+# extracted.Chr.names has 321 entries 318 of which have valid Chr names
+
+# Add these names to the original cbell.Data$loc
+cbell.Data$loc[c(unique.miss.Chrname.cb)] <- extracted.Chr.names
+
+###### Use these indices to add the starting positions to these same entries in cbell.Data
+cbell.Data$bp[c(unique.miss.Chrname.cb)] <- round((recov.Miss.cb$start_position[indx.Local.cb]/1000000),3)
+
+no.Chrname.cb <- num.NA(cbell.Data$loc)   # Only 109 now do not have Chr names
+no.Startpos.cb <- num.NA(cbell.Data$bp)   # Only 141 do not have start positions
+num.G <- no.Chrname.cb
+
+# Verify these numbers
+num.H <- length(na.omit(cbell.Data$loc))           # 19891 have Chr names
+num.I <- length(na.omit(cbell.Data$bp))            # 19858 have start positions
+
+track.Recovery.chr[,2] <- c(num.A,
+                            num.B,
+                            num.C,
+                            num.D,
+                            num.E,
+                            num.F,
+                            num.G,
+                            num.H,
+                            num.I)
+
+@
+
+There are \Sexpr{no.Chrname.cb} entries from among the original 20,000 that do not have valid Chromosome names, and \Sexpr{no.Startpos.cb} that do not have valid start positions.
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+########### Try to recover additional missing chromosome names and starting positions 
+########### Temporal Cerebral Wall ##############################################################
+
+# How many rows in prefront.Data have NA for Chr name (loc)?
+num.A <- num.NA(tempor.Data$loc)    # 427
+
+# Put these into a separate data frame
+no.Chr.tm <- tempor.Data[which(is.na(tempor.Data$loc)),]
+
+
+# How many of these 427 have ENTREZIDs?
+num.B <- num.A - num.NA(no.Chr.tm$ENTREZID)   
+# 375 of them: try to use ENTREZIDs to recover remaining missing Chr name and starting position
+
+# Note: because additional Chr names were recovered above using Illumina IDs, all of the Illumina IDs left in tempor.Data do not return any new records (only 1 does)
+recov.Miss.tm <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol", "chromosome_name", "start_position","end_position", "band","entrezgene"), filters = "entrezgene", values = as.character(no.Chr.tm$ENTREZID), mart = ensembl)
+
+num.C <- dim(recov.Miss.tm)[1]
+
+# This returns 906 rows: some of the ENTREZIDs have more than one probe
+# How many of the returned illumina probes from the query match Illumina probes in the 427 that are missing Chr names? Map to origional data.
+
+map.Query.to.original.tm <- match(unique(recov.Miss.tm$entrezgene),tempor.Data$ENTREZID)
+length(unique(recov.Miss.tm$entrezgene))
+# map.Query.to.original.tm contains the indices in tempor.Data of the 359 unique entrezgene entries in the returned query.
+
+num.D <- length(unique(recov.Miss.tm$entrezgene))
+
+# Here are the 359 indices from the 906 that have unique entrezgene entries
+indx.unique.entrezgene.from.query <- match(unique(recov.Miss.tm$entrezgene),recov.Miss.tm$entrezgene)
+
+
+# When only the unique entrezgene entries from the query are mapped to tempor.Data$ENTREZID, there are 359 unique entrezgenes from the query, and all of them map back to tempor.Data.
+
+#Verify that all of the entries to which they map in profront.Data are lacking Chr names.
+num.E <- num.NA(tempor.Data$loc[c(map.Query.to.original.tm)])
+
+# Surprisingly, all 359 of these ENTREZID entries in tempor.Data are not lacking Chr names 
+# 321 of the unique 359 are lacking chromosome names (38 have Chr names)
+
+# The indices (in the 906 ndata frame) of the 321 unique entrezgene also missing Chr names in tempor.Data 
+
+indx.Local.tm <- which(is.na(tempor.Data$loc[c(map.Query.to.original.tm)]))
+
+# Get the indices in terms of tempor.Data of the 321 that lack Chr names 
+
+unique.miss.Chrname.tm <- map.Query.to.original.tm[c(indx.Local.tm)]
+
+
+# unique.miss.Chrname.tm holds the 321 indices in tempor.Data that are missing Chr names and that can be potentially filled in with Chr names from the query
+
+# Verify that all 321 of these tempor.Data$loc are lacking Chr names
+
+print(num.NA(tempor.Data$loc[c(unique.miss.Chrname.tm)])) # 321 - yes, all lack Chr names
+
+# Now get the Chr names from the query to use to fill in the 321 missing ones in tempor.Data
+# Some of these Chr names are formatted oddly, so use the function get.Chr.names to extract
+# the correctly formatted Chr names from those that are formatted oddly
+
+extracted.Chr.names <- get.Chr.names(recov.Miss.tm$chromosome_name[indx.Local.tm])
+
+# How many useable Chr names were extracted?   318 can be used
+num.F <- num.E - num.NA(extracted.Chr.names)
+
+# extracted.Chr.names has 321 entries 318 of which have valid Chr names
+
+# Add these names to the original tempor.Data$loc
+tempor.Data$loc[c(unique.miss.Chrname.tm)] <- extracted.Chr.names
+
+###### Use these indices to add the starting positions to these same entries in tempor.Data
+tempor.Data$bp[c(unique.miss.Chrname.tm)] <- round((recov.Miss.tm$start_position[indx.Local.tm]/1000000),3)
+
+no.Chrname.tm <- num.NA(tempor.Data$loc)   # Only 109 now do not have Chr names
+no.Startpos.tm <- num.NA(tempor.Data$bp)   # Only 141 do not have start positions
+num.G <- no.Chrname.tm
+
+# Verify these numbers
+num.H <- length(na.omit(tempor.Data$loc))           # 19891 have Chr names
+num.I <- length(na.omit(tempor.Data$bp))            # 19858 have start positions
+
+track.Recovery.chr[,3] <- c(num.A,
+                            num.B,
+                            num.C,
+                            num.D,
+                            num.E,
+                            num.F,
+                            num.G,
+                            num.H,
+                            num.I)
+
+@
+
+There are \Sexpr{no.Chrname.tm} entries from among the original 20,000 that do not have valid Chromosome names, and \Sexpr{no.Startpos.tm} that do not have valid start positions.
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+########### Try to recover additional missing chromosome names and starting positions 
+########### Pons ##############################################################
+
+# How many rows in pons.Data have NA for Chr name (loc)?
+num.A <- num.NA(pons.Data$loc)    # 427
+
+# Put these into a separate data frame
+no.Chr.po <- pons.Data[which(is.na(pons.Data$loc)),]
+
+
+# How many of these 427 have ENTREZIDs?
+num.B <- num.A - num.NA(no.Chr.po$ENTREZID)   
+# 375 of them: try to use ENTREZIDs to recover remaining missing Chr name and starting position
+
+# Note: because additional Chr names were recovered above using Illumina IDs, all of the Illumina IDs left in pons.Data do not return any new records (only 1 does)
+recov.Miss.po <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol", "chromosome_name", "start_position","end_position", "band","entrezgene"), filters = "entrezgene", values = as.character(no.Chr.po$ENTREZID), mart = ensembl)
+
+num.C <- dim(recov.Miss.po)[1]
+
+# This returns 906 rows: some of the ENTREZIDs have more than one probe
+# How many of the returned illumina probes from the query match Illumina probes in the 427 that are missing Chr names? Map to origional data.
+
+map.Query.to.original.po <- match(unique(recov.Miss.po$entrezgene),pons.Data$ENTREZID)
+length(unique(recov.Miss.po$entrezgene))
+# map.Query.to.original.po contains the indices in pons.Data of the 359 unique entrezgene entries in the returned query.
+
+num.D <- length(unique(recov.Miss.po$entrezgene))
+
+# Here are the 359 indices from the 906 that have unique entrezgene entries
+indx.unique.entrezgene.from.query <- match(unique(recov.Miss.po$entrezgene),recov.Miss.po$entrezgene)
+
+
+# When only the unique entrezgene entries from the query are mapped to pons.Data$ENTREZID, there are 359 unique entrezgenes from the query, and all of them map back to pons.Data.
+
+#Verify that all of the entries to which they map in profront.Data are lacking Chr names.
+num.E <- num.NA(pons.Data$loc[c(map.Query.to.original.po)])
+
+# Surprisingly, all 359 of these ENTREZID entries in pons.Data are not lacking Chr names 
+# 321 of the unique 359 are lacking chromosome names (38 have Chr names)
+
+# The indices (in the 906 ndata frame) of the 321 unique entrezgene also missing Chr names in pons.Data 
+
+indx.Local.po <- which(is.na(pons.Data$loc[c(map.Query.to.original.po)]))
+
+# Get the indices in terms of pons.Data of the 321 that lack Chr names 
+
+unique.miss.Chrname.po <- map.Query.to.original.po[c(indx.Local.po)]
+
+# unique.miss.Chrname.po holds the 321 indices in pons.Data that are missing Chr names and that can be potentially filled in with Chr names from the query
+
+# Verify that all 321 of these pons.Data$loc are lacking Chr names
+
+print(num.NA(pons.Data$loc[c(unique.miss.Chrname.po)])) # 321 - yes, all lack Chr names
+
+# Now get the Chr names from the query to use to fill in the 321 missing ones in pons.Data
+# Some of these Chr names are formatted oddly, so use the function get.Chr.names to extract
+# the correctly formatted Chr names from those that are formatted oddly
+
+extracted.Chr.names <- get.Chr.names(recov.Miss.po$chromosome_name[indx.Local.po])
+
+# How many useable Chr names were extracted?   318 can be used
+num.F <- num.E - num.NA(extracted.Chr.names)
+
+# extracted.Chr.names has 321 entries 318 of which have valid Chr names
+
+# Add these names to the original pons.Data$loc
+pons.Data$loc[c(unique.miss.Chrname.po)] <- extracted.Chr.names
+
+###### Use these indices to add the starting positions to these same entries in pons.Data
+pons.Data$bp[c(unique.miss.Chrname.po)] <- round((recov.Miss.po$start_position[indx.Local.po]/1000000),3)
+
+no.Chrname.po <- num.NA(pons.Data$loc)   # Only 109 now do not have Chr names
+no.Startpos.po <- num.NA(pons.Data$bp)   # Only 141 do not have start positions
+num.G <- no.Chrname.po
+
+# Verify these numbers
+num.H <- length(na.omit(pons.Data$loc))           # 19891 have Chr names
+num.I <- length(na.omit(pons.Data$bp))            # 19858 have start positions
+
+track.Recovery.chr[,4] <- c(num.A,
+                            num.B,
+                            num.C,
+                            num.D,
+                            num.E,
+                            num.F,
+                            num.G,
+                            num.H,
+                            num.I)
+
+@
+
+There are \Sexpr{no.Chrname.po} entries from among the original 20,000 that do not have valid Chromosome names, and \Sexpr{no.Startpos.po} that do not have valid start positions.
+
+
+
+<<include=FALSE, echo=FALSE, results=tex>>=
+# Table the final numbers of entries with complete Chr names and starting positions
+
+
+track.Recovery.chr.tab <- xtable(track.Recovery.chr,
+                                          caption=c('Counts related to recovered Chromosome names and Starting Positions.'))
+
+
+@
+
+The analyses of effects by Chromosome and by Starting Position are based on the counts as shown in the table below.\\
+
+\Sexpr{track.Recovery.chr.tab}
+
+<<include=FALSE, echo=FALSE, results=hide>>=
+# Write out the four data files with the recovered information so that they can be used in subsequent analyses. Write them out one at a time, then combine them.
+
+write.csv(prefront.Data,"/Volumes/Macintosh_HD_3/genetics/genenetwork2/comt_correlations_20000_prefrontal_augmented.csv",row.names=FALSE)
+
+write.csv(cbell.Data,"/Volumes/Macintosh_HD_3/genetics/genenetwork2/comt_correlations_20000_cerebellum_augmented.csv",row.names=FALSE)
+
+write.csv(tempor.Data,"/Volumes/Macintosh_HD_3/genetics/genenetwork2/comt_correlations_20000_temporal_augmented.csv",row.names=FALSE)
+
+write.csv(pons.Data,"/Volumes/Macintosh_HD_3/genetics/genenetwork2/comt_correlations_20000_pons_augmented.csv",row.names=FALSE)
+
+
+@
+
+
+
+\end{document}
+
+
+ 

@@ -1,0 +1,74 @@
+% Transcription factor analysis
+
+\documentclass[11pt]{article}
+\usepackage{graphicx, subfig}
+\usepackage{float}
+\pagenumbering{arabic}
+\usepackage{enumerate}
+\usepackage{Sweave}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{framed}
+\usepackage{longtable}
+\usepackage{tablefootnote}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{keep.source=TRUE} 
+
+\hspace{-1.5em}Gene Network\\
+COMT expression correlations in Four Brain Areas\\
+Fall, 2017\\
+
+
+<<echo=FALSE>>=
+library(ggplot2,ggthemes)
+library(ggExtra)
+library(psych)
+library(knitr)
+library(openxlsx)
+library(xtable)
+library(Cairo)
+library(RColorBrewer)
+library(biomaRt)
+@
+
+<<include=FALSE, echo=FALSE, results=hide>>=
+# Generate a unique ID for this program by path and filename. This unique ID is attached to this file using a tag in the filesystem.
+source('unique_id_generator.R')
+
+fname <- c("/Volumes/Macintosh_HD_3/genetics/genenetwork2/comt_correlations_ontology_200_v4.Rnw")
+
+prog.Name <- unique.ID(fname)
+
+prog.Name
+@
+
+This program has the unique ID: \Sexpr{prog.Name}.
+
+
+<<include=FALSE,echo=FALSE,results=tex>>=
+# read in the transcription factor data
+wbts <- loadWorkbook('transcription_factors_from_genefriends.xlsx')   
+
+# now tell R to read that workbook and which sheet
+  comt.tsfactors <- data.frame(read.xlsx(wbts,sheet = "comt"))
+  shared8chr5.tsfactors <- data.frame(read.xlsx(wbts,sheet = "shared8_chr5"))
+
+shared.tsfactors.indx <- match(comt.tsfactors$Gene.Symbol,shared8chr5.tsfactors$Gene.Symbol)
+shared8chr5.tsfactors$Gene.Symbol[c(shared.tsfactors.indx)]
+
+shared.tsfactors <- data.frame(Gene=rep(NA,length(shared.tsfactors.indx)),
+                                        Pvalue = rep(NA,length(shared.tsfactors.indx)))
+
+shared.tsfactors$Gene <- shared8chr5.tsfactors$Gene.Symbol[c(shared.tsfactors.indx)]
+shared.tsfactors$Pvalue <- shared8chr5.tsfactors$p.value[c(shared.tsfactors.indx)]
+
+
+@
+
+
+\end{document}
