@@ -65,6 +65,8 @@ source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_mismatch_hgnc.R')
 source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_get_miss_Stats.R')
 source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_strip_chr.R')
 source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_strip_bp.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_miss_chr_bp.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_miss_symb_descr.R')
 
 
 stand.Col.names <- c('Prefrontal',
@@ -239,6 +241,8 @@ major.Area <- list(pf=prefront.Data,
                    po=pons.Data)
        
 
+i <- c(1:4) # index for the four brain areas, i is reserved
+
 # Get corrected start positions for all genes
 
 # pf.starts <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol",
@@ -264,35 +268,27 @@ major.Area <- list(pf=prefront.Data,
 
 @
 
+<<>>=
+# Missing Chr names/numbers ('loc') and starting positions ('bp')
+  
+     un.nobp.tab  <- get.miss.Chr.bp(major.Area,i)
+
+@
+
+The table below shows that the current master data file with the four primary data sets contains numerous entries with missing Chromosome names and gene start positions.\\
+\Sexpr{un.nobp.tab}
+
 <<missing_genes >>=
-# Using the original data files, generate a table showing how many gene names are missing in each area
+# Next determine how many entries are missing gene names
+     # Using the original data files, generate a table showing how many gene names are missing in each area
   
-  missing.Data <- data.frame(geneSymb=c(rep(NA,4)),
-                             geneName=c(rep(NA,4)))
-
-
-  
-  missing.Data[,1] <- c(sum(is.na(prefront.Data$Symbol)),
-                    sum(is.na(cbell.Data$Symbol)),
-                    sum(is.na(tempor.Data$Symbol)),
-                    sum(is.na(pons.Data$Symbol)))
-  
-  func.sum.symb <- function(x,i) sum(is.na(x[i]$Symbol))
-  func.sum.gene <- function(x,i) sum(is.na(x[i]$Description))
-  
-  missing.Data[,1] <- sapply(major.Area,func.sum.symb,i=c(1:4))
-  missing.Data[,2] <- sapply(major.Area,func.sum.gene,i=c(1:4))
-  row.names(missing.Data) <- stand.Col.names
-
-  
-miss.tab <- xtable(missing.Data,
-                   caption=c('Missing gene symbols and gene names by brain area.'))  
+     miss.tab <- get.num.miss.symbols(major.Area,i)
 
 @
 
 This table shows that all 20,000 probes in each brain area have gene symbols.\\
 
-\Sexpr{\miss.tab}
+\Sexpr{miss.tab}
 
 Unfortunately, not all of the gene symbols are official gene symbols. Some of them are just numbers or symbols like LOCxx.
 
@@ -334,8 +330,6 @@ The next table shows the distribution of the number of probes per gene; that is,
 <<>>=
 # Read in the illumina_humanref_8_v2 excel file to get the entrez ids and gene symbols for all of the data from the 4 brain areas 
 
-i <- c(1:4)
-
 wbillum <- loadWorkbook('illumina_human_ref_8_v2v3.xlsx')   
 
 # now tell R to read that workbook and which sheet
@@ -344,10 +338,11 @@ wbillum <- loadWorkbook('illumina_human_ref_8_v2v3.xlsx')
 
   illum.indx.v2 <- list()
   
-
+  illum.indx.v2 <- lapply(major.Area[i], function(x,i,y)  match(x[i]$Record,y$ilmn),
+                          i,illumina8v2.Data)
+  
 for (j in 1:4) {
   
-  illum.indx.v2[[j]] <- match(major.Area[[j]]$Record,illumina8v2.Data$ilmn)
   major.Area[[j]]$ENTREZID <- illumina8v2.Data$entrez[illum.indx.v2[[j]]]
   
 }
@@ -373,24 +368,67 @@ for (j in 1:4) {
 # Only 6 or 7 ENTREZIDs are missing in each brain area. Find the missing ones, and use getBM with gene symbols to get the missing ENTREZIDs
   
   miss.entrez.indx <- list()
+  find.miss.tmp <- list()
   find.miss.entrez <- list()
   where.miss.Symb <- list()
   unique.miss.Symb <- list()
   
-  miss.entrez.indx <- sapply(major.Area[i], function(x,i) which(is.na(x$ENTREZID)),i)
+  miss.entrez.indx <- lapply(major.Area[i], function(x,i) which(is.na(x$ENTREZID)),i)
   
-  find.miss.entrez <- sapply(major.Area[i], function (x,i,y) {getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol","chromosome_name", "start_position","end_position","entrezgene"), filters = 'hgnc_symbol', values = x$Symbol[unlist(y)], mart = ensembl)}, i, miss.entrez.indx[i]) 
-
+  for (ti in 1:4)   {
+       
+       print(major.Area[[ti]]$Symbol[unlist(miss.entrez.indx[[ti]])])
+       print(major.Area[[ti]]$ENTREZID[unlist(miss.entrez.indx[[ti]])])
+       
+  }
   
-   temp.found <- list()
+  
+  
+# Cannot use illumina_humanref_8_v3 because the data were collected using the ref8_v2 platform
+    # find.miss.entrez <- sapply(major.Area[i], function (x,i,y) {getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol","chromosome_name", "start_position","end_position","entrezgene"), filters = 'hgnc_symbol', values = x$Symbol[unlist(y)], mart = ensembl)}, i, miss.entrez.indx[i]) 
+  
+    find.miss.tmp <- lapply(major.Area[i], function (x,i,y) {biomaRt::select(gene.DB,keys=as.character(x$Symbol[unlist(y[i])]),columns=c('SYMBOL','ENTREZID'),keytype=c('SYMBOL'))}, i, miss.entrez.indx)
 
+    for (ti in 1:4)   {
+    
+         where.miss.Symb[[ti]] <- match(major.Area[[ti]]$Symbol[unlist(miss.entrez.indx[[ti]])],find.miss.tmp[[ti]][,1])
+         
+    }
+   
+# Check results by hand
+    hand.entrez <- list(matrix(rep(NA,3*length(miss.entrez.indx[[1]])),ncol=3),
+                        matrix(rep(NA,3*length(miss.entrez.indx[[2]])),ncol=3),
+                        matrix(rep(NA,3*length(miss.entrez.indx[[3]])),ncol=3),
+                        matrix(rep(NA,3*length(miss.entrez.indx[[4]])),ncol=3))
+
+    #pf    
+    hand.entrez[[1]][1:length(miss.entrez.indx[[1]]),1] <- c("EEF1A1", "EEF1A1", "GAPDH",  "ACTB",   "TUBB",   "ACTB","TXN")
+    hand.entrez[[1]][1:length(miss.entrez.indx[[1]]),2] <- c("1915",   "1915",   "2597",   "60",     "203068", "60", "7295" )
+    hand.entrez[[1]][1:length(miss.entrez.indx[[1]]),3] <- c('1915','1915','2597','60','203068','60','7295')
+    
+    #cb
+        hand.entrez[[2]][1:length(miss.entrez.indx[[2]]),1] <- c("GAPDH",  "EEF1A1", "EEF1A1", "TXN",    "ACTB",   "TUBB",   "ACTB")
+    hand.entrez[[2]][1:length(miss.entrez.indx[[2]]),2] <- c('2597','1915','1915','7295','60',
+                                                             "203068",'60')
+    hand.entrez[[2]][1:length(miss.entrez.indx[[2]]),3] <- c("2597",   "1915",   "1915",   "7295",   "60",     "203068", "60")
+    
+    #tm
+        hand.entrez[[3]][1:length(miss.entrez.indx[[3]]),1] <- c("EEF1A1", "EEF1A1", "GAPDH",  "ACTB",   "TXN",    "TUBB")
+    hand.entrez[[3]][1:length(miss.entrez.indx[[3]]),2] <- c('1915','1915','2597','60','7295',
+                                                             "203068")
+    hand.entrez[[3]][1:length(miss.entrez.indx[[3]]),3] <- c("1915",   "1915",   "2597",   "60",     "7295",   "203068")
+    
+    #po
+        hand.entrez[[4]][1:length(miss.entrez.indx[[4]]),1] <- c("EEF1A1", "ACTB",   "EEF1A1", "TUBB",   "GAPDH",  "TXN",    "ACTB")
+    hand.entrez[[4]][1:length(miss.entrez.indx[[4]]),2] <- c('1915','60','1915',"203068",'2597',
+                                                             '7295','60')
+    hand.entrez[[4]][1:length(miss.entrez.indx[[4]]),3] <- c("1915",   "60",     "1915",   "203068", "2597",   "7295",   "60")
+    
+# All of the ENTREZID were checked by hand and are correct.    
+    
     for (l in 1:4)   {
-  
-      where.miss.Symb[[l]] <- sapply(major.Area[l], function(x,i,y,z) {match(as.character(x$Symbol[c(unlist(y))]),unique(unlist(z)))}, l, miss.entrez.indx[l],find.miss.entrez[2,l])
-  
-      temp.found[[l]] <- list(sapply(find.miss.entrez[6,l], function(x,i,y) {unique(unlist(x))[unlist(y)]},l,where.miss.Symb[l]))
-      
-      major.Area[[l]]$ENTREZID[miss.entrez.indx[[l]]] <- unlist(temp.found[[l]])
+
+      major.Area[[l]]$ENTREZID[unlist(miss.entrez.indx[[l]])] <- find.miss.tmp[[l]][,2][unlist(where.miss.Symb[[l]])]
 
     }
    
@@ -438,56 +476,127 @@ for (j in 1:4) {
 #                          cbell.Data$ENTREZID[c(hold.rand.rows[6:10,2])],
 #                          tempor.Data$ENTREZID[c(hold.rand.rows[11:15,2])],
 #                          pons.Data$ENTREZID[c(hold.rand.rows[16:20,2])])
-#   
-#   
-#  # All but MGC17330 were found by handf on Gene Cards and entered below. An internet lookup was used to try to find MGC17330.
-#   
-#   missing.Gene <- alias2SymbolTable('MGC17330', species = "Hs")   # Returns NA
 # 
-#   # Use gene symbol for lookup  
-#   missing.Gene <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol","chromosome_name", "start_position","end_position","entrezgene"), filters = 'hgnc_symbol', values = 'MGC17330', mart = ensembl)     # Also returns NA
+# 
+# #  # All but MGC17330 were found by handf on Gene Cards and entered below. An internet lookup was used to try to find MGC17330.
+# #   
+# #   missing.Gene <- alias2SymbolTable('MGC17330', species = "Hs")   # Returns NA
+# # 
+# #   # Use gene symbol for lookup  
+# #   missing.Gene <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol","chromosome_name", "start_position","end_position","entrezgene"), filters = 'hgnc_symbol', values = 'MGC17330', mart = ensembl)     # Also returns NA
+# #   
+# #   # Use entrezgene for lookup
+# #   # This returns PIK3IP1 as the gene symbol for this gene. It must be an alias.
+# #   missing.Gene <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol","chromosome_name", "start_position","end_position","entrezgene"), filters = 'entrezgene', values = '113791', mart = ensembl)     
+# #   
+# # # This is the correct entrezgene ID for PIK3IP1:  113791
+# #   
+# #   # Corrected in the primary data excel data file on March 23, 2018
+# #   # Corrected in illumina_human_ref_8_v2v3.xlsx March 23, 2018
+# #   # Corrected at this point in the program in cbell.Data$Symbol March 23, 2018
+# #   
+# #   cbell.Data$Symbol[19679] <- c('PIK3IP1')
+# #   
+#   hold.rand.rows[,5] <- as.character(c(3765,
+#                                        83746,
+#                                        5265,
+#                                        7073,
+#                                        11235,
+#                                        54821,     # FLJ20105 -> ERCC6L
+#                                        11107,
+#                                        27004,
+#                                        729396,
+#                                        10942,
+#                                        54112,
+#                                        3785,
+#                                        441522,           # FLJ31132 -> obsolete (removed at NCBI)
+#                                        8773,
+#                                        153571,
+#                                        1805,
+#                                        283461,
+#                                        80099,      # FLJ21075 -> C7orf69
+#                                        54777,      # C10ORF92 -> CFAP46
+#                                        158787
+#   ))
+# 
+# ####################
+# #  alias2SymbolTable('FLJ20105',species='Hs')   <- produces NA
+#   # Found as alias for ERCC6L on ensembl web site
+# 
+#  alias2SymbolTable('FLJ20105',species='Hs')
+#  
 #   
-#   # Use entrezgene for lookup
-#   # This returns PIK3IP1 as the gene symbol for this gene. It must be an alias.
-#   missing.Gene <- getBM(attributes = c("illumina_humanref_8_v3", "hgnc_symbol","chromosome_name", "start_position","end_position","entrezgene"), filters = 'entrezgene', values = '113791', mart = ensembl)     
+#   # Need to replace FLJ20105 with ERCC6L in all primary data sets and in major.Area
+#   miss.Alias <- lapply(major.Area[i], function(x,i) grep('FLJ20105',x$Symbol),i)
 #   
-# # This is the correct entrezgene ID for PIK3IP1:  113791
+#   for (mi in 1:4)  {
+#        
+#        major.Area[[mi]]$Symbol[unlist(miss.Alias[[mi]])] <- c('ERCC6L')
+#   }
+# ################## 
+# #  FLJ31132 is considered obsolete
 #   
-#   # Corrected in the primary data excel data file on March 23, 2018
-#   # Corrected in illumina_human_ref_8_v2v3.xlsx March 23, 2018
-#   # Corrected at this point in the program in cbell.Data$Symbol March 23, 2018
+#   alias2SymbolTable('FLJ31132',species='Hs')     # produces NA
 #   
-#   cbell.Data$Symbol[19679] <- c('PIK3IP1')
+#   missing.Gene <- biomaRt::select(gene.DB,keys='FLJ31132',columns=c('GENENAME','SYMBOL','ENTREZID'),keytype=c('SYMBOL'))    # Produces NA
 #   
-#   hold.rand.rows[,5] <- as.character(c(55540,
-#                                        2617,
-#                                        8890,
-#                                        7106,
-#                                        55246,
-#                                        3249,
-#                                        253152,
-#                                        29895,
-#                                        113791,         # not in gene cards MGC17330
-#                                        9745,
-#                                        284273,
-#                                        220,
-#                                        2897,
-#                                        83879,
-#                                        55850,
-#                                        10383,
-#                                        29103,
-#                                        8639,
-#                                        284443,
-#                                        3178))
+#   missing.Gene <- biomaRt::select(gene.DB,keys='441522',columns=c('GENENAME','SYMBOL','ENTREZID'),keytype=c('ENTREZID'))   # Produces NA
+#   
+#   which(illumina8v2.Data$symbol == 'FLJ31132')
+# ##################
+#   
+#   alias2SymbolTable('FLJ21075',species='Hs')    # NA
+#   
+#   # Found on Gene Cards as C7orf69
+# ##################  
+#   
+# # Compare the two sets of ENTREZIDs: fileENTREZID, genecardsENTREZID
+#   
+#   setdiff(hold.rand.rows[,4],hold.rand.rows[,5])  #= numeric(0)  March 23, 2018
+# 
+#   setdiff(hold.rand.rows[,4],hold.rand.rows[,5])  #= numeric(0)  April 2, 2018
+
+# March 23, 2018: The ENTREZIDs from  n = 5 randomly sampled of rows from each brain area agree perfectly with the same entrezgene IDs looked up by hand using Gene Cards.
   
-# Compare the two sets of ENTREZIDs: fileENTREZID, genecardsENTREZID
+  # April 2, 2018: The ENTREZIDs from  n = 5 randomly sampled of rows from each brain area agree perfectly with the same entrezgene IDs looked up by hand using Gene Cards.
   
-#  setdiff(hold.rand.rows[,4],hold.rand.rows[,5])  = numeric(0)
+  
+@
+
+<<>>=
+# Check for missing rows
+  
+  miss.Tab <- list()
+  
+  miss.Tab <- sapply(major.Area[i], function(x,i) {get.miss.Stats(x,i)},i)
+  
+  miss.Tab
+
+#               pf cb tm po
+# miss.Symb   0  0  0  0 
+# miss.entrez 0  0  0  0 
+
+  # Missing Chr names/numbers ('loc') and starting positions ('bp')
+  
+     un.nobp.tab  <- get.miss.Chr.bp(major.Area,i)
+@
+
+     The table below shows that the current master data file with the four primary data sets contains numerous entries with missing Chromosome names and gene start positions.\\
+
+     \Sexpr{un.nobp.tab}
+
+     
+<<missing_genes >>=
+# Next determine how many entries are missing gene names
+     # Using the original data files, generate a table showing how many gene names are missing in each area
+  
+     miss.tab <- get.num.miss.symbols(major.Area,i)
 
 @
 
-March 23, 2018: The ENTREZIDs from  n = 5 randomly sampled of rows from each brain area agree perfectly with the same entrezgene IDs looked up by hand using Gene Cards. 
+This table shows that all 20,000 probes in each brain area have gene symbols.\\
 
+\Sexpr{miss.tab} 
 
 <<>>=
 # At this point, there are no missing Gene Symbols and no missing ENTREZIds in any of the brain area data.
@@ -506,7 +615,10 @@ March 23, 2018: The ENTREZIDs from  n = 5 randomly sampled of rows from each bra
   entrez.indx <- list()
   nums.from.biomart <- list()
 
- genesrnums <- lapply(major.Area[i], function (x,i) genes.Are.nums(x), i)   
+ genesrnums <- lapply(major.Area[i], function (x,i) genes.Are.nums(x), i) 
+ 
+# April 2, 2018   genernums returns 0 for the length of each Symbol variable
+ # Changes were previously written out to 
  
 # Use the ENTREZIDs to get the correct gene Symbols for these genes that are numbers.
  
@@ -760,8 +872,8 @@ for (k in 1:4) {
   un.Chr <- list()
   miss.bp <- list()
   
-  un.Chr <- lapply(major.Area[i], function(x,i) which(x$loc == 'Un'))
-  miss.bp <- lapply(major.Area[i], function(x,i) which(x$bp == 1.00))
+  # un.Chr <- lapply(major.Area[i], function(x,i) which(x$loc == 'Un'))
+  # miss.bp <- lapply(major.Area[i], function(x,i) which(x$bp == 1.00))
 # There are no missing Chr numbers/names
  # There are missing start positions
   
