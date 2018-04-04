@@ -561,7 +561,118 @@ for (j in 1:4) {
   # April 2, 2018: The ENTREZIDs from  n = 5 randomly sampled of rows from each brain area agree perfectly with the same entrezgene IDs looked up by hand using Gene Cards.
   
   
+  # Replace Septin 10 symbol with SEPT10
+  
+  sept10.indx.pre <- lapply(major.Area[i], function(x,i) {which(x$Symbol == 'Septin 10')},i)
+
+    for (im in 1:4)  {
+       
+       major.Area[[im]]$Symbol[unlist(sept10.indx.pre)] <- c('SEPT10')
+  }
+  
+  sept10.indx.post <- lapply(major.Area[i], function(x,i) {which(x$Symbol == 'Septin 10')},i)
+  
+  
+  symb.with.space <- lapply(major.Area[i], function(x,i) {which(grepl(' ',x$Symbol))},i)
+  
+  # All of the symbols with spaces are of the form 'Septin n' where n is a number with the exception of 'Selenoprotein 15' which is 'SEP15'
+  
+  unique.gene.space <- unique(c(major.Area[[1]]$Symbol[unlist(symb.with.space[[1]])],
+          major.Area[[2]]$Symbol[unlist(symb.with.space[[2]])],
+          major.Area[[3]]$Symbol[unlist(symb.with.space[[3]])],
+          major.Area[[4]]$Symbol[unlist(symb.with.space[[4]])]))
+  
+  unique.gene.space <- unique.gene.space[c(1,2,3,6,4,5,7,9,10,8)]
+  replace.gene.space <- data.frame(orig=c("Septin 2","Septin 3","Septin 4","Septin 5","Septin 6",
+                                   "Septin 7","Septin 9","Septin 11","Septin 12","Selenoprotein 15"),repl=c('SEPT2',
+                                              'SEPT3',
+                                              'SEPT4',
+                                              'SEPT5',
+                                              'SEPT6',
+                                              'SEPT7',
+                                              'SEPT9',
+                                              'SEPT11',
+                                              'SEPT12',
+                                              'SEP15'))
+ replace.space.indx <- list()
+   
+ for (yi in 1:4) {
+  
+       replace.space.indx[[yi]] <- match(major.Area[[yi]]$Symbol[unlist(symb.with.space[[yi]])],
+                                         replace.gene.space[,1])
+  }
+  
+ for (yi in 1:4)   {
+     major.Area[[yi]]$Symbol[unlist(symb.with.space[[yi]])] <- as.character(replace.gene.space[unlist(replace.space.indx[[yi]]),2])
+ }
+
+  
+  prefront.Data <- major.Area[[1]]
+  cbell.Data <- major.Area[[2]]
+  tempor.Data <- major.Area[[3]]
+  pons.Data <- major.Area[[4]]
+  
 @
+
+<< >>=
+# Some gene Symbols use upper case XXORFYY and some use lower case XXorfYY. It should be lower case.
+# Replace ORF with orf when it is meant to indicate open reading frame because official symbols # use 'orf'.
+  
+  which.ORF.indx <- lapply(major.Area[i], function(x,i) which(grepl('ORF',x$Symbol,ignore.case=FALSE)),i)
+  sum.ORF.indx <- data.frame(ORD2orf=c(length(which.ORF.indx[[1]]),
+                                       length(which.ORF.indx[[2]]),
+                                       length(which.ORF.indx[[3]]),
+                                       length(which.ORF.indx[[4]])))
+  row.names(sum.ORF.indx) <- stand.Col.names
+  print(sum.ORF.indx)
+  
+  #April 2, 2018
+
+#              ORD2orf
+# Prefrontal    1045
+# Cerebellum    1072
+# Temporal      1062
+# Pons          1056
+
+for (im in 1:4)  {
+  
+     major.Area[[im]]$Symbol[unlist(which.ORF.indx[[im]])] <- sub('ORF','orf',major.Area[[im]]$Symbol[unlist(which.ORF.indx[[im]])],ignore.case=FALSE)
+
+}
+# Done April 2, 2018 and wrote out new data files
+#            ORD2orf
+# Prefrontal       0
+# Cerebellum       0
+# Temporal         0  
+# Pons             0  
+
+  prefront.Data <- major.Area[[1]]
+  cbell.Data <- major.Area[[2]]
+  tempor.Data <- major.Area[[3]]
+  pons.Data <- major.Area[[4]]
+  
+  
+  
+@
+
+<<>>=
+# Write interim results to primary data files
+# Interim: write back out the primary data files after finding symbols for genes as numbers and for genes with LOCxx
+# Note: they are written as txt files to prevent Excel from converting gene symbols such as MARCH8 to date format  
+  # write to files
+
+# Using the extension, .txt, allows these to be imported into excel so that the column with gene Symbols can be set to text, preventing Excel from converting gene Symbols like MARCH1 to date format.
+#    write.csv(as.data.frame(prefront.Data),"/Volumes/Macintosh_HD_3/genetics/genenetwork2/comt_correlations_20000_prefrontal_augmentedNew.csv.txt",row.names=FALSE)
+# # # # # #
+#    write.csv(as.data.frame(cbell.Data),"/Volumes/Macintosh_HD_3/genetics/genenetwork2/comt_correlations_20000_cerebellum_augmentedNew.csv.txt",row.names=FALSE)
+# # # # # #
+#    write.csv(as.data.frame(tempor.Data),"/Volumes/Macintosh_HD_3/genetics/genenetwork2/comt_correlations_20000_temporal_augmentedNew.csv.txt",row.names=FALSE)
+# # # # # #
+#    write.csv(as.data.frame(pons.Data),"/Volumes/Macintosh_HD_3/genetics/genenetwork2/comt_correlations_20000_pons_augmentedNew.csv.txt",row.names=FALSE)
+  
+  @
+
+
 
 <<>>=
 # Check for missing rows
@@ -610,67 +721,68 @@ This table shows that all 20,000 probes in each brain area have gene symbols.\\
 # func_genes_are_nums.R')
 # func_genes_are_locs.R')  
  
- genesrnums <- list() 
-  returned.Symbols <- list()
-  entrez.indx <- list()
-  nums.from.biomart <- list()
-
- genesrnums <- lapply(major.Area[i], function (x,i) genes.Are.nums(x), i) 
- 
-# April 2, 2018   genernums returns 0 for the length of each Symbol variable
- # Changes were previously written out to 
- 
-# Use the ENTREZIDs to get the correct gene Symbols for these genes that are numbers.
- 
- for (u in 1:4)   {
- 
-      ########### DEBUG
-#      u <- c(1)
-      #################
-          if (length(genesrnums) > 0)   {
-      # returned.Symbols[[u]] <- getBM(attributes = c("hgnc_symbol","entrezgene"), filters = 'entrezgene', values = major.Area[[u]]$ENTREZID[unlist(genesrnums[[u]])], mart = ensembl)
-      
-      nums.from.biomart[[u]] <- biomaRt::select(gene.DB,keys=as.character(major.Area[[u]]$ENTREZID[unlist(genesrnums[[u]])]),columns=c('GENENAME','SYMBOL','ENTREZID'),keytype=c('ENTREZID'))
-      
-      not.Symb.na <- which(!is.na(nums.from.biomart[[u]]$SYMBOL))
-      # entrez.indx[[u]] <- match(major.Area[[u]]$ENTREZID[unlist(genesrnums[[u]])],nums.from.biomart[[u]]$ENTREZID)
-      
-      entrez.indx[[u]] <- match(nums.from.biomart[[u]]$ENTREZID[c(not.Symb.na)],major.Area[[u]]$ENTREZID)
-      
-      major.Area[[u]]$Symbol[c(entrez.indx[[u]])] <- alias2SymbolTable(nums.from.biomart[[u]]$SYMBOL[c(not.Symb.na)],species='Hs')
-      
-          } else {}
-      
- } # end brain area loop
+#  genesrnums <- list() 
+#   returned.Symbols <- list()
+#   entrez.indx <- list()
+#   nums.from.biomart <- list()
+# 
+#  genesrnums <- lapply(major.Area[i], function (x,i) genes.Are.nums(x), i) 
+#  
+# # April 2, 2018   genernums returns 0 for the length of each Symbol variable
+#  # Changes were previously written out to the primary data sets and the master data set
+#  
+# # Use the ENTREZIDs to get the correct gene Symbols for these genes that are numbers.
+#  
+#  for (u in 1:4)   {
+#  
+#       ########### DEBUG
+# #      u <- c(1)
+#       #################
+#           if (length(genesrnums) > 0)   {
+#       # returned.Symbols[[u]] <- getBM(attributes = c("hgnc_symbol","entrezgene"), filters = 'entrezgene', values = major.Area[[u]]$ENTREZID[unlist(genesrnums[[u]])], mart = ensembl)
+#       
+#       nums.from.biomart[[u]] <- biomaRt::select(gene.DB,keys=as.character(major.Area[[u]]$ENTREZID[unlist(genesrnums[[u]])]),columns=c('GENENAME','SYMBOL','ENTREZID'),keytype=c('ENTREZID'))
+#       
+#       not.Symb.na <- which(!is.na(nums.from.biomart[[u]]$SYMBOL))
+#       # entrez.indx[[u]] <- match(major.Area[[u]]$ENTREZID[unlist(genesrnums[[u]])],nums.from.biomart[[u]]$ENTREZID)
+#       
+#       entrez.indx[[u]] <- match(nums.from.biomart[[u]]$ENTREZID[c(not.Symb.na)],major.Area[[u]]$ENTREZID)
+#       
+#       major.Area[[u]]$Symbol[c(entrez.indx[[u]])] <- alias2SymbolTable(nums.from.biomart[[u]]$SYMBOL[c(not.Symb.na)],species='Hs')
+#       
+#           } else {}
+#       
+#  } # end brain area loop
 
   miss.Tab <- list()
   
   miss.Tab <- sapply(major.Area[i], function(x,i) {get.miss.Stats(x,i)},i)
   
   miss.Tab 
- 
+
+  # April 3, 2018
 #            pf cb tm po
 # miss.Symb   0  0  0  0 
 # miss.entrez 0  0  0  0  
  
  
-  prefront.Data$Symbol <- unlist(major.Area[[1]]$Symbol)
-  cbell.Data$Symbol <- unlist(major.Area[[2]]$Symbol)
-  tempor.Data$Symbol <-unlist(major.Area[[3]]$Symbol)
-  pons.Data$Symbol <- unlist(major.Area[[4]]$Symbol)
+  # prefront.Data$Symbol <- unlist(major.Area[[1]]$Symbol)
+  # cbell.Data$Symbol <- unlist(major.Area[[2]]$Symbol)
+  # tempor.Data$Symbol <-unlist(major.Area[[3]]$Symbol)
+  # pons.Data$Symbol <- unlist(major.Area[[4]]$Symbol)
   
   # Need to reconstitute major.Area with the full and corrected data
   
-  major.Area <- list(pf=prefront.Data,
-                   cb=cbell.Data,
-                   tm=tempor.Data,
-                   po=pons.Data)
-  
-  miss.Tab <- list()
-  
-  miss.Tab <- sapply(major.Area[i], function(x,i) {get.miss.Stats(x,i)},i)
-  
-  miss.Tab
+  # major.Area <- list(pf=prefront.Data,
+  #                  cb=cbell.Data,
+  #                  tm=tempor.Data,
+  #                  po=pons.Data)
+  # 
+  # miss.Tab <- list()
+  # 
+  # miss.Tab <- sapply(major.Area[i], function(x,i) {get.miss.Stats(x,i)},i)
+  # 
+  # miss.Tab
   
 #              pf cb tm po
 # miss.Symb   0  0  0  0 
@@ -698,118 +810,119 @@ sapply(genesrlocs[i], function(x,i) length(x), i)
 # pf  cb  tm  po 
 # 452 461 461 462 
  
- locs.from.biomart <- list()
+#  locs.from.biomart <- list()
+# 
+#   
+# # Use the ENTREZIDs to get the correct gene Symbols for these genes that are numbers.
+#  
+# # Note: the numbers in all of the comments below apply only to major.Area[[1]] which is the pf data set
+#  
+#  for (u in 1:4)   {
+#  
+#       ########## DEBUG 
+#        u <- c(4)
+#       ################
+#       if (length(genesrlocs[[u]]) > 0)  {
+# 
+# # Returns 222 symbols for major.Area[[1]] (Some of them are "".)     
+#       returned.Symbols[[u]] <- getBM(attributes = c("hgnc_symbol","entrezgene"), filters = 'entrezgene', values = major.Area[[u]]$ENTREZID[unlist(genesrlocs[[u]])], mart = ensembl)
+#       
+# # Eight of the symbols are listed as "". These need to be replaced with NA
+#       which.blank <- which(returned.Symbols[[u]]$hgnc_symbol == "")
+#       returned.Symbols[[u]]$hgnc_symbol[c(which.blank)] <- NA
+# 
+# # Holds the 222 ENTREZID indices in major.Area of the 222 entrezgene entries queried that yielded either symbols or NA 
+# # Note, rather than matching returned.Symbols$entrezgene against only the 452 ENTREZIDs corresponding to the entries that have LOCxx as symbols, match against the full major.Area$ENTREZID. In this way, entrez.indx[[u]] directly references the full major.Area data.frame
+#      entrez.indx[[u]] <- match(returned.Symbols[[u]]$entrezgene,major.Area[[u]]$ENTREZID)
+# 
+# # The indices in entrez1.indx are from matching the entrezgene entries in the returned.Symbol set against only the local 452 ENTREZIDs used to query getBM   
+#      entrez1.indx[[u]] <- match(returned.Symbols[[u]]$entrezgene,major.Area[[u]]$ENTREZID[unlist(genesrlocs[[u]])])
+# 
+# 
+# # There are 3 duplicated indices among the 222 in entrez.indx[[1]]     
+# #     sum(duplicated(entrez.indx[[1]]))
+# 
+# 
+# # Returns entries for all 452 entrezgene queries, but 139 of them are NA, 313 are Symbols
+#  locs.from.biomart[[u]] <- biomaRt::select(gene.DB,keys=as.character(major.Area[[u]]$ENTREZID[unlist(genesrlocs[[u]])]),columns=c('GENENAME','SYMBOL','ENTREZID'),keytype=c('ENTREZID'))
+#  
+# # Holds the 452 indices in major.Area$ENTREZID that correspond to the ENTREZIDs used to query biomart for gene symbols 
+#      
+#      entrez2.indx[[u]] <- match(locs.from.biomart[[u]]$ENTREZID,major.Area[[u]]$ENTREZID)
+#      
+#      # locs.from.biomart[[u]]$SYMBOL
+#      
+# 
+#  #     } #end brain area loop
+# 
+# 
+#        
+#       # Note (for pf): the getBM query found 222 symbols that were originally LOCxx; the biomart query found 313.
+#        
+#      # Set up the found symbols in a data.frame with the two columns being the symbol results of the two queries.
+#        
+# hold.all.query.Symb <- data.frame(gt.BM=rep(NA,length(unlist(genesrlocs[[u]]))),
+#                                             biom=rep(NA,length(unlist(genesrlocs[[u]])))
+# )
+#      
+#  hold.all.query.Symb[c(entrez1.indx[[u]]),1] <-  alias2SymbolTable(returned.Symbols[[u]]$hgnc_symbol,
+#                                                                    species='Hs')
+#  hold.all.query.Symb[,2] <- alias2SymbolTable(locs.from.biomart[[u]]$SYMBOL,species='Hs')
+#  
+#  # Now hold.all.query.Symb holds the available symbols from the two queries side-by-side.
+#  # Note: there are still LOCxx entries because neither query could find all the symbols using entrezgene
+#  
+#  # Combine the two columns using the appropriate symbol or NA
+#  # Rules 
+#    # NA, NA       -> NA
+#    # NA, Symb2    -> Symb2
+#    # Symb1, NA    -> Symb1
+#    # Symb1, Symb2 -> Symb2
+#    
+#  
+#  comb.query <- union_all(hold.all.query.Symb[,1],hold.all.query.Symb[,2])[(length(hold.all.query.Symb[,1]) + 1):(2*length(hold.all.query.Symb[,1]))]
+#  
+#  subst.Symb <- which(!is.na(comb.query))
+# 
+#  # This now substitutes the found gene Symbols for the LOCxx entries in major.Area[[u]]$Symbol 
+#  
+#  major.Area[[u]]$Symbol[c(genesrlocs[[u]][c(subst.Symb)])] <- comb.query[subst.Symb]
+#  
+#       } else {}
+#  
+#       } #end brain area loop
+# 
+#    miss.Tab <- list()
+#   
+#   miss.Tab <- sapply(major.Area[i], function(x,i) {get.miss.Stats(x,i)},i)
+#   
+#   miss.Tab
+#   
+# #            pf cb tm po
+# # miss.Symb   0  0  0  0 
+# # miss.entrez 0  0  0  0 
+#  
+# genesrlocs <- sapply(major.Area[i], function (x,i) genes.Are.locs(x,i), i)
+#  
+# sapply(genesrlocs[i], function(x,i) length(x), i)
 
-  
-# Use the ENTREZIDs to get the correct gene Symbols for these genes that are numbers.
- 
-# Note: the numbers in all of the comments below apply only to major.Area[[1]] which is the pf data set
- 
- for (u in 1:4)   {
- 
-      ########## DEBUG 
-       u <- c(4)
-      ################
-      if (length(genesrlocs[[u]]) > 0)  {
-
-# Returns 222 symbols for major.Area[[1]] (Some of them are "".)     
-      returned.Symbols[[u]] <- getBM(attributes = c("hgnc_symbol","entrezgene"), filters = 'entrezgene', values = major.Area[[u]]$ENTREZID[unlist(genesrlocs[[u]])], mart = ensembl)
-      
-# Eight of the symbols are listed as "". These need to be replaced with NA
-      which.blank <- which(returned.Symbols[[u]]$hgnc_symbol == "")
-      returned.Symbols[[u]]$hgnc_symbol[c(which.blank)] <- NA
-
-# Holds the 222 ENTREZID indices in major.Area of the 222 entrezgene entries queried that yielded either symbols or NA 
-# Note, rather than matching returned.Symbols$entrezgene against only the 452 ENTREZIDs corresponding to the entries that have LOCxx as symbols, match against the full major.Area$ENTREZID. In this way, entrez.indx[[u]] directly references the full major.Area data.frame
-     entrez.indx[[u]] <- match(returned.Symbols[[u]]$entrezgene,major.Area[[u]]$ENTREZID)
-
-# The indices in entrez1.indx are from matching the entrezgene entries in the returned.Symbol set against only the local 452 ENTREZIDs used to query getBM   
-     entrez1.indx[[u]] <- match(returned.Symbols[[u]]$entrezgene,major.Area[[u]]$ENTREZID[unlist(genesrlocs[[u]])])
-
-
-# There are 3 duplicated indices among the 222 in entrez.indx[[1]]     
-#     sum(duplicated(entrez.indx[[1]]))
-
-
-# Returns entries for all 452 entrezgene queries, but 139 of them are NA, 313 are Symbols
- locs.from.biomart[[u]] <- biomaRt::select(gene.DB,keys=as.character(major.Area[[u]]$ENTREZID[unlist(genesrlocs[[u]])]),columns=c('GENENAME','SYMBOL','ENTREZID'),keytype=c('ENTREZID'))
- 
-# Holds the 452 indices in major.Area$ENTREZID that correspond to the ENTREZIDs used to query biomart for gene symbols 
-     
-     entrez2.indx[[u]] <- match(locs.from.biomart[[u]]$ENTREZID,major.Area[[u]]$ENTREZID)
-     
-     # locs.from.biomart[[u]]$SYMBOL
-     
-
- #     } #end brain area loop
-
-
-       
-      # Note (for pf): the getBM query found 222 symbols that were originally LOCxx; the biomart query found 313.
-       
-     # Set up the found symbols in a data.frame with the two columns being the symbol results of the two queries.
-       
-hold.all.query.Symb <- data.frame(gt.BM=rep(NA,length(unlist(genesrlocs[[u]]))),
-                                            biom=rep(NA,length(unlist(genesrlocs[[u]])))
-)
-     
- hold.all.query.Symb[c(entrez1.indx[[u]]),1] <-  alias2SymbolTable(returned.Symbols[[u]]$hgnc_symbol,
-                                                                   species='Hs')
- hold.all.query.Symb[,2] <- alias2SymbolTable(locs.from.biomart[[u]]$SYMBOL,species='Hs')
- 
- # Now hold.all.query.Symb holds the available symbols from the two queries side-by-side.
- # Note: there are still LOCxx entries because neither query could find all the symbols using entrezgene
- 
- # Combine the two columns using the appropriate symbol or NA
- # Rules 
-   # NA, NA       -> NA
-   # NA, Symb2    -> Symb2
-   # Symb1, NA    -> Symb1
-   # Symb1, Symb2 -> Symb2
-   
- 
- comb.query <- union_all(hold.all.query.Symb[,1],hold.all.query.Symb[,2])[(length(hold.all.query.Symb[,1]) + 1):(2*length(hold.all.query.Symb[,1]))]
- 
- subst.Symb <- which(!is.na(comb.query))
-
- # This now substitutes the found gene Symbols for the LOCxx entries in major.Area[[u]]$Symbol 
- 
- major.Area[[u]]$Symbol[c(genesrlocs[[u]][c(subst.Symb)])] <- comb.query[subst.Symb]
- 
-      } else {}
- 
-      } #end brain area loop
-
-   miss.Tab <- list()
-  
-  miss.Tab <- sapply(major.Area[i], function(x,i) {get.miss.Stats(x,i)},i)
-  
-  miss.Tab
-  
-#            pf cb tm po
-# miss.Symb   0  0  0  0 
-# miss.entrez 0  0  0  0 
- 
-genesrlocs <- sapply(major.Area[i], function (x,i) genes.Are.locs(x,i), i)
- 
-sapply(genesrlocs[i], function(x,i) length(x), i)
-
+# April 3, 2018
 # Reduced the LOCxx gene symbols from ~455 to ~167
 # pf  cb  tm  po 
 # 167 170 166 165
  
  
  # Reconstitute the primary data frames after these LOCxx genes have been converted to actual symbols
-  prefront.Data$Symbol <- unlist(major.Area[[1]]$Symbol)
-  cbell.Data$Symbol <- unlist(major.Area[[2]]$Symbol)
-  tempor.Data$Symbol <-unlist(major.Area[[3]]$Symbol)
-  pons.Data$Symbol <- unlist(major.Area[[4]]$Symbol)
-  
-  # Need to reconstitute major.Area with the full and corrected data
-  major.Area <- list(pf=prefront.Data,
-                   cb=cbell.Data,
-                   tm=tempor.Data,
-                   po=pons.Data)
+  # prefront.Data$Symbol <- unlist(major.Area[[1]]$Symbol)
+  # cbell.Data$Symbol <- unlist(major.Area[[2]]$Symbol)
+  # tempor.Data$Symbol <-unlist(major.Area[[3]]$Symbol)
+  # pons.Data$Symbol <- unlist(major.Area[[4]]$Symbol)
+  # 
+  # # Need to reconstitute major.Area with the full and corrected data
+  # major.Area <- list(pf=prefront.Data,
+  #                  cb=cbell.Data,
+  #                  tm=tempor.Data,
+  #                  po=pons.Data)
  
 @
 
@@ -836,58 +949,162 @@ sapply(genesrlocs[i], function(x,i) length(x), i)
   
 ### Strip all characters after : in Location
 
-loc.temp <- lapply(major.Area[i], function(x,i) strip.Chr(x), i)    
-
-
-### Get start locations from prefront.Data$Location
-
-  bp.temp <- lapply(major.Area[i], function(x,i) strip.bp(x), i)
-  
-# add columns to the primary data sets named 'loc' that has the Chromosome name/number and 'bp' that has the starting location of the transcript/probe
-
- 
-for (k in 1:4) {
-     
-     major.Area[[k]]$loc <- as.character(loc.temp[[k]])
-     major.Area[[k]]$bp <- bp.temp[[k]]
-     
-     # Add a column with the sign of the correlation to each areal data.frame
-     major.Area[[k]]$corsign <- as.factor(sign(major.Area[[k]]$Sample.r))
-}  
-  
-  
-   # Reconstitute the primary data frames after these LOCxx genes have been converted to actual symbols
-  prefront.Data <- data.frame(major.Area[[1]])
-  cbell.Data <- data.frame(major.Area[[2]])
-  tempor.Data <-data.frame(major.Area[[3]])
-  pons.Data <- data.frame(major.Area[[4]])
-  
+# loc.temp <- lapply(major.Area[i], function(x,i) strip.Chr(x), i)    
+# 
+# 
+# ### Get start locations from prefront.Data$Location
+# 
+#   bp.temp <- lapply(major.Area[i], function(x,i) strip.bp(x), i)
+#   
+# # add columns to the primary data sets named 'loc' that has the Chromosome name/number and 'bp' that has the starting location of the transcript/probe
+# 
+#  
+# for (k in 1:4) {
+#      
+#      major.Area[[k]]$loc <- as.character(loc.temp[[k]])
+#      major.Area[[k]]$bp <- bp.temp[[k]]
+#      
+#      # Add a column with the sign of the correlation to each areal data.frame
+#      major.Area[[k]]$corsign <- as.factor(sign(major.Area[[k]]$Sample.r))
+# }  
+#   
+#   
+#    # Reconstitute the primary data frames after these LOCxx genes have been converted to actual symbols
+#   prefront.Data <- data.frame(major.Area[[1]])
+#   cbell.Data <- data.frame(major.Area[[2]])
+#   tempor.Data <-data.frame(major.Area[[3]])
+#   pons.Data <- data.frame(major.Area[[4]])
+#   
   
   @
 
 <<>>=
 # There are no NA entries either for 'loc' or 'bp'. However, there are many 'Un' entries for 'loc' and '1.00' entries for 'bp'
   
-# First try to use the ENTREZIDs to get both the missing Chr numbers/names and the 'bp' starting positions
+# First try to use the ENTREZIDs to get the missing Chr numbers/names
+
   un.Chr <- list()
+  
+  un.Chr <- lapply(major.Area[i], function(x,i) which(x$loc == 'Un'))
+  unique.un.entrez <- c(length(unique(major.Area[[1]]$ENTREZID[unlist(un.Chr[[1]])])),
+                        length(unique(major.Area[[2]]$ENTREZID[unlist(un.Chr[[2]])])),
+                        length(unique(major.Area[[3]]$ENTREZID[unlist(un.Chr[[3]])])),
+                        length(unique(major.Area[[4]]$ENTREZID[unlist(un.Chr[[4]])]))) 
+
+ num.un <- data.frame(Number_Un_Chr=unlist(lapply(un.Chr[i], function(x,i) length(x)),i),
+                      Unique_ENTREZIDs=unlist(unique.un.entrez))
+ num.un.tab <- xtable(num.un,
+                      caption='Number of rows with Chromosome as Un in each brain area.')
+ 
+ num.un[5,1:2] <- c(sum(num.un$Number_Un_Chr),sum(num.un$Unique_ENTREZIDs))
+ 
+ row.names(num.un) <- c(row.names(num.un)[1:4],'sum')
+ 
+ #April 2, 2018
+#     Number_Un_Chr Unique_ENTREZIDs
+# pf           2055             1847
+# cb           2047             1833
+# tm           2043             1822
+# po           2027             1806
+# sum          8172             7308
+ 
+ # Use ENTREZIDs to get Chr=Un entries
+ 
+   miss.un.returned <- lapply(major.Area[i], function(x,i,y) {getBM(attributes=c('entrezgene','hgnc_symbol','chromosome_name'), filters ='entrezgene', values =x$ENTREZID[unlist(y)], mart = ensembl)}, i, un.Chr[i])
+   
+   no.chr.in.name <- lapply(miss.un.returned[i], function(x,i) which(!grepl('CHR',x$chromosome_name)),i)
+   
+   temp.no.chr <- list()
+   unique.entrez.temp <- list()
+   
+   for (im in 1:4)  {
+   
+   temp.no.chr[[im]] <- match(major.Area[[im]]$ENTREZID[unlist(un.Chr[[im]])],as.character(miss.un.returned[[im]]$entrezgene[unlist(no.chr.in.name[[im]])]))
+   
+   }
+   
+   major.Area[[1]]$loc[unlist(un.Chr[[1]])] <- as.character(miss.un.returned[[1]]$chromosome_name[unlist(no.chr.in.name[[1]])])[unlist(temp.no.chr[[1]])]
+   
+   major.Area[[2]]$loc[unlist(un.Chr[[2]])] <- as.character(miss.un.returned[[2]]$chromosome_name[unlist(no.chr.in.name[[2]])])[unlist(temp.no.chr[[2]])]
+   
+   major.Area[[3]]$loc[unlist(un.Chr[[3]])] <- as.character(miss.un.returned[[3]]$chromosome_name[unlist(no.chr.in.name[[3]])])[unlist(temp.no.chr[[3]])]
+   
+   major.Area[[4]]$loc[unlist(un.Chr[[4]])] <- as.character(miss.un.returned[[4]]$chromosome_name[unlist(no.chr.in.name[[4]])])[unlist(temp.no.chr[[4]])]
+   
+   un.Chr.post <- lapply(major.Area[i], function(x,i) which(x$loc == 'Un'))
+   
+   unique.un.entrez.post <- c(length(unique(major.Area[[1]]$ENTREZID[unlist(un.Chr.post[[1]])])),
+                        length(unique(major.Area[[2]]$ENTREZID[unlist(un.Chr.post[[2]])])),
+                        length(unique(major.Area[[3]]$ENTREZID[unlist(un.Chr.post[[3]])])),
+                        length(unique(major.Area[[4]]$ENTREZID[unlist(un.Chr.post[[4]])]))) 
+
+ num.un <- data.frame(Number_Un_Chr=unlist(lapply(un.Chr.post[i], function(x,i) length(x)),i),
+                      Unique_ENTREZIDs=unlist(unique.un.entrez.post))
+ 
+#     Number_Un_Chr Unique_ENTREZIDs
+# pf             0                0
+# cb             0                0
+# tm             0                0
+# po             0                0
+ 
+# April 4, 2018: There are no entries that have 'Un' for the chromosome number/name
+ # This is because 'Un' wasm replaced by NA whern the chromsosome name could not be found
+ 
+# Check for NA in chromosome names (loc)
+  miss.Tab <- list()
+
+  miss.Tab <- sapply(major.Area[i], function(x,i) {get.miss.Stats(x,i)},i)
+
+  miss.Tab
+#   
+#             pf  cb tm  po 
+# miss.Symb   0   0  0   0  
+# miss.entrez 0   0  0   0  
+# miss.loc    104 98 104 100    Reduced from approximately 2500 'Un' 
+  
+  prefront.Data$loc <- major.Area[[1]]$loc
+  cbell.Data$loc <- major.Area[[2]]$loc
+  tempor.Data$loc <- major.Area[[3]]$loc
+  pons.Data$loc <- major.Area[[4]]$loc
+  
+@ 
+
+ 
+ << bp1.00 >>=
+  
+  # Now find missing start positions; this shows up as bp = 1.00
+ 
   miss.bp <- list()
   
-  # un.Chr <- lapply(major.Area[i], function(x,i) which(x$loc == 'Un'))
-  # miss.bp <- lapply(major.Area[i], function(x,i) which(x$bp == 1.00))
-# There are no missing Chr numbers/names
- # There are missing start positions
+  miss.bp <- lapply(major.Area[i], function(x,i) which(x$bp == 1.00))
+  
+  num.miss.bp <- lapply(miss.bp[i], function(x,i) length(x),i)
+  
+  num.miss.bp.tab <- data.frame(Number_missing_start_positions=unlist(num.miss.bp))
+  
+  # April 43, 2018
+#    Number_missing_start_positions
+# pf                           2113
+# cb                           2101
+# tm                           2098
+# po                           2084  
+  
+  
   
   miss.bp.returned <- list()
   match.bp.indx <- list()
   
   miss.bp.returned <- lapply(major.Area[i], function(x,i,y) {getBM(attributes=c('entrezgene','hgnc_symbol','chromosome_name','start_position'), filters ='entrezgene', values =x$ENTREZID[unlist(y)], mart = ensembl)}, i,miss.bp[i])
   
-
+# The start positions need to be divided by 1Mb (1,000,000) to make tyhem consistent with the existing entries.
      
      for (w in 1:4)   {
      
-     match.bp.indx[[w]] <- na.omit(match(major.Area[[w]]$ENTREZID[unlist(miss.bp[[w]])],
-                                 miss.bp.returned[[w]]$entrezgene))
+     # match.bp.indx[[w]] <- na.omit(match(major.Area[[w]]$ENTREZID[unlist(miss.bp[[w]])],
+     #                             miss.bp.returned[[w]]$entrezgene))
+          
+       match.bp.indx[[w]] <- match(major.Area[[w]]$ENTREZID[unlist(miss.bp[[w]])],
+                                  as.character(miss.bp.returned[[w]]$entrezgene))   
           
      }
   
@@ -896,8 +1113,50 @@ for (k in 1:4) {
      major.Area[[w]]$bp[unlist(miss.bp[[w]])] <- miss.bp.returned[[w]]$start_position[unlist(match.bp.indx[[w]])]/1000000
        
   }
+ 
+  # Check for NA in chromosome starting positions (bp)
+  miss.Tab <- list()
+
+  miss.Tab <- sapply(major.Area[i], function(x,i) {get.miss.Stats(x,i)},i)
+
+  miss.Tab 
+
+  # April 4, 2018
+
+#               pf  cb tm  po 
+# miss.Symb   0   0  0   0  
+# miss.entrez 0   0  0   0  
+# miss.loc    104 98 104 100
+# miss.bp     104 99 104 100
   
+  # Both the chromosome name and starting position missing counts were reduced from approximately 2500 to 100.
+ 
+  prefront.Data$bp <- major.Area[[1]]$bp
+  cbell.Data$bp <- major.Area[[2]]$bp
+  tempor.Data$bp <- major.Area[[3]]$bp
+  pons.Data$bp <- major.Area[[4]]$bp 
+  
+    
   @
+
+<< write_data >>=
+# Interim: write back out the primary data files after finding symbols for genes as numbers and for genes with LOCxx
+# Note: they are written as txt files to prevent Excel from converting gene symbols such as MARCH8 to date format  
+  # write to files
+
+# Using the extension, .txt, allows these to be imported into excel so that the column with gene Symbols can be set to text, preventing Excel from converting gene Symbols like MARCH1 to date format.
+#    write.csv(as.data.frame(prefront.Data),"/Volumes/Macintosh_HD_3/genetics/genenetwork2/comt_correlations_20000_prefrontal_augmentedNew.csv.txt",row.names=FALSE)
+# # # # # #
+#    write.csv(as.data.frame(cbell.Data),"/Volumes/Macintosh_HD_3/genetics/genenetwork2/comt_correlations_20000_cerebellum_augmentedNew.csv.txt",row.names=FALSE)
+# # # # # #
+#    write.csv(as.data.frame(tempor.Data),"/Volumes/Macintosh_HD_3/genetics/genenetwork2/comt_correlations_20000_temporal_augmentedNew.csv.txt",row.names=FALSE)
+# # # # # #
+#    write.csv(as.data.frame(pons.Data),"/Volumes/Macintosh_HD_3/genetics/genenetwork2/comt_correlations_20000_pons_augmentedNew.csv.txt",row.names=FALSE)
+
+  @
+
+
+
 
 
 \end{document}
