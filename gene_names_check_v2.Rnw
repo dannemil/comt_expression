@@ -19,7 +19,7 @@
 \SweaveOpts{keep.source=TRUE} 
 
 \hspace{-1.5em}Gene Network\\
-COMT expression correlations in Four Bartin Areas\\
+COMT expression correlations in Four Brain Areas\\
 Fall, 2017\\
 
 
@@ -721,37 +721,37 @@ This table shows that all 20,000 probes in each brain area have gene symbols.\\
 # func_genes_are_nums.R')
 # func_genes_are_locs.R')  
  
-#  genesrnums <- list() 
+#  genesrnums <- list()
 #   returned.Symbols <- list()
 #   entrez.indx <- list()
 #   nums.from.biomart <- list()
-# 
-#  genesrnums <- lapply(major.Area[i], function (x,i) genes.Are.nums(x), i) 
-#  
-# # April 2, 2018   genernums returns 0 for the length of each Symbol variable
-#  # Changes were previously written out to the primary data sets and the master data set
-#  
-# # Use the ENTREZIDs to get the correct gene Symbols for these genes that are numbers.
-#  
+# # 
+#  genesrnums <- lapply(major.Area[i], function (x,i) genes.Are.nums(x), i)
+# #  
+# # # April 2, 2018   genernums returns 0 for the length of each Symbol variable
+# #  # Changes were previously written out to the primary data sets and the master data set
+# #  
+# # # Use the ENTREZIDs to get the correct gene Symbols for these genes that are numbers.
+# #  
 #  for (u in 1:4)   {
-#  
+# 
 #       ########### DEBUG
 # #      u <- c(1)
 #       #################
 #           if (length(genesrnums) > 0)   {
 #       # returned.Symbols[[u]] <- getBM(attributes = c("hgnc_symbol","entrezgene"), filters = 'entrezgene', values = major.Area[[u]]$ENTREZID[unlist(genesrnums[[u]])], mart = ensembl)
-#       
+# 
 #       nums.from.biomart[[u]] <- biomaRt::select(gene.DB,keys=as.character(major.Area[[u]]$ENTREZID[unlist(genesrnums[[u]])]),columns=c('GENENAME','SYMBOL','ENTREZID'),keytype=c('ENTREZID'))
-#       
+# 
 #       not.Symb.na <- which(!is.na(nums.from.biomart[[u]]$SYMBOL))
 #       # entrez.indx[[u]] <- match(major.Area[[u]]$ENTREZID[unlist(genesrnums[[u]])],nums.from.biomart[[u]]$ENTREZID)
-#       
+# 
 #       entrez.indx[[u]] <- match(nums.from.biomart[[u]]$ENTREZID[c(not.Symb.na)],major.Area[[u]]$ENTREZID)
-#       
+# 
 #       major.Area[[u]]$Symbol[c(entrez.indx[[u]])] <- alias2SymbolTable(nums.from.biomart[[u]]$SYMBOL[c(not.Symb.na)],species='Hs')
-#       
+# 
 #           } else {}
-#       
+# 
 #  } # end brain area loop
 
   miss.Tab <- list()
@@ -1155,8 +1155,82 @@ sapply(genesrlocs[i], function(x,i) length(x), i)
 
   @
 
+<< hgnc >>=
+# Try to replace 'LOCxxx' gene symbols with approved symbols
+# Note: the hgnc_complete_database.xlsx has no approved gene symbols that begin with 'LOCxx'
+  
+  # 1. Use the HGNC database with the entrezgene to get the approved symbol to try to replace the
+    #  'LOCxxxx' gene symbols
+  
+# Indices (rows) of entries with 'LOCxxx' as gene symbol
+  LOC.indx <- lapply(major.Area[i], function (x,i) genes.Are.locs(x,i), i)
+ 
+LOC.num <- data.frame(Genes_with_LOCsymbols = unlist(lapply(LOC.indx[i], function(x,i) length(x), i))) 
+
+LOC.num
+
+#    Genes_with_LOCsymbols
+# pf                   167
+# cb                   170
+# tm                   166
+# po                   165
 
 
+LOC.symbol.returned <- lapply(major.Area[i], function(x,i,y) {getBM(attributes=c('entrezgene','hgnc_symbol','ensembl_gene_id'), filters ='entrezgene', values = as.character(x$ENTREZID[unlist(y[i])]), mart = ensembl)}, i,LOC.indx)
+
+
+  
+  @
+
+
+<<>>=
+# Try to find missing chromosome names and staert positions using gene Symbols rather than entrezgene.
+  
+  na.loc.indx <- lapply(major.Area[i], function(x,i) which(is.na(x$loc)),i)
+     na.bp.indx <- lapply(major.Area[i], function(x,i) which(is.na(x$bp)),i)
+     
+     na.loc.returned <- lapply(major.Area[i], function(x,i,y) {getBM(attributes=c('entrezgene','hgnc_symbol','chromosome_name'), filters ='hgnc_symbol', values =as.character(x$Symbol[unlist(y)]), mart = ensembl)}, i,na.loc.indx[i])
+     
+     
+     
+     # no.chr.in.name <- lapply(na.loc.returned[i], function(x,i) which(!grepl('CHR',x$chromosome_name)),i)
+     
+
+# Try to extract the Chromosome name/number from the returned values that are formatted as 'CHR_HSCHR'
+
+na.loc.returned.temp <- list()
+temp.Init <- list()
+
+na.loc.returned.temp[[1]] <- sub('CHR_HSCHR','',na.loc.returned[[1]]$chromosome_name)
+
+temp.Init[[1]] <- grep('^[X-Y]|^[1-9]?|^[1]{1}[0-9]{1}|^[2]{1}[0-2]{1}[^:punct:]',na.loc.returned.temp[[1]],value=TRUE)
+
+temp.Init[[1]] <- substr(temp.Init[[1]],1,2)
+temp.Init[[1]] <- sub('\\_','',temp.Init[[1]])
+temp.Init[[1]][which(temp.Init[[1]] == 'CH')] <- NA
+temp.Init[[1]][which(temp.Init[[1]] == 'KI')] <- NA
+num.NA(temp.Init[[1]])
+
+temp.no.chr[[1]] <- match(major.Area[[1]]$Symbol[unlist(na.loc.indx[[1]])],as.character(na.loc.returned[[1]]$hgnc_symbol))
+
+as.character(temp.Init[[1]][temp.no.chr[[1]]])
+
+
+temp.no.chr <- list()
+
+   for (im in 1:4)  {
+   
+   temp.no.chr[[im]] <- match(major.Area[[im]]$Symbol[unlist(na.loc.indx[[im]])],as.character(na.loc.returned[[im]]$hgnc_symbol[unlist(no.chr.in.name[[im]])]))
+   
+   }
+     
+     
+     
+          
+     na.bp.returned <- lapply(major.Area[i], function(x,i,y) {getBM(attributes=c('hgnc_symbol','start_position'), filters ='hgnc_symbol', values =as.character(x$Symbol[unlist(y)]), mart = ensembl)}, i,na.bp.indx[i])
+  
+  
+  @
 
 
 \end{document}
