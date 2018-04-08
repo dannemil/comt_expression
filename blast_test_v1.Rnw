@@ -1,0 +1,132 @@
+\documentclass[11pt]{article}
+\usepackage{graphicx, subfig}
+\usepackage{float}
+\pagenumbering{arabic}
+\usepackage{enumerate}
+\usepackage{Sweave}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{framed}
+\usepackage{longtable}
+\usepackage{tablefootnote}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{keep.source=TRUE} 
+
+\hspace{-1.5em}Gene Network\\
+COMT expression correlations in Four Brain Areas\\
+Fall, 2017\\
+
+
+
+<<echo=FALSE>>=
+library(knitr)
+library(openxlsx)
+library(xtable)
+#library(magrittr)
+library(tables)
+library(plyr)
+library(scales)
+library(utils)
+# library(ggman)
+library(dplyr)
+library(biomaRt)
+library(stringr)
+library(curl)
+library(git2r)
+library(githubinstall)
+library(devtools)
+
+setwd('/Volumes/Macintosh_HD_3/genetics/genenetwork2/')
+@
+
+
+<<init, include=FALSE >>=
+opts_chunk$set(include=FALSE,
+               echo=FALSE,
+               message=FALSE,
+               warning=FALSE)
+@
+
+<<include=FALSE, echo=FALSE, results=hide>>=
+# Generate a unique ID for this program by path and filename. This unique ID is attached to this file using a tag in the filesystem.
+source('unique_id_generator.R')
+
+fname <- c("/Volumes/Macintosh_HD_3/genetics/genenetwork2/blast_test_v1.Rnw")
+
+prog.Name <- unique.ID(fname)
+
+prog.Name
+
+@
+
+<< bioconductor_libs >>=
+source("https://bioconductor.org/biocLite.R")
+
+#biocLite('rBLAST')
+install_github("mhahsler/rBLAST")
+
+biocLite('Biostrings')
+library('Biostrings')
+library('rBLAST')
+
+biocLite('annotate')
+
+library('annotate')
+
+@
+
+<< read_data >>=
+wball <- loadWorkbook('comt_correlations_20000_all_areas_augmentedNew.xlsx')   
+
+# now tell R to read that workbook and which sheet
+  prefront.Data <- data.frame(read.xlsx(wball,sheet = "prefrontal"))
+  
+  cbell.Data <- data.frame(read.xlsx(wball,sheet = "cerebellum"))
+
+  tempor.Data <- data.frame(read.xlsx(wball,sheet = "temporal"))
+
+  pons.Data <- data.frame(read.xlsx(wball,sheet = "pons"))
+
+
+# create a list with these data frames to be used when the same operation is applied to all area
+  
+major.Area <- list(pf=prefront.Data,
+                   cb=cbell.Data,
+                   tm=tempor.Data,
+                   po=pons.Data)
+
+ib <- c(1:4)
+
+# Read in the illumina_humanref_8_v2 excel file to get the entrez ids and gene symbols for all of the data from the 4 brain areas 
+
+wbillum <- loadWorkbook('illumina_human_ref_8_v2v3.xlsx')   
+
+# now tell R to read that workbook and which sheet
+  illumina8v2.Data <- data.frame(read.xlsx(wbillum,sheet = "illumina_v2"))
+
+@
+
+<< missing_Chr_names >>=
+  
+  
+  
+  
+@
+
+
+<< test_blast >>=
+
+seq <- readDNAStringSet('blast_test_fasta.txt', format="fasta",
+               nrec=-1L, skip=0L, seek.first.rec=TRUE, use.names=TRUE)
+
+blast.returned <- blastSequences(x = seq,as="data.frame")
+@
+
+
+\end{document}

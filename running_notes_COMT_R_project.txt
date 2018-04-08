@@ -1,0 +1,166 @@
+Running notes on COMT project Started April 5, 2018
+
+Use Option-Shift-T to run the timeStamp AppleScript, then Control V to paste in the time stamp.
+
+April 5, 2018
+
+It looks like there is no way to recover gene symbols for the remaining cases in which the symbol looks like 'LOCxxx'. I tried several approaches, and none of them returned anything but 'LOCxxx'
+
+
+Thursday, April 5, 2018 at 4:46:59 PM
+The table below shows that there were approximately 100 rows with NA for the loc variable (Chromosome name)
+sapply(na.loc.indx[ib], function(x,ib) length(x), ib)
+
+# rows that had NA under the Chr name variable loc
+#  pf  cb  tm  po 
+# 104  98 104 100
+
+When ensembl is queried for these missing Chromosomes names it returns the numbers shown in the first column below.
+The second column shows the number of those that were formatted as CHR_ which made them unusable, so I extracted the CHR name/number from them
+
+#    total_returned CH_returned CH2NAleft
+# pf            319          56         6
+# cb            280          21         6
+# tm            311          40         2
+# po            292          35         4
+
+After this step, only, 6, 6, 2 & 4 remain with CHR as the loc value. But this has not yet been integrated into the primary data files.
+                            
+# temp.Init holds the corrected Chromosome names to be used to replace the NAs in major.Area
+# first need to match the ENTREZIDs of the NA loc against the extracted/returned Chr names in temp.Init
+
+
+Friday, April 6, 2018 at 2:02:46 PM
+
+<< recover_Chr_names>>=
+There were 
+
+# rows that had NA under the Chr name variable loc
+#  pf  cb  tm  po 
+# 104  98 104 100
+
+When getBM was queried using Symbol and ENTREZID of the rows missing Chromosome names, the following statistics resulted:
+
+#    total_returnedSymb CH_returnedSymb CH2NAleftSymb total_returnedEntrez CH_returnedEmntrez
+# pf                319              56             6                  357                 59
+# cb                280              21             6                  319                 27
+# tm                311              40             2                  348                 51
+# po                292              35             4                  340                 42
+#    CH2NAleftEntrez
+# pf               7
+# cb               8
+# tm               4
+# po               5
+
+In other words, after reformatting the Chromosome names that looked like CHR_xxx only approximate 6-7 of the ~320 returned results could not be reformatted into standard Chromosome values such as '2' or 'X'.
+
+However, even though only approximately 100 NA entries were used in the query, getBM returned many more results ~300-320. This requires a matching between the missing NA Symbols and ENTREZIDs and the returned hgnc_gene and extrezgene values.
+
+
+<< check_NA_reformatted_extracted_Chr_names >>=
+                            
+# temp.Init$symb and temp.Init$entrezg hold the corrected Chromosome names to be used to 
+  #replace the NAs in major.Area
+# first need to match the ENTREZIDs of the NA loc in major.Area against the extracted/returned    Chr names in na.loc.returned and na.loc.returned.entrez using Symbols and ENTREZID
+# For example, there were
+
+rows that had NA under the Chr name variable loc
+  pf  cb  tm  po 
+ 104  98 104 100 
+
+Once the existence of the potential Chr_names was checked against was checked against NAs in the temp.Init$symbol and temp.Init$entrezg files, the numbers in the table below show how many additional chromosome names were recovered using Symbol and ENTREZID getBM queries.
+
+ add.Chr.names
+           Symbol_query entrez_query
+Prefrontal           21            7
+Cerebellum           16            6
+Temporal             19            7
+Pons                 21            7
+
+<< union_Symb_entrez_returns >>=
+Need to get the union of these available Chr names before substituting them into major.Area and the primary data files
+
+But creating the union loses the information about which of the two queries produced the Chromosome name to be used.
+
+ˇSaturday, April 7, 2018 at 6:03:27 AM
+
+Rewrote section before the union operation to create lists that for each brain area have the index of the match using Symbol/hgnc_gene, the returned symbol (hgnc_gene), the returned enter (entrezgene), the returned loc (chromosome_name) and the reformatted/extracted chromosomes name from temp.Init$symbol.
+
+This was repeated for the getBM query that was based on entrezgene.
+
+When this is done, the numbers of useable additional Chromosome names that result are shown in the table below.
+
+> add.Chr.names
+           Symbol_query entrez_query
+Prefrontal           21            4
+Cerebellum           16            3
+Temporal             19            4
+Pons                 21            4
+
+Now, the union operation can be completed.
+
+It looks like for union.found.Chr.indx that holds the union of the corresponding indices from the two types of getBM queries, the indices from the entrezgene query are always a subset of those from the hgnc_gene query.
+
+This table, comp.union.intersect.tab, shows that the getBM query for chromosome names based on entrezgene values produced no additional chromosome names over and above the ones produced by the query based on gene symbols.
+
+		No additional chromosome names?
+Prefrontal 	TRUE 
+Cerebellum 	TRUE 
+Temporal 	TRUE 
+Pons 		TRUE 
+
+Now use the union vector  to replace the NA values in major.Area and in the primary data files.
+
+After the recovered chromosome names were written to the major.Area files, the table below shows the number of missing chromosome names remaining.
+
+> missing.loc
+   Missing_Chr_names
+pf                83
+cb                82
+tm                85
+po                79
+
+l 1320
+
+Saturday, April 7, 2018 at 11:15:25 AM
+
+added chunk << write_data_out >> to write out the primary data files after finding various missing values
+
+l 1335
+
+The chuck << find_miss_start_pos_bp >>= basically needs to repeat the procedure that was just completed for finding missing chromosome names
+
+This section to find the missing start positions begins at line 1341 - do not replace anything above that with new variable names
+
+<< check_NA_in_bp >>=                            
+
+sapply(na.bp.indx[ib], function(x,ib) length(x), ib)
+
+# rows that had NA under the Chr name variable loc
+#  pf  cb  tm  po 
+# 104  98 104 100
+
+The table above shows the number of rows missing start positions in each brain area for trying to recover then using getBM.
+
+From the two getBM queries the number of additional starting positions returned was
+
+> add.start.Pos
+           Symbol_query entrez_query
+Prefrontal           18            2
+Cerebellum           14            2
+Temporal             16            2
+Pons                 18            2
+
+********** Do not forget to divide the returned starting positions by 1,000,000
+
+> missing.bp
+   Missing_start_Pos
+pf                86
+cb                85
+tm                88
+po                82
+
+Saturday, April 7, 2018 at 3:42:32 PM
+
+BLAST test using probe sequence for COMT
+AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC
