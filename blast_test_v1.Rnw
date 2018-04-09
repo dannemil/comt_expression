@@ -41,6 +41,10 @@ library(curl)
 library(git2r)
 library(githubinstall)
 library(devtools)
+library('xml2')
+library(RCurl)
+library(XML)
+
 
 setwd('/Volumes/Macintosh_HD_3/genetics/genenetwork2/')
 @
@@ -79,6 +83,10 @@ biocLite('annotate')
 
 library('annotate')
 
+biocLite("org.Hs.eg.db")   
+
+library("org.Hs.eg.db")
+
 @
 
 << read_data >>=
@@ -114,19 +122,179 @@ wbillum <- loadWorkbook('illumina_human_ref_8_v2v3.xlsx')
 
 << missing_Chr_names >>=
   
+  miss.Chr <- list()
   
+  miss.Chr <- lapply(major.Area[ib], function(x,ib) which(is.na(x$loc)), ib)
   
+  match.Ilum <- list()
+  
+  for (im in 1:4)  {
+  
+  match.Ilum[[im]] <- match(major.Area[[im]]$Record[unlist(miss.Chr[[im]])],
+                            illumina8v2.Data$ilmn)
+  } 
+  
+@
+
+<< get_probe_seq >>=
+  missing.seqs <- list()
+  
+  missing.Seqs <- lapply(match.Ilum[ib], function(x,ib) substr(illumina8v2.Data$Reporter.Sequence[unlist(x)],1,50), ib)
   
 @
 
 
-<< test_blast >>=
+<< fasta_format >>=
 
-seq <- readDNAStringSet('blast_test_fasta.txt', format="fasta",
-               nrec=-1L, skip=0L, seek.first.rec=TRUE, use.names=TRUE)
+# write out the sequences so that they look like this:
+  
+  # > idENTREZID
+  # ATTGCCGT...
+  
+# get the ENTREZIDs of the rows missing Chr names
+  
+  fasta.entrez <- list()
+  
+  for (im in 1:4)   {
+  
+     fasta.entrez[[im]] <- major.Area[[im]]$ENTREZID[unlist(miss.Chr[im])]
+  
+  }
 
-blast.returned <- blastSequences(x = seq,as="data.frame")
+fasta.miss.Chr <- list()
+area.prefix <- c('_pf',
+                 '_cb',
+                 '_tm',
+                 '_po')
+
+fasta.miss.Chr.1perline <- list()
+  
+for (im in 1:4)    {
+
+     fasta.miss.Chr[[im]] <- c(rep(NA,length(fasta.entrez[[im]])))
+     fasta.miss.Chr.1perline[[im]] <- c(rep(NA,2*length(fasta.entrez[[im]])))
+     
+     
+     fasta.miss.Chr[[im]][1] <- c(paste('>id_',fasta.entrez[[im]][1],area.prefix[im],'\n',
+                                        missing.Seqs[[im]][1],'\n',sep=''))
+     fasta.miss.Chr.1perline[[im]][1] <- c(paste('>id_',
+                                        fasta.entrez[[im]][1],area.prefix[im],sep=''))
+     fasta.miss.Chr.1perline[[im]][2] <- c(paste(missing.Seqs[[im]][1],sep=''))
+
+     for (ji in 2:length(fasta.entrez[[im]]))   {
+    
+  
+    fasta.miss.Chr[[im]][ji] <- c(paste(fasta.miss.Chr[[im]][ji-1],'>id_',
+                                        fasta.entrez[[im]][ji],area.prefix[im],'\n',
+                                        missing.Seqs[[im]][ji],'\n',sep=''))
+    
+    fasta.miss.Chr.1perline[[im]][(2*(ji-1) + 1)] <- c(paste('>id_',
+                                        fasta.entrez[[im]][ji],area.prefix[im],sep=''))
+    fasta.miss.Chr.1perline[[im]][(2*(ji-1) + 2)] <- c(paste(missing.Seqs[[im]][ji],sep=''))
+    
+    
+    
+     }
+     
+    fasta.miss.Chr[[im]] <- fasta.miss.Chr[[im]][length(fasta.entrez[[im]])]
+    
+    # Remove '\n' from the last sequence in each area
+    fasta.miss.Chr[[im]] <- gsub('.{2}$','',fasta.miss.Chr[[im]])
+    
+}
+
+
+
+fileConn<-file("missing_Chr_by_fasta_pf.txt")
+     writeLines(fasta.miss.Chr.1perline[[1]], fileConn)
+close(fileConn)
+
+fileConn<-file("missing_Chr_by_fasta_cb.txt")
+     writeLines(fasta.miss.Chr.1perline[[2]], fileConn)
+close(fileConn)
+
+fileConn<-file("missing_Chr_by_fasta_tm.txt")
+     writeLines(fasta.miss.Chr.1perline[[3]], fileConn)
+close(fileConn)
+
+fileConn<-file("missing_Chr_by_fasta_po.txt")
+     writeLines(fasta.miss.Chr.1perline[[4]], fileConn)
+close(fileConn)
+
+
+
 @
+
+<< get_Chr_from_fasta >>=
+
+# seq <- readDNAStringSet('blast_test_fasta.txt', format="fasta",
+#                nrec=-1L, skip=0L, seek.first.rec=TRUE, use.names=TRUE)
+
+  # Need to format the multiple sequences as a FASTA file
+  
+  
+  blast.returned <- list()
+
+  blast.returned <- lapply(fasta.miss.Chr[ib], function(z,ib) blastSequences(x = z,as="data.frame"),ib)
+  
+@
+
+<< alternative_blast >>=
+  
+s <- c('> probe1','AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC')
+  
+  blast.f6<- ## The fields you want back from blast. c.f. `blastn -help` 
+       c('qseqid', 'sseqid', 'pident', 'qcovs')
+  
+  blast.path <- c('/Volumes/Macintosh_HD_3/genetics/genenetwork2/ncbi-blast-2.7.1+/bin/')
+  
+  # blast.out<- ## The system call to blastn 
+  #      system2(paste(blast.path,'blastn',sep=''),c('-db',"'nt'" ,'-outfmt',
+  #                         sprintf('"6 %s"',paste(collapse=' ',blast.f6)) , 
+  #                         '-perc_identity',"'.90'" ,'-num_threads', 5), 
+  #                         # use 'em if you got 'em ! 
+  #                         input=s ,stdout=TRUE,
+  #              -remote)
+  
+  
+  blast.out <- system2('/Volumes/Macintosh_HD_3/genetics/genenetwork2/ncbi-blast-2.7.1+/bin/blastn', c('-db',"'nt'", '-remote', '-out', "'/Volumes/Macintosh_HD_3/genetics/genenetwork2/fasta_search_pf.txt'"), input=fasta.miss.Chr.1perline[[1]])
+  
+  blast.out.cb <- system2('/Volumes/Macintosh_HD_3/genetics/genenetwork2/ncbi-blast-2.7.1+/bin/blastn', c('-db',"'nt'", '-remote', '-out', "'/Volumes/Macintosh_HD_3/genetics/genenetwork2/fasta_search_cb.txt'"), input=fasta.miss.Chr.1perline[[2]])
+  
+  blast.out.tm <- system2('/Volumes/Macintosh_HD_3/genetics/genenetwork2/ncbi-blast-2.7.1+/bin/blastn', c('-db',"'nt'", '-remote', '-out', "'/Volumes/Macintosh_HD_3/genetics/genenetwork2/fasta_search_tm.txt'"), input=fasta.miss.Chr.1perline[[3]])
+  
+  blast.out.po <- system2('/Volumes/Macintosh_HD_3/genetics/genenetwork2/ncbi-blast-2.7.1+/bin/blastn', c('-db',"'nt'", '-remote', '-out', "'/Volumes/Macintosh_HD_3/genetics/genenetwork2/fasta_search_po.txt'"), input=fasta.miss.Chr.1perline[[4]])
+  
+  # try tabular output
+  blast.out.pf <- system2('/Volumes/Macintosh_HD_3/genetics/genenetwork2/ncbi-blast-2.7.1+/bin/blastn', c('-db',"'nt'", '-remote', '-out', "'/Volumes/Macintosh_HD_3/genetics/genenetwork2/fasta_search_pf_tab.txt'",'-perc_identity',"'.96'",
+          '-outfmt', "'6 qseqid sseqid pident qlen length mismatch gaps staxids evalue bitscore'"), input=fasta.miss.Chr.1perline[[1]])
+  
+   blast.out.pf <- system2('/Volumes/Macintosh_HD_3/genetics/genenetwork2/ncbi-blast-2.7.1+/bin/blastn', c('-db',"'nt'", '-remote', '-out', "'/Volumes/Macintosh_HD_3/genetics/genenetwork2/fasta_search_cb_tab.txt'",'-perc_identity',"'.96'",
+          '-outfmt', "'6 qseqid sseqid pident qlen length mismatch gaps staxids evalue bitscore'"), input=fasta.miss.Chr.1perline[[2]])
+  
+
+@
+
+<< subset_blast_by_staxids_9606_Hs >>=
+  
+    
+   
+@
+
+
+<< accession2gene >>=
+ xs <- accessionToUID("AAD24196",db="genbank")
+
+   xs <- genbank('BC103756',disp='browser')
+   xml <- getURL('https://www.ncbi.nlm.nih.gov/gene?tool=bioconductor&cmd=Search&term=BC103756')
+   docs <- xmlTreeParse(xml,useInternalNodes = TRUE)
+   
+xml.List.a <- xmlToList(docs,addAttributes = TRUE, simplify = FALSE)
+xml.List.a[[1]]$title
+
+   
+@
+
 
 
 \end{document}
