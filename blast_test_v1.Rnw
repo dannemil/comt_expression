@@ -44,6 +44,7 @@ library(devtools)
 library('xml2')
 library(RCurl)
 library(XML)
+library(rentrez)
 
 
 setwd('/Volumes/Macintosh_HD_3/genetics/genenetwork2/')
@@ -225,74 +226,103 @@ close(fileConn)
 
 @
 
-<< get_Chr_from_fasta >>=
-
-# seq <- readDNAStringSet('blast_test_fasta.txt', format="fasta",
-#                nrec=-1L, skip=0L, seek.first.rec=TRUE, use.names=TRUE)
-
-  # Need to format the multiple sequences as a FASTA file
-  
-  
-  blast.returned <- list()
-
-  blast.returned <- lapply(fasta.miss.Chr[ib], function(z,ib) blastSequences(x = z,as="data.frame"),ib)
-  
-@
-
 << alternative_blast >>=
   
-s <- c('> probe1','AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC')
-  
-  blast.f6<- ## The fields you want back from blast. c.f. `blastn -help` 
-       c('qseqid', 'sseqid', 'pident', 'qcovs')
-  
-  blast.path <- c('/Volumes/Macintosh_HD_3/genetics/genenetwork2/ncbi-blast-2.7.1+/bin/')
-  
-  # blast.out<- ## The system call to blastn 
-  #      system2(paste(blast.path,'blastn',sep=''),c('-db',"'nt'" ,'-outfmt',
-  #                         sprintf('"6 %s"',paste(collapse=' ',blast.f6)) , 
-  #                         '-perc_identity',"'.90'" ,'-num_threads', 5), 
-  #                         # use 'em if you got 'em ! 
-  #                         input=s ,stdout=TRUE,
-  #              -remote)
-  
-  
-  blast.out <- system2('/Volumes/Macintosh_HD_3/genetics/genenetwork2/ncbi-blast-2.7.1+/bin/blastn', c('-db',"'nt'", '-remote', '-out', "'/Volumes/Macintosh_HD_3/genetics/genenetwork2/fasta_search_pf.txt'"), input=fasta.miss.Chr.1perline[[1]])
-  
-  blast.out.cb <- system2('/Volumes/Macintosh_HD_3/genetics/genenetwork2/ncbi-blast-2.7.1+/bin/blastn', c('-db',"'nt'", '-remote', '-out', "'/Volumes/Macintosh_HD_3/genetics/genenetwork2/fasta_search_cb.txt'"), input=fasta.miss.Chr.1perline[[2]])
-  
-  blast.out.tm <- system2('/Volumes/Macintosh_HD_3/genetics/genenetwork2/ncbi-blast-2.7.1+/bin/blastn', c('-db',"'nt'", '-remote', '-out', "'/Volumes/Macintosh_HD_3/genetics/genenetwork2/fasta_search_tm.txt'"), input=fasta.miss.Chr.1perline[[3]])
-  
-  blast.out.po <- system2('/Volumes/Macintosh_HD_3/genetics/genenetwork2/ncbi-blast-2.7.1+/bin/blastn', c('-db',"'nt'", '-remote', '-out', "'/Volumes/Macintosh_HD_3/genetics/genenetwork2/fasta_search_po.txt'"), input=fasta.miss.Chr.1perline[[4]])
-  
   # try tabular output
-  blast.out.pf <- system2('/Volumes/Macintosh_HD_3/genetics/genenetwork2/ncbi-blast-2.7.1+/bin/blastn', c('-db',"'nt'", '-remote', '-out', "'/Volumes/Macintosh_HD_3/genetics/genenetwork2/fasta_search_pf_tab.txt'",'-perc_identity',"'.96'",
-          '-outfmt', "'6 qseqid sseqid pident qlen length mismatch gaps staxids evalue bitscore'"), input=fasta.miss.Chr.1perline[[1]])
+  blast.out.pf <- system2('/Volumes/Macintosh_HD_3/genetics/genenetwork2/ncbi-blast-2.7.1+/bin/blastn', c('-db',"'nt'", '-remote', 
+ # '-out', "'/Volumes/Macintosh_HD_3/genetics/genenetwork2/fasta_search_pf_tab.txt'",'-perc_identity',"'.96'",
+          '-outfmt', "'6 qseqid sseqid pident qlen length mismatch gaps staxids evalue bitscore'"), input=fasta.miss.Chr.1perline[[1]], stdout=TRUE)
   
-   blast.out.pf <- system2('/Volumes/Macintosh_HD_3/genetics/genenetwork2/ncbi-blast-2.7.1+/bin/blastn', c('-db',"'nt'", '-remote', '-out', "'/Volumes/Macintosh_HD_3/genetics/genenetwork2/fasta_search_cb_tab.txt'",'-perc_identity',"'.96'",
-          '-outfmt', "'6 qseqid sseqid pident qlen length mismatch gaps staxids evalue bitscore'"), input=fasta.miss.Chr.1perline[[2]])
+  blast.out.pf1 <- gsub('\\t','   ',blast.out.pf)
+  blast.out.pf1 <- gsub('gi\\|','',blast.out.pf1)
+  blast.out.pf1 <- gsub('\\| ','   ',blast.out.pf1)
+  blast.out.pf1 <- gsub("[0-9]\\|\\S+\\|",'   ', blast.out.pf1)
+  blast.out.pf1 <- strsplit(blast.out.pf1,'   ')
+
+  blast.out.pf1 <- data.frame(matrix(unlist(blast.out.pf1), ncol=11, 
+                                     byrow=T),stringsAsFactors=FALSE)
+
+  colnames(blast.out.pf1) <- c('id', 'gi.Access','ref.Access','percent.Match',
+                              'qlen','length','mismatch','gaps','taxon.Code','evalue','bitscore')
+  
+  blast.out.pf1$percent.Match <- trimws(blast.out.pf1$percent.Match, which = c("left"))
+  make.nums <- c(4:8,10:11)
+  
+  # Make various columns numeric instead of character
+  temp.out <- sapply(blast.out.pf1[,make.nums], function(x,make.nums) as.numeric(x),make.nums)
+  blast.out.pf1[,make.nums] <- temp.out
+  
+  # Add a column that only contains the ENTREZID contained in the middle of the ID
+  # in "id_731390_pf" 731390 is the ENTREZID
+  # Also add a column that only has the brain area e.g., prefrontalf for the id above
+  # Don't need to extract the pf - this file is exclusively pf
+  
+  blast.out.pf1$area <- c(rep('prefrontal',dim(blast.out.pf1)[1]))
+  
+  # Extract the ENTREZID
+  temp.out <- gsub('id_','',blast.out.pf1$id)
+  temp.out.a <- gsub('_[a-z]+','',temp.out)
+  blast.out.pf1$ENTREZID <- temp.out.a
+@
+  
+  
+<< subset_9606 >>=  
+  # Now subset by taxon.Code = 9606 (Homo sapiens)
+  
+  blast.out.pf9606 <- subset(blast.out.pf1,blast.out.pf1$taxon.Code == '9606')
+
+  # Need to extract the first hit from every unique ENTREZID
+  # Table/count the number of unique ENTREZIDs
+  
+  entrezid.count <- data.frame(count(blast.out.pf9606,blast.out.pf9606$ENTREZID))
+  colnames(entrezid.count) <- c('entrezid','n')
+  unique.blast.entrezid <- unique(blast.out.pf9606$ENTREZID)
+  
+  position.entrezid <- match(unique.blast.entrezid,entrezid.count$entrezid)
+  pos.inc <- matrix(rep(NA,length(unique.blast.entrezid)),ncol=1)
+  pos.inc[1] <- c(1)
+  
+  for (im in 2:length(unique.blast.entrezid))  {
+       
+       pos.inc[im] <- pos.inc[(im-1)] + entrezid.count[position.entrezid[im-1],2]
+  }
+  
+# Store only the first hit rows of the unique ENTREZIDs
+  
+  first.hits <- data.frame()
+  
+  first.hits <- blast.out.pf9606[c(pos.inc),]
+  
+  
+     # blast.out.cb <- system2('/Volumes/Macintosh_HD_3/genetics/genenetwork2/ncbi-blast-2.7.1+/bin/blastn', c('-db',"'nt'", '-remote', '-out', "'/Volumes/Macintosh_HD_3/genetics/genenetwork2/fasta_search_cb_tab.txt'",'-perc_identity',"'.96'",
+     #      '-outfmt', "'6 qseqid sseqid pident qlen length mismatch gaps staxids evalue bitscore'"), input=fasta.miss.Chr.1perline[[2]])
   
 
 @
 
-<< subset_blast_by_staxids_9606_Hs >>=
-  
-    
-   
-@
 
 
 << accession2gene >>=
  xs <- accessionToUID("AAD24196",db="genbank")
 
-   xs <- genbank('BC103756',disp='browser')
+   xs <- genbank('BC103756.2',disp='browser')
    xml <- getURL('https://www.ncbi.nlm.nih.gov/gene?tool=bioconductor&cmd=Search&term=BC103756')
    docs <- xmlTreeParse(xml,useInternalNodes = TRUE)
    
 xml.List.a <- xmlToList(docs,addAttributes = TRUE, simplify = FALSE)
 xml.List.a[[1]]$title
 
-   
+
+entrez_dbs()
+entrez_db_searchable(db='gene')
+query <- c("BC103756[ACCN]")
+try.rentrez <- entrez_search(db='gene',query,retmax= 4)
+temp.esumm <- entrez_summary(db='gene',id="6187")
+extract_from_esummary(temp.esumm,'name')
+extract_from_esummary(temp.esumm,'chromosome')
+extract_from_esummary(temp.esumm,'chrstart')
+
+
 @
 
 

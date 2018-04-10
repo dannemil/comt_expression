@@ -1,0 +1,803 @@
+BLASTN 2.7.1+
+
+
+Reference: Zheng Zhang, Scott Schwartz, Lukas Wagner, and Webb
+Miller (2000), "A greedy algorithm for aligning DNA sequences", J
+Comput Biol 2000; 7(1-2):203-14.
+
+
+
+Database: Nucleotide collection (nt)
+           47,193,206 sequences; 175,291,025,312 total letters
+
+
+
+Query= probe1
+
+Length=50
+
+RID: CM8N22YM014
+                                                                      Score     E
+Sequences producing significant alignments:                          (Bits)  Value
+
+BC100018.2  Homo sapiens catechol-O-methyltransferase, mRNA (cDNA...  93.5    3e-16
+XM_011529886.1  PREDICTED: Homo sapiens catechol-O-methyltransfer...  93.5    3e-16
+NM_001135162.1  Homo sapiens catechol-O-methyltransferase (COMT),...  93.5    3e-16
+NM_001135161.1  Homo sapiens catechol-O-methyltransferase (COMT),...  93.5    3e-16
+NM_000754.3  Homo sapiens catechol-O-methyltransferase (COMT), tr...  93.5    3e-16
+AK290440.1  Homo sapiens cDNA FLJ76097 complete cds, highly simil...  93.5    3e-16
+BC000419.2  Homo sapiens catechol-O-methyltransferase, mRNA (cDNA...  93.5    3e-16
+BC011935.2  Homo sapiens catechol-O-methyltransferase, mRNA (cDNA...  93.5    3e-16
+M65212.1  Homo sapiens catechol-O-methyltransferase (COMT) mRNA, ...  93.5    3e-16
+M58525.1  Homo sapiens catechol-O-methyltransferase (COMT) mRNA, ...  93.5    3e-16
+XR_001712910.2  PREDICTED: Pan troglodytes catechol-O-methyltrans...  87.9    1e-14
+XM_003317096.5  PREDICTED: Pan troglodytes catechol-O-methyltrans...  87.9    1e-14
+XM_003317095.4  PREDICTED: Pan troglodytes catechol-O-methyltrans...  87.9    1e-14
+XM_009437803.3  PREDICTED: Pan troglodytes catechol-O-methyltrans...  87.9    1e-14
+XM_003317094.4  PREDICTED: Pan troglodytes catechol-O-methyltrans...  87.9    1e-14
+XM_009437802.3  PREDICTED: Pan troglodytes catechol-O-methyltrans...  87.9    1e-14
+XM_024240241.1  PREDICTED: Pongo abelii catechol-O-methyltransfer...  87.9    1e-14
+XM_004063030.2  PREDICTED: Gorilla gorilla gorilla catechol-O-met...  87.9    1e-14
+XM_004063029.2  PREDICTED: Gorilla gorilla gorilla catechol-O-met...  87.9    1e-14
+XM_019018409.1  PREDICTED: Gorilla gorilla gorilla catechol-O-met...  87.9    1e-14
+XM_019018408.1  PREDICTED: Gorilla gorilla gorilla catechol-O-met...  87.9    1e-14
+XM_019018407.1  PREDICTED: Gorilla gorilla gorilla catechol-O-met...  87.9    1e-14
+XM_019018406.1  PREDICTED: Gorilla gorilla gorilla catechol-O-met...  87.9    1e-14
+XM_019018405.1  PREDICTED: Gorilla gorilla gorilla catechol-O-met...  87.9    1e-14
+XM_019018404.1  PREDICTED: Gorilla gorilla gorilla catechol-O-met...  87.9    1e-14
+XM_019018402.1  PREDICTED: Gorilla gorilla gorilla catechol-O-met...  87.9    1e-14
+XR_001337612.1  PREDICTED: Pan paniscus catechol-O-methyltransfer...  87.9    1e-14
+XM_008966663.2  PREDICTED: Pan paniscus catechol-O-methyltransfer...  87.9    1e-14
+XM_008966662.2  PREDICTED: Pan paniscus catechol-O-methyltransfer...  87.9    1e-14
+XM_008966661.2  PREDICTED: Pan paniscus catechol-O-methyltransfer...  87.9    1e-14
+XM_012508150.1  PREDICTED: Nomascus leucogenys catechol-O-methylt...  87.9    1e-14
+XM_003814056.2  PREDICTED: Pan paniscus catechol-O-methyltransfer...  87.9    1e-14
+XM_021673943.1  PREDICTED: Aotus nancymaae catechol-O-methyltrans...  82.4    6e-13
+KY088283.1  Callithrix jacchus catechol-O-methyltransferase (COMT...  82.4    6e-13
+XM_017977980.1  PREDICTED: Callithrix jacchus catechol-O-methyltr...  82.4    6e-13
+XM_009006767.2  PREDICTED: Callithrix jacchus catechol-O-methyltr...  82.4    6e-13
+XM_017977975.1  PREDICTED: Callithrix jacchus catechol-O-methyltr...  82.4    6e-13
+XM_002743544.3  PREDICTED: Callithrix jacchus catechol-O-methyltr...  82.4    6e-13
+EF103922.1  Homo sapiens catechol-O-methyltransferase transcript ...  76.8    3e-11
+EF103920.1  Homo sapiens catechol-O-methyltransferase transcript ...  76.8    3e-11
+XM_009437804.3  PREDICTED: Pan troglodytes catechol-O-methyltrans...  73.1    3e-10
+XM_024240243.1  PREDICTED: Pongo abelii catechol-O-methyltransfer...  73.1    3e-10
+XM_024240242.1  PREDICTED: Pongo abelii catechol-O-methyltransfer...  73.1    3e-10
+XM_017028595.1  PREDICTED: Homo sapiens catechol-O-methyltransfer...  73.1    3e-10
+XM_017028594.1  PREDICTED: Homo sapiens catechol-O-methyltransfer...  73.1    3e-10
+XM_008966664.2  PREDICTED: Pan paniscus catechol-O-methyltransfer...  73.1    3e-10
+NG_011526.1  Homo sapiens catechol-O-methyltransferase (COMT), Re...  71.3    1e-09
+AY341246.1  Homo sapiens catechol-O-methyltransferase (COMT) gene...  71.3    1e-09
+AC005663.2  Homo sapiens chromosome 22 clone p888c9 map 22q11, co...  71.3    1e-09
+AC000080.2  Homo sapiens Chromosome 22q11.2 Cosmid Clone 56c In D...  71.3    1e-09
+Z26491.1  H.sapiens gene for catechol O-methyltransferase             71.3    1e-09
+EF103921.1  Homo sapiens catechol-O-methyltransferase transcript ...  56.5    3e-05
+EF103917.1  Homo sapiens catechol-O-methyltransferase transcript ...  56.5    3e-05
+EF103916.1  Homo sapiens catechol-O-methyltransferase transcript ...  54.7    1e-04
+
+
+>BC100018.2 Homo sapiens catechol-O-methyltransferase, mRNA (cDNA clone MGC:110987 
+IMAGE:6163659), complete cds
+Length=1322
+
+ Score = 93.5 bits (50),  Expect = 3e-16
+ Identities = 50/50 (100%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            ||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  177  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  226
+
+
+>XM_011529886.1 PREDICTED: Homo sapiens catechol-O-methyltransferase (COMT), 
+transcript variant X1, mRNA
+Length=1263
+
+ Score = 93.5 bits (50),  Expect = 3e-16
+ Identities = 50/50 (100%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            ||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  117  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  166
+
+
+>NM_001135162.1 Homo sapiens catechol-O-methyltransferase (COMT), transcript 
+variant 3, mRNA
+Length=2279
+
+ Score = 93.5 bits (50),  Expect = 3e-16
+ Identities = 50/50 (100%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            ||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  187  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  236
+
+
+>NM_001135161.1 Homo sapiens catechol-O-methyltransferase (COMT), transcript 
+variant 2, mRNA
+Length=2262
+
+ Score = 93.5 bits (50),  Expect = 3e-16
+ Identities = 50/50 (100%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            ||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  170  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  219
+
+
+>NM_000754.3 Homo sapiens catechol-O-methyltransferase (COMT), transcript 
+variant 1, mRNA
+Length=2304
+
+ Score = 93.5 bits (50),  Expect = 3e-16
+ Identities = 50/50 (100%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            ||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  212  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  261
+
+
+>AK290440.1 Homo sapiens cDNA FLJ76097 complete cds, highly similar to Homo 
+sapiens catechol-O-methyltransferase (COMT), transcript variant 
+MB-COMT, mRNA
+Length=1610
+
+ Score = 93.5 bits (50),  Expect = 3e-16
+ Identities = 50/50 (100%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            ||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  150  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  199
+
+
+>BC000419.2 Homo sapiens catechol-O-methyltransferase, mRNA (cDNA clone MGC:8663 
+IMAGE:2964400), complete cds
+ BC005867.2 Homo sapiens catechol-O-methyltransferase, mRNA (cDNA clone MGC:4072 
+IMAGE:2964400), complete cds
+ FJ224345.1 Homo sapiens epididymis secretory sperm binding protein Li 98n 
+(HEL-S-98n) mRNA, complete cds
+Length=1217
+
+ Score = 93.5 bits (50),  Expect = 3e-16
+ Identities = 50/50 (100%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            ||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  140  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  189
+
+
+>BC011935.2 Homo sapiens catechol-O-methyltransferase, mRNA (cDNA clone MGC:20006 
+IMAGE:3503220), complete cds
+Length=1213
+
+ Score = 93.5 bits (50),  Expect = 3e-16
+ Identities = 50/50 (100%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            ||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  55   AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  104
+
+
+>M65212.1 Homo sapiens catechol-O-methyltransferase (COMT) mRNA, complete 
+cds
+Length=1107
+
+ Score = 93.5 bits (50),  Expect = 3e-16
+ Identities = 50/50 (100%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1   AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+           ||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  41  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  90
+
+
+>M58525.1 Homo sapiens catechol-O-methyltransferase (COMT) mRNA, complete 
+cds
+Length=1206
+
+ Score = 93.5 bits (50),  Expect = 3e-16
+ Identities = 50/50 (100%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            ||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  167  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  216
+
+
+>XR_001712910.2 PREDICTED: Pan troglodytes catechol-O-methyltransferase (COMT), 
+transcript variant X7, misc_RNA
+Length=1610
+
+ Score = 87.9 bits (47),  Expect = 1e-14
+ Identities = 49/50 (98%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||||||||||||| |||||||
+Sbjct  406  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCTGGAGGCC  455
+
+
+>XM_003317096.5 PREDICTED: Pan troglodytes catechol-O-methyltransferase (COMT), 
+transcript variant X5, mRNA
+Length=1550
+
+ Score = 87.9 bits (47),  Expect = 1e-14
+ Identities = 49/50 (98%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||||||||||||| |||||||
+Sbjct  404  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCTGGAGGCC  453
+
+
+>XM_003317095.4 PREDICTED: Pan troglodytes catechol-O-methyltransferase (COMT), 
+transcript variant X4, mRNA
+Length=1394
+
+ Score = 87.9 bits (47),  Expect = 1e-14
+ Identities = 49/50 (98%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||||||||||||| |||||||
+Sbjct  248  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCTGGAGGCC  297
+
+
+>XM_009437803.3 PREDICTED: Pan troglodytes catechol-O-methyltransferase (COMT), 
+transcript variant X3, mRNA
+Length=1622
+
+ Score = 87.9 bits (47),  Expect = 1e-14
+ Identities = 49/50 (98%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||||||||||||| |||||||
+Sbjct  476  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCTGGAGGCC  525
+
+
+>XM_003317094.4 PREDICTED: Pan troglodytes catechol-O-methyltransferase (COMT), 
+transcript variant X2, mRNA
+Length=1358
+
+ Score = 87.9 bits (47),  Expect = 1e-14
+ Identities = 49/50 (98%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||||||||||||| |||||||
+Sbjct  212  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCTGGAGGCC  261
+
+
+>XM_009437802.3 PREDICTED: Pan troglodytes catechol-O-methyltransferase (COMT), 
+transcript variant X1, mRNA
+Length=1298
+
+ Score = 87.9 bits (47),  Expect = 1e-14
+ Identities = 49/50 (98%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||||||||||||| |||||||
+Sbjct  152  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCTGGAGGCC  201
+
+
+>XM_024240241.1 PREDICTED: Pongo abelii catechol-O-methyltransferase (COMT), 
+transcript variant X1, mRNA
+Length=1363
+
+ Score = 87.9 bits (47),  Expect = 1e-14
+ Identities = 49/50 (98%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||||||||||||| |||||||
+Sbjct  212  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCTGGAGGCC  261
+
+
+>XM_004063030.2 PREDICTED: Gorilla gorilla gorilla catechol-O-methyltransferase 
+(COMT), transcript variant X9, mRNA
+Length=1462
+
+ Score = 87.9 bits (47),  Expect = 1e-14
+ Identities = 49/50 (98%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||||||||||||| |||||||
+Sbjct  313  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCTGGAGGCC  362
+
+
+>XM_004063029.2 PREDICTED: Gorilla gorilla gorilla catechol-O-methyltransferase 
+(COMT), transcript variant X8, mRNA
+Length=1361
+
+ Score = 87.9 bits (47),  Expect = 1e-14
+ Identities = 49/50 (98%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||||||||||||| |||||||
+Sbjct  212  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCTGGAGGCC  261
+
+
+>XM_019018409.1 PREDICTED: Gorilla gorilla gorilla catechol-O-methyltransferase 
+(COMT), transcript variant X7, mRNA
+Length=2332
+
+ Score = 87.9 bits (47),  Expect = 1e-14
+ Identities = 49/50 (98%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||||||||||||| |||||||
+Sbjct  324  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCTGGAGGCC  373
+
+
+>XM_019018408.1 PREDICTED: Gorilla gorilla gorilla catechol-O-methyltransferase 
+(COMT), transcript variant X6, mRNA
+Length=2174
+
+ Score = 87.9 bits (47),  Expect = 1e-14
+ Identities = 49/50 (98%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||||||||||||| |||||||
+Sbjct  166  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCTGGAGGCC  215
+
+
+>XM_019018407.1 PREDICTED: Gorilla gorilla gorilla catechol-O-methyltransferase 
+(COMT), transcript variant X5, mRNA
+Length=2267
+
+ Score = 87.9 bits (47),  Expect = 1e-14
+ Identities = 49/50 (98%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||||||||||||| |||||||
+Sbjct  259  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCTGGAGGCC  308
+
+
+>XM_019018406.1 PREDICTED: Gorilla gorilla gorilla catechol-O-methyltransferase 
+(COMT), transcript variant X4, mRNA
+Length=2212
+
+ Score = 87.9 bits (47),  Expect = 1e-14
+ Identities = 49/50 (98%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||||||||||||| |||||||
+Sbjct  204  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCTGGAGGCC  253
+
+
+>XM_019018405.1 PREDICTED: Gorilla gorilla gorilla catechol-O-methyltransferase 
+(COMT), transcript variant X3, mRNA
+Length=2173
+
+ Score = 87.9 bits (47),  Expect = 1e-14
+ Identities = 49/50 (98%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||||||||||||| |||||||
+Sbjct  165  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCTGGAGGCC  214
+
+
+>XM_019018404.1 PREDICTED: Gorilla gorilla gorilla catechol-O-methyltransferase 
+(COMT), transcript variant X2, mRNA
+Length=1271
+
+ Score = 87.9 bits (47),  Expect = 1e-14
+ Identities = 49/50 (98%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||||||||||||| |||||||
+Sbjct  122  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCTGGAGGCC  171
+
+
+>XM_019018402.1 PREDICTED: Gorilla gorilla gorilla catechol-O-methyltransferase 
+(COMT), transcript variant X1, mRNA
+Length=2470
+
+ Score = 87.9 bits (47),  Expect = 1e-14
+ Identities = 49/50 (98%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||||||||||||| |||||||
+Sbjct  462  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCTGGAGGCC  511
+
+
+>XR_001337612.1 PREDICTED: Pan paniscus catechol-O-methyltransferase (COMT), 
+transcript variant X6, misc_RNA
+Length=1320
+
+ Score = 87.9 bits (47),  Expect = 1e-14
+ Identities = 49/50 (98%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||||||||||||| |||||||
+Sbjct  116  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCTGGAGGCC  165
+
+
+>XM_008966663.2 PREDICTED: Pan paniscus catechol-O-methyltransferase (COMT), 
+transcript variant X3, mRNA
+Length=2363
+
+ Score = 87.9 bits (47),  Expect = 1e-14
+ Identities = 49/50 (98%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||||||||||||| |||||||
+Sbjct  349  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCTGGAGGCC  398
+
+
+>XM_008966662.2 PREDICTED: Pan paniscus catechol-O-methyltransferase (COMT), 
+transcript variant X2, mRNA
+Length=2178
+
+ Score = 87.9 bits (47),  Expect = 1e-14
+ Identities = 49/50 (98%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||||||||||||| |||||||
+Sbjct  164  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCTGGAGGCC  213
+
+
+>XM_008966661.2 PREDICTED: Pan paniscus catechol-O-methyltransferase (COMT), 
+transcript variant X1, mRNA
+Length=2136
+
+ Score = 87.9 bits (47),  Expect = 1e-14
+ Identities = 49/50 (98%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||||||||||||| |||||||
+Sbjct  122  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCTGGAGGCC  171
+
+
+>XM_012508150.1 PREDICTED: Nomascus leucogenys catechol-O-methyltransferase (COMT), 
+mRNA
+Length=1520
+
+ Score = 87.9 bits (47),  Expect = 1e-14
+ Identities = 49/50 (98%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||||||||||||| |||||||
+Sbjct  342  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCTGGAGGCC  391
+
+
+>XM_003814056.2 PREDICTED: Pan paniscus catechol-O-methyltransferase (COMT), 
+transcript variant X5, mRNA
+Length=1358
+
+ Score = 87.9 bits (47),  Expect = 1e-14
+ Identities = 49/50 (98%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||||||||||||| |||||||
+Sbjct  212  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCTGGAGGCC  261
+
+
+>XM_021673943.1 PREDICTED: Aotus nancymaae catechol-O-methyltransferase (COMT), 
+mRNA
+Length=1255
+
+ Score = 82.4 bits (44),  Expect = 6e-13
+ Identities = 48/50 (96%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||| ||||||||| |||||||
+Sbjct  215  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTCTGAAGATGCTGGAGGCC  264
+
+
+>KY088283.1 Callithrix jacchus catechol-O-methyltransferase (COMT) mRNA, 
+complete cds
+Length=932
+
+ Score = 82.4 bits (44),  Expect = 6e-13
+ Identities = 48/50 (96%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1   AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+           |||||||||||||||||||||||||||||||| ||||||||| |||||||
+Sbjct  5   AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTCTGAAGATGCTGGAGGCC  54
+
+
+>XM_017977980.1 PREDICTED: Callithrix jacchus catechol-O-methyltransferase (COMT), 
+transcript variant X4, mRNA
+Length=1271
+
+ Score = 82.4 bits (44),  Expect = 6e-13
+ Identities = 48/50 (96%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||| ||||||||| |||||||
+Sbjct  226  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTCTGAAGATGCTGGAGGCC  275
+
+
+>XM_009006767.2 PREDICTED: Callithrix jacchus catechol-O-methyltransferase (COMT), 
+transcript variant X3, mRNA
+Length=1261
+
+ Score = 82.4 bits (44),  Expect = 6e-13
+ Identities = 48/50 (96%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||| ||||||||| |||||||
+Sbjct  216  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTCTGAAGATGCTGGAGGCC  265
+
+
+>XM_017977975.1 PREDICTED: Callithrix jacchus catechol-O-methyltransferase (COMT), 
+transcript variant X2, mRNA
+Length=1393
+
+ Score = 82.4 bits (44),  Expect = 6e-13
+ Identities = 48/50 (96%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||| ||||||||| |||||||
+Sbjct  316  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTCTGAAGATGCTGGAGGCC  365
+
+
+>XM_002743544.3 PREDICTED: Callithrix jacchus catechol-O-methyltransferase (COMT), 
+transcript variant X1, mRNA
+Length=1179
+
+ Score = 82.4 bits (44),  Expect = 6e-13
+ Identities = 48/50 (96%), Gaps = 0/50 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+            |||||||||||||||||||||||||||||||| ||||||||| |||||||
+Sbjct  134  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTCTGAAGATGCTGGAGGCC  183
+
+
+>EF103922.1 Homo sapiens catechol-O-methyltransferase transcript variant 
+COMT_v7 (COMT) mRNA, alternatively spliced
+Length=741
+
+ Score = 76.8 bits (41),  Expect = 3e-11
+ Identities = 41/41 (100%), Gaps = 0/41 (0%)
+ Strand=Plus/Plus
+
+Query  10  GCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+           |||||||||||||||||||||||||||||||||||||||||
+Sbjct  1   GCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  41
+
+
+>EF103920.1 Homo sapiens catechol-O-methyltransferase transcript variant 
+COMT_v6 (COMT) mRNA, alternatively spliced
+Length=237
+
+ Score = 76.8 bits (41),  Expect = 3e-11
+ Identities = 41/41 (100%), Gaps = 0/41 (0%)
+ Strand=Plus/Plus
+
+Query  10  GCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  50
+           |||||||||||||||||||||||||||||||||||||||||
+Sbjct  1   GCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC  41
+
+
+>XM_009437804.3 PREDICTED: Pan troglodytes catechol-O-methyltransferase (COMT), 
+transcript variant X6, mRNA
+Length=1608
+
+ Score = 73.1 bits (39),  Expect = 3e-10
+ Identities = 39/39 (100%), Gaps = 0/39 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGA  39
+            |||||||||||||||||||||||||||||||||||||||
+Sbjct  168  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGA  206
+
+
+>XM_024240243.1 PREDICTED: Pongo abelii catechol-O-methyltransferase (COMT), 
+transcript variant X3, mRNA
+Length=1615
+
+ Score = 73.1 bits (39),  Expect = 3e-10
+ Identities = 39/39 (100%), Gaps = 0/39 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGA  39
+            |||||||||||||||||||||||||||||||||||||||
+Sbjct  170  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGA  208
+
+
+>XM_024240242.1 PREDICTED: Pongo abelii catechol-O-methyltransferase (COMT), 
+transcript variant X2, mRNA
+Length=1492
+
+ Score = 73.1 bits (39),  Expect = 3e-10
+ Identities = 39/39 (100%), Gaps = 0/39 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGA  39
+            |||||||||||||||||||||||||||||||||||||||
+Sbjct  170  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGA  208
+
+
+>XM_017028595.1 PREDICTED: Homo sapiens catechol-O-methyltransferase (COMT), 
+transcript variant X3, mRNA
+Length=1526
+
+ Score = 73.1 bits (39),  Expect = 3e-10
+ Identities = 39/39 (100%), Gaps = 0/39 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGA  39
+            |||||||||||||||||||||||||||||||||||||||
+Sbjct  86   AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGA  124
+
+
+>XM_017028594.1 PREDICTED: Homo sapiens catechol-O-methyltransferase (COMT), 
+transcript variant X2, mRNA
+Length=1582
+
+ Score = 73.1 bits (39),  Expect = 3e-10
+ Identities = 39/39 (100%), Gaps = 0/39 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGA  39
+            |||||||||||||||||||||||||||||||||||||||
+Sbjct  142  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGA  180
+
+
+>XM_008966664.2 PREDICTED: Pan paniscus catechol-O-methyltransferase (COMT), 
+transcript variant X4, mRNA
+Length=2451
+
+ Score = 73.1 bits (39),  Expect = 3e-10
+ Identities = 39/39 (100%), Gaps = 0/39 (0%)
+ Strand=Plus/Plus
+
+Query  1    AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGA  39
+            |||||||||||||||||||||||||||||||||||||||
+Sbjct  143  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGA  181
+
+
+>NG_011526.1 Homo sapiens catechol-O-methyltransferase (COMT), RefSeqGene 
+(LRG_1010) on chromosome 22
+Length=35236
+
+ Score = 71.3 bits (38),  Expect = 1e-09
+ Identities = 38/38 (100%), Gaps = 0/38 (0%)
+ Strand=Plus/Plus
+
+Query  1      AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAG  38
+              ||||||||||||||||||||||||||||||||||||||
+Sbjct  24513  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAG  24550
+
+
+>AY341246.1 Homo sapiens catechol-O-methyltransferase (COMT) gene, complete 
+cds
+Length=30328
+
+ Score = 71.3 bits (38),  Expect = 1e-09
+ Identities = 38/38 (100%), Gaps = 0/38 (0%)
+ Strand=Plus/Plus
+
+Query  1      AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAG  38
+              ||||||||||||||||||||||||||||||||||||||
+Sbjct  21257  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAG  21294
+
+
+>AC005663.2 Homo sapiens chromosome 22 clone p888c9 map 22q11, complete sequence
+Length=103122
+
+ Score = 71.3 bits (38),  Expect = 1e-09
+ Identities = 38/38 (100%), Gaps = 0/38 (0%)
+ Strand=Plus/Plus
+
+Query  1      AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAG  38
+              ||||||||||||||||||||||||||||||||||||||
+Sbjct  15071  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAG  15108
+
+
+>AC000080.2 Homo sapiens Chromosome 22q11.2 Cosmid Clone 56c In DGCR Region, 
+complete sequence
+Length=44090
+
+ Score = 71.3 bits (38),  Expect = 1e-09
+ Identities = 38/38 (100%), Gaps = 0/38 (0%)
+ Strand=Plus/Plus
+
+Query  1      AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAG  38
+              ||||||||||||||||||||||||||||||||||||||
+Sbjct  32963  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAG  33000
+
+
+>Z26491.1 H.sapiens gene for catechol O-methyltransferase
+Length=3651
+
+ Score = 71.3 bits (38),  Expect = 1e-09
+ Identities = 38/38 (100%), Gaps = 0/38 (0%)
+ Strand=Plus/Plus
+
+Query  1     AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAG  38
+             ||||||||||||||||||||||||||||||||||||||
+Sbjct  1037  AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAG  1074
+
+
+>EF103921.1 Homo sapiens catechol-O-methyltransferase transcript variant 
+COMT_v4 (COMT) mRNA, alternatively spliced
+Length=299
+
+ Score = 56.5 bits (30),  Expect = 3e-05
+ Identities = 30/30 (100%), Gaps = 0/30 (0%)
+ Strand=Plus/Plus
+
+Query  10  GCTGGAGCCTGCTCAGAGGTGCTTTGAAGA  39
+           ||||||||||||||||||||||||||||||
+Sbjct  1   GCTGGAGCCTGCTCAGAGGTGCTTTGAAGA  30
+
+
+>EF103917.1 Homo sapiens catechol-O-methyltransferase transcript variant 
+COMT_v2 (COMT) mRNA, alternatively spliced
+Length=500
+
+ Score = 56.5 bits (30),  Expect = 3e-05
+ Identities = 30/30 (100%), Gaps = 0/30 (0%)
+ Strand=Plus/Plus
+
+Query  10  GCTGGAGCCTGCTCAGAGGTGCTTTGAAGA  39
+           ||||||||||||||||||||||||||||||
+Sbjct  1   GCTGGAGCCTGCTCAGAGGTGCTTTGAAGA  30
+
+
+>EF103916.1 Homo sapiens catechol-O-methyltransferase transcript variant 
+COMT_v1 (COMT) mRNA, alternatively spliced
+Length=384
+
+ Score = 54.7 bits (29),  Expect = 1e-04
+ Identities = 29/29 (100%), Gaps = 0/29 (0%)
+ Strand=Plus/Plus
+
+Query  10  GCTGGAGCCTGCTCAGAGGTGCTTTGAAG  38
+           |||||||||||||||||||||||||||||
+Sbjct  1   GCTGGAGCCTGCTCAGAGGTGCTTTGAAG  29
+
+
+
+Lambda      K        H
+    1.33    0.621     1.12 
+
+Gapped
+Lambda      K        H
+    1.28    0.460    0.850 
+
+Effective search space used: 3477504582640
+
+
+  Database: Nucleotide collection (nt)
+    Posted date:  Mar 24, 2018 03:15 PM
+  Number of letters in database: 175,291,025,312
+  Number of sequences in database:  47,193,206
+
+
+
+Matrix: blastn matrix 1 -2
+Gap Penalties: Existence: 0, Extension: 2.5

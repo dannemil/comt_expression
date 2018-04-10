@@ -164,3 +164,74 @@ Saturday, April 7, 2018 at 3:42:32 PM
 
 BLAST test using probe sequence for COMT
 AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC
+
+Monday, April 9, 2018 at 8:59:35 AM
+
+This chunk << alternative_blast >>=
+produces a data frame (after many transformations) of the form:
+
+            id gi.Access     ref.Access percent.Match qlen length mismatch gaps taxon.Code   evalue	bitscore
+1 id_440589_pf 136724010 XR_001712422.2       100.000   50     50        0    0       9598 2.57e-16	93.5
+
+This comes from querying the blastn server using the probe Reporter.Sequence of all of the rows that have missing Chromosomes.
+
+It next needs to be subset by the taxon.Code=9606 (Homo sapiens).
+
+After this, only the top hit for each unique id should be retained. NOTICE that the top hit once the data have been subset by 9606 is not necessarily the top overall hit for that id. It is, on the other hand, the top hit for Homo sapiens of that probe sequence.
+
+NOTE: blastn was queried with 83 sequences, but the results returned by blastn for pf for example only contain 80 unique ids.
+*** Will need to match the IDs to the ENTREZIDs of the 83 rows missing Chromosome names that were used in the query.
+
+In the chunk << subset_9606 >>= the variable pos.inc holds the row number of the first hit for each unique ENTREZID in the order in which they appear in the blast.out.pf9606
+
+first.hits holds only the first hits for homo sapiens for unique ENTREZIDs
+
+The second ACCESSION number can then be used with rentrez_search to find the Chromosome name, gene name, and start location.
+
+Monday, April 9, 2018 at 2:24:19 PM
+
+Documentation for querying the enter gene database
+ˇhttps://cran.r-project.org/web/packages/rentrez/vignettes/rentrez_tutorial.html
+
+<< match_new_Chr_names >>=
+ The ENTREZIDs with missing chromosomes need to be matched against the newly found chromosomes from renters
+
+*************************************
+Tuesday, April 10, 2018 at 7:37:46 AM
+
+When the results returned from the rentrez search were matched using entrezgene (uid) to the ENTREZIDs from the rows missing Chromosome names, there were only approximately 2-3 matches out of 83 ENTREZIDs from rows missing Chromosomes. Something is wrong, so the next step is to discover why rentrez returned so many hits, but so few of them could be used to reduce the number of rows with missing Chr names.
+
+<< get_illumina_entrezid_symbol >>=
+
+Retrieve the entrezgenes and symbols from the illumination file based on probes whose search key matched the .Record value from the major.Area lists.
+
+When the ENTREZIDs from major.Area of the rows missing Chromosome (loc) names are compared to the entrez values from the illumina file matched through ILMN_xxx values, the two sets of entrezgene IDs are identical.
+
+> setdiff(as.character(unlist(entrez.and.symb.Illum[[1]][1])),as.character(major.Area[[1]]$ENTREZID[unlist(miss.Chr[[1]])]))
+character(0)
+
+> setdiff(as.character(unlist(entrez.and.symb.Illum[[1]][2])),as.character(major.Area[[2]]$ENTREZID[unlist(miss.Chr[[2]])]))
+character(0)
+
+> setdiff(as.character(unlist(entrez.and.symb.Illum[[1]][3])),as.character(major.Area[[3]]$ENTREZID[unlist(miss.Chr[[3]])]))
+character(0)
+
+> setdiff(as.character(unlist(entrez.and.symb.Illum[[1]][4])),as.character(major.Area[[4]]$ENTREZID[unlist(miss.Chr[[4]])]))
+character(0)
+
+
+COMT 1312 Reported.Sequence AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC
+
+Do not use the ACCESSION numbers found using BLASTN with the probe Reporter.Sequence(s) because the first hit for homo sapiens gives too few ENTREZID/uid matches to be useful.
+
+Instead, use the Symbols of the missing loc rows to retrieve chromosome names and start positions using rentrez.
+
+
+This chunk << replace_missing_Chr_names >>= uses the chromosome names, and start positions recovered using rentrez to replace some of the missing loc values in major.Area[[1]] and in prefrontal.Data.
+
+Need to repeat this analysis for the other three brain areas to find missing loc (Chromosome names) then repeat it for all four areas to retrieve missing start positions (bp).
+
+
+
+
+

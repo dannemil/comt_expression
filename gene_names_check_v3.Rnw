@@ -90,7 +90,7 @@ opts_chunk$set(include=FALSE,
 # Generate a unique ID for this program by path and filename. This unique ID is attached to this file using a tag in the filesystem.
 source('unique_id_generator.R')
 
-fname <- c("/Volumes/Macintosh_HD_3/genetics/genenetwork2/gene_names_check_v2.Rnw")
+fname <- c("/Volumes/Macintosh_HD_3/genetics/genenetwork2/gene_names_check_v3.Rnw")
 
 prog.Name <- unique.ID(fname)
 
@@ -1158,14 +1158,14 @@ sapply(genesrlocs[i], function(x,i) length(x), i)
 
 
 << recover_Chr_names>>=
-# Try to find missing chromosome names and staert positions using gene Symbols rather than entrezgene.
+# Try to find missing chromosome names using gene Symbols rather than entrezgene.
   
-  na.loc.indx <- lapply(major.Area[i], function(x,i) which(is.na(x$loc)),i)
-     na.bp.indx <- lapply(major.Area[i], function(x,i) which(is.na(x$bp)),i)
+  na.loc.indx <- lapply(major.Area[ib], function(x,i) which(is.na(x$loc)),i)
+     na.bp.indx <- lapply(major.Area[ib], function(x,i) which(is.na(x$bp)),i)
      
-     na.loc.returned <- lapply(major.Area[i], function(x,i,y) {getBM(attributes=c('entrezgene','hgnc_symbol','chromosome_name'), filters ='hgnc_symbol', values =as.character(x$Symbol[unlist(y)]), mart = ensembl)}, i,na.loc.indx[i])
+     na.loc.returned <- lapply(major.Area[ib], function(x,i,y) {getBM(attributes=c('entrezgene','hgnc_symbol','chromosome_name'), filters ='hgnc_symbol', values =as.character(x$Symbol[unlist(y)]), mart = ensembl)}, i,na.loc.indx[ib])
      
-     na.loc.returned.entrez <- lapply(major.Area[i], function(x,i,y) {getBM(attributes=c('entrezgene','hgnc_symbol','chromosome_name'), filters ='entrezgene', values =as.character(x$ENTREZID[unlist(y)]), mart = ensembl)}, i,na.loc.indx[i])
+     na.loc.returned.entrez <- lapply(major.Area[ib], function(x,i,y) {getBM(attributes=c('entrezgene','hgnc_symbol','chromosome_name'), filters ='entrezgene', values =as.character(x$ENTREZID[unlist(y)]), mart = ensembl)}, i,na.loc.indx[ib])
      
 # Try to extract the Chromosome name/number from the returned values that are formatted as 'CHR_HSCHR'
 
@@ -1245,7 +1245,7 @@ loc.match.entrez.indx <- list(indx=c(),
 
 found.Chr.names <- list(symb=rep(NA,4),
                             entrezg=rep(NA,4))
-add.Chr.names <- data.frame(Additional_Chr_names = rep(NA,4))
+add.Chr.names <- data.frame(Additional_start_Pos = rep(NA,4))
 
 for (im in 1:4)  {
      
@@ -1338,28 +1338,147 @@ success.of.write <- write.primary(prefront.Data,
 
 
 
-<< >>=
-temp.no.chr <- lapply(major.Area[ib], function(x,ib,y,z) match(x$Symbol[unlist(y)],z$hgnc_symbol), ib, na.loc.indx[ib], na.loc.returned[ib])
+<< find_miss_start_pos_bp >>=
+     
+     na.bp.indx <- lapply(major.Area[ib], function(x,i) which(is.na(x$bp)),i)
+     
+     na.bp.returned <- lapply(major.Area[ib], function(x,i,y) {getBM(attributes=c('entrezgene','hgnc_symbol','start_position'), filters ='hgnc_symbol', values =as.character(x$Symbol[unlist(y)]), mart = ensembl)}, i,na.bp.indx[ib])
+     
+     na.bp.returned.entrez <- lapply(major.Area[ib], function(x,i,y) {getBM(attributes=c('entrezgene','hgnc_symbol','start_position'), filters ='entrezgene', values =as.character(x$ENTREZID[unlist(y)]), mart = ensembl)}, i,na.bp.indx[ib])
+     
+
+# na.bp.returned.temp <- list(symb=rep(NA,4),
+#                              entrez=rep(NA,4))
+temp.Init <- list(symbol=rep(NA,4),
+                  entrezg=rep(NA,4))
+
+temp.Init$symbol <- lapply(na.bp.returned[ib], function(x,ib) x$start_position, ib)
+temp.Init$entrezg <- lapply(na.bp.returned.entrez[ib], function(x,ib) x$start_position, ib)
+
+@
 
 
+<< check_NA_in_bp >>=                            
 
+sapply(na.bp.indx[ib], function(x,ib) length(x), ib)
+
+# rows that had NA under the bp variable
+#  pf  cb  tm  po 
+# 104  99 104 100 
 
 temp.no.chr <- list()
 
-   for (im in 1:4)  {
-   
-   temp.no.chr[[im]] <- match(major.Area[[im]]$Symbol[unlist(na.loc.indx[[im]])],as.character(na.loc.returned[[im]]$hgnc_symbol[unlist(no.chr.in.name[[im]])]))
-   
-   }
-# This only recovers an additional 10 - 15 Chr names in each brain area
+bp.match.Symb.indx <- list(indx=c(),
+                            symb=c(),
+                            entrez=c(),
+                            start.Pos=c(),
+                            bp=c())
+
+bp.match.entrez.indx <- list(indx=c(),
+                            symb=c(),
+                            entrez=c(),
+                            start.Pos=c(),
+                            bp=c())
+
+
+
+
+found.start.Pos <- list(symb=rep(NA,4),
+                            entrezg=rep(NA,4))
+add.start.Pos <- data.frame(Additional_start_Pos = rep(NA,4))
+
+for (im in 1:4)  {
+     
+# returned by Symbol query     
+     bp.match.Symb.indx$indx[[im]] <- match(major.Area[[im]]$Symbol[unlist(na.bp.indx[[im]])],na.bp.returned[[im]]$hgnc_symbol)
+     bp.match.Symb.indx$symb[[im]] <- na.bp.returned[[im]]$hgnc_symbol[unlist(bp.match.Symb.indx$indx[[im]])]
+     bp.match.Symb.indx$entrez[[im]] <- na.bp.returned[[im]]$entrezgene[unlist(bp.match.Symb.indx$indx[[im]])]
+     bp.match.Symb.indx$start.Pos[[im]] <- na.bp.returned[[im]]$start_position[unlist(bp.match.Symb.indx$indx[[im]])]
+     bp.match.Symb.indx$bp[[im]] <- temp.Init$symbol[[im]][unlist(bp.match.Symb.indx$indx[[im]])]
+
+# returned by entrezgene query     
+     bp.match.entrez.indx$indx[[im]] <- match(major.Area[[im]]$Symbol[unlist(na.bp.indx[[im]])],na.bp.returned.entrez[[im]]$hgnc_symbol)
+     bp.match.entrez.indx$symb[[im]] <- na.bp.returned.entrez[[im]]$hgnc_symbol[unlist(bp.match.entrez.indx$indx[[im]])]
+     bp.match.entrez.indx$entrez[[im]] <- na.bp.returned.entrez[[im]]$entrezgene[unlist(bp.match.entrez.indx$indx[[im]])]
+     bp.match.entrez.indx$start.Pos[[im]] <- na.bp.returned.entrez[[im]]$start_position[unlist(bp.match.entrez.indx$indx[[im]])]
+     bp.match.entrez.indx$bp[[im]] <- temp.Init$entrezg[[im]][unlist(bp.match.entrez.indx$indx[[im]])]
+     
+     found.start.Pos$symb[[im]] <- sum(!is.na(bp.match.Symb.indx$start.Pos[[im]]))
+     
+     found.start.Pos$entrezg[[im]] <- sum(!is.na(bp.match.entrez.indx$start.Pos[[im]]))
+
+     } # end brain area loop
+
+add.start.Pos <- data.frame(Symbol_query = unlist(found.start.Pos$symb),
+                            entrez_query = unlist(found.start.Pos$entrezg))
+row.names(add.start.Pos) <- stand.Col.names
+add.start.Pos.tab <- xtable(add.start.Pos,
+                            caption='Additional starting positions recovered using Symbol Query, column 1, and entrezgene Query, column 2')
+
+@
+
+\Sexpr{add.start.Pos.tab}
+
+
+<< union_Symb_entrez_returns >>=
+
+found.bp <- list()   # Will hold the union of chromosome names from the two queries
+# found.bp can be used to replace the missing, NA, values in major.Area and in the oprimary data files.
+
+for (im in 1:4)  {
+     
+     found.bp[[im]] <- pmin(temp.Init$symbol[[im]][unlist(bp.match.Symb.indx$indx[[im]])]/1000000,temp.Init$entrezg[[im]][unlist(bp.match.entrez.indx$indx[[im]])]/1000000,na.rm=TRUE)
+     
+     major.Area[[im]]$bp[unlist(na.bp.indx[[im]])] <- found.bp[[im]] 
+
+}
+
+prefront.Data$bp <- major.Area[[1]]$bp
+cbell.Data$bp <- major.Area[[2]]$bp
+tempor.Data$bp <- major.Area[[3]]$bp
+pons.Data$bp <- major.Area[[4]]$bp
+
+
+missing.bp <- data.frame(Missing_start_Pos=unlist(lapply(major.Area[ib], function(x,ib) num.NA(x$bp), ib)))
+
+missing.bp.tab <- xtable(missing.bp,
+                          caption='Remaining numbers of missing starting positions rows by brain area.')
+
+> missing.bp
+   Missing_start_Pos
+pf                86
+cb                85
+tm                88
+po                82
+
+@
+
+After the recovered chromosome names were written to the major.Area files, the table below shows the number of missing chromosome names remaining.\\
+
+\Sexpr{missing.bp.tab}
+
+<< write_data_out >>=
+
+success.of.write <- data.frame(prefront=NA,
+                               cbell=NA,
+                               tempor=NA,
+                               pons=NA)
+
+success.of.write <- write.primary(prefront.Data,
+                                  cbell.Data,
+                                  tempor.Data,
+                                  pons.Data)
+
+     success.of.write <- unlist(lapply(success.of.write[ib], function(x,ib) {if (x[ib]) {x[ib] = 'succeeded'} else {x[ib] = 'failed'}}, ib))
+     
+     success.of.write
+
+@
      
      
-     
-          
-     na.bp.returned <- lapply(major.Area[i], function(x,i,y) {getBM(attributes=c('hgnc_symbol','start_position'), filters ='hgnc_symbol', values =as.character(x$Symbol[unlist(y)]), mart = ensembl)}, i,na.bp.indx[i])
   
   
-  @
+
 
 
 \end{document}
