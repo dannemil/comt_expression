@@ -231,6 +231,22 @@ This chunk << replace_missing_Chr_names >>= uses the chromosome names, and start
 
 Need to repeat this analysis for the other three brain areas to find missing loc (Chromosome names) then repeat it for all four areas to retrieve missing start positions (bp).
 
+Tuesday, April 10, 2018 at 3:44:47 PM
+
+Consider running a principle components analysis of the correlations with COMT. The genes that load most highly on there first several components could be another way of determining the set to use for ontology analysis.
+
+Wednesday, April 11, 2018 at 9:02:34 AM
+
+At the end of the first rentrez run using major.Area[[1]], for the symbol C12orf63 rentrez returned uids 
+[1] "144535"    "100490177" "417921"    "105097493" "105075061" "104963968" "104569553" "104513791"
+ [9] "104491721" "104482013" "104370438" "104360091" "104254646" "104164853" "104143861" "104072519"
+[17] "104041059" "104029002" "103811347" "104696434"
+
+None of these match the ENTREZID for that Symbol in major.Area[[1]]: 374467
+
+However, when you look up 374467 in the gene database, it shows that that ENTREZID was replaced with 144535 which is the first aid returned in the rentrez search.  Additionally, searching gene cards with thew symbol gives the chromosome and start position. It also gives the correct symbol, CFAP54. By hand I replaced the results for row 31 in rentrez.results[[1]] with the correct information.
+
+
 
 
 

@@ -1,0 +1,448 @@
+\documentclass[11pt]{article}
+\usepackage{graphicx, subfig}
+\usepackage{float}
+\pagenumbering{arabic}
+\usepackage{enumerate}
+\usepackage{Sweave}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{framed}
+\usepackage{longtable}
+\usepackage{tablefootnote}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{keep.source=TRUE} 
+
+\hspace{-1.5em}Gene Network\\
+COMT expression correlations in Four Brain Areas\\
+Fall, 2017\\
+
+
+
+<<echo=FALSE>>=
+library(knitr)
+library(openxlsx)
+library(xtable)
+#library(magrittr)
+library(tables)
+library(plyr)
+library(scales)
+library(utils)
+# library(ggman)
+library(dplyr)
+library(biomaRt)
+library(stringr)
+library(curl)
+library(git2r)
+library(githubinstall)
+library(devtools)
+library('xml2')
+library(RCurl)
+library(XML)
+library(rentrez)
+
+
+setwd('/Volumes/Macintosh_HD_3/genetics/genenetwork2/')
+@
+
+
+<<init, include=FALSE >>=
+opts_chunk$set(include=FALSE,
+               echo=FALSE,
+               message=FALSE,
+               warning=FALSE)
+@
+
+<<include=FALSE, echo=FALSE, results=hide>>=
+# Generate a unique ID for this program by path and filename. This unique ID is attached to this file using a tag in the filesystem.
+source('unique_id_generator.R')
+
+fname <- c("/Volumes/Macintosh_HD_3/genetics/genenetwork2/blast_test_v1.Rnw")
+
+prog.Name <- unique.ID(fname)
+
+prog.Name
+
+@
+
+<< bioconductor_libs >>=
+source("https://bioconductor.org/biocLite.R")
+
+#biocLite('rBLAST')
+install_github("mhahsler/rBLAST")
+
+biocLite('Biostrings')
+library('Biostrings')
+library('rBLAST')
+
+biocLite('annotate')
+
+library('annotate')
+
+biocLite("org.Hs.eg.db")   
+
+library("org.Hs.eg.db")
+
+@
+
+<< read_data >>=
+wball <- loadWorkbook('comt_correlations_20000_all_areas_augmentedNew.xlsx')   
+
+# now tell R to read that workbook and which sheet
+  prefront.Data <- data.frame(read.xlsx(wball,sheet = "prefrontal"))
+  
+  cbell.Data <- data.frame(read.xlsx(wball,sheet = "cerebellum"))
+
+  tempor.Data <- data.frame(read.xlsx(wball,sheet = "temporal"))
+
+  pons.Data <- data.frame(read.xlsx(wball,sheet = "pons"))
+
+
+# create a list with these data frames to be used when the same operation is applied to all area
+  
+major.Area <- list(pf=prefront.Data,
+                   cb=cbell.Data,
+                   tm=tempor.Data,
+                   po=pons.Data)
+
+ib <- c(1:4)
+
+# Read in the illumina_humanref_8_v2 excel file to get the entrez ids and gene symbols for all of the data from the 4 brain areas 
+
+wbillum <- loadWorkbook('illumina_human_ref_8_v2v3.xlsx')   
+
+# now tell R to read that workbook and which sheet
+  illumina8v2.Data <- data.frame(read.xlsx(wbillum,sheet = "illumina_v2"))
+
+@
+
+<< missing_Chr_names >>=
+  
+  miss.Chr <- list()
+  
+  miss.Chr <- lapply(major.Area[ib], function(x,ib) which(is.na(x$loc)), ib)
+  
+  match.Ilum <- list()
+  
+  for (im in 1:4)  {
+  
+     match.Ilum[[im]] <- match(major.Area[[im]]$Record[unlist(miss.Chr[[im]])],
+                            illumina8v2.Data$ilmn)
+  } 
+  
+@
+
+<< get_probe_seq >>=
+  missing.seqs <- list()
+  
+  missing.Seqs <- lapply(match.Ilum[ib], function(x,ib) substr(illumina8v2.Data$Reporter.Sequence[unlist(x)],1,50), ib)
+  
+@
+
+<< get_illumina_entrezid_symbol >>=
+
+  entrez.and.symb.Illum <- list()
+  entrez.from.Illum <- list()
+  symb.from.Illum <- list()
+  
+  entrez.from.Illum <- lapply(match.Ilum[ib], function(x,ib) illumina8v2.Data$entrez[unlist(x)], ib)
+  
+  symb.from.Illum <- lapply(match.Ilum[ib], function(x,ib) illumina8v2.Data$symbol[unlist(x)], ib)
+  
+   entrez.and.symb.Illum <- list(entrez.from.Illum,
+                                 symb.from.Illum)
+  
+@
+
+<< fasta_format >>=
+
+# write out the sequences so that they look like this:
+  
+  # > idENTREZID
+  # ATTGCCGT...
+  
+# get the ENTREZIDs of the rows missing Chr names
+  
+  fasta.entrez <- list()
+  
+#   for (im in 1:4)   {
+#   
+# #     fasta.entrez[[im]] <- major.Area[[im]]$ENTREZID[unlist(miss.Chr[im])]
+# 
+#        fasta.entrez[[im]] <- entrez.and.symb.Illum[[1]][im]  
+#   }
+   
+   fasta.entrez <- lapply(entrez.and.symb.Illum[1], function(x,i) x[ib], ib)
+
+fasta.miss.Chr <- list()
+area.prefix <- c('_pf',
+                 '_cb',
+                 '_tm',
+                 '_po')
+
+fasta.miss.Chr.1perline <- list()
+  
+for (im in 1:4)    {
+
+     fasta.miss.Chr[[im]] <- c(rep(NA,length(fasta.entrez[[1]][im])))
+     fasta.miss.Chr.1perline[[im]] <- c(rep(NA,2*length(fasta.entrez[[1]][im])))
+     
+     
+     fasta.miss.Chr[[im]][1] <- c(paste('>id_',fasta.entrez[[1]][im],area.prefix[im],'\n',
+                                        missing.Seqs[[im]][1],'\n',sep=''))
+     fasta.miss.Chr.1perline[[im]][1] <- c(paste('>id_',
+                                        fasta.entrez[[im]][1],area.prefix[im],sep=''))
+     fasta.miss.Chr.1perline[[im]][2] <- c(paste(missing.Seqs[[im]][1],sep=''))
+
+     for (ji in 2:length(fasta.entrez[[im]]))   {
+    
+  
+    fasta.miss.Chr[[im]][ji] <- c(paste(fasta.miss.Chr[[im]][ji-1],'>id_',
+                                        fasta.entrez[[im]][ji],area.prefix[im],'\n',
+                                        missing.Seqs[[im]][ji],'\n',sep=''))
+    
+    fasta.miss.Chr.1perline[[im]][(2*(ji-1) + 1)] <- c(paste('>id_',
+                                        fasta.entrez[[im]][ji],area.prefix[im],sep=''))
+    fasta.miss.Chr.1perline[[im]][(2*(ji-1) + 2)] <- c(paste(missing.Seqs[[im]][ji],sep=''))
+    
+    
+    
+     }
+     
+    fasta.miss.Chr[[im]] <- fasta.miss.Chr[[im]][length(fasta.entrez[[im]])]
+    
+    # Remove '\n' from the last sequence in each area
+    fasta.miss.Chr[[im]] <- gsub('.{2}$','',fasta.miss.Chr[[im]])
+    
+}
+
+
+
+fileConn<-file("missing_Chr_by_fasta_pf.txt")
+     writeLines(fasta.miss.Chr.1perline[[1]], fileConn)
+close(fileConn)
+
+fileConn<-file("missing_Chr_by_fasta_cb.txt")
+     writeLines(fasta.miss.Chr.1perline[[2]], fileConn)
+close(fileConn)
+
+fileConn<-file("missing_Chr_by_fasta_tm.txt")
+     writeLines(fasta.miss.Chr.1perline[[3]], fileConn)
+close(fileConn)
+
+fileConn<-file("missing_Chr_by_fasta_po.txt")
+     writeLines(fasta.miss.Chr.1perline[[4]], fileConn)
+close(fileConn)
+
+
+
+@
+
+<< alternative_blast >>=
+  
+  # try tabular output
+  blast.out.pf <- system2('/Volumes/Macintosh_HD_3/genetics/genenetwork2/ncbi-blast-2.7.1+/bin/blastn', c('-db',"'nt'", '-remote', 
+ # '-out', "'/Volumes/Macintosh_HD_3/genetics/genenetwork2/fasta_search_pf_tab.txt'",
+ '-perc_identity',"'.96'",
+          '-outfmt', "'6 qseqid sseqid pident qlen length mismatch gaps staxids evalue bitscore'"), input=fasta.miss.Chr.1perline[[1]], stdout=TRUE)
+
+     blast.out.pf.test <- system2('/Volumes/Macintosh_HD_3/genetics/genenetwork2/ncbi-blast-2.7.1+/bin/blastn', c('-db',"'nt'", '-remote', 
+ # '-out', "'/Volumes/Macintosh_HD_3/genetics/genenetwork2/fasta_search_pf_tab.txt'",
+ '-perc_identity',"'.96'",
+          '-outfmt', "'6 qseqid sseqid pident qlen length mismatch gaps staxids evalue bitscore'"), input=fasta.miss.Chr.1perline[[1]][1:2], stdout=TRUE)
+  
+  blast.out.pf1 <- gsub('\\t','   ',blast.out.pf)
+  blast.out.pf1 <- gsub('gi\\|','',blast.out.pf1)
+  blast.out.pf1 <- gsub('\\| ','   ',blast.out.pf1)
+  blast.out.pf1 <- gsub("[0-9]\\|\\S+\\|",'   ', blast.out.pf1)
+  blast.out.pf1 <- strsplit(blast.out.pf1,'   ')
+
+  blast.out.pf1 <- data.frame(matrix(unlist(blast.out.pf1), ncol=11, 
+                                     byrow=T),stringsAsFactors=FALSE)
+
+  colnames(blast.out.pf1) <- c('id', 'gi.Access','ref.Access','percent.Match',
+                              'qlen','length','mismatch','gaps','taxon.Code','evalue','bitscore')
+  
+  blast.out.pf1$percent.Match <- trimws(blast.out.pf1$percent.Match, which = c("left"))
+  make.nums <- c(4:8,10:11)
+  
+  # Make various columns numeric instead of character
+  temp.out <- sapply(blast.out.pf1[,make.nums], function(x,make.nums) as.numeric(x),make.nums)
+  blast.out.pf1[,make.nums] <- temp.out
+  
+  # Add a column that only contains the ENTREZID contained in the middle of the ID
+  # in "id_731390_pf" 731390 is the ENTREZID
+  # Also add a column that only has the brain area e.g., prefrontalf for the id above
+  # Don't need to extract the pf - this file is exclusively pf
+  
+  blast.out.pf1$area <- c(rep('prefrontal',dim(blast.out.pf1)[1]))
+  
+  # Extract the ENTREZID
+  temp.out <- gsub('id_','',blast.out.pf1$id)
+  temp.out.a <- gsub('_[a-z]+','',temp.out)
+  blast.out.pf1$ENTREZID <- temp.out.a
+@
+  
+  
+<< subset_9606 >>=  
+  # Now subset by taxon.Code = 9606 (Homo sapiens)
+  
+  blast.out.pf9606 <- subset(blast.out.pf1,blast.out.pf1$taxon.Code == '9606')
+
+  # Need to extract the first hit from every unique ENTREZID
+  # Table/count the number of unique ENTREZIDs
+  
+  entrezid.count <- data.frame(count(blast.out.pf9606,blast.out.pf9606$ENTREZID))
+  colnames(entrezid.count) <- c('entrezid','n')
+  unique.blast.entrezid <- unique(blast.out.pf9606$ENTREZID)
+  
+  position.entrezid <- match(unique.blast.entrezid,entrezid.count$entrezid)
+  pos.inc <- matrix(rep(NA,length(unique.blast.entrezid)),ncol=1)
+  pos.inc[1] <- c(1)
+  
+  for (im in 2:length(unique.blast.entrezid))  {
+       
+       pos.inc[im] <- pos.inc[(im-1)] + entrezid.count[position.entrezid[im-1],2]
+  }
+  
+# Store only the first hit rows of the unique ENTREZIDs
+  
+  first.hits <- data.frame()
+  
+  first.hits <- blast.out.pf9606[c(pos.inc),]
+  
+  # remove decimal part of ACCESSION number
+  first.hits$ref.Access <- gsub('\\.[0-9]+','',first.hits$ref.Access)
+  
+  
+     # blast.out.cb <- system2('/Volumes/Macintosh_HD_3/genetics/genenetwork2/ncbi-blast-2.7.1+/bin/blastn', c('-db',"'nt'", '-remote', 
+  #'-out', "'/Volumes/Macintosh_HD_3/genetics/genenetwork2/fasta_search_cb_tab.txt'",
+  # '-perc_identity',"'.96'",
+  #          '-outfmt', "'6 qseqid sseqid pident qlen length mismatch gaps staxids evalue bitscore'"), input=fasta.miss.Chr.1perline[[2]])
+     
+          # blast.out.cb.test <- system2('/Volumes/Macintosh_HD_3/genetics/genenetwork2/ncbi-blast-2.7.1+/bin/blastn', c('-db',"'nt'", '-remote', 
+          # # '-out', "'/Volumes/Macintosh_HD_3/genetics/genenetwork2/fasta_search_cb_tab.txt'",
+          # '-perc_identity',"'.96'",
+          # '-outfmt', "'6 qseqid sseqid pident qlen length mismatch gaps staxids evalue bitscore'"), input=fasta.miss.Chr.1perline[[2]][1:2])
+  
+
+@
+
+
+
+<< accession2gene >>=
+#  xs <- accessionToUID("AAD24196",db="genbank")
+# 
+#    xs <- genbank('BC103756.2',disp='browser')
+#    xml <- getURL('https://www.ncbi.nlm.nih.gov/gene?tool=bioconductor&cmd=Search&term=BC103756')
+#    docs <- xmlTreeParse(xml,useInternalNodes = TRUE)
+#    
+# xml.List.a <- xmlToList(docs,addAttributes = TRUE, simplify = FALSE)
+# xml.List.a[[1]]$title
+
+## Start here
+#xa <- as.list(org.Hs.egACCNUM2EG) # query this database to make sure ACCESSION number exists
+
+entrez_dbs()
+entrez_db_searchable(db='gene')
+
+loop.delay <- c(4)   # in seconds
+rentrez.results <- list()
+retrieved.num <- c(0)
+
+count.returned <- matrix(rep(NA,dim(first.hits)[1]))
+
+#for (im in (retrieved.num + 1):dim(first.hits)[1])  {
+
+     for (im in (retrieved.num + 1):length(major.Area[[1]]$Symbol[unlist(miss.Chr[[1]])]))  {
+#          query <- c(first.hits$ref.Access[im])
+          query <- c(major.Area[[1]]$Symbol[unlist(miss.Chr[[1]])][im])
+          
+               try.rentrez <- entrez_search(db='gene',query)
+          
+          
+               
+          if (try.rentrez$count > 0)   {
+               count.returned[im] <- try.rentrez$count
+               temp.esumm <- entrez_summary(db='gene',id=try.rentrez$ids)
+               rentrez.results[[im]] <- temp.esumm
+               
+          } else {
+               
+               count.returned[im] <- c(0)
+               rentrez.results[[im]] <- as.list(rep(NA,21))   # number of items (+1) in returned query
+          }
+          
+     Sys.sleep(loop.delay)    # because the entrez gene server will accept no more than 3 queries per second
+     print(paste('iteration ',im,sep=''))
+}
+
+@
+
+<< match_new_Chr_names >>=
+
+#match.rentrez.uids <- match(as.character(major.Area[[1]]$ENTREZID[unlist(miss.Chr[[1]])]),
+#                            first.hits$ENTREZID)
+al <- c(1:length(major.Area[[1]]$Symbol[unlist(miss.Chr[[1]])]))
+
+# match.rentrez.uids.temp <- lapply(rentrez.results[al], function(x,al,y,z) match(as.character(y[1]$ENTREZID[unlist(z)]),z), al, miss.Chr[al],rentrez.results[al])
+
+retrieved.num <- c(0)
+
+rentrez.results.uid <- matrix()
+
+for (im in (retrieved.num + 1):length(major.Area[[1]]$Symbol[unlist(miss.Chr[[1]])]))  {
+     
+     rentrez.results.uid[im] <- rentrez.results[[im]][1]
+     
+}
+
+match.rentrez.temp <- data.frame(indx=rep(NA,length(major.Area[[1]]$Symbol[unlist(miss.Chr[[1]])])),uid=rep(NA,length(major.Area[[1]]$Symbol[unlist(miss.Chr[[1]])])), 
+                         chr_name=rep(NA,length(major.Area[[1]]$Symbol[unlist(miss.Chr[[1]])])),
+                                 symbol=rep(NA,length(major.Area[[1]]$Symbol[unlist(miss.Chr[[1]])])), start_pos=rep(NA,length(major.Area[[1]]$Symbol[unlist(miss.Chr[[1]])])))
+
+
+for (im in 1:length(major.Area[[1]]$Symbol[unlist(miss.Chr[[1]])]))  {
+
+     
+     match.rentrez.temp[im,1] <- match(as.character(major.Area[[1]]$ENTREZID[unlist(miss.Chr[[1]])[im]]),rentrez.results.uid)
+     
+     if (!is.na(match.rentrez.temp[im,1]))  {
+          match.rentrez.temp[im,2] <- rentrez.results[[match.rentrez.temp[im,1]]]$uid
+          match.rentrez.temp[im,3] <- rentrez.results[[match.rentrez.temp[im,1]]]$chromosome
+          match.rentrez.temp[im,4] <- rentrez.results[[match.rentrez.temp[im,1]]]$name
+          match.rentrez.temp[im,5] <- rentrez.results[[match.rentrez.temp[im,1]]]$chrstart
+          
+               if (match.rentrez.temp[im,5] == 999999999)  {
+                    match.rentrez.temp[im,5] <- NA
+               }   else {
+               
+               }
+          
+     } else {
+          match.rentrez.temp[im,2] <- NA
+          match.rentrez.temp[im,3] <- NA
+          match.rentrez.temp[im,4] <- NA
+          match.rentrez.temp[im,5] <- NA
+          
+     }
+
+}
+
+@
+
+<< replace_missing_Chr_names >>=
+
+major.Area[[1]]$loc[unlist(miss.Chr[[1]])] <- match.rentrez.temp$chr_name
+num.NA(major.Area[[1]]$loc)
+
+
+@
+
+
+\end{document}
