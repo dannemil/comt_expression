@@ -1,0 +1,459 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf100
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red217\green11\blue5;\red217\green11\blue5;}
+{\*\expandedcolortbl;;\cssrgb\c88946\c14202\c0;\cssrgb\c88946\c14202\c0;}
+{\info
+{\author James L. Dannemiller}
+{\*\company Department of Psychology; Rice University}}\margl1440\margr1440\vieww25080\viewh13880\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs32 \cf0 Running notes on COMT project Started April 5, 2018\
+\
+data files at {\field{\*\fldinst{HYPERLINK "http://genenetwork.org/webqtl/main.py?FormID=sharinginfo&GN_AccessionId=482"}}{\fldrslt http://genenetwork.org/webqtl/main.py?FormID=sharinginfo&GN_AccessionId=482}}\
+\
+Citation:\
+Please review and cite: Gibbs JR, Hernandez DG, Dillman A, Ryten M, Trabzuni D, Traynor BJ, Nalls MA, Arepalli S, Ramasamy A, van der Brug MP, Troncoso J, Johnson R, O'Brien R, Zielke HR, Zonderman A, Ferrucci L, Longo DL, Smith C, Walker R, Weale M, Hardy JA, Cookson MR, Singleton AB. {\field{\*\fldinst{HYPERLINK "https://www.ncbi.nlm.nih.gov/pubmed/22433082"}}{\fldrslt PMID: 22433082}}.\
+\
+Authors above do not correspond to the authors at the PMID link.\
+Hernandez, D. G., Nalls, M. A., Moore, M., Chong, S., Dillman, A., Trabzuni, D., Gibbs, J. R., Ryten, M., Arepalli, S., Weale, M. E., Zonderman, A. B., Troncoso, J., O'Brien, R., Walker, R., Smith, C., Bandinelli, S., Traynor, B. J., Hardy, J., Singleton, A. B., & Cookson, M. R. (2012). Integration of GWAS SNPs and tissue specific expression profiling reveal discrete eQTLs for human traits in blood and brain. Neurobiol Dis, 47(1), 20-8. \
+\
+\
+\
+\
+Use Option-Shift-T to run the timeStamp AppleScript, then Control V to paste in the time stamp.\
+\
+April 5, 2018\
+\
+It looks like there is no way to recover gene symbols for the remaining cases in which the symbol looks like 'LOCxxx'. I tried several approaches, and none of them returned anything but 'LOCxxx'\
+\
+\
+Thursday, April 5, 2018 at 4:46:59 PM\
+The table below shows that there were approximately 100 rows with NA for the loc variable (Chromosome name)\
+sapply(na.loc.indx[ib], function(x,ib) length(x), ib)\
+\
+# rows that had NA under the Chr name variable loc\
+#  pf  cb  tm  po \
+# 104  98 104 100\
+\
+When ensembl is queried for these missing Chromosomes names it returns the numbers shown in the first column below.\
+The second column shows the number of those that were formatted as CHR_ which made them unusable, so I extracted the CHR name/number from them\
+\
+#    total_returned CH_returned CH2NAleft\
+# pf            319          56         6\
+# cb            280          21         6\
+# tm            311          40         2\
+# po            292          35         4\
+\
+After this step, only, 6, 6, 2 & 4 remain with CHR as the loc value. But this has not yet been integrated into the primary data files.\
+                            \
+# temp.Init holds the corrected Chromosome names to be used to replace the NAs in major.Area\
+# first need to match the ENTREZIDs of the NA loc against the extracted/returned Chr names in temp.Init\
+\
+\
+Friday, April 6, 2018 at 2:02:46 PM\
+\
+<< recover_Chr_names>>=\
+There were \
+\
+# rows that had NA under the Chr name variable loc\
+#  pf  cb  tm  po \
+# 104  98 104 100\
+\
+When getBM was queried using Symbol and ENTREZID of the rows missing Chromosome names, the following statistics resulted:\
+\
+#    total_returnedSymb CH_returnedSymb CH2NAleftSymb total_returnedEntrez CH_returnedEmntrez\
+# pf                319              56             6                  357                 59\
+# cb                280              21             6                  319                 27\
+# tm                311              40             2                  348                 51\
+# po                292              35             4                  340                 42\
+#    CH2NAleftEntrez\
+# pf               7\
+# cb               8\
+# tm               4\
+# po               5\
+\
+In other words, after reformatting the Chromosome names that looked like CHR_xxx only approximate 6-7 of the ~320 returned results could not be reformatted into standard Chromosome values such as '2' or 'X'.\
+\
+However, even though only approximately 100 NA entries were used in the query, getBM returned many more results ~300-320. This requires a matching between the missing NA Symbols and ENTREZIDs and the returned hgnc_gene and extrezgene values.\
+\
+\
+<< check_NA_reformatted_extracted_Chr_names >>=\
+                            \
+# temp.Init$symb and temp.Init$entrezg hold the corrected Chromosome names to be used to \
+  #replace the NAs in major.Area\
+# first need to match the ENTREZIDs of the NA loc in major.Area against the extracted/returned    Chr names in na.loc.returned and na.loc.returned.entrez using Symbols and ENTREZID\
+# For example, there were\
+\
+rows that had NA under the Chr name variable loc\
+  pf  cb  tm  po \
+ 104  98 104 100 \
+\
+Once the existence of the potential Chr_names was checked against was checked against NAs in the temp.Init$symbol and temp.Init$entrezg files, the numbers in the table below show how many additional chromosome names were recovered using Symbol and ENTREZID getBM queries.\
+\
+ add.Chr.names\
+           Symbol_query entrez_query\
+Prefrontal           21            7\
+Cerebellum           16            6\
+Temporal             19            7\
+Pons                 21            7\
+\
+<< union_Symb_entrez_returns >>=\
+Need to get the union of these available Chr names before substituting them into major.Area and the primary data files\
+\
+But creating the union loses the information about which of the two queries produced the Chromosome name to be used.\
+\
+\uc0\u711 Saturday, April 7, 2018 at 6:03:27 AM\
+\
+Rewrote section before the union operation to create lists that for each brain area have the index of the match using Symbol/hgnc_gene, the returned symbol (hgnc_gene), the returned enter (entrezgene), the returned loc (chromosome_name) and the reformatted/extracted chromosomes name from temp.Init$symbol.\
+\
+This was repeated for the getBM query that was based on entrezgene.\
+\
+When this is done, the numbers of useable additional Chromosome names that result are shown in the table below.\
+\
+> add.Chr.names\
+           Symbol_query entrez_query\
+Prefrontal           21            4\
+Cerebellum           16            3\
+Temporal             19            4\
+Pons                 21            4\
+\
+Now, the union operation can be completed.\
+\
+It looks like for union.found.Chr.indx that holds the union of the corresponding indices from the two types of getBM queries, the indices from the entrezgene query are always a subset of those from the hgnc_gene query.\
+\
+This table, comp.union.intersect.tab, shows that the getBM query for chromosome names based on entrezgene values produced no additional chromosome names over and above the ones produced by the query based on gene symbols.\
+\
+		No additional chromosome names?\
+Prefrontal 	TRUE \
+Cerebellum 	TRUE \
+Temporal 	TRUE \
+Pons 		TRUE \
+\
+Now use the union vector  to replace the NA values in major.Area and in the primary data files.\
+\
+After the recovered chromosome names were written to the major.Area files, the table below shows the number of missing chromosome names remaining.\
+\
+> missing.loc\
+   Missing_Chr_names\
+pf                83\
+cb                82\
+tm                85\
+po                79\
+\
+l 1320\
+\
+Saturday, April 7, 2018 at 11:15:25 AM\
+\
+added chunk << write_data_out >> to write out the primary data files after finding various missing values\
+\
+l 1335\
+\
+The chuck << find_miss_start_pos_bp >>= basically needs to repeat the procedure that was just completed for finding missing chromosome names\
+\
+This section to find the missing start positions begins at line 1341 - do not replace anything above that with new variable names\
+\
+<< check_NA_in_bp >>=                            \
+\
+sapply(na.bp.indx[ib], function(x,ib) length(x), ib)\
+\
+# rows that had NA under the Chr name variable loc\
+#  pf  cb  tm  po \
+# 104  98 104 100\
+\
+The table above shows the number of rows missing start positions in each brain area for trying to recover then using getBM.\
+\
+From the two getBM queries the number of additional starting positions returned was\
+\
+> add.start.Pos\
+           Symbol_query entrez_query\
+Prefrontal           18            2\
+Cerebellum           14            2\
+Temporal             16            2\
+Pons                 18            2\
+\
+********** Do not forget to divide the returned starting positions by 1,000,000\
+\
+> missing.bp\
+   Missing_start_Pos\
+pf                86\
+cb                85\
+tm                88\
+po                82\
+\
+Saturday, April 7, 2018 at 3:42:32 PM\
+\
+BLAST test using probe sequence for COMT\
+AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC\
+\
+Monday, April 9, 2018 at 8:59:35 AM\
+\
+This chunk << alternative_blast >>=\
+produces a data frame (after many transformations) of the form:\
+\
+            id gi.Access     ref.Access percent.Match qlen length mismatch gaps taxon.Code   evalue	bitscore\
+1 id_440589_pf 136724010 XR_001712422.2       100.000   50     50        0    0       9598 2.57e-16	93.5\
+\
+This comes from querying the blastn server using the probe Reporter.Sequence of all of the rows that have missing Chromosomes.\
+\
+It next needs to be subset by the taxon.Code=9606 (Homo sapiens).\
+\
+After this, only the top hit for each unique id should be retained. NOTICE that the top hit once the data have been subset by 9606 is not necessarily the top overall hit for that id. It is, on the other hand, the top hit for Homo sapiens of that probe sequence.\
+\
+NOTE: blastn was queried with 83 sequences, but the results returned by blastn for pf for example only contain 80 unique ids.\
+*** Will need to match the IDs to the ENTREZIDs of the 83 rows missing Chromosome names that were used in the query.\
+\
+In the chunk << subset_9606 >>= the variable pos.inc holds the row number of the first hit for each unique ENTREZID in the order in which they appear in the blast.out.pf9606\
+\
+first.hits holds only the first hits for homo sapiens for unique ENTREZIDs\
+\
+The second ACCESSION number can then be used with rentrez_search to find the Chromosome name, gene name, and start location.\
+\
+Monday, April 9, 2018 at 2:24:19 PM\
+\
+Documentation for querying the enter gene database\
+\uc0\u711 https://cran.r-project.org/web/packages/rentrez/vignettes/rentrez_tutorial.html\
+\
+<< match_new_Chr_names >>=\
+ The ENTREZIDs with missing chromosomes need to be matched against the newly found chromosomes from renters\
+\
+*************************************\
+Tuesday, April 10, 2018 at 7:37:46 AM\
+\
+When the results returned from the rentrez search were matched using entrezgene (uid) to the ENTREZIDs from the rows missing Chromosome names, there were only approximately 2-3 matches out of 83 ENTREZIDs from rows missing Chromosomes. Something is wrong, so the next step is to discover why rentrez returned so many hits, but so few of them could be used to reduce the number of rows with missing Chr names.\
+\
+<< get_illumina_entrezid_symbol >>=\
+\
+Retrieve the entrezgenes and symbols from the illumination file based on probes whose search key matched the .Record value from the major.Area lists.\
+\
+When the ENTREZIDs from major.Area of the rows missing Chromosome (loc) names are compared to the entrez values from the illumina file matched through ILMN_xxx values, the two sets of entrezgene IDs are identical.\
+\
+> setdiff(as.character(unlist(entrez.and.symb.Illum[[1]][1])),as.character(major.Area[[1]]$ENTREZID[unlist(miss.Chr[[1]])]))\
+character(0)\
+\
+> setdiff(as.character(unlist(entrez.and.symb.Illum[[1]][2])),as.character(major.Area[[2]]$ENTREZID[unlist(miss.Chr[[2]])]))\
+character(0)\
+\
+> setdiff(as.character(unlist(entrez.and.symb.Illum[[1]][3])),as.character(major.Area[[3]]$ENTREZID[unlist(miss.Chr[[3]])]))\
+character(0)\
+\
+> setdiff(as.character(unlist(entrez.and.symb.Illum[[1]][4])),as.character(major.Area[[4]]$ENTREZID[unlist(miss.Chr[[4]])]))\
+character(0)\
+\
+\
+COMT 1312 Reported.Sequence AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC\
+\
+Do not use the ACCESSION numbers found using BLASTN with the probe Reporter.Sequence(s) because the first hit for homo sapiens gives too few ENTREZID/uid matches to be useful.\
+\
+Instead, use the Symbols of the missing loc rows to retrieve chromosome names and start positions using rentrez.\
+\
+\
+This chunk << replace_missing_Chr_names >>= uses the chromosome names, and start positions recovered using rentrez to replace some of the missing loc values in major.Area[[1]] and in prefrontal.Data.\
+\
+Need to repeat this analysis for the other three brain areas to find missing loc (Chromosome names) then repeat it for all four areas to retrieve missing start positions (bp).\
+\
+Tuesday, April 10, 2018 at 3:44:47 PM\
+\
+Consider running a principle components analysis of the correlations with COMT. The genes that load most highly on there first several components could be another way of determining the set to use for ontology analysis.\
+\
+Wednesday, April 11, 2018 at 9:02:34 AM\
+\
+At the end of the first rentrez run using major.Area[[1]], for the symbol C12orf63 rentrez returned uids \
+[1] "144535"    "100490177" "417921"    "105097493" "105075061" "104963968" "104569553" "104513791"\
+ [9] "104491721" "104482013" "104370438" "104360091" "104254646" "104164853" "104143861" "104072519"\
+[17] "104041059" "104029002" "103811347" "104696434"\
+\
+None of these match the ENTREZID for that Symbol in major.Area[[1]]: 374467\
+\
+However, when you look up 374467 in the gene database, it shows that that ENTREZID was replaced with 144535 which is the first aid returned in the rentrez search.  Additionally, searching gene cards with thew symbol gives the chromosome and start position. It also gives the correct symbol, CFAP54. By hand I replaced the results for row 31 in rentrez.results[[1]] with the correct information.\
+\
+Thursday, April 12, 2018 at 8:02:03 AM\
+\
+rentrez.results[[1]][where.replace[1],1:4] <- c("144535",'CFAP54','12','96489556')\
+\
+I did the same one-off operation for the other three brain areas. The same ENTREZID, 374467, was missing from each of the returned sets of data.\
+\
+line 405\
+\
+Thursday, April 12, 2018 at 7:22:49 PM\
+\
+The code in the chunk << one.off >>= was used to replace outdated symbols and to fill in missing chromosomes and start positions just for rows in enter.comp.area before putting them into major.Area. The code was repeated four times with data as shown in these four matrices:\
+\
+area 1\
+  area indx   startpos   symbol chr\
+1    1   35 141.002591  SPANXB1   X\
+2    1   19  95.407266    SYNE3  14\
+3    1   11  28.505943     RCC1   1\
+4    1   50   2.184074 MGC40069  14\
+5    1   67    1.14516 FLJ35816   4\
+6    1   74   0.113348 RNA28SN5  22\
+7    1   77  11.976734    SNX29  16\
+\
+# redefine one.off.matx\
+#cb\
+one.off.matx <- matrix(c(2,12,141.002591,'SPANXB1','X',\
+                         2,41,11.976734,'SNX29','16',\
+                         2,64,95.407266,'SYNE3','14',\
+                         2,65,0.113348,'RNA28SN5','22'),\
+                         ncol=5,byrow=TRUE\
+                       )\
+\
+# redefine one.off.matx\
+#tm\
+one.off.matx <- matrix(c(3,13,141.002591,'SPANXB1','X',\
+                         3,28,11.976734,'SNX29','16',\
+                         3,29,0.113348,'RNA28SN5','22',\
+                         3,47,28.505943,'RCC1','1',\
+                         3,57,2.184074,'MGC40069','14',\
+                         3,82,95.407266,'SYNE3','14'),\
+                         ncol=5,byrow=TRUE\
+                       )\
+\
+# redefine one.off.matx\
+#po\
+one.off.matx <- matrix(c(4,13,141.002591,'SPANXB1','X',\
+                         4,39,11.976734,'SNX29','16',\
+                         4,53,95.407266,'SYNE3','14',\
+                         4,61,28.505943,'RCC1','1',\
+                         4,62,0.113348,'RNA28SN5','22',\
+                         4,77,2.184074,'MGC40069','14'),\
+                         ncol=5,byrow=TRUE\
+                       )\
+\
+In the chunk << substitute.new.values >>= the missing and incorrect values in major.Area will be addressed. it is probably best given all of the transformations, to link the missing ENTREZIDs in major to the uids in entrez.comp.area rather than assume that they are sequentially in register.\
+\
+Friday, April 13, 2018 at 11:32:02 AM\
+\
+"/Volumes/Macintosh_HD_3/genetics/genenetwork2/blast_test_v3.Rnw"\
+\
+So far, this is only being run on the pf data set.\
+In the chunk << subset_9606 >>=, before subsetting there were 10,477 hits returned.\
+\
+After subsetting with bitscore >= 93.5 and percent.Match > 94% there are 2098 hits remaining.\
+\
+Tested 50 random ref.Access numbers. The gene database returned 2 hits from those 50 queries. If all queries were independent, then that would give an estimate of  (2/50)*2098 =~ 84 new chromosome locations and start positions.\
+\
+ \
+{\field{\*\fldinst{HYPERLINK "https://biology.stackexchange.com/questions/19338/what-e-value-blast-cut-off-is-best"}}{\fldrslt https://biology.stackexchange.com/questions/19338/what-e-value-blast-cut-off-is-best}}\
+Use cutoff of 1xe-05 or the E-value (not p-value)\
+\
+\
+Saturday, April 14, 2018 at 2:50:10 PM\
+\
+In the chunk << use_new_rentrez >>= the newly recovered Symbols, Chr names and start positions are checked against major.Area to determine whether or not to substitute the new entries for the existing ones.\
+\
+dim(rentrez.results.by.entrez) = 37,4  There are potentially 37 Symbols, Chr names and start positions that could be used. BUT,\
+\
+For example, in the pf data set, the original query was for gene symbols that still had the designation 'LOCxxx.' There were 37 of these. That means that any gene name returned by the rentrez gene search that did not begin with 'LOC' should be substituted for its LOC name into major.Area[[1]]$Symbol.\
+\
+On the other hand, there are no missing Chromosome names among that set of 37 rows in major.Area, so none of the chromosome names returned by rentrez potentially should be substituted into major.Area[[1]]$loc.\
+\
+Similarly, there is only 1 missing start position in major.Area[[1]]$bp among the 37 rows, so only that one start position that corresponds to the missing one in major.Area[[1]]$bp should be used.\
+\
+The gene ASAH2C should be ASAH2B according to gene cards. Changed this as a one-off.\
+The gene "DEFB4B" which was "LOC728454" according to Gene Cards has a different ENTREZID than LOC728454 had. For this reason, I left the LOC symbol.\
+The gene CFAP74 replaced "LOC339457" in a One-off.\
+\
+The chromosome names from rentrez match exactly the ones already in major.Area\
+\
+Sunday, April 15, 2018 at 6:40:37 AM\
+\
+In the cb data set, the chromosome names returned by rentrez at indices 7 and 8 do not match those in major for the corresponding indices:\
+\
+comp.avail.needed[7,3] = 4	major.Area[[2]]$loc[xxx] = 21    LOC389833   389833\
+comp.avail.needed[8,3] = Un	major.Area[[2]]$loc[xxx] = 4	LOC389834	389834\
+\
+NCBI using LOC symbols confirmed that LOC389833 (pseudogene) is on Chromosome 21. The symbol was replaced with TEKT4P2.\
+Replaced in major April 15\
+\
+There was a rentrez/major discrepancy in chromosome names at index 8 Un vs. 4\
+Gene Cards confirmed it was Chr 4.\
+Replaced in major April 15\
+\
+******* wrote out the new cell.Data file. ********** Sunday, April 15, 2018 at 12:19:05 PM\
+\
+The criteria for retaining blasts search results were bitscore >= 93.5 and percentMatch > 94%\
+\
+{\field{\*\fldinst{HYPERLINK "file::/Volumes/Macintosh_HD_3/genetics/genenetwork2/blast_test_v3.Rnw"}}{\fldrslt file::/Volumes/Macintosh_HD_3/genetics/genenetwork2/blast_test_v3.Rnw}}\
+\
+** Need to write out the results of searching the 'gene' database using rentrez so the searches do not have to be repeated.\
+\
+********* Install this R memory management package: {\field{\*\fldinst{HYPERLINK "https://cran.r-project.org/web/packages/SOAR/SOAR.pdf"}}{\fldrslt https://cran.r-project.org/web/packages/SOAR/SOAR.pdf}}\
+\
+See this reference as a justification for excluding LOC genes from the analysis.: {\field{\*\fldinst{HYPERLINK "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4426370/"}}{\fldrslt https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4426370/}}\
+"Probes mapping to genes of uncertain function (LOC symbols) and those encompassing a common SNP (1000G, release June 2010) were further excluded, leaving 23,555 probes used in the analysis.\
+\
+Some fo the checks that I have implemented can be considered "\cf2 sanity checks\cf0 " or "\cf2 spot checks\cf0 .\'92\
+\
+l473\
+\
+l503\
+############## BEGIN One-off corrections ########################\
+#################################################################\
+\
+  # corrections for major.Area[[1]], prefrontal in the comp.avail.needed matrix\
+  # correct in comp.avail.need first and rentrez.results.by.entrez before major.Area\
+  col 1: rentrez symbol\
+  col 2: major symbol\
+  col 3: rentrez chr\
+  col 4: major chr\
+  col 5: rentrez startpos\
+  col 6: major startpos\
+  \
+  # the rentrez.results.by.entre data frame has the same row indices\
+  col 1: uid\
+  col 2: name      \
+  col 3: chromosome\
+  col 4: start.pos\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 Sunday, April 15, 2018 at 8:34:03 PM\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+temp.split <- gsub('\\\\t',' ',blast.out)\
+temp.split <- data.frame(do.call('rbind', strsplit(temp.split,' ')))\
+\
+colnames(temp.split) <- c('id', 'gi.ref.Access','percent.Match',\
+                              'qlen','length','mismatch','gaps','taxon.Code','evalue','bitscore')\
+\
+temp.split <- data.frame(do.call('rbind', strsplit(as.character(temp.split$gi.ref.Access),'\\\\^|[a-z]\{2,\}\\\\|')))\
+\
+\
+temp.split[,c(2,3)] <- gsub('\\\\|\{1\}','',temp.split[,c(2,3)])\
+temp.split <- temp.split[,2:3]\
+blast.out <- data.frame(blast.out[,1],temp.split[,1:2],blast.out[,c(3:10)])\
+colnames(blast.out) <- c('id','gi.Access','ref.Access','percent.Match',\
+                              'qlen','length','mismatch','gaps','taxon.Code','evalue','bitscore')\
+\
+Need to write out the results of the entrez_search, so that it does not have to be repeated. try.rentrez <- entrez_search(db='gene',query)\
+\
+l324\
+\
+Added SOAR memory management to the library.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 Monday, April 16, 2018 at 9:04:47 AM\
+\
+\cf0 ls()  show all of the objects in the current environment\
+\
+objects()  same as ls()\
+\
+ls(pattern="some pattern or reg expression")  filter current objects\
+\
+hold.ls <- ls(pattern="some pattern or reg expression")  assign filtered objects to hold.ls\
+\
+rm(list=hold.ls)   remove from the current environment the filtered objects held in hold.ls\
+\
+rm(list=ls(pattern="some pattern or reg expression"))    This is equivalent to rm(list=hold.ls) ad avoids having to create a new variable.\
+\
+apropos('pattern') same as ls(pattern="some pattern or reg expression") filter objects\
+\
+Store(object1,object2) from the package SOAR store object1 and object2 on disk; they are still immediately available, but this frees up memory\
+\
+str(object1)   structure of object1: what column names, what data frames if it is a list, etc. with detailed information on each column\
+\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+}
