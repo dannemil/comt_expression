@@ -63,7 +63,7 @@ library(roxygen2)
 setwd('/Volumes/Macintosh_HD_3/genetics/genenetwork2/')
 source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_write_primary_data_one_set.R')
 source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_test_getdir.R')
-source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_obj_size_Mb.R')  # objSize.Mb(object1)
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/objSizeMb.R')  # objSizeMb(object1)
 
 
 @
