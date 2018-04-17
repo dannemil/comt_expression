@@ -4,11 +4,10 @@
 .Ruserdata
 .DS_Store
 match_probe_seq.Rnw
-comt_correlations_20000_all_areas_augmentedNew.xlsx.OLD9
 ncbi-blast-2.7.1+
-comt_correlations_20000_all_areas_augmentedNew.xlsx.OLD
-comt_correlations_20000_all_areas_augmentedNew.xlsx.OLD2
-comt_correlations_20000_all_areas_augmentedNew.xlsx.OLD3
-comt_correlations_20000_all_areas_augmentedNew.xlsx.OLD4
 ref1.xml
 .RDataTmp
+func_get_path.R
+func_list_objects.R
+test_getdir.R.OLD
+comt_correlations_20000_all_areas_augmentedNew.xlsxOLD10
