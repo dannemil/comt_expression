@@ -1,7 +1,9 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf100
 {\fonttbl\f0\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;\red217\green11\blue5;\red0\green0\blue0;}
-{\*\expandedcolortbl;;\cssrgb\c88946\c14202\c0;\cssrgb\c0\c0\c0;}
+{\colortbl;\red255\green255\blue255;\red217\green11\blue5;\red0\green0\blue0;\red217\green11\blue5;
+}
+{\*\expandedcolortbl;;\cssrgb\c88946\c14202\c0;\cssrgb\c0\c0\c0;\cssrgb\c88946\c14202\c0;
+}
 {\info
 {\author James L. Dannemiller}
 {\*\company Department of Psychology; Rice University}}\margl1440\margr1440\vieww25080\viewh13880\viewkind0
@@ -509,6 +511,21 @@ The vector useable.results.indx holds the indices in the rentrez.results.by.entr
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 \cf0 l535\
 \
+Used the R program remove_unused.R with the files, remove_list.txt and remove_list_edited.txt to delete the unused variables.\
 \
+l626\
 \
+The chunk << genes_from_startpos >>= attempts to retrieve gene symbols using chromosome and start position. For the 6 useable values that resulted from the Accession query and the following entrez Gene db query, not a single returned gene had an Entrezgene ID that matched the one that corresponded to the chromosome and start position of the query. This was for the prefrontal data. For this reason, this query is unlikely to produce any new information.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf4 Tuesday, April 17, 2018 at 3:16:34 PM\cf0 \
+\
+l402\
+Stopped with the cbell data ready to query Gene db with Accession numbers.\
+\
+\cf4 Wednesday, April 18, 2018 at 6:07:23 AM\
+\
+\cf3 Ran the bell data through the Accession query of Gene db, but it halted after iteration 483.\
+\
+\cf0 \
 }
