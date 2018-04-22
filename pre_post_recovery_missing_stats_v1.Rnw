@@ -1,0 +1,194 @@
+{\bfseries {pre_post_recovery_missing_stats_v1.Rnw}}\\
+
+Program to generate tables pre- and post- preprocessing of the data on number of rows with missing observations on various variables and the number of rows with gene symbols that begin with "LOC." Additionally, some chromosomes were initiaslly listed as 'Un' for unknown.\\
+
+\documentclass[11pt]{article}
+\usepackage{graphicx, subfig}
+\usepackage{float}
+\pagenumbering{arabic}
+\usepackage{enumerate}
+\usepackage{Sweave}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{framed}
+\usepackage{longtable}
+\usepackage{tablefootnote}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{keep.source=TRUE} 
+
+\hspace{-1.5em}Gene Network\\
+COMT expression correlations in Four Brain Areas\\
+Fall, 2017\\
+
+
+
+<<echo=FALSE>>=
+
+library(base)
+library(knitr)
+library(openxlsx)
+library(xtable)
+library(magrittr)
+library(tables)
+library(plyr)
+library(scales)
+library(utils)
+# library(ggman)
+library(dplyr)
+library(biomaRt)
+library(stringr)
+library(curl)
+library(git2r)
+library(githubinstall)
+library(devtools)
+library('xml2')
+library(RCurl)
+library(XML)
+library(rentrez)
+library(data.table)
+library(pracma)
+library(SOAR)
+library(roxygen2)
+library(GlobalOptions)
+library(tidyr)
+
+work.path <- c('/Volumes/Macintosh_HD_3/genetics/genenetwork2/')
+
+setwd(work.path)
+
+# Include sourced programs here.
+source.prog <- data.frame(rfunc=                  
+          'func_get_match_length',
+          'func_chrom_names',
+          'func_get_start_pos',
+          'func_myBioCLite',
+          'func_genes_are_nums',
+          'func_genes_are_locs',
+          'func_genes2chr',
+          'func_anyY',
+          'func_gene_start_end',
+          'func_chisq_genesBychr',
+          'func_mismatch_hgnc',
+          'func_get_miss_Stats',
+          'func_strip_chr',
+          'func_strip_bp',
+          'func_miss_chr_bp',
+          'func_miss_symb_descr',
+          'func_write_primary_data',
+          'func_write_primary_data_one_set',
+          'func_test_getdir',
+          'func_obj_size_Mb',
+          'func_new_objects',
+          'func_tstamp',
+          'func_prog_id',
+          'func_countNA',
+          'func_where_NA',
+          'func_squareAxes',
+          'func_histChr',
+          'func_onlycisChr',
+          'func_hypergeom_plot',
+          'func_commaSep',
+          'func_nums2genes',
+          'func_raincloudPlots',
+          'func_unique_id_generator',
+          'new_objects'
+)
+
+source(paste(work.path,source.prog$rfunc,'.R',sep=''))
+
+sourced.Funcs <- matrix(c('func_get_match_length',
+          'func_chrom_names',
+          'func_get_start_pos',
+          'func_myBioCLite',
+          'func_genes_are_nums',
+          'func_genes_are_locs',
+          'func_genes2chr',
+          'func_anyY',
+          'func_gene_start_end',
+          'func_chisq_genesBychr',
+          'func_mismatch_hgnc',
+          'func_get_miss_Stats',
+          'func_strip_chr',
+          'func_strip_bp',
+          'func_miss_chr_bp',
+          'func_miss_symb_descr',
+          'func_write_primary_data',
+          'func_write_primary_data_one_set',
+          'func_test_getdir',
+          'func_obj_size_Mb',
+          'func_new_objects',
+          'func_tstamp',
+          'func_prog_id',
+          'func_countNA',
+          'func_where_NA',
+          'func_squareAxes',
+          'func_histChr',
+          'func_onlycisChr',
+          'func_hypergeom_plot',
+          'func_commaSep',
+          'func_nums2genes',
+          'func_raincloudPlots',
+          'func_unique_id_generator',
+          'new_objects'),
+          ncol=1)
+
+fileConn<-file('sourced_functions_programs.txt')
+     writeLines(sourced.Funcs,con=fileConn,sep=',\n')
+close(fileConn)
+
+################ READ THESE IN #################
+
+
+stand.Col.names.lc <- c("prefrontal",
+                        "cerebellum",
+                        "temporal",
+                        "pons")
+
+opt <- setGlobalOptions(
+          recordTimestamps = TRUE
+)
+
+@
+
+
+<<init, include=FALSE >>=
+opts_chunk$set(include=FALSE,
+               echo=FALSE,
+               message=FALSE,
+               warning=FALSE)
+
+# Function to catch warnings that a sheet has no data yet and return NAs 
+readPrime = function(x,y,z) {     
+     tryCatch(data.frame(read.xlsx(x,sheet = y)),
+            warning = function(w) {print(paste("no data ", y));
+            return(z)},
+            error = function(e) {print(paste("error reading data", y));
+            return(z)}
+)
+}
+@
+
+<<include=FALSE, echo=FALSE, results=hide>>=
+# Generate a unique ID for this program by path and filename. This unique ID is attached to this file using a tag in the filesystem.
+
+fname <- csf()   # function to get current path including file name
+
+prog.Name <- unique.ID(fname)
+
+prog.Name   # unique ID based on hash of file name
+
+# Write out the file_name, unique ID and date/time to '.Rscriptnames'
+
+rec.script(eval(fname),eval(prog.Name))
+
+@
+
+
+
+\end{document}

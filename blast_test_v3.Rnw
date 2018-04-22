@@ -59,13 +59,25 @@ library(SOAR)
 library(roxygen2)
 
 
-
-
 setwd('/Volumes/Macintosh_HD_3/genetics/genenetwork2/')
+
 source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_write_primary_data_one_set.R')
 source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_test_getdir.R')
 source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_obj_size_Mb.R')  # objSizeMb(object1)
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/new_objects.R')
+source('/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_new_objects.R')
 
+
+######### add timestamp attribute to a object when it is created
+# x <- 1
+# print(x)
+# 
+# `<-` = function(...) {
+#   eval.parent(replace(match.call(), c(1, 3), list(base::`<-`, structure(..2, ctime=Sys.time()))))
+# }
+# x <- 2
+# print(x)
+##################################################################
 
 @
 

@@ -1,9 +1,9 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf100
-{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fswiss\fcharset0 ArialMT;}
 {\colortbl;\red255\green255\blue255;\red217\green11\blue5;\red0\green0\blue0;\red217\green11\blue5;
-}
+\red27\green29\blue31;\red255\green255\blue255;}
 {\*\expandedcolortbl;;\cssrgb\c88946\c14202\c0;\cssrgb\c0\c0\c0;\cssrgb\c88946\c14202\c0;
-}
+\cssrgb\c14118\c15294\c16078;\cssrgb\c100000\c100000\c100000;}
 {\info
 {\author James L. Dannemiller}
 {\*\company Department of Psychology; Rice University}}\margl1440\margr1440\vieww25080\viewh13880\viewkind0
@@ -527,5 +527,123 @@ Stopped with the cbell data ready to query Gene db with Accession numbers.\
 \
 \cf3 Ran the bell data through the Accession query of Gene db, but it halted after iteration 483.\
 \
+Wrote new code to help remove unused objects from memory before storing an image of the current session:\
+	
+\i new_objects.R
+\i0  and 
+\i func_new_objects.R\
+\
+
+\i0 Before restarting blast_test_v3.Rnw on the cell data, record the existing values of the variables\
+\
+im = 484\
+dim(query.ref.Access)[1] = 2037\
+num.hits = 30\
+count.returned[[2]][483] = 9\
+count.returned[[2]][484] = NA\
+"brain area Cerebellum iteration 484"\
+\
+\
+\
+\cf4 Thursday, April 19, 2018 at 12:33:48 PM\
+\
+\cf3 Added functions to save and retrieve timestamps for when objects were created.\
+\
+file = func_tstamp.R\
+\
+tstamp(object)   # pass the name of the object without quotes\
+\
+If successful, it writes the name of the object, and a timestamp to the file .Rtimestamps and returns "timestamp recorded"\
+If it fails, it returns "timestamp failed"\
+\
+Note: it originally saved the timestamp as the 
+\f1\fs30 \cf5 \cb6 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec5 number of seconds since Epoch = Jan 1st 1970 0:00:00. I changed it to save it in human readable format.\
+\
+These next two functions are unnecessary now that the date/time is stored in human readable format.\
+The functions ctime(object) and mtime(object) return the date/time in human-readable format for the first time an object was created, and the last time it was changed.\
+\
+*************\
+The function, rec.script(eval(fname),eval(prog.Name)), in the file 
+\i func_prog_id.R
+\i0 , is invoked automatically when a new R script is created (not for functions) to write out the file name of the script, the unique ID, and the date/time. They are written to .
+\i Rscriptnames
+\i0   . The information is written only once for each script.\
+
+\f0\fs32 \cf3 \cb1 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\cf4 Friday, April 20, 2018 at 5:39:27 AM\cf3 \
 \cf0 \
+[1] "brain area Cerebellum iteration 839"\
+Error in curl::curl_fetch_memory(url, handle = handle) : \
+  Timeout was reached: Operation timed out after 10008 milliseconds with 0 out of 0 bytes received\
+\
+l674\
+\
+for cerebellum\
+> comp.avail.needed\
+   r.entrez m.entrez    r.symb    m.symb r.chr m.chr r.startpos m.startpos\
+1    115648   115648 LOC115648 LOC115648    19    19         NA  21.382659\
+2    155060   155060 LOC155060 LOC155060     7     7 149.285280 149.285280\
+3    283874   283874 LOC283874 LOC283874    16    16   2.651150   2.651150\
+4    285074   285074 LOC285074 LOC285074     2     2  87.030674  87.030674\
+5    286526   286526      RAR2 LOC286526     X     X         NA 102.079768\
+6    339457   339457  C1orf222 LOC339457     1     1         NA   1.843362\
+7    387820   387820 LOC387820 LOC387820    11    11 127.940983 127.940983\
+8    388022   388022 LOC388022 LOC388022    14    14 104.719759 104.719759\
+9    389833   389833 LOC389833 LOC389833     4     4         NA   0.026502\
+10   389834   389834 LOC389834 LOC389834    Un    Un         NA   0.051062\
+11   400464   400464 LOC400464 LOC400464    15    15  99.807022  99.807022\
+12   400499   400499 LOC400499 LOC400499    16    16  11.372014  11.372014\
+13   400924   400924 LOC400924 LOC400924    22    22         NA  28.756106\
+14   400968   400968 LOC400968 LOC400968    15    15  19.620670  19.620670\
+15   401252   401252 LOC401252 LOC401252     6     6  32.331465  32.331465\
+16   401589   401589 LOC401589 LOC401589     X     X  52.051170  52.051170\
+17   440337   440337 LOC440337 LOC440337    16    16   6.377742   6.377742\
+18   440568   440568 LOC440568 LOC440568     1     1  16.034509  16.034509\
+19   440570   440570 LOC440570 LOC440570     1     1         NA  17.071734\
+20   441070   441070 LOC441070 LOC441070     5     5  44.874939  44.874939\
+21   441120   441120 LOC441120 LOC441120     5     5         NA 179.012331\
+22   441193   441193 LOC441193 LOC441193     7     7   5.426139   5.426139\
+23   441257   441257 LOC441257 LOC441257     7     7         NA  72.134118\
+24   441268   441268 LOC441268 LOC441268     7     7         NA  97.394601\
+25   441956   441956 LOC441956 LOC441956    21    21  13.679218  13.679218\
+26   442535   442535 LOC442535 LOC442535     7     7         NA         NA\
+27   541469   541469 LOC541469 LOC541469    19    19         NA  43.486253\
+28   541473   541473 LOC541473 LOC541473     7     7  75.391948  75.391948\
+29   642897   642897 LOC642897 LOC642897    11    11  93.609431  93.609431\
+30   643576   643576 LOC643576 LOC643576    12    12 104.030728 104.030728\
+31   644563   644563 LOC644563 LOC644563     X     X 107.131573 107.131573\
+32   646347   646347 LOC646347 LOC646347     1     1 160.894888 160.894888\
+33   646517   646517 LOC646517 LOC646517     6     6  51.409883  51.409883\
+34   727726   727726 LOC727726 LOC727726    10    10  50.696330  50.696330\
+35   727849   727849 LOC727849 LOC727849    15    15         NA  80.943212\
+36   728392   728392 LOC728392 LOC728392    17    17   5.499426   5.499426\
+37   728454   728454    DEFB4B LOC728454     8     8   7.259787   7.259787\
+38    88523    88523  LOC88523  LOC88523    13    13         NA  31.905007\
+39    90925    90925  LOC90925  LOC90925    14    14         NA         NA\
+40    91431    91431  LOC91431  LOC91431     4     4         NA 113.680469\
+\
+\cf4 Saturday, April 21, 2018 at 6:38:22 AM\cf0 \
+l569\
+l424\
+\
+\
+\cf4 Saturday, April 21, 2018 at 4:15:58 PM\cf0 \
+\
+- Ran the findClosestGene routine on prefrontal, cerebellum and temporal.\
+- Replaced the primary data files e.g., comt_correlations_20000_prefrontal_augmentedNew.csv.txt with the new data frames\
+- Still need to repeat the procedure for pons starting with the Accession queries.\
+\
+The decision procedure on using the results from the closest gene queries:\
+1. If the starting position already in the major.Area file fell inside the txStart and txEnd of the returned query then that gene was substituted for the LOCxxx symbol\
+2. If the starting position of the gene in the major.Area file was within +/- 204363 bases of the txStart of the returned gene, then that gene was also used.\
+3. The range of +/- 204363 bp was based half the range of difference between the existing starting position and txStart for the temporal data for those genes in which the starting position fell within the gene. The prefrontal range was very similar.\
+\
+\cf4 Sunday, April 22, 2018 at 9:37:23 AM\cf0 \
+\
+Put all functions and programs to be sourced into the file 'sourced_functions_programs.txt'\
+This gets read in, formatted correctly, and all of the functions and programs get sourced.\
+\
+\
+\
 }
