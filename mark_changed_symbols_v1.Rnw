@@ -1,0 +1,208 @@
+{\bfseries {pre_post_recovery_missing_stats_v1.Rnw}}\\
+
+Program to generate tables pre- and post- preprocessing of the data on number of rows with missing observations on various variables and the number of rows with gene symbols that begin with "LOC." Additionally, some chromosomes were initiaslly listed as 'Un' for unknown.\\
+
+\documentclass[11pt]{article}
+\usepackage{graphicx, subfig}
+\usepackage{float}
+\pagenumbering{arabic}
+\usepackage{enumerate}
+\usepackage{Sweave}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{framed}
+\usepackage{longtable}
+\usepackage{tablefootnote}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{keep.source=TRUE} 
+
+\hspace{-1.5em}Gene Network\\
+COMT expression correlations in Four Brain Areas\\
+Fall, 2017\\
+
+
+
+<<echo=FALSE>>=
+
+library(base)
+library(knitr)
+library(openxlsx)
+library(xtable)
+library(magrittr)
+library(tables)
+library(plyr)
+library(scales)
+library(utils)
+# library(ggman)
+library(dplyr)
+library(biomaRt)
+library(stringr)
+library(curl)
+library(git2r)
+library(githubinstall)
+library(devtools)
+library('xml2')
+library(RCurl)
+library(XML)
+library(rentrez)
+library(data.table)
+library(pracma)
+library(SOAR)
+library(roxygen2)
+library(GlobalOptions)
+library(tidyr)
+
+work.path <- c('/Volumes/Macintosh_HD_3/genetics/genenetwork2/')
+
+setwd(work.path)
+
+
+################ READ THIS LIST OF TO-BE SOURCED FUNCTIONS AND PROGRAMS IN #################
+sourced.Funcs <-matrix()
+
+fileConn<-file('sourced_functions_programs.txt')
+     sourced.Funcs <- 
+          readLines(con=fileConn)
+     temp.Funcs <- str_replace(sourced.Funcs,',','.R')
+          sourced.Funcs <- matrix(as.character(temp.Funcs),ncol=1)
+     temp2.Funcs <- paste(work.path,sourced.Funcs,sep='') 
+          sourced.Funcs <- matrix(as.character(temp2.Funcs),ncol=1)
+close(fileConn)
+
+sF <- seq_len(length(sourced.Funcs))
+sapply(sourced.Funcs[sF], function(x,sF) source(as.character(x)), sF)
+
+
+stand.Col.names.lc <- c("prefrontal",
+                        "cerebellum",
+                        "temporal",
+                        "pons")
+
+opt <- setGlobalOptions(
+          recordTimestamps = FALSE
+)
+
+@
+
+
+<<init, include=FALSE >>=
+opts_chunk$set(include=FALSE,
+               echo=FALSE,
+               message=FALSE,
+               warning=FALSE)
+
+# Function to catch warnings that a sheet has no data yet and returns NAs 
+readPrime = function(x,y,z) {     
+     tryCatch(data.frame(read.xlsx(x,sheet = y)),
+            warning = function(w) {print(paste("no data ", y));
+            return(z)},
+            error = function(e) {print(paste("error reading data", y));
+            return(z)}
+)
+}
+@
+
+<<include=FALSE, echo=FALSE, results=hide>>=
+# Generate a unique ID for this program by path and filename. This unique ID is attached to this file using a tag in the filesystem.
+
+fname <- csf()   # function to get current path including file name
+
+prog.Name <- unique.ID(fname)
+
+prog.Name   # unique ID based on hash of file name
+
+# Write out the file_name, unique ID and date/time to '.Rscriptnames'
+
+rec.script(eval(fname),eval(prog.Name))
+
+@
+
+<< read_data >>=
+
+################# Already processed data ######################
+#wball <- loadWorkbook('comt_correlations_20000_all_areas_augmentedNew.xlsx') 
+
+
+################# DEBUG - use previous data
+wball <- loadWorkbook('comt_correlations_20000_all_areas_augmentedNewOLD10.xlsx') 
+###########################################
+
+# now tell R to read that workbook and which sheet
+  prefront.Data <- data.frame(read.xlsx(wball,sheet = "prefrontal"))
+  
+  cbell.Data <- data.frame(read.xlsx(wball,sheet = "cerebellum"))
+
+  tempor.Data <- data.frame(read.xlsx(wball,sheet = "temporal"))
+
+  pons.Data <- data.frame(read.xlsx(wball,sheet = "pons"))
+  
+  Store(prefront.Data,
+        cbell.Data,
+        tempor.Data,
+        pons.Data)
+
+
+# create a list with these data frames to be used when the same operation is applied to all area
+  
+major.Area <- list(pf=prefront.Data,
+                   cb=cbell.Data,
+                   tm=tempor.Data,
+                   po=pons.Data)
+################# END Already processed data #######################
+
+################# Original data as downloaded from genenetwork2 ####
+wballo <- loadWorkbook('comt_all_areas_correlation_results.xlsx')   
+
+# now tell R to read that workbook and which sheet
+  oprefront.Data <- data.frame(read.xlsx(wballo,sheet = "prefrontal"))
+  
+  ocbell.Data <- data.frame(read.xlsx(wballo,sheet = "cerebellum"))
+
+  otempor.Data <- data.frame(read.xlsx(wballo,sheet = "temporal"))
+
+  opons.Data <- data.frame(read.xlsx(wballo,sheet = "pons"))
+  
+  Store(oprefront.Data,
+        ocbell.Data,
+        otempor.Data,
+        opons.Data)
+
+
+# create a list with these data frames to be used when the same operation is applied to all area
+  
+omajor.Area <- list(opf=oprefront.Data,
+                   ocb=ocbell.Data,
+                   otm=otempor.Data,
+                   opo=opons.Data)
+
+################# END Original data as downloaded from genenetwork2 ####
+@
+
+<< original_stats >>=
+
+preprocess.Stats <- list()
+ib <- seq_len(4)
+
+preprocess.Stats[[1]] <- lapply(omajor.Area[ib], function(x,ib) data.frame(chrUnknown=sum(as.integer(str_count(x$Location,pattern='ChrUn')))))
+
+preprocess.Stats[[2]] <- lapply(omajor.Area[ib], function(x,ib) data.frame(chrUnknown=sum(as.integer(str_count(x$Symbol,pattern='^LOC')))))
+
+
+postprocess.Stats <- list()
+# Note: in the preprocessed data files, any missing values or 'Un' values have been replaced with NA
+
+############ HERE
+postprocess.Stats[[1]] <- lapply(major.Area[ib], function(x,ib) data.frame(chrUnknown=num.NA(x$loc)),ib)
+
+
+@
+
+
+
+\end{document}

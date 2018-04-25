@@ -5,8 +5,8 @@ get.miss.Chr.bp <- function(in.data,ji)  {
      un.num <- list()
      no.bp.num <- list()
      
-     un.num <- lapply(major.Area[i], function(x,i) length(which(x$loc == 'Un')))
-     no.bp.num <- lapply(major.Area[i], function(x,i) length(which(x$bp == 1.00)))
+     un.num <- lapply(major.Area[ji], function(x,ji) length(which(x$loc == 'Un')))
+     no.bp.num <- lapply(major.Area[ji], function(x,ji) length(which(x$bp == 1.00)))
      
      miss.Chr.bp <- data.frame(matrix(c(un.num,
                                         no.bp.num),ncol=2))

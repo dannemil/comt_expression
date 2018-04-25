@@ -62,87 +62,20 @@ work.path <- c('/Volumes/Macintosh_HD_3/genetics/genenetwork2/')
 
 setwd(work.path)
 
-# Include sourced programs here.
-source.prog <- data.frame(rfunc=                  
-          'func_get_match_length',
-          'func_chrom_names',
-          'func_get_start_pos',
-          'func_myBioCLite',
-          'func_genes_are_nums',
-          'func_genes_are_locs',
-          'func_genes2chr',
-          'func_anyY',
-          'func_gene_start_end',
-          'func_chisq_genesBychr',
-          'func_mismatch_hgnc',
-          'func_get_miss_Stats',
-          'func_strip_chr',
-          'func_strip_bp',
-          'func_miss_chr_bp',
-          'func_miss_symb_descr',
-          'func_write_primary_data',
-          'func_write_primary_data_one_set',
-          'func_test_getdir',
-          'func_obj_size_Mb',
-          'func_new_objects',
-          'func_tstamp',
-          'func_prog_id',
-          'func_countNA',
-          'func_where_NA',
-          'func_squareAxes',
-          'func_histChr',
-          'func_onlycisChr',
-          'func_hypergeom_plot',
-          'func_commaSep',
-          'func_nums2genes',
-          'func_raincloudPlots',
-          'func_unique_id_generator',
-          'new_objects'
-)
 
-source(paste(work.path,source.prog$rfunc,'.R',sep=''))
-
-sourced.Funcs <- matrix(c('func_get_match_length',
-          'func_chrom_names',
-          'func_get_start_pos',
-          'func_myBioCLite',
-          'func_genes_are_nums',
-          'func_genes_are_locs',
-          'func_genes2chr',
-          'func_anyY',
-          'func_gene_start_end',
-          'func_chisq_genesBychr',
-          'func_mismatch_hgnc',
-          'func_get_miss_Stats',
-          'func_strip_chr',
-          'func_strip_bp',
-          'func_miss_chr_bp',
-          'func_miss_symb_descr',
-          'func_write_primary_data',
-          'func_write_primary_data_one_set',
-          'func_test_getdir',
-          'func_obj_size_Mb',
-          'func_new_objects',
-          'func_tstamp',
-          'func_prog_id',
-          'func_countNA',
-          'func_where_NA',
-          'func_squareAxes',
-          'func_histChr',
-          'func_onlycisChr',
-          'func_hypergeom_plot',
-          'func_commaSep',
-          'func_nums2genes',
-          'func_raincloudPlots',
-          'func_unique_id_generator',
-          'new_objects'),
-          ncol=1)
+################ READ THIS LIST OF TO-BE SOURCED FUNCTIONS AND PROGRAMS IN #################
 
 fileConn<-file('sourced_functions_programs.txt')
-     writeLines(sourced.Funcs,con=fileConn,sep=',\n')
+     sourced.Funcs <- 
+          data.frame(rfunc=readLines(con=fileConn),stringsAsFactors = FALSE)
+
+     temp.Funcs <- str_replace(sourced.Funcs$rfunc,',','.R')
+          sourced.Funcs <- data.frame(rfunc=as.character(temp.Funcs),stringsAsFactors = FALSE)
+     temp2.Funcs <- paste(work.path,sourced.Funcs$rfunc,sep='') 
+          sourced.Funcs <- data.frame(rfunc=as.character(temp2.Funcs),stringsAsFactors = FALSE)
 close(fileConn)
 
-################ READ THESE IN #################
+source(sourced.Funcs$rfunc[1:length(sourced.Funcs)])
 
 
 stand.Col.names.lc <- c("prefrontal",
@@ -151,7 +84,7 @@ stand.Col.names.lc <- c("prefrontal",
                         "pons")
 
 opt <- setGlobalOptions(
-          recordTimestamps = TRUE
+          recordTimestamps = FALSE
 )
 
 @
@@ -163,7 +96,7 @@ opts_chunk$set(include=FALSE,
                message=FALSE,
                warning=FALSE)
 
-# Function to catch warnings that a sheet has no data yet and return NAs 
+# Function to catch warnings that a sheet has no data yet and returns NAs 
 readPrime = function(x,y,z) {     
      tryCatch(data.frame(read.xlsx(x,sheet = y)),
             warning = function(w) {print(paste("no data ", y));
@@ -188,6 +121,66 @@ prog.Name   # unique ID based on hash of file name
 rec.script(eval(fname),eval(prog.Name))
 
 @
+
+<< read_data >>=
+
+################# Already processed data ######################
+wball <- loadWorkbook('comt_correlations_20000_all_areas_augmentedNew.xlsx')   
+
+# now tell R to read that workbook and which sheet
+  prefront.Data <- data.frame(read.xlsx(wball,sheet = "prefrontal"))
+  
+  cbell.Data <- data.frame(read.xlsx(wball,sheet = "cerebellum"))
+
+  tempor.Data <- data.frame(read.xlsx(wball,sheet = "temporal"))
+
+  pons.Data <- data.frame(read.xlsx(wball,sheet = "pons"))
+  
+  Store(prefront.Data,
+        cbell.Data,
+        tempor.Data,
+        pons.Data)
+
+
+# create a list with these data frames to be used when the same operation is applied to all area
+  
+major.Area <- list(pf=prefront.Data,
+                   cb=cbell.Data,
+                   tm=tempor.Data,
+                   po=pons.Data)
+################# END Already processed data #######################
+
+################# Original data as downloaded from genenetwork2 ####
+wballo <- loadWorkbook('comt_correlations_20000_all_areas_augmentedNew.xlsx')   
+
+# now tell R to read that workbook and which sheet
+  oprefront.Data <- data.frame(read.xlsx(wballo,sheet = "prefrontal"))
+  
+  ocbell.Data <- data.frame(read.xlsx(wballo,sheet = "cerebellum"))
+
+  otempor.Data <- data.frame(read.xlsx(wballo,sheet = "temporal"))
+
+  opons.Data <- data.frame(read.xlsx(wballo,sheet = "pons"))
+  
+  Store(oprefront.Data,
+        ocbell.Data,
+        otempor.Data,
+        opons.Data)
+
+
+# create a list with these data frames to be used when the same operation is applied to all area
+  
+omajor.Area <- list(opf=oprefront.Data,
+                   ocb=ocbell.Data,
+                   otm=otempor.Data,
+                   opo=opons.Data)
+
+
+
+
+################# END Original data as downloaded from genenetwork2 ####
+
+
 
 
 
