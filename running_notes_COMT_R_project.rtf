@@ -1,12 +1,14 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf100
 {\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fswiss\fcharset0 ArialMT;}
-{\colortbl;\red255\green255\blue255;\red217\green11\blue5;\red0\green0\blue0;\red217\green11\blue5;
-\red27\green29\blue31;\red255\green255\blue255;\red252\green39\blue18;\red243\green235\blue10;}
-{\*\expandedcolortbl;;\cssrgb\c88946\c14202\c0;\cssrgb\c0\c0\c0;\cssrgb\c88946\c14202\c0;
-\cssrgb\c14118\c15294\c16078;\cssrgb\c100000\c100000\c100000;\cssrgb\c100000\c25271\c7591;\cssrgb\c96264\c92423\c0;}
+{\colortbl;\red255\green255\blue255;\red217\green11\blue5;\red0\green0\blue0;\red27\green29\blue31;
+\red255\green255\blue255;\red252\green39\blue18;\red243\green235\blue10;\red191\green191\blue191;\red252\green39\blue18;
+}
+{\*\expandedcolortbl;;\cssrgb\c88946\c14202\c0;\cssrgb\c0\c0\c0;\cssrgb\c14118\c15294\c16078;
+\cssrgb\c100000\c100000\c100000;\cssrgb\c100000\c25271\c7591;\cssrgb\c96264\c92423\c0;\csgray\c79525;\cssrgb\c100000\c25271\c7591;
+}
 {\info
 {\author James L. Dannemiller}
-{\*\company Department of Psychology; Rice University}}\margl1440\margr1440\vieww25080\viewh13880\viewkind0
+{\*\company Department of Psychology; Rice University}}\margl1440\margr1440\vieww30860\viewh13880\viewkind0
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
 \f0\fs32 \cf0 Running notes on COMT project Started April 5, 2018\
@@ -506,7 +508,9 @@ The vector useable.results.indx holds the indices in the rentrez.results.by.entr
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
 \cf2 Tuesday, April 17, 2018 at 10:10:18 AM\
 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
 \cf3 Deleted unused variables in the current environment with the program blast_test_v3.Rnw.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
 \cf2 \
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 \cf0 l535\
@@ -518,13 +522,14 @@ l626\
 The chunk << genes_from_startpos >>= attempts to retrieve gene symbols using chromosome and start position. For the 6 useable values that resulted from the Accession query and the following entrez Gene db query, not a single returned gene had an Entrezgene ID that matched the one that corresponded to the chromosome and start position of the query. This was for the prefrontal data. For this reason, this query is unlikely to produce any new information.\
 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
-\cf4 Tuesday, April 17, 2018 at 3:16:34 PM\cf0 \
+\cf2 Tuesday, April 17, 2018 at 3:16:34 PM\cf0 \
 \
 l402\
 Stopped with the cbell data ready to query Gene db with Accession numbers.\
 \
-\cf4 Wednesday, April 18, 2018 at 6:07:23 AM\
+\cf2 Wednesday, April 18, 2018 at 6:07:23 AM\
 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
 \cf3 Ran the bell data through the Accession query of Gene db, but it halted after iteration 483.\
 \
 Wrote new code to help remove unused objects from memory before storing an image of the current session:\
@@ -545,8 +550,10 @@ count.returned[[2]][484] = NA\
 \
 \
 \
-\cf4 Thursday, April 19, 2018 at 12:33:48 PM\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 Thursday, April 19, 2018 at 12:33:48 PM\
 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
 \cf3 Added functions to save and retrieve timestamps for when objects were created.\
 \
 file = func_tstamp.R\
@@ -557,8 +564,8 @@ If successful, it writes the name of the object, and a timestamp to the file .Rt
 If it fails, it returns "timestamp failed"\
 \
 Note: it originally saved the timestamp as the 
-\f1\fs30 \cf5 \cb6 \expnd0\expndtw0\kerning0
-\outl0\strokewidth0 \strokec5 number of seconds since Epoch = Jan 1st 1970 0:00:00. I changed it to save it in human readable format.\
+\f1\fs30 \cf4 \cb5 \expnd0\expndtw0\kerning0
+number of seconds since Epoch = Jan 1st 1970 0:00:00. I changed it to save it in human readable format.\
 \
 These next two functions are unnecessary now that the date/time is stored in human readable format.\
 The functions ctime(object) and mtime(object) return the date/time in human-readable format for the first time an object was created, and the last time it was changed.\
@@ -569,9 +576,10 @@ The function, rec.script(eval(fname),eval(prog.Name)), in the file
 \i0 , is invoked automatically when a new R script is created (not for functions) to write out the file name of the script, the unique ID, and the date/time. They are written to .
 \i Rscriptnames
 \i0   . The information is written only once for each script.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
 
-\f0\fs32 \cf3 \cb1 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
-\cf4 Friday, April 20, 2018 at 5:39:27 AM\cf3 \
+\f0\fs32 \cf3 \cb1 \kerning1\expnd0\expndtw0 \
+\cf2 Friday, April 20, 2018 at 5:39:27 AM\cf3 \
 \cf0 \
 [1] "brain area Cerebellum iteration 839"\
 Error in curl::curl_fetch_memory(url, handle = handle) : \
@@ -623,12 +631,12 @@ for cerebellum\
 39    90925    90925  LOC90925  LOC90925    14    14         NA         NA\
 40    91431    91431  LOC91431  LOC91431     4     4         NA 113.680469\
 \
-\cf4 Saturday, April 21, 2018 at 6:38:22 AM\cf0 \
+\cf2 Saturday, April 21, 2018 at 6:38:22 AM\cf0 \
 l569\
 l424\
 \
 \
-\cf4 Saturday, April 21, 2018 at 4:15:58 PM\cf0 \
+\cf2 Saturday, April 21, 2018 at 4:15:58 PM\cf0 \
 \
 - Ran the findClosestGene routine on prefrontal, cerebellum and temporal.\
 - Replaced the primary data files e.g., comt_correlations_20000_prefrontal_augmentedNew.csv.txt with the new data frames\
@@ -639,7 +647,7 @@ The decision procedure on using the results from the closest gene queries:\
 2. If the starting position of the gene in the major.Area file was within +/- 204363 bases of the txStart of the returned gene, then that gene was also used.\
 3. The range of +/- 204363 bp was based half the range of difference between the existing starting position and txStart for the temporal data for those genes in which the starting position fell within the gene. The prefrontal range was very similar.\
 \
-\cf4 Sunday, April 22, 2018 at 9:37:23 AM\cf0 \
+\cf2 Sunday, April 22, 2018 at 9:37:23 AM\cf0 \
 \
 Put all functions and programs to be sourced into the file 'sourced_functions_programs.txt'\
 This gets read in, formatted correctly, and all of the functions and programs get sourced.\
@@ -648,7 +656,7 @@ Sunday, April 22, 2018 at 5:53:51 PM\
 \
 When summarizing the number of NA entries in the four brain areas for Chromosome names (loc), I discovered that there were 99 NA in prefrontal, but only 5, 6, and 4 in cerebellum, temporal and pons, respectively. I am going back to recalculate the symbol.LOC for prefrontal and repeat the process of trying to replace these NAs.\
 \
-\cf7 Monday, April 23, 2018 at 2:53:57 PM\cf0 \
+\cf6 Monday, April 23, 2018 at 2:53:57 PM\cf0 \
 \
 Error in curl::curl_fetch_memory(url, handle = handle) : \
   Empty reply from server\
@@ -672,7 +680,7 @@ Need to look up the start positions of the two NAs in the last column of comp.av
 \
 Changed major.Area[[1]] to reflect these changes. Checked number of NAs in loc (Chr name) of prefrontal: answer is now 80- NA.\
 \
-\cf7 Something is still wrong with the loc column in major.Area[[1]]. For example, row 46 shows a symbol of RPS2P8 - looking this up shows that it is on Chr 1 at 51250562\
+\cf6 Something is still wrong with the loc column in major.Area[[1]]. For example, row 46 shows a symbol of RPS2P8 - looking this up shows that it is on Chr 1 at 51250562\
 \
 Tuesday, April 24, 2018 at 10:59:29 AM\
 \cf3 \
@@ -700,11 +708,11 @@ ENTREZID		0\
 loc				78\
 bp				83\
 \
-\cb8 Forgot to write out comp.avail.needed file for redone prefrontal.\cb1 \
+\cb7 Forgot to write out comp.avail.needed file for redone prefrontal.\cb1 \
 \
 Stopped at the point where hand lookups were necessary for temporal closest genes.\
 \
-\cf7 Wednesday, April 25, 2018 at 7:36:34 AM\cf3 \
+\cf6 Wednesday, April 25, 2018 at 7:36:34 AM\cf3 \
 \
 Finished preprocessing on temporal data\
 \
@@ -723,4 +731,208 @@ loc				72\
 bp				77\
 \
 Need to mark in the aggregate spreadsheet, those rows in which the original Symbol was changed. Do this by comparing the original unprocessed data file to the completed preprocessed data file.\
+\
+Wednesday, April 25, 2018 at 5:25:56 PM\
+\
+Symbol changes from original data:\
+\
+A 	TOT.change 	\
+B 	ORF.tot 	\
+C 	orf.change \
+D	ORF.nochange \
+E	ORF.to.nonorf \
+F	LOC.tot \
+G	LOC.change  \
+H	Accounted.changes\
+\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clheight449 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx960
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clheight449 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx1920
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clheight449 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clheight449 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx3840
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clheight449 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx4800
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clheight449 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth2040\clftsWidth3 \clheight449 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx6720
+\clvertalc \clshdrawnil \clwWidth2680\clftsWidth3 \clheight449 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx7680
+\clvertalc \clshdrawnil \clwWidth3020\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 Area\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 TOT.change\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 ORF.tot\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 orf.change\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 ORF.nochange\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 ORF.to.nonorf \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 LOC.tot\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 LOC.change \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 Accounted.changes\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx960
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx1920
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx3840
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx4800
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth2040\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx6720
+\clvertalc \clshdrawnil \clwWidth2680\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx7680
+\clvertalc \clshdrawnil \clwWidth3020\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 Prefrontal \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1384\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1046\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1045\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 0\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 452\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 305\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1351\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx960
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx1920
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx3840
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx4800
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth2040\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx6720
+\clvertalc \clshdrawnil \clwWidth2680\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx7680
+\clvertalc \clshdrawnil \clwWidth3020\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 Cerebellum\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1410\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1072\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1072\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 0\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 0\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 461\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 305\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1377\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx960
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx1920
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx3840
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx4800
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth2040\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx6720
+\clvertalc \clshdrawnil \clwWidth2680\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx7680
+\clvertalc \clshdrawnil \clwWidth3020\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 Temporal\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1410\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1062\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1062\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 0\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 0\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 461\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 316\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1378\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx960
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx1920
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx3840
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx4800
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth2040\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx6720
+\clvertalc \clshdrawnil \clwWidth2680\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx7680
+\clvertalc \clshdrawnil \clwWidth3020\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 Pons\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1410\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1056\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1056\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 0\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 0\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 462\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 318\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1374\cell \lastrow\row
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 \
+\
+\cf6 Thursday, April 26, 2018 at 8:45:11 AM\cf3 \
+\
+There are two tables in the file genes_in_common_and_not_original_and_preprocessed_data.pdf that show the numbers of genes shared by pairs of brain areas in the original and the preprocessed data as well as the number of genes not shared by pairs of brain areas.\
+\
+There were no differences in any brain area on the illumination probe IDs between the original and preprocessed data.\
+\
+There were now rows with missing symbols either in the original or the preprocessed data.\
+ \
+\
+Friday, April 27, 2018 at 12:02:14 PM\
+\
+Discovered that the original data files in excel formatted gene symbols such as MAR8 or MARCH8 as numbers 41705. I will search for all date-like symbols in the preprocessed data major.Area because those were imported with the Symbol column set to text format to leave the dateline symbols as they were.\
+\
+Corrected the symbols in the original data frames that were numbers because they were dates in the downloaded data when opened in excel. Used the following steps:\
+1. Located all of the date-like symbols in the preprocessed, major.Area, data frames by grepping  'MARCH' and 'SEPT'.\
+2. Only the MARCH symbols had been converted to number because the SEPT symbols were originally Septin 2, etc.\
+3. Got indices of the MARCH symbols in the major.Area data frames.\
+4. Used these indices to write out the correct symbols (e.g., MARCH 8) to the original data frames in orig.major.Area[[n]]$Symbol\
+5. Replaced the separate original data frames, e.g., orig.prefront.Data, with their orig.major.Area[[1]], etc.\
+6. Wrote out new individual files with the area data with corrected symbols as for example: comt_temporal_correlation_results.csv.txt\
+7. Imported those individual files AS TEXT into comt_all_areas_correlation_results.xlsx setting the format of the Symbol column to TEXT to prevent excel for converting symbols like MARCH8 into dates.\
+\
+\
+\cf9 Saturday, April 28, 2018 at 11:15:29 AM\cf3 \
+\
+The SEPT10 symbol rows in major.Area[[2, 3, 4]] were identical:  69   734  1575 12154\
+But in major.Area[[1]], the first two rows were missing and had symbols that were not SEPT10. \
+Checking orig.major.Area showed that the illumination probe IDs were different for those rows between [[1]] versus [[2,3,4]].\
+\
+major.Area[[area.now]]$Symbol[SEPT10.indx[[area.now]][lpos]] <- c('RNF11')\
+major.Area[[area.now]]$ENTREZID[SEPT10.indx[[area.now]][lpos]] <- c('26994')\
+major.Area[[area.now]]$loc[SEPT10.indx[[area.now]][lpos]] <- c('1')\
+major.Area[[area.now]]$bp[SEPT10.indx[[area.now]][lpos]] <- c('51.236273')\
+major.Area[[area.now]]$new.symbol[SEPT10.indx[[area.now]][lpos]] <- c('RNF11')\
+major.Area[[area.now]]$orig.symbol[SEPT10.indx[[area.now]][lpos]] <- c('RNF11')\
+major.Area[[area.now]]$symbol_change[SEPT10.indx[[area.now]][lpos]] <- FALSE\
+\
+Replaced all of the incorrect SEPT10 entries in the primary data files and reimported them into the master data file.\
+\
+\
+\
+\
 }
