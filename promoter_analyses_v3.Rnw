@@ -163,7 +163,9 @@ fname <- csf()   # function to get current path including file name
 
 # Write out the file_name, unique ID and date/time to '.Rscriptnames'
 
-          rec.script(eval(fname),eval(prog.Name))
+          rec.script(Rin=eval(fname),ui=eval(prog.Name))
+
+#          rec.script(Rin=eval(fname),ui=eval(prog.Name))
 @
 
 This program has the unique ID: \Sexpr{prog.Name}.
@@ -1427,18 +1429,8 @@ ggsave(c(paste(plot.dir,'loci_highest_10_ntide_posVneg_po.pdf',sep='')),
 \includegraphics{Core_promoter_elements}
 
 <<initiator.element>>=
-# Y-Y-A-N-W-Y-Y
-# [C/T]   [C/T]     A    [A/C/G/T]      [A/T]     [C/T]     [C/T]
-#  999    1000     1001       1002       1003      1004     1005    for prom.all, prom.pos etc
-#  39      40      41          42         43        44       45     in fasta.by.lett series
 
-# or
-# B-W-C-A-B-W
-# [C/G/T]   [A/T]     C          A        [C/G/T]   [A/T]
-# 998        999     1000      1001         1002     1003
-#  38        39       40        41           42       43
-
-# or simply YR
+# Y-R
 # [C/T]   [A/G]
 #   1000  1001
 #  40      41
@@ -1448,30 +1440,37 @@ ggsave(c(paste(plot.dir,'loci_highest_10_ntide_posVneg_po.pdf',sep='')),
 #### proms.all[[1]] has the COMT genes as fasta formatted 1600-character entries.
 
 
-motif.Inr <- c('[CGT][AT]CA[CGT][AT]',
-               '[CT][CT]A[ACGT][AT][CT][CT]',
-               '[C/T][A/G]'
+mot.site <- c(0,1)      #### 0,1 looks at -1, +1 TSS
+
+### Look for the consensus Y-R [C/T][G/A]   at -1, +1 TSS
+motif.Inr <- c('CA',
+               'CG',
+               'TA',
+               'TG'
                )
-loc.lims.t <- c(-107,50)
+loc.lims.t <- mot.site
 loc.lims <- 1000 + loc.lims.t
 
 motif.hits.loci.all <- list()
-num.Inr.all <- matrix(rep(NA,16),ncol=4)
+num.Inr.all <- matrix(rep(NA,20),ncol=5)
+num.with.motif <- list()
+
 for (im in ib)   {
      
-     num.Inr.all[im,4] <- c(dim(proms.all[[im]])[1])
-     at.least <- matrix(rep(NA,3*dim(proms.all[[im]])[1]),ncol=3)
+     num.with.motif.temp <- c(rep(NA,length(motif.Inr)))
+     num.Inr.all[im,5] <- c(length(proms.all[[im]]))
+     at.least <- matrix(rep(NA,4*length(proms.all[[im]])),ncol=4)
      loc.hits <- list()
      
-     for (ai in 1:3)      {
+     for (ai in 1:length(motif.Inr))      {
                
           loc.hits.temp <- c(0)
      
           grep.temp <- c(NA)
           
-          for (kh in 1:dim(proms.all[[im]])[1])     {
+          for (kh in 1:length(proms.all[[im]]))     {
           
-               cat(paste('brain area ',im,' gene ',kh,' \n',sep=''))
+               cat(paste('brain area ',im,' motif ',motif.Inr[ai],' gene ',kh,' \n',sep=''))
           
                grep.temp <- gregexpr(motif.Inr[ai],substr(proms.all[[im]][kh],loc.lims[1],loc.lims[2]))
 
@@ -1493,19 +1492,23 @@ for (im in ib)   {
      }    # number of genes loop kh
      
           loc.hits[[ai]] <- loc.hits.temp[2:length(loc.hits.temp)] + (loc.lims.t[1] -1)
+          num.with.motif.temp[ai] <- sum(at.least[,ai])
+          
      
 }  # motif type loop ai
      
      motif.hits.loci.all[[im]] <- loc.hits
+     num.with.motif[[im]] <- round(num.with.motif.temp/length(proms.all[[im]]),4)
      num.Inr.all[im,1] <- sum(at.least[,1])
      num.Inr.all[im,2] <- sum(at.least[,2])
      num.Inr.all[im,3] <- sum(at.least[,3])
+     num.Inr.all[im,4] <- sum(at.least[,4])
 
 }
 
 
 for (im in ib)    {
-     for (jy in 1:3)    {
+     for (jy in 1:4)    {
      
           motif.hits.loci.all[[im]][[jy]] <- subset(motif.hits.loci.all[[im]][[jy]],
                                         motif.hits.loci.all[[im]][[jy]] >= -100)
@@ -1516,9 +1519,9 @@ for (im in ib)    {
 
 ####### run to here ^^^^^
 
-num.Inr.all.pc <- matrix(rep(NA,7*4),ncol=7)
-num.Inr.all.pc[,c(1,3,5,7)] <- num.Inr.all[,c(1,2,3,4)]
-num.Inr.all.pc[,c(2,4,6)] <- round(100*num.Inr.all.pc[,c(1,3,5)]/num.Inr.all.pc[,7],1)
+num.Inr.all.pc <- matrix(rep(NA,9*4),ncol=9)
+num.Inr.all.pc[,c(1,3,5,7,9)] <- num.Inr.all[,c(1,2,3,4,5)]
+num.Inr.all.pc[,c(2,4,6,8)] <- round(100*num.Inr.all.pc[,c(1,3,5,7)]/num.Inr.all.pc[,9],1)
 
 num.Inr.all.f <- data.frame(motif1=c(paste(num.Inr.all.pc[,1],
                          ' (',round(num.Inr.all.pc[,2],3),') ',sep='')),
@@ -1526,51 +1529,60 @@ num.Inr.all.f <- data.frame(motif1=c(paste(num.Inr.all.pc[,1],
                          ' (',round(num.Inr.all.pc[,4],3),') ',sep='')),
                          motif3=c(paste(num.Inr.all.pc[,5],
                          ' (',round(num.Inr.all.pc[,6],3),') ',sep='')),
-                         Genes=num.Inr.all.pc[,7])
+                          motif4=c(paste(num.Inr.all.pc[,7],
+                         ' (',round(num.Inr.all.pc[,8],3),') ',sep='')),
+                         Genes=num.Inr.all.pc[,9])
 
 
-colnames(num.Inr.all.f) <- c(expon("Inr1","a"),
-#                           'Inr2\\$^b\\$',
-                            expon("Inr2","b"),
-                            expon("Inr3","c"),
+colnames(num.Inr.all.f) <- c(motif.Inr,
                            'Number of Genes')
 row.names(num.Inr.all.f) <- stand.Col.names.aug
 
 
 
 num.Inr.all.tab <- xtable(num.Inr.all.f,
-                                caption=c(paste("Number (percentage) of all ",italic("COMT"),"\\den correlated genes in each brain area having at least one instance of each of three different consensus intiator element (Inr) sequences in the region from -100 to + 50 nucleotides relative to the transcription start site TSS (adjacent to +1)",sep="")))
+                                caption=c("Number (percentage) of all COMT-correlated genes in each brain area having the dinucleotide sequence shown as the column header in positions [-1, +1] relative to the transcription start site TSS. These dinucleotides represent one of the consensus sequences (Y-R) for the Initiator element in the promoter region."),digits=c(0,0,0,0,0,0))
 
-print(num.Inr.all.tab,type='latex',sanitize.text.function = function(x) {x})
+print(num.Inr.all.tab,type='latex')
 
 @
 
 
-<<Inr.pos.subset>>=
+<<initiator.element.Positive.subset>>=
+
+# Y-R
+# [C/T]   [A/G]
+#   1000  1001
+#  40      41
+
 #### fasta.by.lett_pos.genes[[1]][[1]][1:10] only has the 51 letters from -40 to +10 for pos genes in the COMT project in pf
 
 #### proms.pos[[1]] has the COMT genes as fasta formatted 1600-character entries.
 
-### Change the positions that it looks for the motifs in
 
 mot.site <- c(0,1)      #### 0,1 looks at -1, +1 TSS
 
-motif.Inr <- c('[CGT][AT]CA[CGT][AT]',
-               '[CT][CT]A[ACGT][AT][CT][CT]',
-               'TG'         #### Just look for CA at -1, +1      '[C/T][A/G]'
+### Look for the consensus Y-R [C/T][G/A]   at -1, +1 TSS
+motif.Inr <- c('CA',
+               'CG',
+               'TA',
+               'TG'
                )
 loc.lims.t <- mot.site
 loc.lims <- 1000 + loc.lims.t
 
 motif.hits.loci.pos <- list()
-num.Inr.pos <- matrix(rep(NA,16),ncol=4)
+num.Inr.pos <- matrix(rep(NA,20),ncol=5)
+num.with.motif <- list()
+
 for (im in ib)   {
      
-     num.Inr.pos[im,4] <- c(length(proms.pos[[im]]))
-     at.least <- matrix(rep(NA,3*length(proms.pos[[im]])),ncol=3)
+     num.with.motif.temp <- c(rep(NA,length(motif.Inr)))
+     num.Inr.pos[im,5] <- c(length(proms.pos[[im]]))
+     at.least <- matrix(rep(NA,4*length(proms.pos[[im]])),ncol=4)
      loc.hits <- list()
      
-     for (ai in 1:3)      {
+     for (ai in 1:length(motif.Inr))      {
                
           loc.hits.temp <- c(0)
      
@@ -1578,7 +1590,7 @@ for (im in ib)   {
           
           for (kh in 1:length(proms.pos[[im]]))     {
           
-               cat(paste('brain area ',im,' gene ',kh,' \n',sep=''))
+               cat(paste('brain area ',im,' motif ',motif.Inr[ai],' gene ',kh,' \n',sep=''))
           
                grep.temp <- gregexpr(motif.Inr[ai],substr(proms.pos[[im]][kh],loc.lims[1],loc.lims[2]))
 
@@ -1600,19 +1612,23 @@ for (im in ib)   {
      }    # number of genes loop kh
      
           loc.hits[[ai]] <- loc.hits.temp[2:length(loc.hits.temp)] + (loc.lims.t[1] -1)
+          num.with.motif.temp[ai] <- sum(at.least[,ai])
+          
      
 }  # motif type loop ai
      
      motif.hits.loci.pos[[im]] <- loc.hits
+     num.with.motif[[im]] <- round(num.with.motif.temp/length(proms.pos[[im]]),4)
      num.Inr.pos[im,1] <- sum(at.least[,1])
      num.Inr.pos[im,2] <- sum(at.least[,2])
      num.Inr.pos[im,3] <- sum(at.least[,3])
+     num.Inr.pos[im,4] <- sum(at.least[,4])
 
 }
 
 
 for (im in ib)    {
-     for (jy in 1:3)    {
+     for (jy in 1:4)    {
      
           motif.hits.loci.pos[[im]][[jy]] <- subset(motif.hits.loci.pos[[im]][[jy]],
                                         motif.hits.loci.pos[[im]][[jy]] >= -100)
@@ -1623,9 +1639,9 @@ for (im in ib)    {
 
 ####### run to here ^^^^^
 
-num.Inr.pos.pc <- matrix(rep(NA,7*4),ncol=7)
-num.Inr.pos.pc[,c(1,3,5,7)] <- num.Inr.pos[,c(1,2,3,4)]
-num.Inr.pos.pc[,c(2,4,6)] <- round(100*num.Inr.pos.pc[,c(1,3,5)]/num.Inr.pos.pc[,7],1)
+num.Inr.pos.pc <- matrix(rep(NA,9*4),ncol=9)
+num.Inr.pos.pc[,c(1,3,5,7,9)] <- num.Inr.pos[,c(1,2,3,4,5)]
+num.Inr.pos.pc[,c(2,4,6,8)] <- round(100*num.Inr.pos.pc[,c(1,3,5,7)]/num.Inr.pos.pc[,9],1)
 
 num.Inr.pos.f <- data.frame(motif1=c(paste(num.Inr.pos.pc[,1],
                          ' (',round(num.Inr.pos.pc[,2],3),') ',sep='')),
@@ -1633,49 +1649,59 @@ num.Inr.pos.f <- data.frame(motif1=c(paste(num.Inr.pos.pc[,1],
                          ' (',round(num.Inr.pos.pc[,4],3),') ',sep='')),
                          motif3=c(paste(num.Inr.pos.pc[,5],
                          ' (',round(num.Inr.pos.pc[,6],3),') ',sep='')),
-                         Genes=num.Inr.pos.pc[,7])
+                          motif4=c(paste(num.Inr.pos.pc[,7],
+                         ' (',round(num.Inr.pos.pc[,8],3),') ',sep='')),
+                         Genes=num.Inr.pos.pc[,9])
 
 
-colnames(num.Inr.pos.f) <- c("Inr1a",
-                            "Inr2b",
-                            "Inr3c",
+colnames(num.Inr.pos.f) <- c(motif.Inr,
                            'Number of Genes')
 row.names(num.Inr.pos.f) <- stand.Col.names.aug
 
 
 
 num.Inr.pos.tab <- xtable(num.Inr.pos.f,
-                                caption=c("Number (percentage) of pos COMT correlated genes in each brain area having at least one instance of each of three different consensus intiator element (Inr) sequences in the region from -100 to + 50 nucleotides relative to the transcription start site TSS (adjacent to +1)"))
+                                caption=c("Number (percentage) of strongest positively COMT-correlated genes in each brain area having the dinucleotide sequence shown as the column header in positions [-1, +1] relative to the transcription start site TSS. These dinucleotides represent one of the consensus sequences (Y-R) for the Initiator element in the promoter region."),digits=c(0,0,0,0,0,0))
 
 print(num.Inr.pos.tab,type='latex')
 
 @
 
-<<Inr.neg.subset>>=
+<<initiator.element.Negative.subset>>=
+
+# Y-R
+# [C/T]   [A/G]
+#   1000  1001
+#  40      41
+
 #### fasta.by.lett_neg.genes[[1]][[1]][1:10] only has the 51 letters from -40 to +10 for neg genes in the COMT project in pf
 
 #### proms.neg[[1]] has the COMT genes as fasta formatted 1600-character entries.
 
-### Change the negitions that it looks for the motifs in
 
 mot.site <- c(0,1)      #### 0,1 looks at -1, +1 TSS
 
-motif.Inr <- c('[CGT][AT]CA[CGT][AT]',
-               '[CT][CT]A[ACGT][AT][CT][CT]',
-               'TG'           ### Just Look for CA at -1, +1 '[C/T][A/G]'
+### Look for the consensus Y-R [C/T][G/A]   at -1, +1 TSS
+motif.Inr <- c('CA',
+               'CG',
+               'TA',
+               'TG'
                )
 loc.lims.t <- mot.site
 loc.lims <- 1000 + loc.lims.t
 
 motif.hits.loci.neg <- list()
-num.Inr.neg <- matrix(rep(NA,16),ncol=4)
+num.Inr.neg <- matrix(rep(NA,20),ncol=5)
+num.with.motif <- list()
+
 for (im in ib)   {
      
-     num.Inr.neg[im,4] <- c(length(proms.neg[[im]]))
-     at.least <- matrix(rep(NA,3*length(proms.neg[[im]])),ncol=3)
+     num.with.motif.temp <- c(rep(NA,length(motif.Inr)))
+     num.Inr.neg[im,5] <- c(length(proms.neg[[im]]))
+     at.least <- matrix(rep(NA,4*length(proms.neg[[im]])),ncol=4)
      loc.hits <- list()
      
-     for (ai in 1:3)      {
+     for (ai in 1:length(motif.Inr))      {
                
           loc.hits.temp <- c(0)
      
@@ -1683,7 +1709,7 @@ for (im in ib)   {
           
           for (kh in 1:length(proms.neg[[im]]))     {
           
-               cat(paste('brain area ',im,' gene ',kh,' \n',sep=''))
+               cat(paste('brain area ',im,' motif ',motif.Inr[ai],' gene ',kh,' \n',sep=''))
           
                grep.temp <- gregexpr(motif.Inr[ai],substr(proms.neg[[im]][kh],loc.lims[1],loc.lims[2]))
 
@@ -1705,19 +1731,23 @@ for (im in ib)   {
      }    # number of genes loop kh
      
           loc.hits[[ai]] <- loc.hits.temp[2:length(loc.hits.temp)] + (loc.lims.t[1] -1)
+          num.with.motif.temp[ai] <- sum(at.least[,ai])
+          
      
 }  # motif type loop ai
      
      motif.hits.loci.neg[[im]] <- loc.hits
+     num.with.motif[[im]] <- round(num.with.motif.temp/length(proms.neg[[im]]),4)
      num.Inr.neg[im,1] <- sum(at.least[,1])
      num.Inr.neg[im,2] <- sum(at.least[,2])
      num.Inr.neg[im,3] <- sum(at.least[,3])
+     num.Inr.neg[im,4] <- sum(at.least[,4])
 
 }
 
 
 for (im in ib)    {
-     for (jy in 1:3)    {
+     for (jy in 1:4)    {
      
           motif.hits.loci.neg[[im]][[jy]] <- subset(motif.hits.loci.neg[[im]][[jy]],
                                         motif.hits.loci.neg[[im]][[jy]] >= -100)
@@ -1728,9 +1758,9 @@ for (im in ib)    {
 
 ####### run to here ^^^^^
 
-num.Inr.neg.pc <- matrix(rep(NA,7*4),ncol=7)
-num.Inr.neg.pc[,c(1,3,5,7)] <- num.Inr.neg[,c(1,2,3,4)]
-num.Inr.neg.pc[,c(2,4,6)] <- round(100*num.Inr.neg.pc[,c(1,3,5)]/num.Inr.neg.pc[,7],1)
+num.Inr.neg.pc <- matrix(rep(NA,9*4),ncol=9)
+num.Inr.neg.pc[,c(1,3,5,7,9)] <- num.Inr.neg[,c(1,2,3,4,5)]
+num.Inr.neg.pc[,c(2,4,6,8)] <- round(100*num.Inr.neg.pc[,c(1,3,5,7)]/num.Inr.neg.pc[,9],1)
 
 num.Inr.neg.f <- data.frame(motif1=c(paste(num.Inr.neg.pc[,1],
                          ' (',round(num.Inr.neg.pc[,2],3),') ',sep='')),
@@ -1738,23 +1768,90 @@ num.Inr.neg.f <- data.frame(motif1=c(paste(num.Inr.neg.pc[,1],
                          ' (',round(num.Inr.neg.pc[,4],3),') ',sep='')),
                          motif3=c(paste(num.Inr.neg.pc[,5],
                          ' (',round(num.Inr.neg.pc[,6],3),') ',sep='')),
-                         Genes=num.Inr.neg.pc[,7])
+                          motif4=c(paste(num.Inr.neg.pc[,7],
+                         ' (',round(num.Inr.neg.pc[,8],3),') ',sep='')),
+                         Genes=num.Inr.neg.pc[,9])
 
 
-colnames(num.Inr.neg.f) <- c("Inr1a",
-                            "Inr2b",
-                            "Inr3c",
+colnames(num.Inr.neg.f) <- c(motif.Inr,
                            'Number of Genes')
 row.names(num.Inr.neg.f) <- stand.Col.names.aug
 
 
 
 num.Inr.neg.tab <- xtable(num.Inr.neg.f,
-                                caption=c("Number (percentage) of neg COMT correlated genes in each brain area having at least one instance of each of three different consensus intiator element (Inr) sequences in the region from -100 to + 50 nucleotides relative to the transcription start site TSS (adjacent to +1)"))
+                                caption=c("Number (percentage) of strongest negatively COMT-correlated genes in each brain area having the dinucleotide sequence shown as the column header in negitions [-1, +1] relative to the transcription start site TSS. These dinucleotides represent one of the consensus sequences (Y-R) for the Initiator element in the promoter region."),digits=c(0,0,0,0,0,0))
 
 print(num.Inr.neg.tab,type='latex')
 
 @
+
+<<plots.CA.CG.TA.TG.posVneg>>=
+### Set up long data frame
+
+Inr.YR.posVneg <- data.frame(posCA=num.Inr.pos.pc[,2],
+                             posCG=num.Inr.pos.pc[,4],
+                             posTA=num.Inr.pos.pc[,6],
+                             posTG=num.Inr.pos.pc[,8],
+                             negCA=num.Inr.neg.pc[,2],
+                             negCG=num.Inr.neg.pc[,4],
+                             negTA=num.Inr.neg.pc[,6],
+                             negTG=num.Inr.neg.pc[,8])
+
+Inr.YR.posVneg.long <- stack(Inr.YR.posVneg)
+Inr.YR.posVneg.long[,3] <- c(rep(c('Positive','Negative'),each=16))
+Inr.YR.posVneg.long[,4] <- c(rep(c(stand.Col.names.aug),8))
+Inr.YR.posVneg.long[,5] <- c(rep(rep(c('CA','CG','TA','TG'),each=4),2))
+Inr.YR.posVneg.long[,6] <- c(rep(c(1,-1),each=16))*Inr.YR.posVneg.long[,1]
+
+
+colnames(Inr.YR.posVneg.long) <- c('PercentGenes','ind','CorrValence',
+                                   'BrainArea','Motif',
+                                   'flipNeg')
+
+Inr.YR.posVneg.long$CorrValence <- as.factor(Inr.YR.posVneg.long$CorrValence)
+Inr.YR.posVneg.long$BrainArea <- as.factor(Inr.YR.posVneg.long$BrainArea)
+Inr.YR.posVneg.long$Motif <- as.factor(Inr.YR.posVneg.long$Motif)
+
+               
+
+ya.plot <- ggplot(data=Inr.YR.posVneg.long, aes(x=Motif,fill=CorrValence)) +
+     facet_wrap( ~ BrainArea,ncol=2)  +
+
+
+     geom_bar(stat = "identity", data = Inr.YR.posVneg.long,aes(y = flipNeg)) +
+     # geom_text(data = Inr.YR.posVneg.long, aes(y = flipNeg, 
+     #                          label = PercentGenes), 
+     #                          size = 2.5, hjust = c(-1.0)) +
+
+     theme(axis.title = element_text(face="bold"))    +
+     scale_y_continuous(limits = c(-40, 40), breaks = seq(-40, 40, 10), 
+                        labels = abs(seq(-40, 40, 10))) +
+     theme_tufte() +
+     coord_flip() + 
+     ylab('Percent Genes') + 
+     xlab("Motif") +
+     guides(fill = FALSE) +
+     geom_hline(yintercept = c(0),size=c(0.5),color='black',linetype='dashed')  +
+     annotate("text", x = c('TG'), y = c(-30),
+              label = c('Negative subset'),
+              size = 2.5,
+              color='black')  +
+     annotate("text", x = c('TG'), y = c(25),
+              label = c('Positive subset'),
+              size = 2.5,
+              color='black')
+
+ya.plot
+
+     
+
+
+
+
+@
+
+
 
 
 

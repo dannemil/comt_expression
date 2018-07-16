@@ -496,60 +496,49 @@ chrom.Data <- data.frame(chrom=chrom.Names,
 
 #  read.fasta
 seq.fasta <- list()
-seq.pos.fasta <- list()
-seq.neg.fasta <- list()
+seq.fasta.entrez <- list()
 
+seq.pos.fasta <- list()
+seq.pos.fasta.entrez <- list()
+
+seq.neg.fasta <- list()
+seq.neg.fasta.entrez <- list()
 
 
 for (im in ib)   {
 
-seq.fasta[[im]] <- readDNAStringSet(paste('fasta_500_promoter_seq_',area.abbrv[im],
-                                         '_final.fa',sep=''), format="fasta",
-               nrec=-1L, skip=0L, seek.first.rec=FALSE, use.names=TRUE)
+seq.fasta[[im]] <- read.fasta(file=paste('fasta_500_promoter_seq_',area.abbrv[im],
+                                         '_final.fa',sep=''),seqtype='DNA',
+                            forceDNAtolower=FALSE,seqonly=TRUE,strip.desc=FALSE,
+                            as.string=TRUE)
 
-seq.pos.fasta[[im]] <- readDNAStringSet(paste('fasta_500_promoter_seq_',area.abbrv[im],
-                                         '_pos.fa',sep=''), format="fasta",
-               nrec=-1L, skip=0L, seek.first.rec=FALSE, use.names=TRUE)
+seq.fasta.entrez[[im]] <- read.fasta(file=paste('fasta_500_promoter_seq_',area.abbrv[im],
+                                         '_final.fa',sep=''),seqtype='DNA',
+                            forceDNAtolower=FALSE,seqonly=FALSE,strip.desc=FALSE,
+                            as.string=TRUE)
 
 
-seq.neg.fasta[[im]] <- readDNAStringSet(paste('fasta_500_promoter_seq_',area.abbrv[im],
-                                         '_neg.fa',sep=''), format="fasta",
-               nrec=-1L, skip=0L, seek.first.rec=FALSE, use.names=TRUE)
+seq.pos.fasta[[im]] <- read.fasta(file=paste('fasta_500_promoter_seq_',area.abbrv[im],
+                                         '_pos.fa',sep=''),seqtype='DNA',
+                            forceDNAtolower=FALSE,seqonly=TRUE,strip.desc=FALSE,
+                            as.string=TRUE)
 
-# seq.neg.fasta.entrez[[im]] <- read.fasta(file=paste('fasta_500_promoter_seq_',area.abbrv[im],
-#                                          '_neg.fa',sep=''),seqtype='DNA',
-#                             forceDNAtolower=FALSE,seqonly=FALSE,strip.desc=FALSE,
-#                             as.string=TRUE)
+seq.pos.fasta.entrez[[im]] <- read.fasta(file=paste('fasta_500_promoter_seq_',area.abbrv[im],
+                                         '_pos.fa',sep=''),seqtype='DNA',
+                            forceDNAtolower=FALSE,seqonly=FALSE,strip.desc=FALSE,
+                            as.string=TRUE)
+
+
+seq.neg.fasta[[im]] <- read.fasta(file=paste('fasta_500_promoter_seq_',area.abbrv[im],
+                                         '_neg.fa',sep=''),seqtype='DNA',
+                            forceDNAtolower=FALSE,seqonly=TRUE,strip.desc=FALSE,
+                            as.string=TRUE)
+
+seq.neg.fasta.entrez[[im]] <- read.fasta(file=paste('fasta_500_promoter_seq_',area.abbrv[im],
+                                         '_neg.fa',sep=''),seqtype='DNA',
+                            forceDNAtolower=FALSE,seqonly=FALSE,strip.desc=FALSE,
+                            as.string=TRUE)
 }
-
-@
-
-proms.all<- seq.fasta
-proms.pos <- seq.pos.fasta
-proms.neg <- seq.neg.fasta
-
-
-<<write.fasta.nolinefeeds>>=
-
-# write out promoter sequences in fasta format with no line breaks
-
-# for (im in ib)     {
-# 
-# 
-# writeXStringSet(seq.fasta[[im]], 
-#                 paste("fasta_500_promoter_seq_",
-#                       area.abbrv[im],"_final.fa",sep=''), append=FALSE,
-#                 compress=FALSE, compression_level=NA, format="fasta",width=2000)
-# 
-# writeXStringSet(seq.pos.fasta[[im]], paste("fasta_500_promoter_seq_",
-#                       area.abbrv[im],"_pos.fa",sep=''), append=FALSE,
-#                 compress=FALSE, compression_level=NA, format="fasta",width=2000)
-# 
-# writeXStringSet(seq.neg.fasta[[im]], paste("fasta_500_promoter_seq_",
-#                       area.abbrv[im],"_neg.fa",sep=''), append=FALSE,
-#                 compress=FALSE, compression_level=NA, format="fasta",width=2000)
-#      
-# }
 
 @
 
@@ -676,9 +665,6 @@ for (im in ib)    {
 
 }  # end area loop         
 
-pwm_pos_comt_genes <- list()
-pwm_pos_comt_genes_ATvCG <- list()
-
 for (im in ib)   {
                     
           write.table(pos_genes.lett.freq[[im]], file = paste('pos_genes_PWM_minus40_plus10_',stand.Col.names[im],'.csv',sep=''))
@@ -686,10 +672,6 @@ for (im in ib)   {
 pwm_pos_comt_genes[[im]] <- as.data.frame(t(pos_genes.lett.freq[[im]]))
 colnames(pwm_pos_comt_genes[[im]]) <- DNA_BASES
           pwm_pos_comt_genes[[im]]$site <- c(-40:10)
-          
-pwm_pos_comt_genes_ATvCG[[im]]   <- data.frame(site=pwm_pos_comt_genes[[im]][,5],
-                              AT=(pwm_pos_comt_genes[[im]][,1] + pwm_pos_comt_genes[[im]][,4]),
-                              CG=(pwm_pos_comt_genes[[im]][,2] + pwm_pos_comt_genes[[im]][,3]))
           
 }
 
@@ -733,20 +715,12 @@ for (im in ib)    {
 
 } #end area loop
 
-
-pwm_neg_comt_genes <- list()
-pwm_neg_comt_genes_ATvCG <- list()
-
 for (im in ib)    {                
           write.table(neg_genes.lett.freq[[im]], file = paste('neg_genes_PWM_minus40_plus10_',stand.Col.names[im],'.csv',sep=''))
 
 pwm_neg_comt_genes[[im]] <- as.data.frame(t(neg_genes.lett.freq[[im]]))
 colnames(pwm_neg_comt_genes[[im]]) <- DNA_BASES
           pwm_neg_comt_genes[[im]]$site <- c(-40:10)
-          
-pwm_neg_comt_genes_ATvCG[[im]]   <- data.frame(site=pwm_neg_comt_genes[[im]][,5],
-                              AT=(pwm_neg_comt_genes[[im]][,1] + pwm_neg_comt_genes[[im]][,4]),
-                              CG=(pwm_neg_comt_genes[[im]][,2] + pwm_neg_comt_genes[[im]][,3]))
           
 }          
 
@@ -791,20 +765,13 @@ for (im in ib)    {
  
 } #end area loop
 
-pwm_all_comt_genes <- list()
-pwm_all_comt_genes_ATvCG <- list()
-
 for (im in ib)              {     
           write.table(all_genes.lett.freq[[im]], file = paste('all_genes_PWM_minus40_plus10_',stand.Col.names[im],'.csv',sep=''))
 
 pwm_all_comt_genes[[im]] <- as.data.frame(t(all_genes.lett.freq[[im]]))
 colnames(pwm_all_comt_genes[[im]]) <- DNA_BASES
           pwm_all_comt_genes[[im]]$site <- c(-40:10)
-
-pwm_all_comt_genes_ATvCG[[im]]   <- data.frame(site=pwm_all_comt_genes[[im]][,5],
-                              AT=(pwm_all_comt_genes[[im]][,1] + pwm_all_comt_genes[[im]][,4]),
-                              CG=(pwm_all_comt_genes[[im]][,2] + pwm_all_comt_genes[[im]][,3]))
-
+          
 }
 
 
@@ -829,33 +796,6 @@ all.PWM.long.temp <- rbind(all.PWM.long[[1]],
 
      
 all.area.PWM.bground <- all.PWM.long.temp
-
-### AT v CG ##########
-# long form to plot the background PWM
-
-all.PWM.long.ATvCG <- list()
-all.genes.PWM.near.TSS.ATvCG <- list()
-all.PWM.long.temp.ATvCG <- list()
-all.area.PWM.bground.ATvCG <- list()
-
-all.genes.PWM.near.TSS.ATvCG <- lapply(pwm_all_comt_genes_ATvCG[ib], function(x,ib) data.frame(x[,2:3]), ib )
-
-all.PWM.long.ATvCG <- lapply(all.genes.PWM.near.TSS.ATvCG[ib], function(x,ib) stack(x), ib)
-
-all.PWM.long.temp.ATvCG <- rbind(all.PWM.long.ATvCG[[1]],
-                  all.PWM.long.ATvCG[[2]],
-                  all.PWM.long.ATvCG[[3]],
-                  all.PWM.long.ATvCG[[4]])
-
-     all.PWM.long.temp.ATvCG$loci <- as.integer(c(rep(c(-40:10),4)))
-     all.PWM.long.temp.ATvCG$area <- c(rep(stand.Col.names.aug, each=length(sseq)))
-
-
-     colnames(all.PWM.long.temp.ATvCG) <- c('PWM','NucleotidePair','Locus','Brain_Area')
-
-     
-all.area.PWM.bground.ATvCG <- all.PWM.long.temp.ATvCG
-
 
 # #### all: try with pwm_all_comt_genes
 # all.genes.PWM.near.TSS <- lapply(all_genes.lett.freq[ib], function(x,ib) data.frame(x), ib )
@@ -917,6 +857,9 @@ neg.PWM.long.temp <- rbind(neg.PWM.long[[1]],
 
      
 neg.area.PWM.bground <- neg.PWM.long.temp
+
+
+
 
 
 long.area <- matrix(c(1,204,
@@ -1049,33 +992,6 @@ ggsave(c(paste(plot.dir,params.plot$fnamesb[pj],'.pdf',sep='')),
        scale = 1, width = 7, height = 5, units = c("in"),
        dpi = 300, limitsize = TRUE)
 }
-
-#### plot AT v CG content
-plot.ATvCG <- ggplot(data=all.area.PWM.bground.ATvCG, aes(x=Locus,y=PWM,color=NucleotidePair)) +     
-          geom_line(size=0.75) +
-          theme_classic() +
-          labs(title='Site-specific AT vs CG content proportions',
-               x = 'Position',
-               y = 'Proportion'
-               ) +
-     theme(plot.title = element_text(hjust = 0.5)) +
-     theme(plot.subtitle = element_text(hjust = 0.5)) +
-     scale_x_continuous(breaks=c(-40,-30,-20,-10,0,10),
-                        labels=c('-40','-30','-20','-10','+1','+10')) +
-     scale_y_continuous(limits=c(0.0,1.0),
-                        breaks=c(seq(0,1,.2))) +
-     geom_vline(aes(xintercept = 0),linetype='dotted',size=0.6) 
-     # annotate("text", x = c(-26), y = c(0.23), 
-     #          label = c('TATA Box'),
-     #           size = 3,
-     #           color='black')
-plot.ATvCG
-
-ggsave(c(paste(new_plots,'all_genes_ATvCG.pdf',sep='')), 
-       plot = plot.ATvCG, device = 'pdf', path = NULL,
-       scale = 1, width = 7, height = 5, units = c("in"),
-       dpi = 300, limitsize = TRUE)
-
 
 @
 
@@ -1548,7 +1464,7 @@ print(num.Inr.all.tab,type='latex',sanitize.text.function = function(x) {x})
 <<Inr.plots>>=
 
 Inr.hits.motif1.long <- data.frame(loci=c(unlist(motif.hits.loci.all[[1]][[1]])),
-                             motif=c(rep(expression(paste('B-W-C-',underline(A),'-B-W',sep="")),length(unlist(motif.hits.loci.all[[1]][[1]])))
+                             motif=c(rep('B-W-C-A-B-W',length(unlist(motif.hits.loci.all[[1]][[1]])))
                                      ))
 Inr.hits.motif2.long <- data.frame(loci=c(unlist(motif.hits.loci.all[[1]][[2]])),
                              motif=c(rep('Y-Y-A-N-W-Y-Y',length(unlist(motif.hits.loci.all[[1]][[2]])))
@@ -1565,7 +1481,7 @@ Inr.hits.motif.long <- rbind(Inr.hits.motif1.long,
 
 
 Inr.hits.motif.long$motif <- factor(Inr.hits.motif.long$motif, 
-                         levels = c(expression(paste('B-W-C-',underline(A),'-B-W',sep="")),
+                         levels = c('B-W-C-A-B-W',
                                          "Y-Y-A-N-W-Y-Y",
                                                "Y-R"))
 
@@ -1605,6 +1521,12 @@ ggsave("/Volumes/Macintosh_HD_3/genetics/genenetwork2/new_plots/Inr_motif_positi
        height=3.0,
        units=c('in')
 )
+
+
+
+
+
+
 
 @
 
@@ -2163,7 +2085,7 @@ Inr3types[12,c(1,2)] <- unlist(Inr3.df[4,c(1,2)])
 
 Inr2types <- Inr3types[c(1,2,4,5,7,8,10,11),]
 
-# Transform the ftable into a 4 x 3 x 2 array
+# Trasform the ftable into a 4 x 3 x 2 array
 # First dimension: brain area
 # Second dimension: Inr type
 # Third dimension: valence
@@ -2172,6 +2094,10 @@ library(stats)
  mtx3D <- aperm(array(t(as.matrix(Inr2types)),c(2,2,4)),c(3,2,1))
  
  mantelhaen.test(mtx3D)
+
+
+       
+
 
 @
 
@@ -2194,233 +2120,16 @@ plotPatternDensityMap(proms.pos.p[[1]],
 
 
 
-<<dinucleotides.nearTSS>>=
+<<DNAletterplots>>=
 
 # Around TSS put the DNA sequence for each gene aligned at TSS
 
-dinucl.nearTSS <- list()
-dinucl.nearTSS.temp <- list()
-datset <- list(all=proms.all,
-               pos=proms.pos,
-               neg=proms.neg)
 
-for (hk in 1:length(datset))     {
-     for (im in ib)   {
 
-          dinucl.nearTSS.temp[[im]] <- addmargins(table(substr(datset[[hk]][[im]],1000,1000),substr(datset[[hk]][[im]],1001,1001)))
-     
-     }
-     
-     dinucl.nearTSS[[hk]] <- dinucl.nearTSS.temp
-     
-}
+ngenes <- c(1:length(proms.pos[[1]]))
+tab.DNA.pos.pf <- lapply(proms.pos[[1]][ngenes], function(x,ngenes) as.character(unlist(x)[990:1010]), ngenes)
 
-find_cell <- function(table, row, col, name="core-fg"){
-  l <- table$layout
-  which(l$t==row & l$l==col & l$name==name)
-}
-
-ttm<- ttheme_minimal(base_size = 6, base_colour = "black", base_family = "",
-  parse = FALSE, padding = unit(c(4, 4), "mm"))
-
-allpf <- dinucl.nearTSS[[1]][[1]]
-pospf <- dinucl.nearTSS[[2]][[1]]
-negpf <- dinucl.nearTSS[[3]][[1]]
-allcb <- dinucl.nearTSS[[1]][[2]]
-poscb <- dinucl.nearTSS[[2]][[2]]
-negcb <- dinucl.nearTSS[[3]][[2]]
-alltm <- dinucl.nearTSS[[1]][[3]]
-postm <- dinucl.nearTSS[[2]][[3]]
-negtm <- dinucl.nearTSS[[3]][[3]]
-allpo <- dinucl.nearTSS[[1]][[4]]
-pospo <- dinucl.nearTSS[[2]][[4]]
-negpo <- dinucl.nearTSS[[3]][[4]]
-
-tallpf <- tableGrob(allpf, theme=ttm)
-tpospf <- tableGrob(pospf, theme=ttm)
-tnegpf <- tableGrob(negpf, theme=ttm)
-tallcb <- tableGrob(allcb, theme=ttm)
-tposcb <- tableGrob(poscb, theme=ttm)
-tnegcb <- tableGrob(negcb, theme=ttm)
-talltm <- tableGrob(alltm, theme=ttm)
-tpostm <- tableGrob(postm, theme=ttm)
-tnegtm <- tableGrob(negtm, theme=ttm)
-tallpo <- tableGrob(allpo, theme=ttm)
-tpospo <- tableGrob(pospo, theme=ttm)
-tnegpo <- tableGrob(negpo, theme=ttm)
-
-g <- grid.arrange(
-  tallpf, tpospf,tnegpf,
-  tallcb, tposcb,tnegcb,
-  nrow=2,padding = unit(0.1, "line")
-  )
-
-h <- grid.arrange(
-  talltm, tpostm,tnegtm,
-  tallpo, tpospo,tnegpo,
-  nrow=2,padding = unit(0.1, "line")
-  )
-
-
-grid.draw(g)
-grid.draw(h)
-
-
-near.TSS.posVneg.pf <- rbind(dinucl.nearTSS[[2]][[1]][1:4,1:4],
-                              dinucl.nearTSS[[3]][[1]][1:4,1:4])
-
-near.TSS.posVneg.cb <- rbind(dinucl.nearTSS[[2]][[2]][1:4,1:4],
-                              dinucl.nearTSS[[3]][[2]][1:4,1:4])
-
-near.TSS.posVneg.tm <- rbind(dinucl.nearTSS[[2]][[3]][1:4,1:4],
-                              dinucl.nearTSS[[3]][[3]][1:4,1:4])
-
-near.TSS.posVneg.po <- rbind(dinucl.nearTSS[[2]][[4]][1:4,1:4],
-                              dinucl.nearTSS[[3]][[4]][1:4,1:4])
-
-library(stats)
- mtx3D <- aperm(array(t(as.matrix(near.TSS.posVneg.pf)),c(4,4,2)),c(2,1,3))
- 
- mantelhaen.test(mtx3D)
- 
- 
- # Put posVneg in long form
- 
-near.TSS.posVneg.pf.long <- stack(near.TSS.posVneg.pf)
-
-near.TSS.posVneg.pf.long[,3] <- rep(rep(c('pos','neg'),each=4),4)
-
-colnames(near.TSS.posVneg.pf.long) <- c('TSSp1','TSSm1','Valence','Count')
-near.TSS.posVneg.pf.long <- data.frame(near.TSS.posVneg.pf.long)
-
-near.TSS.posVneg.pf.long$TSSp1 <- as.factor(near.TSS.posVneg.pf.long$TSSp1)
-near.TSS.posVneg.pf.long$TSSm1 <- as.factor(near.TSS.posVneg.pf.long$TSSm1)
-near.TSS.posVneg.pf.long$Valence <- as.factor(near.TSS.posVneg.pf.long$Valence)
-
-str(near.TSS.posVneg.pf.long)
-# 'data.frame':	32 obs. of  4 variables:
-#  $ TSSp1  : Factor w/ 4 levels "A","C","G","T": 1 2 3 4 1 2 3 4 1 2 ...
-#  $ TSSm1  : Factor w/ 4 levels "A","C","G","T": 1 1 1 1 1 1 1 1 2 2 ...
-#  $ Valence: Factor w/ 2 levels "neg","pos": 2 2 2 2 1 1 1 1 2 2 ...
-#  $ Count  : num  8 54 15 21 2 45 7 8 7 35 ...
-
-# Convert to Table
-
-tab.temp <- xtabs(Count ~ TSSp1 + TSSm1 + Valence,
-              data=near.TSS.posVneg.pf.long)
-
-ftable(tab.temp)
-
-mantelhaen.test(tab.temp)
-
-# 	Cochran-Mantel-Haenszel test
-# 
-# data:  tab.temp
-# Cochran-Mantel-Haenszel M^2 = 35.208312, df = 9,
-# p-value = 0.00005474671
-
-## Repeat for other areas
-## Cerebellum
-
-near.TSS.posVneg.cb <- rbind(dinucl.nearTSS[[2]][[2]][1:4,1:4],
-                              dinucl.nearTSS[[3]][[2]][1:4,1:4])
-near.TSS.posVneg.cb.long <- stack(near.TSS.posVneg.cb)
-
-near.TSS.posVneg.cb.long[,3] <- rep(rep(c('pos','neg'),each=4),4)
-
-colnames(near.TSS.posVneg.cb.long) <- c('TSSp1','TSSm1','Valence','Count')
-near.TSS.posVneg.cb.long <- data.frame(near.TSS.posVneg.cb.long)
-
-near.TSS.posVneg.cb.long$TSSp1 <- as.factor(near.TSS.posVneg.cb.long$TSSp1)
-near.TSS.posVneg.cb.long$TSSm1 <- as.factor(near.TSS.posVneg.cb.long$TSSm1)
-near.TSS.posVneg.cb.long$Valence <- as.factor(near.TSS.posVneg.cb.long$Valence)
-
-str(near.TSS.posVneg.cb.long)
-# 'data.frame':	32 obs. of  4 variables:
-#  $ TSSp1  : Factor w/ 4 levels "A","C","G","T": 1 2 3 4 1 2 3 4 1 2 ...
-#  $ TSSm1  : Factor w/ 4 levels "A","C","G","T": 1 1 1 1 1 1 1 1 2 2 ...
-#  $ Valence: Factor w/ 2 levels "neg","pos": 2 2 2 2 1 1 1 1 2 2 ...
-#  $ Count  : num  8 54 15 21 2 45 7 8 7 35 ...
-
-# Convert to Table
-
-tab.temp <- xtabs(Count ~ TSSp1 + TSSm1 + Valence,
-              data=near.TSS.posVneg.cb.long)
-
-ftable(tab.temp)
-
-mantelhaen.test(tab.temp)
-
-
-
-## Temporal Cortex
-
-near.TSS.posVneg.tm <- rbind(dinucl.nearTSS[[2]][[3]][1:4,1:4],
-                              dinucl.nearTSS[[3]][[3]][1:4,1:4])
-near.TSS.posVneg.tm.long <- stack(near.TSS.posVneg.tm)
-
-near.TSS.posVneg.tm.long[,3] <- rep(rep(c('pos','neg'),each=4),4)
-
-colnames(near.TSS.posVneg.tm.long) <- c('TSSp1','TSSm1','Valence','Count')
-near.TSS.posVneg.tm.long <- data.frame(near.TSS.posVneg.tm.long)
-
-near.TSS.posVneg.tm.long$TSSp1 <- as.factor(near.TSS.posVneg.tm.long$TSSp1)
-near.TSS.posVneg.tm.long$TSSm1 <- as.factor(near.TSS.posVneg.tm.long$TSSm1)
-near.TSS.posVneg.tm.long$Valence <- as.factor(near.TSS.posVneg.tm.long$Valence)
-
-str(near.TSS.posVneg.tm.long)
-# 'data.frame':	32 obs. of  4 variables:
-#  $ TSSp1  : Factor w/ 4 levels "A","C","G","T": 1 2 3 4 1 2 3 4 1 2 ...
-#  $ TSSm1  : Factor w/ 4 levels "A","C","G","T": 1 1 1 1 1 1 1 1 2 2 ...
-#  $ Valence: Factor w/ 2 levels "neg","pos": 2 2 2 2 1 1 1 1 2 2 ...
-#  $ Count  : num  8 54 15 21 2 45 7 8 7 35 ...
-
-# Convert to Table
-
-tab.temp <- xtabs(Count ~ TSSp1 + TSSm1 + Valence,
-              data=near.TSS.posVneg.tm.long)
-
-ftable(tab.temp)
-
-mantelhaen.test(tab.temp)
-
-
-## Pons
-
-near.TSS.posVneg.po <- rbind(dinucl.nearTSS[[2]][[4]][1:4,1:4],
-                              dinucl.nearTSS[[3]][[4]][1:4,1:4])
-near.TSS.posVneg.po.long <- stack(near.TSS.posVneg.po)
-
-near.TSS.posVneg.po.long[,3] <- rep(rep(c('pos','neg'),each=4),4)
-
-colnames(near.TSS.posVneg.po.long) <- c('TSSp1','TSSm1','Valence','Count')
-near.TSS.posVneg.po.long <- data.frame(near.TSS.posVneg.po.long)
-
-near.TSS.posVneg.po.long$TSSp1 <- as.factor(near.TSS.posVneg.po.long$TSSp1)
-near.TSS.posVneg.po.long$TSSm1 <- as.factor(near.TSS.posVneg.po.long$TSSm1)
-near.TSS.posVneg.po.long$Valence <- as.factor(near.TSS.posVneg.po.long$Valence)
-
-str(near.TSS.posVneg.po.long)
-# 'data.frame':	32 obs. of  4 variables:
-#  $ TSSp1  : Factor w/ 4 levels "A","C","G","T": 1 2 3 4 1 2 3 4 1 2 ...
-#  $ TSSm1  : Factor w/ 4 levels "A","C","G","T": 1 1 1 1 1 1 1 1 2 2 ...
-#  $ Valence: Factor w/ 2 levels "neg","pos": 2 2 2 2 1 1 1 1 2 2 ...
-#  $ Count  : num  8 54 15 21 2 45 7 8 7 35 ...
-
-# Convert to Table
-
-tab.temp <- xtabs(Count ~ TSSp1 + TSSm1 + Valence,
-              data=near.TSS.posVneg.po.long)
-
-ftable(tab.temp)
-
-mantelhaen.test(tab.temp)
-
-
-
-
-
-
+dna.disp.pos.pf <- xtable(matrix(noquote(as.character(tab.DNA.pos.pf)),ncol=1))
 
 
 @
