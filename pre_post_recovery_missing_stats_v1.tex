@@ -1,0 +1,109 @@
+\documentclass[11pt]{article}
+\usepackage{rotating}
+\usepackage{graphicx, subfig}
+\usepackage{float}
+\pagenumbering{arabic}
+\usepackage{enumerate}
+\usepackage{Sweave}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{framed}
+\usepackage{longtable}
+\usepackage{tablefootnote}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{textcomp}
+\usepackage{tabularx}
+
+\setlength\parindent{0pt}
+
+
+
+\begin{document}
+\input{pre_post_recovery_missing_stats_v1-concordance}
+ 
+
+\author{James L. Dannemiller \\ Rice University}
+\title{COMT Expression Correlations in Four Brain Areas}
+\maketitle
+\today \\
+Gene Network\\
+Spring, 2018\\
+{\textit {COMT}} catalyzes degradation of catecholamines including dopamine, norepinephrine and epinephrine.\\
+
+\textlangle{}{\textit {pre post recovery missing stats v1.Rnw}}\textrangle{}: Program to generate tables pre- and post- preprocessing of the data on number of rows with missing observations on various variables. Additionally, some chromosomes were initiaslly listed as 'Un' for unknown.\\
+
+
+
+
+
+
+
+% latex table generated in R 3.4.4 by xtable 1.8-2 package
+% 
+\begin{table}[ht]
+\centering
+\caption{Total numbers of probes (Row 1), original number of probes with chromosome names identified (Row 2), number of probes with chromosome names identified after processing (Row 3).} 
+\begin{tabularx}{\textwidth}{lXXXX}
+  \hline
+ & \begin{sideways} prefrontal \end{sideways} & \begin{sideways} cerebellum \end{sideways} & \begin{sideways} temporal \end{sideways} & \begin{sideways} pons \end{sideways} \\ 
+  \hline
+Number of probes & 20000 & 20000 & 20000 & 20000 \\ 
+  Original & 17945 & 17953 & 17957 & 17973 \\ 
+  Processed & 19921 & 19922 & 19922 & 19928 \\ 
+   \hline
+\end{tabularx}
+\end{table}
+\vspace{1em}
+
+
+% latex table generated in R 3.4.4 by xtable 1.8-2 package
+% 
+\begin{table}[ht]
+\centering
+\caption{Total numbers of probes (Row 1), original number of probes with known transcription start positions (Row 2), number of probes with known transcription start positions after processing (Row 3).} 
+\begin{tabularx}{\textwidth}{lXXXX}
+  \hline
+ & \begin{sideways} prefrontal \end{sideways} & \begin{sideways} cerebellum \end{sideways} & \begin{sideways} temporal \end{sideways} & \begin{sideways} pons \end{sideways} \\ 
+  \hline
+Number of probes & 20000 & 20000 & 20000 & 20000 \\ 
+  Original & 17945 & 17953 & 17957 & 17973 \\ 
+  Processed & 19917 & 19917 & 19919 & 19923 \\ 
+   \hline
+\end{tabularx}
+\end{table}
+% latex table generated in R 3.4.4 by xtable 1.8-2 package
+% 
+\begin{table}[ht]
+\centering
+\caption{Total numbers of probes (Row 1), original number of probes with LOCxx gene symbols (Row 2), number of probes with LOCxx gene symbols after processing (Row 3).} 
+\begin{tabularx}{\textwidth}{lXXXX}
+  \hline
+ & \begin{sideways} prefrontal \end{sideways} & \begin{sideways} cerebellum \end{sideways} & \begin{sideways} temporal \end{sideways} & \begin{sideways} pons \end{sideways} \\ 
+  \hline
+Number of probes & 20000 & 20000 & 20000 & 20000 \\ 
+  Original & 452 & 461 & 461 & 462 \\ 
+  Processed & 147 & 156 & 145 & 144 \\ 
+   \hline
+\end{tabularx}
+\end{table}
+%latex.default(summ.pre.post.LOC.tab, file = "", caption = paste0("Total numbers of probes (Row 1), original number of probes with LOCxx gene symbols (Row 2), number of probes with LOCxx gene symbols after processing (Row 3).",     sep = ""), caption.loc = c("top"), rowlabel = "Measure",     colnamesTexCmd = "bfseries", booktabs = TRUE, label = c("tab:missingstats"),     na.blank = TRUE, vbar = FALSE, longtable = TRUE, table.env = TRUE,     continued = c("Number of Genes in Common Continued"), first.hline.double = FALSE,     append = FALSE)%
+\setlongtables\begin{longtable}{lrrrr}\caption{Total numbers of probes (Row 1), original number of probes with LOCxx gene symbols (Row 2), number of probes with LOCxx gene symbols after processing (Row 3).} \tabularnewline
+\toprule
+\multicolumn{1}{l}{\bfseries Measure}&\multicolumn{1}{c}{\bfseries prefrontal}&\multicolumn{1}{c}{\bfseries cerebellum}&\multicolumn{1}{c}{\bfseries temporal}&\multicolumn{1}{c}{\bfseries pons}\tabularnewline
+\midrule
+\endfirsthead\caption[]{\em (Number of Genes in Common Continued)} \tabularnewline
+\midrule
+\multicolumn{1}{l}{\bfseries Measure}&\multicolumn{1}{c}{\bfseries prefrontal}&\multicolumn{1}{c}{\bfseries cerebellum}&\multicolumn{1}{c}{\bfseries temporal}&\multicolumn{1}{c}{\bfseries pons}\tabularnewline
+\midrule
+\endhead
+\midrule
+\endfoot
+\label{tab:missingstats}
+Number of probes&$20000$&$20000$&$20000$&$20000$\tabularnewline
+Original&$  452$&$  461$&$  461$&$  462$\tabularnewline
+Processed&$  147$&$  156$&$  145$&$  144$\tabularnewline
+\bottomrule
+\end{longtable}
+
+\end{document}

@@ -827,10 +827,10 @@ p + facet_wrap(~ Area,ncol=2,labeller = as_labeller(area_names)) +
 # First, order the data.frame in each area by gene Symbol. This will put multiple probes for the same gene in neighboring rows.
 
 area.List <- list()
-area.List <- list(prefront.Data,
-                  cbell.Data,
-                  tempor.Data,
-                  pons.Data)
+area.List <- list(major.Area[[1]],
+                  major.Area[[2]],
+                  major.Area[[3]],
+                  major.Area[[4]])
 
 area.List.byGene <- list()
 
@@ -913,6 +913,20 @@ for (k in 1:dim(area.Data.maxExpr)[1]) {
 area.List.byGene[[h]] <- area.Data.selected
 
 } #end loop over the four areas
+
+# write out the data using gene as the unit rather than probe
+
+for (hj in ib)    {
+
+     fname <- paste('gene_as_unit_',stand.Col.names[hj],'.csv.txt')
+     write.csv(area.List.byGene[[hj]],fname,row.names=FALSE)
+}
+
+
+
+
+
+
 
 ################## ************ area.List.byGene now contains the complete set of variables for
 ### each row, but each gene is represented only once by the probe with the maximum expression level

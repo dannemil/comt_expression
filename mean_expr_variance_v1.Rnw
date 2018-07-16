@@ -1,0 +1,244 @@
+%%%%%%%%%%%
+%
+% Selecting genes based on the variance in their mean expression levels across brain areas
+%
+%%%%%%%%%%%
+
+\input{/Volumes/Macintosh_HD_3/genetics/genenetwork2/ltx_preamble.tex}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+<<>>=
+readanswer <- function()
+{ 
+  answ <- readline(prompt="Do you want to source the core input data script (Y/N)?: ")
+  if(!grepl("^[YN]+$",answ))
+  {
+    return(readanswer())
+  }
+  
+  return(answ)
+}
+
+if (readanswer() == 'Y')   {
+     source('core_comt_global_data_v2.R')
+} else {
+     
+}
+
+@
+
+<<include=FALSE, echo=FALSE, results=hide>>=
+# Generate a unique ID for this program by path and filename. This unique ID is attached to this file using a tag in the filesystem.
+fname <- csf()   # function to get current path including file name
+
+          prog.Name <- unique.ID(fname)
+
+          prog.Name   # unique ID based on hash of file name
+
+# Write out the file_name, unique ID and date/time to '.Rscriptnames'
+
+          rec.script(eval(fname),eval(prog.Name))
+@
+
+This program has the unique ID: \Sexpr{prog.Name}.
+
+
+
+<<read.data, echo=FALSE>>=
+# Use the no duplicate genes data
+# The column with the mean expression level for a given gene is "Mean"         
+     # read in data that has only one probe per gene
+     
+     fname <- c('gene_as_unit_data.xlsx')
+     
+     if (file.exists(fname))   {
+          wbgene <- loadWorkbook(fname)  
+          
+          # now tell R to read that workbook and which sheet
+          gene.prefront.Data <- data.frame(read.xlsx(wbgene,sheet = "prefrontal"))
+          
+          gene.cbell.Data <- data.frame(read.xlsx(wbgene,sheet = "cerebellum"))
+          
+          gene.tempor.Data <- data.frame(read.xlsx(wbgene,sheet = "temporal"))
+          
+          gene.pons.Data <- data.frame(read.xlsx(wbgene,sheet = "pons"))
+          
+          # reorder data in each area by pval
+          
+          gene.prefront.Data <- gene.prefront.Data[order(gene.prefront.Data$Sample.p.r.,decreasing=FALSE), ]
+          gene.cbell.Data <- gene.cbell.Data[order(gene.cbell.Data$Sample.p.r.,decreasing=FALSE), ]
+          gene.tempor.Data <- gene.tempor.Data[order(gene.tempor.Data$Sample.p.r.,decreasing=FALSE), ]
+          gene.pons.Data <- gene.pons.Data[order(gene.pons.Data$Sample.p.r.,decreasing=FALSE), ]
+          
+          Store(gene.prefront.Data,
+                gene.cbell.Data,
+                gene.tempor.Data,
+                gene.pons.Data)
+          
+          
+          # create a list with these data frames to be used when the same operation is applied to all area
+          
+          gene.Major <- list(pf=gene.prefront.Data,
+                             cb=gene.cbell.Data,
+                             tm=gene.tempor.Data,
+                             po=gene.pons.Data)
+     } else {
+          print(paste('The data file ',fname,' does not exist',sep=''))
+     }
+@
+
+<<expr.var>>=
+# Compute the variance in Mean expression levels across brain areas.
+          # Note: This implies that:
+          # 1. A given gene appears in the data from all four brain areas
+          # 2. The "Mean" expression data have been aligned/matched by gene across brain areas so that the variance can be computed.
+          
+# Get the index of each gene in PfCtx in the other three brain areas
+          # Could do it either on the Symbol or ENTREZID
+
+# Symbol 
+          
+match.expr.indx <- list()
+
+          # match.expr.indx[[1]] = pf and cb
+          # match.expr.indx[[2]] = pf and tm
+          # match.expr.indx[[3]] = pf and po
+
+          match.expr.indx[[1]] <- match(gene.Major[[1]]$Symbol,gene.Major[[2]]$Symbol)
+          match.expr.indx[[2]] <- match(gene.Major[[1]]$Symbol,gene.Major[[3]]$Symbol)
+          match.expr.indx[[3]] <- match(gene.Major[[1]]$Symbol,gene.Major[[4]]$Symbol)
+
+          nomatch.gene.Symbols <- list()         
+nomatch.gene.Symbols[[1]] <- gene.Major[[1]]$Symbol[which(is.na(match.expr.indx[[1]]))]
+nomatch.gene.Symbols[[2]] <- gene.Major[[1]]$Symbol[which(is.na(match.expr.indx[[2]]))]
+nomatch.gene.Symbols[[3]] <- gene.Major[[1]]$Symbol[which(is.na(match.expr.indx[[3]]))]
+
+nomatch.gene.indx <- list()         
+nomatch.gene.indx[[1]] <- which(is.na(match.expr.indx[[1]]))
+nomatch.gene.indx[[2]] <- which(is.na(match.expr.indx[[2]]))
+nomatch.gene.indx[[3]] <- which(is.na(match.expr.indx[[3]]))
+
+exclude.union.pfVcbtmpo <- union(union(nomatch.gene.indx[[1]],nomatch.gene.indx[[2]]),
+                                 nomatch.gene.indx[[3]])
+
+length(exclude.union.pfVcbtmpo)
+
+# There are 3617 genes in PfCtx that have to be excluded because they don't appear in at least one other brain area
+
+c.pa <- c(1:3)          
+miss.genes <- lapply(match.expr.indx[c.pa], function(x,c.pa)  num.NA(x), c.pa)
+miss.genes
+
+
+#No match for 1393 gene in PfCtx in Cerebell
+#No match for 1278 gene in PfCtx in TempCtx
+#No match for 1393 gene in PfCtx in Pons
+
+# Number of genes in the data from each area
+numb.genes <- list()
+numb.genes <- lapply(gene.Major[ib], function(x,ib)  length(x$Symbol), ib)
+numb.genes
+
+# The data set for each brain area has:
+# PfCtx:   16670 genes
+# Cbell:   16685 genes
+# TempCtx: 16636 genes
+# Pons:    16616 genes
+
+# Only if a gene appears in the data from all four areas, can the correct variance be computed
+
+use.from.pf.indx <- setdiff(c(1:numb.genes[[1]]),exclude.union.pfVcbtmpo)
+# There are 13053 genes from PfCtx that appear in all other brain areas
+
+# Get the gene Symbols for these 13053 genes, so that they can be located in the data from all of the other areas
+
+useable.genes <- gene.Major[[1]]$Symbol[c(use.from.pf.indx)]
+
+# Now check to make sure that these 13053 genes in PfCtx do appear in all of the other brain areas
+
+not.pf <- c(2:4)
+check.all.present <- lapply(gene.Major[not.pf], function(x,not.pf) num.NA(match(useable.genes,x$Symbol)), not.pf)
+
+check.all.present
+# $cb[1] 0   $tm[1] 0   $po[1] 0   All of the genes in useable genes from PfCtx are present in every other brain area
+
+# find the indices of these useable genes in each of the other three brain areas
+
+map.gene.indx.pfTOcbtmpo <- lapply(gene.Major[not.pf], function(x,not.pf) match(useable.genes,x$Symbol), not.pf)
+
+meanExpr.by.gene.V.area <- data.frame(pf=gene.Major[[1]]$Mean[c(use.from.pf.indx)],
+                               cb=gene.Major[[2]]$Mean[c(unlist(map.gene.indx.pfTOcbtmpo[[1]]))],
+                               tm=gene.Major[[3]]$Mean[c(unlist(map.gene.indx.pfTOcbtmpo[[2]]))],
+                               po=gene.Major[[4]]$Mean[c(unlist(map.gene.indx.pfTOcbtmpo[[3]]))]
+                               )
+                               
+
+# Now compute the variance in Mean expression for each gene across the four brain areas
+
+var.by.gene.V.area <- rowVars(as.matrix(meanExpr.by.gene.V.area),ncol=4)
+var.by.gene.V.area.df <- data.frame(symbol=gene.Major[[1]]$Symbol[c(use.from.pf.indx)],
+                                    var=var.by.gene.V.area,
+                                    meanExpr.by.gene.V.area,
+                                    entrez=gene.Major[[1]]$ENTREZID[c(use.from.pf.indx)])
+
+genes.ordered.by.var.V.area <- var.by.gene.V.area.df[c(order(var.by.gene.V.area.df$var,
+                                        decreasing=TRUE)),]
+
+GO.ontol.var <- list()
+GO.ontol.var.summ <- list()
+
+          params <- new('GOHyperGParams',                          #
+              # geneIds=target.background.genes[[im]]$gene.set,
+              # universeGeneIds=target.background.genes[[im]]$universe,
+              geneIds=as.character(genes.ordered.by.var.V.area$entrez[1:500]),
+              universeGeneIds=as.character(genes.ordered.by.var.V.area$entrez),
+              ontology='BP',
+              pvalueCutoff=0.001,
+              conditional=F,
+              testDirection='over',
+              annotation="org.Hs.eg.db"
+             )
+GO.ontol.var <- hyperGTest(params)
+GO.ontol.var.summ <- summary(GO.ontol.var)
+
+writeLines(as.character(genes.ordered.by.var.V.area$symbol[1:500]), 
+           con = 'top_genes_by_var', sep = "\n", useBytes = FALSE)
+
+############# Get gene symbols for genes in each significant GOID ################
+gene.entrez.GOid <- list()
+gene.Symbols.GOid <- list()
+ontol.genes.allgos.temp <- list()  #reset for each new ontology term
+ontol.genes.mygos.temp <- list()   #reset for each new ontology term
+
+if (dim(GO.ontol.var.summ)[1] > 0)   {
+     for (ig in 1:dim(GO.ontol.var.summ)[1]) {
+
+     ontol.genes.allgos.temp[[ig]] <- geneIdUniverse(GO.ontol.var)[[ig]]
+     ontol.genes.mygos.temp[[ig]] <- geneIds(GO.ontol.var)[geneIds(GO.ontol.var) %in% ontol.genes.allgos.temp[[ig]]]
+     gene.entrez.GOid[[ig]] <- ontol.genes.mygos.temp[[ig]]
+
+     gene.Symbols.GOid[[ig]] <- getBM(c("hgnc_symbol"),
+                             filters = c("entrezgene"),
+                             values = list(entrezgene=ontol.genes.mygos.temp[[ig]]),
+                             mart = ensembl)
+     
+}  # number of significant GOIDs
+     
+
+     gene.Symbols.term <- gene.Symbols.GOid
+     gene.entrez.term <- gene.entrez.GOid
+     
+} else {
+     
+     gene.Symbols.term <- 'None'
+     gene.entrez.term <- 'None'
+}
+
+          
+          
+@
+
+
+\end{document}

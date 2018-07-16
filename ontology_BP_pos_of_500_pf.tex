@@ -1,0 +1,394 @@
+% Use this file as an \include to put it at the top of Sweave/R generated latex tables.
+
+\documentclass[letterpaper,12pt]{article}
+
+%\usepackage{dgjournal}
+
+
+%%% Note: remove the next two lines to submit article %%%%%%%%%%
+\usepackage{setspace}
+%\linespread{2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%       
+
+%% The mathptmx package is recommended for Times compatible math symbols.
+%% Use mtpro2 or mathtime instead of mathptmx if you have the commercially
+%% available MathTime fonts.
+%% Other options are txfonts (free) or belleek (free) or TM-Math (commercial)
+\usepackage{mathptmx}
+\usepackage{tensor}
+\usepackage{nicefrac}
+\usepackage{units}
+\usepackage{mathtools}
+\usepackage{mathrsfs}
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+\usepackage{nth}
+\usepackage{epsfig}
+\usepackage[makeroom]{cancel}
+\newcommand\Ccancel[2][black]{\renewcommand\CancelColor{\color{#1}}\cancel{#2}}
+\newcommand\Bcancel[2][black]{\renewcommand\CancelColor{\color{#1}}\bcancel{#2}}
+
+\usepackage{geometry}
+\usepackage{changepage}
+
+
+
+\usepackage[T1]{fontenc}
+\usepackage{makecell}
+\newcolumntype{x}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{tikz}
+\newcommand\diag[4]{%
+  \multicolumn{1}{p{#2}|}{\hskip-\tabcolsep
+  $\vcenter{\begin{tikzpicture}[baseline=0,anchor=south west,inner sep=#1]
+  \path[use as bounding box] (0,0) rectangle (#2+2\tabcolsep,\baselineskip);
+  \node[minimum width={#2+2\tabcolsep},minimum height=\baselineskip+\extrarowheight] (box) {};
+  \draw (box.north west) -- (box.south east);
+  \draw (box.south west) -- (box.south west);
+  \node[anchor=south west] at (box.south west) {#3};
+  \node[anchor=north east] at (box.north east) {#4};
+ \end{tikzpicture}}$\hskip-\tabcolsep}}
+
+
+%% Use the graphics package to include figures
+%\usepackage{graphics}
+
+%% Use natbib with these recommended options
+%\usepackage[authoryear,comma,longnamesfirst,sectionbib]{natbib}
+\usepackage[authoryear,comma,sectionbib]{natbib} 
+
+%%%%%%%%%%% Dannemiller added 01/19/2015 - standard preamble
+\usepackage{fancyhdr} % Headers and footers
+
+\pagestyle{fancyplain} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+\fancyhead[RO,RE]{\thepage} % Custom header text
+\renewcommand{\headrulewidth}{0pt} %0pt for no rule, 2pt thicker etc...
+\setlength{\headheight}{15.0pt}
+
+\usepackage{url}   %this allows us to cite URLs in the text
+
+\usepackage{booktabs}
+\usepackage{pstricks}
+\let\clipbox\relax
+\usepackage{amssymb}
+\usepackage{afterpage}
+\usepackage{transparent}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{multicol}
+%\usepackage{chngpage}
+
+
+\usepackage{enumerate}
+\usepackage{xspace}
+
+\usepackage{abbrevs}
+% example: \newabbrev\ART{American Repetrory Theater (ART)}[ART]
+\newabbrev\ssb{Sum of Squares Between genotypes ($SS_{B}$)}[$SS_{B}$]
+\newabbrev\ssw{Sum of Squares Within genotypes ($SS_{W}$)}[$SS_{W}$]
+\newabbrev\sst{Sum of Squares Total ($SS_{T}$)}[$SS_{T}$]
+\newabbrev\ci{current, intermediate (CI)}[CI]
+\newabbrev\cim{current, intermediate matrix (CI matrix)}[CI matrix]
+\newabbrev\cims{current, intermediate matrices (CI matrices)}[CI matrices]
+\newabbrev\civ{current, intermediate vector (CI vector)}[CI vector]
+\newabbrev\civs{current, intermediate vectors (CI vectors)}[CI vectors]
+\newabbrev\cis{current, intermediate scalar (CI scalar)}[CI scalar]
+\newabbrev\maf{minor allele frequency (MAF)}[MAF]
+
+
+
+%%% The following correct for a flawed if statement in package abbrev
+\makeatletter
+\renewcommand\maybe@space@{%
+  % \@tempswatrue % <= this is in the original
+  \maybe@ictrue % <= this is new
+  \expandafter   \@tfor
+    \expandafter \reserved@a
+    \expandafter :%
+    \expandafter =%
+                 \nospacelist
+                 \do \t@st@ic
+  % \if@tempswa % <= this is in the original
+  \ifmaybe@ic % <= this is new
+    \space
+  \fi
+}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{ textcomp }
+\newcommand\dblquote[1]{\textquotedblleft #1\textquotedblright} 
+\newcommand{\apos}{$\text{'}$}
+\newcommand{\be}{\begin{enumerate}}
+\newcommand{\ee}{\end{enumerate}}
+\newcommand{\bes}{\begin{enumerate*}}
+\newcommand{\ees}{\end{enumerate*}}
+\newcommand{\mb}{\noindent\makebox[\textwidth] }
+\newcommand{\den}{\hspace{2pt}\textendash \,}
+\newcommand{\dem}{\textemdash \,}
+\newcommand{\Eq}{Equation }
+
+
+
+%specific hyphenation
+\hyphenation{e-pi-neph-rine}
+\hyphenation{mol-e-cules}
+%\hyphenation{}
+
+
+\providecommand\phantomsection{}
+
+
+%\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{ colorlinks=false,pdfborderstyle={/S/U/W 1},citebordercolor=0 0 1 }
+\colorlet{transpyellow}{white!10!yellow}
+
+\usepackage{rotate}
+\usepackage{rotating}
+\usepackage{rotfloat}
+
+\usepackage{fontspec}
+\usepackage[lofdepth,lotdepth]{subfig}
+\usepackage{threeparttable} 
+\usepackage{tablefootnote}
+\usepackage{footnote}
+
+\usepackage{array}
+%\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{threeparttablex}
+
+
+\usepackage{pdflscape} 
+\usepackage{tabulary}
+\usepackage{ltxtable}
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\setlength\LTleft{0pt}
+\setlength\LTright{0pt}
+
+
+
+\usepackage{colortbl}
+\definecolor{riceblue}{hsb}{0.6,0.1,0.9}
+\definecolor{greenish}{rgb}{0.3,0.6,0.0}
+\definecolor{myblue}{rgb}{0.3,0.3,0.8}
+\definecolor{kugray5}{RGB}{224,224,224}
+\definecolor{lightgray}{gray}{0.9}
+
+\usepackage{xltxtra}
+\usepackage{nicefrac}
+
+\usepackage{rotating}
+\usepackage{lscape}
+
+\usepackage{graphicx}
+%\usepackage{epstopdf}
+\graphicspath{/Users/dannemil/paperless/ase_manuscript/sagmb/}
+
+\usepackage[normal]{engord}
+
+\usepackage{enumitem}
+%\setlist[enumerate]{parsep=4pt}
+
+\usepackage [normalem] {ulem}
+
+\usepackage{tabularx}
+\newcolumntype{S}{@{\stepcounter{Definition}\theDefinition.~} >{\bfseries}l @{~--~}X@{}}
+\newcounter{Definition}[subsubsection]
+
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{caption}
+%\renewcommand{\tablename}{Table}
+\usepackage{threeparttable}
+
+\usepackage{setspace}% http://ctan.org/pkg/setspace
+\AtBeginEnvironment{tabular}{\singlespacing}% Single spacing in tabular environment
+
+%\usepackage{booktabs}
+\usepackage[detect-all]{siunitx}
+\robustify\bfseries
+
+\usepackage{tabularx,colortbl}
+\newcolumntype{Y}{>{\centering\arraybackslash} X}
+\renewcommand{\arraystretch}{1.5}
+
+\usepackage{amsmath, amsthm, amssymb}
+%\setlength{\mathindent}{0pt}
+
+\usepackage{etoolbox}
+\apptocmd\normalsize{%
+ \abovedisplayskip=12pt plus 3pt minus 9pt
+ \abovedisplayshortskip=0pt plus 3pt
+ \belowdisplayskip=12pt plus 3pt minus 9pt
+ \belowdisplayshortskip=7pt plus 3pt minus 4pt
+}{}{}
+
+
+%\numberwithin{figure}{section}
+
+\makeatletter
+\@addtoreset{footnote}{section}
+\makeatother
+
+\usepackage{mdwlist}
+
+
+\renewcommand*\thesubsection{\arabic{section}.\arabic{subsection}}
+\usepackage[title]{appendix}
+\newcounter{appendix}
+\numberwithin{equation}{appendix}
+\usepackage{tablefootnote}
+\usepackage{yhmath}
+\usepackage{ragged2e}
+
+\newcolumntype{C}[1]{>{\Centering\arraybackslash}p{#1}}
+
+\usepackage{makecell}
+\renewcommand\theadfont{\normalsize\bfseries}
+\renewcommand\theadalign{bc}
+\usepackage{cellspace}
+\setlength\cellspacetoplimit{5pt}
+\setlength\cellspacebottomlimit{5pt}
+
+\setlength{\LTpre}{0pt}
+\setlength{\LTpost}{12pt}
+%\setlength\LTleft\parindent
+%\setlength\LTright\fill
+
+
+%\setmainfont{Times}
+\setmainfont{Baskerville}
+%\setmainfont{Alegreya}
+%\setmainfont{Cardo}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\mtx}[1]{\mathbf{#1}}
+
+
+
+\DeclareMathSizes{12pt}{11pt}{8pt}{6pt}
+\everymath=\expandafter{\the\everymath\displaystyle}
+
+\setcounter{secnumdepth}{5}
+
+\usepackage{footnote}
+\makesavenoteenv{tabular}
+\makesavenoteenv{table}
+\usepackage{tablefootnote}
+\usepackage{adjustbox}
+\setlength\heavyrulewidth{.06em}
+\setlength\lightrulewidth{.04em}
+
+
+
+\begin{document}
+
+\noindent
+
+\begin{landscape}
+
+{\footnotesize {
+% latex table generated in R 3.4.4 by xtable 1.8-2 package
+% Wed May 30 11:26:33 2018
+\setlength\LTleft{-1cm}
+\setlength\LTright{-1cm}
+\begin{longtable}{lrrrrrl}
+\caption{Ontology for the positively correlated genes with the lowest p-values for expression correlations with COMT: Prefrontal Cortex} \\ 
+  \toprule
+GOBPID & Pvalue & OddsRatio & ExpCount & Count & Size & Term \\ 
+  \midrule
+GO:1901575 & 0.00000000000024193 & 2.83 & 36.66 & 83 & 1755 & organic substance catabolic process \\ 
+  GO:0019752 & 0.00000000000191738 & 3.40 & 18.94 & 54 & 907 & carboxylic acid metabolic process \\ 
+  GO:0006614 & 0.00000000000199244 & 13.60 & 1.55 & 16 & 74 & SRP-dependent cotranslational protein targeting to membrane \\ 
+  GO:0009056 & 0.00000000000242965 & 2.58 & 44.82 & 92 & 2146 & catabolic process \\ 
+  GO:0006613 & 0.00000000000581534 & 12.52 & 1.65 & 16 & 79 & cotranslational protein targeting to membrane \\ 
+  GO:0045047 & 0.00000000000872417 & 12.13 & 1.69 & 16 & 81 & protein targeting to ER \\ 
+  GO:0072599 & 0.00000000001895280 & 11.42 & 1.78 & 16 & 85 & establishment of protein localization to endoplasmic reticulum \\ 
+  GO:0044248 & 0.00000000003370001 & 2.57 & 38.01 & 80 & 1820 & cellular catabolic process \\ 
+  GO:0000184 & 0.00000000003385265 & 9.88 & 2.13 & 17 & 102 & nuclear-transcribed mRNA catabolic process, nonsense-mediated decay \\ 
+  GO:0006082 & 0.00000000004961424 & 3.06 & 21.24 & 55 & 1017 & organic acid metabolic process \\ 
+  GO:0043436 & 0.00000000008769477 & 3.04 & 20.93 & 54 & 1002 & oxoacid metabolic process \\ 
+  GO:0019080 & 0.00000000033370798 & 6.71 & 3.51 & 20 & 168 & viral gene expression \\ 
+  GO:0006612 & 0.00000000045646174 & 7.54 & 2.84 & 18 & 136 & protein targeting to membrane \\ 
+  GO:0019083 & 0.00000000050474691 & 6.97 & 3.22 & 19 & 154 & viral transcription \\ 
+  GO:0070972 & 0.00000000051781086 & 8.84 & 2.19 & 16 & 105 & protein localization to endoplasmic reticulum \\ 
+  GO:0006413 & 0.00000000078566674 & 6.77 & 3.30 & 19 & 158 & translational initiation \\ 
+  GO:0055114 & 0.00000000297762366 & 2.96 & 17.88 & 46 & 856 & oxidation-reduction process \\ 
+  GO:0044281 & 0.00000000978573710 & 2.27 & 39.73 & 76 & 1902 & small molecule metabolic process \\ 
+  GO:0032787 & 0.00000001125057791 & 3.47 & 10.80 & 33 & 517 & monocarboxylic acid metabolic process \\ 
+  GO:0044282 & 0.00000001362950854 & 4.13 & 7.14 & 26 & 342 & small molecule catabolic process \\ 
+  GO:0019439 & 0.00000002466999636 & 3.49 & 10.03 & 31 & 480 & aromatic compound catabolic process \\ 
+  GO:1901361 & 0.00000002991530197 & 3.39 & 10.67 & 32 & 511 & organic cyclic compound catabolic process \\ 
+  GO:0006631 & 0.00000003146332822 & 4.22 & 6.43 & 24 & 308 & fatty acid metabolic process \\ 
+  GO:0044255 & 0.00000006767057561 & 2.64 & 19.80 & 46 & 948 & cellular lipid metabolic process \\ 
+  GO:0016054 & 0.00000008280514962 & 4.69 & 4.82 & 20 & 231 & organic acid catabolic process \\ 
+  GO:0046395 & 0.00000008280514962 & 4.69 & 4.82 & 20 & 231 & carboxylic acid catabolic process \\ 
+  GO:0000956 & 0.00000021157616676 & 5.15 & 3.74 & 17 & 179 & nuclear-transcribed mRNA catabolic process \\ 
+  GO:0006629 & 0.00000036745895145 & 2.33 & 25.90 & 53 & 1240 & lipid metabolic process \\ 
+  GO:0090150 & 0.00000065868607103 & 4.25 & 4.99 & 19 & 239 & establishment of protein localization to membrane \\ 
+  GO:0006402 & 0.00000078905642861 & 3.86 & 6.06 & 21 & 290 & mRNA catabolic process \\ 
+  GO:0030258 & 0.00000115353279079 & 4.08 & 5.18 & 19 & 248 & lipid modification \\ 
+  GO:0034655 & 0.00000117728275825 & 3.22 & 8.96 & 26 & 429 & nucleobase-containing compound catabolic process \\ 
+  GO:0044270 & 0.00000187266403650 & 3.05 & 9.78 & 27 & 468 & cellular nitrogen compound catabolic process \\ 
+  GO:0016053 & 0.00000200419624676 & 3.76 & 5.89 & 20 & 282 & organic acid biosynthetic process \\ 
+  GO:0046394 & 0.00000200419624676 & 3.76 & 5.89 & 20 & 282 & carboxylic acid biosynthetic process \\ 
+  GO:0051234 & 0.00000202307409344 & 1.75 & 92.93 & 131 & 4449 & establishment of localization \\ 
+  GO:0006605 & 0.00000209509939742 & 3.49 & 6.98 & 22 & 334 & protein targeting \\ 
+  GO:1901566 & 0.00000303378625602 & 2.03 & 35.36 & 63 & 1693 & organonitrogen compound biosynthetic process \\ 
+  GO:0006401 & 0.00000328286130842 & 3.50 & 6.62 & 21 & 317 & RNA catabolic process \\ 
+  GO:0006810 & 0.00000348431672061 & 1.73 & 91.05 & 128 & 4359 & transport \\ 
+  GO:0006364 & 0.00000379081285321 & 4.10 & 4.60 & 17 & 220 & rRNA processing \\ 
+  GO:0072329 & 0.00000379591290085 & 5.82 & 2.34 & 12 & 112 & monocarboxylic acid catabolic process \\ 
+  GO:0043603 & 0.00000468363764893 & 2.39 & 18.09 & 39 & 866 & cellular amide metabolic process \\ 
+  GO:0043299 & 0.00000557665386815 & 2.93 & 9.75 & 26 & 467 & leukocyte degranulation \\ 
+  GO:0046700 & 0.00000557665386815 & 2.93 & 9.75 & 26 & 467 & heterocycle catabolic process \\ 
+  GO:0006518 & 0.00000702306767847 & 2.50 & 15.00 & 34 & 718 & peptide metabolic process \\ 
+  GO:0002275 & 0.00000783850054355 & 2.87 & 9.94 & 26 & 476 & myeloid cell activation involved in immune response \\ 
+  GO:0006081 & 0.00000874441662305 & 7.60 & 1.38 & 9 & 66 & cellular aldehyde metabolic process \\ 
+  GO:0002444 & 0.00000876117203988 & 2.85 & 10.00 & 26 & 479 & myeloid leukocyte mediated immunity \\ 
+  GO:0001676 & 0.00001067388699925 & 6.43 & 1.78 & 10 & 85 & long-chain fatty acid metabolic process \\ 
+  GO:0002366 & 0.00001078942808552 & 2.60 & 12.66 & 30 & 606 & leukocyte activation involved in immune response \\ 
+  GO:0002263 & 0.00001225012722955 & 2.58 & 12.74 & 30 & 610 & cell activation involved in immune response \\ 
+  GO:0044403 & 0.00001571079899728 & 2.40 & 15.58 & 34 & 746 & symbiosis, encompassing mutualism through parasitism \\ 
+  GO:0000038 & 0.00001615201848180 & 13.65 & 0.56 & 6 & 27 & very long-chain fatty acid metabolic process \\ 
+  GO:0044283 & 0.00001670735166018 & 2.74 & 10.38 & 26 & 497 & small molecule biosynthetic process \\ 
+  GO:0044242 & 0.00001737558853057 & 4.25 & 3.63 & 14 & 174 & cellular lipid catabolic process \\ 
+  GO:0009062 & 0.00001963375176913 & 5.95 & 1.90 & 10 & 91 & fatty acid catabolic process \\ 
+  GO:0016032 & 0.00002075292429055 & 2.43 & 14.43 & 32 & 691 & viral process \\ 
+  GO:0016072 & 0.00002271139713252 & 3.53 & 5.26 & 17 & 252 & rRNA metabolic process \\ 
+  GO:0046907 & 0.00002387382240916 & 1.91 & 34.53 & 59 & 1653 & intracellular transport \\ 
+  GO:0051179 & 0.00002459990279365 & 1.62 & 114.23 & 149 & 5469 & localization \\ 
+  GO:1901568 & 0.00002593180098853 & 4.72 & 2.82 & 12 & 135 & fatty acid derivative metabolic process \\ 
+  GO:0008610 & 0.00002767454256694 & 2.51 & 12.64 & 29 & 605 & lipid biosynthetic process \\ 
+  GO:0002274 & 0.00003401411595666 & 2.57 & 11.47 & 27 & 549 & myeloid leukocyte activation \\ 
+  GO:0043312 & 0.00003430325935856 & 2.80 & 8.94 & 23 & 428 & neutrophil degranulation \\ 
+  GO:0002283 & 0.00003557011686050 & 2.79 & 8.96 & 23 & 429 & neutrophil activation involved in immune response \\ 
+  GO:0044419 & 0.00003612233331953 & 2.29 & 16.23 & 34 & 777 & interspecies interaction between organisms \\ 
+  GO:0051186 & 0.00004340624927149 & 2.91 & 7.85 & 21 & 376 & cofactor metabolic process \\ 
+  GO:0042119 & 0.00004901091570909 & 2.73 & 9.15 & 23 & 438 & neutrophil activation \\ 
+  GO:0016042 & 0.00004954448917884 & 3.31 & 5.60 & 17 & 268 & lipid catabolic process \\ 
+  GO:0016192 & 0.00004985050637865 & 1.88 & 33.82 & 57 & 1619 & vesicle-mediated transport \\ 
+  GO:0045055 & 0.00005080190280752 & 2.38 & 13.74 & 30 & 658 & regulated exocytosis \\ 
+  GO:0072594 & 0.00005085501381566 & 2.50 & 11.74 & 27 & 562 & establishment of protein localization to organelle \\ 
+  GO:0002446 & 0.00005441258899407 & 2.71 & 9.21 & 23 & 441 & neutrophil mediated immunity \\ 
+  GO:0036230 & 0.00005441258899407 & 2.71 & 9.21 & 23 & 441 & granulocyte activation \\ 
+  GO:0006635 & 0.00006622525337620 & 6.62 & 1.38 & 8 & 66 & fatty acid beta-oxidation \\ 
+  GO:0042254 & 0.00008155706593479 & 3.16 & 5.83 & 17 & 279 & ribosome biogenesis \\ 
+  GO:0044265 & 0.00008721929473351 & 2.11 & 19.13 & 37 & 916 & cellular macromolecule catabolic process \\ 
+  GO:0006102 & 0.00008745697910502 & 71.01 & 0.10 & 3 & 5 & isocitrate metabolic process \\ 
+  GO:0006887 & 0.00008803494957000 & 2.24 & 15.56 & 32 & 745 & exocytosis \\ 
+  GO:0042063 & 0.00009589960967303 & 3.41 & 4.78 & 15 & 229 & gliogenesis \\ 
+  GO:0006637 & 0.00009873074294533 & 5.41 & 1.86 & 9 & 89 & acyl-CoA metabolic process \\ 
+  GO:0035383 & 0.00009873074294533 & 5.41 & 1.86 & 9 & 89 & thioester metabolic process \\ 
+   \bottomrule
+\end{longtable}
+}}
+\end{landscape}
+\end{document}

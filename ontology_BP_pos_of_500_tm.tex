@@ -1,0 +1,376 @@
+% Use this file as an \include to put it at the top of Sweave/R generated latex tables.
+
+\documentclass[letterpaper,12pt]{article}
+
+%\usepackage{dgjournal}
+
+
+%%% Note: remove the next two lines to submit article %%%%%%%%%%
+\usepackage{setspace}
+%\linespread{2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%       
+
+%% The mathptmx package is recommended for Times compatible math symbols.
+%% Use mtpro2 or mathtime instead of mathptmx if you have the commercially
+%% available MathTime fonts.
+%% Other options are txfonts (free) or belleek (free) or TM-Math (commercial)
+\usepackage{mathptmx}
+\usepackage{tensor}
+\usepackage{nicefrac}
+\usepackage{units}
+\usepackage{mathtools}
+\usepackage{mathrsfs}
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+\usepackage{nth}
+\usepackage{epsfig}
+\usepackage[makeroom]{cancel}
+\newcommand\Ccancel[2][black]{\renewcommand\CancelColor{\color{#1}}\cancel{#2}}
+\newcommand\Bcancel[2][black]{\renewcommand\CancelColor{\color{#1}}\bcancel{#2}}
+
+\usepackage{geometry}
+\usepackage{changepage}
+
+
+
+\usepackage[T1]{fontenc}
+\usepackage{makecell}
+\newcolumntype{x}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{tikz}
+\newcommand\diag[4]{%
+  \multicolumn{1}{p{#2}|}{\hskip-\tabcolsep
+  $\vcenter{\begin{tikzpicture}[baseline=0,anchor=south west,inner sep=#1]
+  \path[use as bounding box] (0,0) rectangle (#2+2\tabcolsep,\baselineskip);
+  \node[minimum width={#2+2\tabcolsep},minimum height=\baselineskip+\extrarowheight] (box) {};
+  \draw (box.north west) -- (box.south east);
+  \draw (box.south west) -- (box.south west);
+  \node[anchor=south west] at (box.south west) {#3};
+  \node[anchor=north east] at (box.north east) {#4};
+ \end{tikzpicture}}$\hskip-\tabcolsep}}
+
+
+%% Use the graphics package to include figures
+%\usepackage{graphics}
+
+%% Use natbib with these recommended options
+%\usepackage[authoryear,comma,longnamesfirst,sectionbib]{natbib}
+\usepackage[authoryear,comma,sectionbib]{natbib} 
+
+%%%%%%%%%%% Dannemiller added 01/19/2015 - standard preamble
+\usepackage{fancyhdr} % Headers and footers
+
+\pagestyle{fancyplain} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+\fancyhead[RO,RE]{\thepage} % Custom header text
+\renewcommand{\headrulewidth}{0pt} %0pt for no rule, 2pt thicker etc...
+\setlength{\headheight}{15.0pt}
+
+\usepackage{url}   %this allows us to cite URLs in the text
+
+\usepackage{booktabs}
+\usepackage{pstricks}
+\let\clipbox\relax
+\usepackage{amssymb}
+\usepackage{afterpage}
+\usepackage{transparent}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{multicol}
+%\usepackage{chngpage}
+
+
+\usepackage{enumerate}
+\usepackage{xspace}
+
+\usepackage{abbrevs}
+% example: \newabbrev\ART{American Repetrory Theater (ART)}[ART]
+\newabbrev\ssb{Sum of Squares Between genotypes ($SS_{B}$)}[$SS_{B}$]
+\newabbrev\ssw{Sum of Squares Within genotypes ($SS_{W}$)}[$SS_{W}$]
+\newabbrev\sst{Sum of Squares Total ($SS_{T}$)}[$SS_{T}$]
+\newabbrev\ci{current, intermediate (CI)}[CI]
+\newabbrev\cim{current, intermediate matrix (CI matrix)}[CI matrix]
+\newabbrev\cims{current, intermediate matrices (CI matrices)}[CI matrices]
+\newabbrev\civ{current, intermediate vector (CI vector)}[CI vector]
+\newabbrev\civs{current, intermediate vectors (CI vectors)}[CI vectors]
+\newabbrev\cis{current, intermediate scalar (CI scalar)}[CI scalar]
+\newabbrev\maf{minor allele frequency (MAF)}[MAF]
+
+
+
+%%% The following correct for a flawed if statement in package abbrev
+\makeatletter
+\renewcommand\maybe@space@{%
+  % \@tempswatrue % <= this is in the original
+  \maybe@ictrue % <= this is new
+  \expandafter   \@tfor
+    \expandafter \reserved@a
+    \expandafter :%
+    \expandafter =%
+                 \nospacelist
+                 \do \t@st@ic
+  % \if@tempswa % <= this is in the original
+  \ifmaybe@ic % <= this is new
+    \space
+  \fi
+}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{ textcomp }
+\newcommand\dblquote[1]{\textquotedblleft #1\textquotedblright} 
+\newcommand{\apos}{$\text{'}$}
+\newcommand{\be}{\begin{enumerate}}
+\newcommand{\ee}{\end{enumerate}}
+\newcommand{\bes}{\begin{enumerate*}}
+\newcommand{\ees}{\end{enumerate*}}
+\newcommand{\mb}{\noindent\makebox[\textwidth] }
+\newcommand{\den}{\hspace{2pt}\textendash \,}
+\newcommand{\dem}{\textemdash \,}
+\newcommand{\Eq}{Equation }
+
+
+
+%specific hyphenation
+\hyphenation{e-pi-neph-rine}
+\hyphenation{mol-e-cules}
+%\hyphenation{}
+
+
+\providecommand\phantomsection{}
+
+
+%\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{ colorlinks=false,pdfborderstyle={/S/U/W 1},citebordercolor=0 0 1 }
+\colorlet{transpyellow}{white!10!yellow}
+
+\usepackage{rotate}
+\usepackage{rotating}
+\usepackage{rotfloat}
+
+\usepackage{fontspec}
+\usepackage[lofdepth,lotdepth]{subfig}
+\usepackage{threeparttable} 
+\usepackage{tablefootnote}
+\usepackage{footnote}
+
+\usepackage{array}
+%\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{threeparttablex}
+
+
+\usepackage{pdflscape} 
+\usepackage{tabulary}
+\usepackage{ltxtable}
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\setlength\LTleft{0pt}
+\setlength\LTright{0pt}
+
+
+
+\usepackage{colortbl}
+\definecolor{riceblue}{hsb}{0.6,0.1,0.9}
+\definecolor{greenish}{rgb}{0.3,0.6,0.0}
+\definecolor{myblue}{rgb}{0.3,0.3,0.8}
+\definecolor{kugray5}{RGB}{224,224,224}
+\definecolor{lightgray}{gray}{0.9}
+
+\usepackage{xltxtra}
+\usepackage{nicefrac}
+
+\usepackage{rotating}
+\usepackage{lscape}
+
+\usepackage{graphicx}
+%\usepackage{epstopdf}
+\graphicspath{/Users/dannemil/paperless/ase_manuscript/sagmb/}
+
+\usepackage[normal]{engord}
+
+\usepackage{enumitem}
+%\setlist[enumerate]{parsep=4pt}
+
+\usepackage [normalem] {ulem}
+
+\usepackage{tabularx}
+\newcolumntype{S}{@{\stepcounter{Definition}\theDefinition.~} >{\bfseries}l @{~--~}X@{}}
+\newcounter{Definition}[subsubsection]
+
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{caption}
+%\renewcommand{\tablename}{Table}
+\usepackage{threeparttable}
+
+\usepackage{setspace}% http://ctan.org/pkg/setspace
+\AtBeginEnvironment{tabular}{\singlespacing}% Single spacing in tabular environment
+
+%\usepackage{booktabs}
+\usepackage[detect-all]{siunitx}
+\robustify\bfseries
+
+\usepackage{tabularx,colortbl}
+\newcolumntype{Y}{>{\centering\arraybackslash} X}
+\renewcommand{\arraystretch}{1.5}
+
+\usepackage{amsmath, amsthm, amssymb}
+%\setlength{\mathindent}{0pt}
+
+\usepackage{etoolbox}
+\apptocmd\normalsize{%
+ \abovedisplayskip=12pt plus 3pt minus 9pt
+ \abovedisplayshortskip=0pt plus 3pt
+ \belowdisplayskip=12pt plus 3pt minus 9pt
+ \belowdisplayshortskip=7pt plus 3pt minus 4pt
+}{}{}
+
+
+%\numberwithin{figure}{section}
+
+\makeatletter
+\@addtoreset{footnote}{section}
+\makeatother
+
+\usepackage{mdwlist}
+
+
+\renewcommand*\thesubsection{\arabic{section}.\arabic{subsection}}
+\usepackage[title]{appendix}
+\newcounter{appendix}
+\numberwithin{equation}{appendix}
+\usepackage{tablefootnote}
+\usepackage{yhmath}
+\usepackage{ragged2e}
+
+\newcolumntype{C}[1]{>{\Centering\arraybackslash}p{#1}}
+
+\usepackage{makecell}
+\renewcommand\theadfont{\normalsize\bfseries}
+\renewcommand\theadalign{bc}
+\usepackage{cellspace}
+\setlength\cellspacetoplimit{5pt}
+\setlength\cellspacebottomlimit{5pt}
+
+\setlength{\LTpre}{0pt}
+\setlength{\LTpost}{12pt}
+%\setlength\LTleft\parindent
+%\setlength\LTright\fill
+
+
+%\setmainfont{Times}
+\setmainfont{Baskerville}
+%\setmainfont{Alegreya}
+%\setmainfont{Cardo}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\mtx}[1]{\mathbf{#1}}
+
+
+
+\DeclareMathSizes{12pt}{11pt}{8pt}{6pt}
+\everymath=\expandafter{\the\everymath\displaystyle}
+
+\setcounter{secnumdepth}{5}
+
+\usepackage{footnote}
+\makesavenoteenv{tabular}
+\makesavenoteenv{table}
+\usepackage{tablefootnote}
+\usepackage{adjustbox}
+\setlength\heavyrulewidth{.06em}
+\setlength\lightrulewidth{.04em}
+
+
+
+\begin{document}
+
+\noindent
+
+\begin{landscape}
+
+{\footnotesize {
+\setlength\LTleft{-1cm}
+\setlength\LTright{-1cm}
+% latex table generated in R 3.4.4 by xtable 1.8-2 package
+% Wed May 30 14:05:49 2018
+\begin{longtable}{lrrrrrl}
+\caption{Ontology for the positively correlated genes with the lowest p-values for expression correlations with COMT: Temporal Cortex} \\ 
+  \toprule
+GOBPID & Pvalue & OddsRatio & ExpCount & Count & Size & Term \\ 
+  \midrule
+GO:0019752 & 0.00000000000000528 & 3.41 & 23.68 & 67 & 914 & carboxylic acid metabolic process \\ 
+  GO:0006082 & 0.00000000000004711 & 3.15 & 26.63 & 70 & 1028 & organic acid metabolic process \\ 
+  GO:0043436 & 0.00000000000007312 & 3.15 & 26.24 & 69 & 1013 & oxoacid metabolic process \\ 
+  GO:0016054 & 0.00000000000143741 & 5.83 & 5.93 & 29 & 229 & organic acid catabolic process \\ 
+  GO:0046395 & 0.00000000000143741 & 5.83 & 5.93 & 29 & 229 & carboxylic acid catabolic process \\ 
+  GO:0044282 & 0.00000000000279114 & 4.67 & 8.78 & 35 & 339 & small molecule catabolic process \\ 
+  GO:0055114 & 0.00000000001419983 & 3.04 & 22.25 & 58 & 859 & oxidation-reduction process \\ 
+  GO:0042063 & 0.00000000106684051 & 4.92 & 5.88 & 25 & 227 & gliogenesis \\ 
+  GO:0048709 & 0.00000000118804224 & 9.29 & 2.02 & 15 & 78 & oligodendrocyte differentiation \\ 
+  GO:0006631 & 0.00000000264671170 & 4.09 & 8.08 & 29 & 312 & fatty acid metabolic process \\ 
+  GO:0032787 & 0.00000000266371346 & 3.27 & 13.52 & 39 & 522 & monocarboxylic acid metabolic process \\ 
+  GO:0044281 & 0.00000000344218348 & 2.16 & 49.66 & 91 & 1917 & small molecule metabolic process \\ 
+  GO:0010001 & 0.00000000372380174 & 5.48 & 4.46 & 21 & 172 & glial cell differentiation \\ 
+  GO:0009063 & 0.00000000744540607 & 7.27 & 2.64 & 16 & 102 & cellular amino acid catabolic process \\ 
+  GO:1901575 & 0.00000004564741328 & 2.10 & 44.53 & 81 & 1719 & organic substance catabolic process \\ 
+  GO:1901605 & 0.00000005977849357 & 4.59 & 5.21 & 21 & 201 & alpha-amino acid metabolic process \\ 
+  GO:1901606 & 0.00000006296806240 & 7.25 & 2.31 & 14 & 89 & alpha-amino acid catabolic process \\ 
+  GO:0009056 & 0.00000008253634004 & 1.98 & 54.61 & 93 & 2108 & catabolic process \\ 
+  GO:0044255 & 0.00000016905629062 & 2.39 & 24.40 & 52 & 942 & cellular lipid metabolic process \\ 
+  GO:0044248 & 0.00000024808585830 & 2.00 & 46.32 & 81 & 1788 & cellular catabolic process \\ 
+  GO:0001676 & 0.00000030233151658 & 6.90 & 2.23 & 13 & 86 & long-chain fatty acid metabolic process \\ 
+  GO:0006520 & 0.00000043360721175 & 3.41 & 8.50 & 26 & 328 & cellular amino acid metabolic process \\ 
+  GO:0016477 & 0.00000065455280520 & 2.19 & 29.09 & 57 & 1123 & cell migration \\ 
+  GO:0006629 & 0.00000070156197873 & 2.13 & 32.10 & 61 & 1239 & lipid metabolic process \\ 
+  GO:0051270 & 0.00000134568295455 & 2.43 & 19.12 & 42 & 738 & regulation of cellular component movement \\ 
+  GO:0048870 & 0.00000177328531293 & 2.08 & 32.25 & 60 & 1245 & cell motility \\ 
+  GO:0051674 & 0.00000177328531293 & 2.08 & 32.25 & 60 & 1245 & localization of cell \\ 
+  GO:2000145 & 0.00000184765641440 & 2.48 & 17.33 & 39 & 669 & regulation of cell motility \\ 
+  GO:0050768 & 0.00000204269143609 & 3.76 & 5.91 & 20 & 228 & negative regulation of neurogenesis \\ 
+  GO:0000038 & 0.00000419995998563 & 13.39 & 0.70 & 7 & 27 & very long-chain fatty acid metabolic process \\ 
+  GO:0010721 & 0.00000450195285887 & 3.43 & 6.76 & 21 & 261 & negative regulation of cell development \\ 
+  GO:0006635 & 0.00000525549013094 & 7.13 & 1.66 & 10 & 64 & fatty acid beta-oxidation \\ 
+  GO:0040012 & 0.00000555910714895 & 2.33 & 18.83 & 40 & 727 & regulation of locomotion \\ 
+  GO:0072329 & 0.00000581779815499 & 5.13 & 2.88 & 13 & 111 & monocarboxylic acid catabolic process \\ 
+  GO:0030334 & 0.00000595173147121 & 2.44 & 16.16 & 36 & 624 & regulation of cell migration \\ 
+  GO:0006081 & 0.00000606976203499 & 7.00 & 1.68 & 10 & 65 & cellular aldehyde metabolic process \\ 
+  GO:0051961 & 0.00000650869634149 & 3.46 & 6.37 & 20 & 246 & negative regulation of nervous system development \\ 
+  GO:0036109 & 0.00000774269964343 & 27.21 & 0.31 & 5 & 12 & alpha-linolenic acid metabolic process \\ 
+  GO:0009083 & 0.00000827135175203 & 16.36 & 0.52 & 6 & 20 & branched-chain amino acid catabolic process \\ 
+  GO:0030258 & 0.00000932545169872 & 3.37 & 6.53 & 20 & 252 & lipid modification \\ 
+  GO:0044242 & 0.00000957914908668 & 4.01 & 4.43 & 16 & 171 & cellular lipid catabolic process \\ 
+  GO:0040011 & 0.00001547781315349 & 1.88 & 37.69 & 64 & 1455 & locomotion \\ 
+  GO:0009636 & 0.00001585247060719 & 3.65 & 5.13 & 17 & 198 & response to toxic substance \\ 
+  GO:0050767 & 0.00001689829207022 & 2.35 & 16.27 & 35 & 628 & regulation of neurogenesis \\ 
+  GO:0021529 & 0.00001724828776326 & Inf & 0.08 & 3 & 3 & spinal cord oligodendrocyte cell differentiation \\ 
+  GO:0021530 & 0.00001724828776326 & Inf & 0.08 & 3 & 3 & spinal cord oligodendrocyte cell fate specification \\ 
+  GO:0009081 & 0.00002016871955748 & 13.47 & 0.60 & 6 & 23 & branched-chain amino acid metabolic process \\ 
+  GO:0009062 & 0.00002250836590462 & 5.30 & 2.36 & 11 & 91 & fatty acid catabolic process \\ 
+  GO:0032879 & 0.00002360780496751 & 1.71 & 58.73 & 89 & 2267 & regulation of localization \\ 
+  GO:0006790 & 0.00002382958025119 & 2.87 & 8.73 & 23 & 337 & sulfur compound metabolic process \\ 
+  GO:0051186 & 0.00002556940435582 & 2.72 & 10.00 & 25 & 386 & cofactor metabolic process \\ 
+  GO:0043651 & 0.00002752926561066 & 19.04 & 0.39 & 5 & 15 & linoleic acid metabolic process \\ 
+  GO:0060284 & 0.00003416711937675 & 2.18 & 18.94 & 38 & 731 & regulation of cell development \\ 
+  GO:1901565 & 0.00003638675209286 & 1.99 & 26.32 & 48 & 1016 & organonitrogen compound catabolic process \\ 
+  GO:0033539 & 0.00003919437166453 & 17.31 & 0.41 & 5 & 16 & fatty acid beta-oxidation using acyl-CoA dehydrogenase \\ 
+  GO:0051960 & 0.00004011129621459 & 2.19 & 18.37 & 37 & 709 & regulation of nervous system development \\ 
+  GO:0008610 & 0.00005003513133520 & 2.27 & 15.75 & 33 & 608 & lipid biosynthetic process \\ 
+  GO:0050793 & 0.00005793619094076 & 1.69 & 54.19 & 82 & 2092 & regulation of developmental process \\ 
+  GO:0033559 & 0.00006051323080270 & 5.19 & 2.18 & 10 & 84 & unsaturated fatty acid metabolic process \\ 
+  GO:1901568 & 0.00006094058912974 & 4.02 & 3.57 & 13 & 138 & fatty acid derivative metabolic process \\ 
+  GO:2000177 & 0.00006097270163759 & 5.85 & 1.76 & 9 & 68 & regulation of neural precursor cell proliferation \\ 
+  GO:0061351 & 0.00007072446668041 & 4.24 & 3.13 & 12 & 121 & neural precursor cell proliferation \\ 
+  GO:0035338 & 0.00007366156004166 & 14.65 & 0.47 & 5 & 18 & long-chain fatty-acyl-CoA biosynthetic process \\ 
+  GO:0007399 & 0.00007818674161043 & 1.69 & 51.29 & 78 & 1980 & nervous system development \\ 
+  GO:0045665 & 0.00008474131814517 & 3.46 & 4.74 & 15 & 183 & negative regulation of neuron differentiation \\ 
+   \bottomrule
+\end{longtable}
+}}
+\end{landscape}
+\end{document}

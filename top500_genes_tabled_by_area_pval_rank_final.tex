@@ -1,0 +1,588 @@
+% Use this file as an \include to put it at the top of Sweave/R generated latex tables.
+
+\documentclass[letterpaper,12pt]{article}
+
+%\usepackage{dgjournal}
+
+
+%%% Note: remove the next two lines to submit article %%%%%%%%%%
+\usepackage{setspace}
+%\linespread{2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%       
+
+%% The mathptmx package is recommended for Times compatible math symbols.
+%% Use mtpro2 or mathtime instead of mathptmx if you have the commercially
+%% available MathTime fonts.
+%% Other options are txfonts (free) or belleek (free) or TM-Math (commercial)
+\usepackage{mathptmx}
+\usepackage{tensor}
+\usepackage{nicefrac}
+\usepackage{units}
+\usepackage{mathtools}
+\usepackage{mathrsfs}
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+\usepackage{nth}
+\usepackage{epsfig}
+\usepackage[makeroom]{cancel}
+\newcommand\Ccancel[2][black]{\renewcommand\CancelColor{\color{#1}}\cancel{#2}}
+\newcommand\Bcancel[2][black]{\renewcommand\CancelColor{\color{#1}}\bcancel{#2}}
+
+\usepackage{geometry}
+\usepackage{changepage}
+
+
+
+\usepackage[T1]{fontenc}
+\usepackage{makecell}
+\newcolumntype{x}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{tikz}
+\newcommand\diag[4]{%
+  \multicolumn{1}{p{#2}|}{\hskip-\tabcolsep
+  $\vcenter{\begin{tikzpicture}[baseline=0,anchor=south west,inner sep=#1]
+  \path[use as bounding box] (0,0) rectangle (#2+2\tabcolsep,\baselineskip);
+  \node[minimum width={#2+2\tabcolsep},minimum height=\baselineskip+\extrarowheight] (box) {};
+  \draw (box.north west) -- (box.south east);
+  \draw (box.south west) -- (box.south west);
+  \node[anchor=south west] at (box.south west) {#3};
+  \node[anchor=north east] at (box.north east) {#4};
+ \end{tikzpicture}}$\hskip-\tabcolsep}}
+
+
+%% Use the graphics package to include figures
+%\usepackage{graphics}
+
+%% Use natbib with these recommended options
+%\usepackage[authoryear,comma,longnamesfirst,sectionbib]{natbib}
+\usepackage[authoryear,comma,sectionbib]{natbib} 
+
+%%%%%%%%%%% Dannemiller added 01/19/2015 - standard preamble
+\usepackage{fancyhdr} % Headers and footers
+
+\pagestyle{fancyplain} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+\fancyhead[RO,RE]{\thepage} % Custom header text
+\renewcommand{\headrulewidth}{0pt} %0pt for no rule, 2pt thicker etc...
+\setlength{\headheight}{15.0pt}
+
+\usepackage{url}   %this allows us to cite URLs in the text
+
+\usepackage{booktabs}
+\usepackage{pstricks}
+\let\clipbox\relax
+\usepackage{amssymb}
+\usepackage{afterpage}
+\usepackage{transparent}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{multicol}
+%\usepackage{chngpage}
+
+
+\usepackage{enumerate}
+\usepackage{xspace}
+
+\usepackage{abbrevs}
+% example: \newabbrev\ART{American Repetrory Theater (ART)}[ART]
+\newabbrev\ssb{Sum of Squares Between genotypes ($SS_{B}$)}[$SS_{B}$]
+\newabbrev\ssw{Sum of Squares Within genotypes ($SS_{W}$)}[$SS_{W}$]
+\newabbrev\sst{Sum of Squares Total ($SS_{T}$)}[$SS_{T}$]
+\newabbrev\ci{current, intermediate (CI)}[CI]
+\newabbrev\cim{current, intermediate matrix (CI matrix)}[CI matrix]
+\newabbrev\cims{current, intermediate matrices (CI matrices)}[CI matrices]
+\newabbrev\civ{current, intermediate vector (CI vector)}[CI vector]
+\newabbrev\civs{current, intermediate vectors (CI vectors)}[CI vectors]
+\newabbrev\cis{current, intermediate scalar (CI scalar)}[CI scalar]
+\newabbrev\maf{minor allele frequency (MAF)}[MAF]
+
+
+
+%%% The following correct for a flawed if statement in package abbrev
+\makeatletter
+\renewcommand\maybe@space@{%
+  % \@tempswatrue % <= this is in the original
+  \maybe@ictrue % <= this is new
+  \expandafter   \@tfor
+    \expandafter \reserved@a
+    \expandafter :%
+    \expandafter =%
+                 \nospacelist
+                 \do \t@st@ic
+  % \if@tempswa % <= this is in the original
+  \ifmaybe@ic % <= this is new
+    \space
+  \fi
+}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{ textcomp }
+\newcommand\dblquote[1]{\textquotedblleft #1\textquotedblright} 
+\newcommand{\apos}{$\text{'}$}
+\newcommand{\be}{\begin{enumerate}}
+\newcommand{\ee}{\end{enumerate}}
+\newcommand{\bes}{\begin{enumerate*}}
+\newcommand{\ees}{\end{enumerate*}}
+\newcommand{\mb}{\noindent\makebox[\textwidth] }
+\newcommand{\den}{\hspace{2pt}\textendash \,}
+\newcommand{\dem}{\textemdash \,}
+\newcommand{\Eq}{Equation }
+
+
+
+%specific hyphenation
+\hyphenation{e-pi-neph-rine}
+\hyphenation{mol-e-cules}
+%\hyphenation{}
+
+
+\providecommand\phantomsection{}
+
+
+%\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{ colorlinks=false,pdfborderstyle={/S/U/W 1},citebordercolor=0 0 1 }
+\colorlet{transpyellow}{white!10!yellow}
+
+\usepackage{rotate}
+\usepackage{rotating}
+\usepackage{rotfloat}
+
+\usepackage{fontspec}
+\usepackage[lofdepth,lotdepth]{subfig}
+\usepackage{threeparttable} 
+\usepackage{tablefootnote}
+\usepackage{footnote}
+
+\usepackage{array}
+%\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{threeparttablex}
+
+
+\usepackage{pdflscape} 
+\usepackage{tabulary}
+\usepackage{ltxtable}
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\setlength\LTleft{0pt}
+\setlength\LTright{0pt}
+
+
+
+\usepackage{colortbl}
+\definecolor{riceblue}{hsb}{0.6,0.1,0.9}
+\definecolor{greenish}{rgb}{0.3,0.6,0.0}
+\definecolor{myblue}{rgb}{0.3,0.3,0.8}
+\definecolor{kugray5}{RGB}{224,224,224}
+\definecolor{lightgray}{gray}{0.9}
+
+\usepackage{xltxtra}
+\usepackage{nicefrac}
+
+\usepackage{rotating}
+\usepackage{lscape}
+
+\usepackage{graphicx}
+%\usepackage{epstopdf}
+\graphicspath{/Users/dannemil/paperless/ase_manuscript/sagmb/}
+
+\usepackage[normal]{engord}
+
+\usepackage{enumitem}
+%\setlist[enumerate]{parsep=4pt}
+
+\usepackage [normalem] {ulem}
+
+\usepackage{tabularx}
+\newcolumntype{S}{@{\stepcounter{Definition}\theDefinition.~} >{\bfseries}l @{~--~}X@{}}
+\newcounter{Definition}[subsubsection]
+
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{caption}
+%\renewcommand{\tablename}{Table}
+\usepackage{threeparttable}
+
+\usepackage{setspace}% http://ctan.org/pkg/setspace
+\AtBeginEnvironment{tabular}{\singlespacing}% Single spacing in tabular environment
+
+%\usepackage{booktabs}
+\usepackage[detect-all]{siunitx}
+\robustify\bfseries
+
+\usepackage{tabularx,colortbl}
+\newcolumntype{Y}{>{\centering\arraybackslash} X}
+\renewcommand{\arraystretch}{1.5}
+
+\usepackage{amsmath, amsthm, amssymb}
+%\setlength{\mathindent}{0pt}
+
+\usepackage{etoolbox}
+\apptocmd\normalsize{%
+ \abovedisplayskip=12pt plus 3pt minus 9pt
+ \abovedisplayshortskip=0pt plus 3pt
+ \belowdisplayskip=12pt plus 3pt minus 9pt
+ \belowdisplayshortskip=7pt plus 3pt minus 4pt
+}{}{}
+
+
+%\numberwithin{figure}{section}
+
+\makeatletter
+\@addtoreset{footnote}{section}
+\makeatother
+
+\usepackage{mdwlist}
+
+
+\renewcommand*\thesubsection{\arabic{section}.\arabic{subsection}}
+\usepackage[title]{appendix}
+\newcounter{appendix}
+\numberwithin{equation}{appendix}
+\usepackage{tablefootnote}
+\usepackage{yhmath}
+\usepackage{ragged2e}
+
+\newcolumntype{C}[1]{>{\Centering\arraybackslash}p{#1}}
+
+\usepackage{makecell}
+\renewcommand\theadfont{\normalsize\bfseries}
+\renewcommand\theadalign{bc}
+\usepackage{cellspace}
+\setlength\cellspacetoplimit{5pt}
+\setlength\cellspacebottomlimit{5pt}
+
+\setlength{\LTpre}{0pt}
+\setlength{\LTpost}{12pt}
+%\setlength\LTleft\parindent
+%\setlength\LTright\fill
+
+
+%\setmainfont{Times}
+\setmainfont{Baskerville}
+%\setmainfont{Alegreya}
+%\setmainfont{Cardo}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\mtx}[1]{\mathbf{#1}}
+
+
+
+\DeclareMathSizes{12pt}{11pt}{8pt}{6pt}
+\everymath=\expandafter{\the\everymath\displaystyle}
+
+\setcounter{secnumdepth}{5}
+
+\usepackage{footnote}
+\makesavenoteenv{tabular}
+\makesavenoteenv{table}
+\usepackage{tablefootnote}
+\usepackage{adjustbox}
+\setlength\heavyrulewidth{.06em}
+\setlength\lightrulewidth{.04em}
+
+
+\begin{document}
+\begin{landscape}
+\noindent
+
+{\scriptsize {
+
+%latex.default(prefrontal.top500.tab, file = "top500_genes_tabled_by_area_pval_rank_final.tex",     caption = c("The 500 most strongly COMT-correlated genes (ranking on correlation p-value) in Prefrontal Cortex."),     caption.loc = c("top"), colheads = c(""), rowlabel = c(""),     colnamesTexCmd = "bfseries", booktabs = TRUE, label = c("tab:top500.pf"),     na.blank = TRUE, vbar = FALSE, longtable = TRUE, table.env = TRUE,     center = c("center"), continued = c("Top 500 Positively Correlated Genes in PF Crtx Continued"),     first.hline.double = FALSE, append = FALSE)%
+\setlongtables\begin{longtable}{l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l}
+\caption{The 500 most strongly {\textit {COMT}}\den correlated genes (ranking on correlation p-value) in Prefrontal Cortex.} \tabularnewline
+\toprule
+\multicolumn{1}{l}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }\tabularnewline
+\midrule
+\endfirsthead\caption[]{\em (Top 500 Positively Correlated Genes in PF Crtx Continued)} \tabularnewline
+\midrule
+\multicolumn{1}{l}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }\tabularnewline
+\midrule
+\endhead
+\midrule
+\endfoot
+\label{tab:top500.pf}
+1&RPL18P13&CAT&COMT&ACY1&CHCHD8&GATM&MYO6&RPL18AP3&C1orf122&YBX1P2\tabularnewline
+2&CDC14B&EDNRB&PDLIM3&C6orf48&{\bfseries {UBP1}}\footnotemark[1]&PGCP&{\bfseries {CADPS2}}&PPIB&ECH1&DTYMK\tabularnewline
+3&HSCB&TTLL4&PNKD&CSTB&MEGF10&H3F3C&POLR2F&HIP1R&RPS2P8&ZFAND3\tabularnewline
+4&CLU&SERF2&PTTG1IP&PKM2&RPL19&COPE&AASS&{\bfseries {NKRF}}&RPS14&C12orf39\tabularnewline
+5&SPAG9&LIMS1&SNAP23&PABPC1&PPAP2B&ZMAT5&SCNM1&RPS5&RPL13A&BCAN\tabularnewline
+6&NKAIN4&{\bfseries {UBE3A}}&{\bfseries {CCDC28A}}&C3orf70&RPL12&{\bfseries {RUSC1}}&ELP4&{\bfseries {CAMSAP1L1}}&PDE6D&GSN\tabularnewline
+7&THSD1&MMP28&LRRC3B&ALDH2&IDH2&ADA&{\bfseries {ABCA5}}&PGLS&IVD&QKI\tabularnewline
+8&{\bfseries {GRSF1}}&HSD17B6&{\bfseries {ELOVL4}}&PGM1&{\bfseries {RAB11FIP5}}&APOE&PIR&RGC32&OLIG1&ACP6\tabularnewline
+9&CPT2&DFFA&{\bfseries {RAB3GAP1}}&CHCHD5&GPSN2&APCDD1&MLC1&SLC25A20&RPL35P5&{\bfseries {SCAMP1}}\tabularnewline
+10&RPS3&ARL6IP6&ARHGAP24&HSD17B8&ZHX2&IQCK&{\bfseries {LZTFL1}}&{\bfseries {SH3BGRL2}}&PIK3C2A&{\bfseries {WDR69}}\tabularnewline
+11&{\bfseries {KPNA4}}&ACAA2&{\bfseries {GABARAPL1}}&ABTB2&{\bfseries {RARS}}&BGLAP&RAG1AP1&YIF1A&PRDX4&{\bfseries {GPIAP1}}\tabularnewline
+12&PCCB&{\bfseries {DENR}}&ALAD&FAM36A&RHBDD1&{\bfseries {SDAD1}}&{\bfseries {OPTN}}&{\bfseries {PPP2CA}}&SCAMP2&STAT3\tabularnewline
+13&{\bfseries {DNAJA2}}&S100A16&HIST1H2AC&TTYH1&PMF1&CIB1&DIRC2&WIPI1&{\bfseries {MYCBP2}}&RBP1\tabularnewline
+14&{\bfseries {SH3GL2}}&{\bfseries {PJA2}}&ATP6V0E1&CLCN2&TPT1&{\bfseries {NEFM}}&MAPRE1&GPR17&S100A13&H3F3AP4\tabularnewline
+15&CBR1&WDFY2&ELOVL2&CYP2J2&{\bfseries {MGC35154}}&{\bfseries {CCNB1}}&GALNT10&SGPL1&GLUL&{\bfseries {NME5}}\tabularnewline
+16&{\bfseries {KIF21A}}&PLA2G5&{\bfseries {SMARCA2}}&THRA&KRT10&SASH1&EIF3S4&FAU&CRB1&{\bfseries {SPATA18}}\tabularnewline
+17&C6orf72&EEF1D&RELA&MON1B&{\bfseries {MATR3}}&{\bfseries {PSMC1}}&PHGDH&PTPRZ1&{\bfseries {PREPL}}&GNG5\tabularnewline
+18&PFN1&NT5C&{\bfseries {SEL1L}}&CHDH&TNFSF13&NSMCE1&PCDHGC3&{\bfseries {VPS36}}&NME6&CTNNA1\tabularnewline
+19&{\bfseries {MCF2}}&CXorf38&RPS17&{\bfseries {SAE1}}&LRP4&CECR1&FER&TST&GNAI2&NUBP1\tabularnewline
+20&FTL&HIP1&{\bfseries {HSF2}}&AGPAT3&ALDH1A1&ATPAF1&RAB9A&DYNLT1&AKR7A3&{\bfseries {SNAP91}}\tabularnewline
+21&CLK3&LGALS3BP&C9orf23&{\bfseries {SYT4}}&EIF4EBP3&RPS9&{\bfseries {C14orf169}}&IGFBP7&CINP&CD302\tabularnewline
+22&{\bfseries {ARHGEF3}}&PSME1&{\bfseries {CADPS}}&C9orf140&KUA-UEV&DAG1&{\bfseries {PRR23B}}&C1orf61&{\bfseries {IFITM5}}&LDHD\tabularnewline
+23&{\bfseries {CDC37L1}}&HSD17B10&DPY19L3&GRHPR&VPS72&{\bfseries {ATG5}}&{\bfseries {GABRG2}}&TMEM136&{\bfseries {TOMM34}}&HLA-A\tabularnewline
+24&CST3&{\bfseries {FAM83B}}&{\bfseries {C5orf5}}&{\bfseries {NDFIP1}}&GRN&GM2A&TFPT&VPS52&PHPT1&ACO2\tabularnewline
+25&TP53AP1&{\bfseries {LOC401589}}&MTM1&RPL36&PARP4&{\bfseries {LIPI}}&GSTM2&SYPL1&MRPL53&RPL8\tabularnewline
+26&RPS11&C11orf48&FAM102A&PXMP2&MGST1&{\bfseries {CCPG1}}&{\bfseries {KIAA1600}}&{\bfseries {NEFH}}&{\bfseries {SYNJ1}}&OACT2\tabularnewline
+27&GNG12&PON2&C16orf14&PECR&{\bfseries {TRIM37}}&LIX1L&{\bfseries {YARS}}&{\bfseries {LPHN2}}&{\bfseries {SMAP1}}&SELENBP1\tabularnewline
+28&{\bfseries {POPDC3}}&RFXANK&NPL&{\bfseries {TCEAL2}}&{\bfseries {CASC1}}&{\bfseries {CD83}}&BCKDHA&TSC22D4&{\bfseries {APRIN}}&FAH\tabularnewline
+29&{\bfseries {MKL2}}&{\bfseries {SLC6A15}}&{\bfseries {LIN28B}}&{\bfseries {MEF2C}}&{\bfseries {ATP6V1C1}}&{\bfseries {MTCH1}}&{\bfseries {ARL15}}&C2orf18&SLC25A1&CRYL1\tabularnewline
+30&IGSF1&SFRS15&PYCR2&{\bfseries {PTPN4}}&C11orf59&ARSF&CLDN10&TGFB2&DOCK1&{\bfseries {CDH12}}\tabularnewline
+31&{\bfseries {ENO2}}&{\bfseries {C15orf37}}&{\bfseries {OXR1}}&{\bfseries {PIP3-E}}&ANXA5&BCAT2&{\bfseries {CACNA2D3}}&{\bfseries {RSPO3}}&TMEM134&RPL30\tabularnewline
+32&{\bfseries {PLCB1}}&DERA&RANBP3L&{\bfseries {NAPB}}&ITGB5&C2orf34&PRKCSH&GPR37L1&MERTK&C2orf68\tabularnewline
+33&{\bfseries {SLC25A12}}&ASRGL1&{\bfseries {TOMM70A}}&PCDHGA12&{\bfseries {THYN1}}&MTA3&C2orf28&IRF2BP2&GNA13&{\bfseries {TOPBP1}}\tabularnewline
+34&{\bfseries {MYH10}}&FADS1&EPN2&PITPNC1&{\bfseries {PCMT1}}&CTSH&ZBTB20&C9orf46&{\bfseries {PCTK2}}&{\bfseries {ENPP5}}\tabularnewline
+35&{\bfseries {CAPZA2}}&{\bfseries {DNAJC5G}}&{\bfseries {CCNF}}&ADHFE1&TMBIM4&MARCKSL1&C10orf26&{\bfseries {SLC30A5}}&RPS13&AGXT2L1\tabularnewline
+36&{\bfseries {PIP5KL1}}&ACOX2&{\bfseries {CCDC63}}&OLIG2&ZNF775&{\bfseries {RALYL}}&PNPO&{\bfseries {AFF2}}&MSRB2&{\bfseries {COL5A2}}\tabularnewline
+37&{\bfseries {WASL}}&{\bfseries {ZNF804B}}&ACSS1&{\bfseries {SLC39A10}}&AP3M1&{\bfseries {DCP2}}&HYI&{\bfseries {VMA21}}&DBI&ZFHX4\tabularnewline
+38&EDG1&{\bfseries {WDR16}}&ADORA2B&{\bfseries {RPP40}}&{\bfseries {CYP4X1}}&PPAP2A&{\bfseries {PRICKLE1}}&FBXO8&C5orf4&HDGF\tabularnewline
+39&MDS032&RPLP0&S100B&EPHX2&{\bfseries {FLJ37357}}&PPP2R5C&CRTAC1&{\bfseries {NCKAP1}}&{\bfseries {FAM26C}}&GNA12\tabularnewline
+40&ABHD3&TSPAN12&PXMP3&{\bfseries {B3GNT1}}&{\bfseries {OR5K3}}&{\bfseries {TTC19}}&{\bfseries {NDEL1}}&TP53BP2&{\bfseries {FLJ23049}}&{\bfseries {PANK2}}\tabularnewline
+\newpage
+41&{\bfseries {CUL3}}&FYN&{\bfseries {AP3M2}}&UCRC&{\bfseries {EPB41L3}}&USP54&{\bfseries {ZNF533}}&RPS4X&{\bfseries {B4GALNT2}}&{\bfseries {RP1-32F7.2}}\tabularnewline
+42&FUCA2&RRNAD1&{\bfseries {TAS2R8}}&{\bfseries {KRT222P}}&TAX1BP3&NR2E1&{\bfseries {AHI1}}&SLC39A12&{\bfseries {MC3R}}&SS18\tabularnewline
+43&{\bfseries {ADARB1}}&FGFR2&{\bfseries {GPRASP2}}&MIF4GD&SLC7A6OS&{\bfseries {LARGE}}&ACTL6A&{\bfseries {ZYG11B}}&SLC9A9&GPR177\tabularnewline
+44&ACSBG1&RIT1&{\bfseries {MLL2}}&{\bfseries {ORC4L}}&PLAT&FLJ10986&{\bfseries {GLS}}&HHLA3&{\bfseries {PI4KII}}&DERL2\tabularnewline
+45&{\bfseries {IL5RA}}&C6orf129&FGF1&PACS2&SORCS2&LGALS3&{\bfseries {ALS2CR13}}&{\bfseries {UBE2D2}}&{\bfseries {NARS}}&{\bfseries {ACTR6}}\tabularnewline
+46&PIPOX&PHLPP&{\bfseries {KLK7}}&CD82&EPB41L5&{\bfseries {LUZP4}}&ACOX1&{\bfseries {GRM1}}&{\bfseries {REEP5}}&{\bfseries {ALX4}}\tabularnewline
+47&OPLAH&CYB5A&{\bfseries {AFF3}}&{\bfseries {ZNF490}}&C3orf63&{\bfseries {CAMTA1}}&ACAA1&AK2&{\bfseries {LRFN5}}&{\bfseries {ZNF396}}\tabularnewline
+48&GJB6&KIAA1161&SLCO1C1&CDC14A&RPL11&{\bfseries {LDB2}}&CDC2L1&{\bfseries {PRC1}}&{\bfseries {LGALS13}}&{\bfseries {NDUFV2}}\tabularnewline
+49&RGS20&{\bfseries {RIOK1}}&{\bfseries {HSDL1}}&HLA-F&{\bfseries {RPIB9}}&C5orf32&PELI2&{\bfseries {MRPS36}}&{\bfseries {KIAA0528}}&EDG7\tabularnewline
+50&{\bfseries {MTMR4}}&C1orf198&{\bfseries {VDAC3}}&DLL1&{\bfseries {MAG1}}&TUFM&{\bfseries {PCDHGA1}}&SEC13&PSAT1&IDH1\tabularnewline
+51&{\bfseries {ZBTB24}}&&&&&&&&&\tabularnewline \hline
+\multicolumn{11}{l}{$^{1}${\scriptsize {The expression levels of genes in boldface are negatively correlated with {\textit {COMT}} expression.}}}
+\end{longtable}
+}}
+
+
+\vspace{2em}
+
+{\scriptsize {
+
+%latex.default(prefrontal.top500.tab, file = "top500_genes_tabled_by_area_pval_rank_final.tex",     caption = c("The 500 most strongly COMT-correlated genes (ranking on correlation p-value) in Prefrontal Cortex."),     caption.loc = c("top"), colheads = c(""), rowlabel = c(""),     colnamesTexCmd = "bfseries", booktabs = TRUE, label = c("tab:top500.pf"),     na.blank = TRUE, vbar = FALSE, longtable = TRUE, table.env = TRUE,     center = c("center"), continued = c("Top 500 Positively Correlated Genes in PF Crtx Continued"),     first.hline.double = FALSE, append = FALSE)%
+\setlongtables\begin{longtable}{l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l}
+\caption{The 500 most strongly {\textit {COMT}}\den correlated genes (ranking on correlation p-value) in Cerebellum.} \tabularnewline
+\toprule
+\multicolumn{1}{l}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }\tabularnewline
+\midrule
+\endfirsthead\caption[]{\em (Top 500 Positively Correlated Genes in Crblm Continued)} \tabularnewline
+\midrule
+\multicolumn{1}{l}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }\tabularnewline
+\midrule
+\endhead
+\midrule
+\endfoot
+\label{tab:top500.pf}
+1&PGCP&CAT&PCCB&FUCA2&TMEM170&RAB9A&OACT2&{\bfseries {ARHGEF12}}&COMT&CYB5D2\tabularnewline
+2&{\bfseries {TMEM106C}}&ACTG1&SEPP1&KUA-UEV&CBR1&VPS41&PIGT&GRHPR&PFN1&MARCKSL1\tabularnewline
+3&PYCR2&FNTA&{\bfseries {C1orf71}}&MYO6&PDE6D&C3orf70&DIRC2&GRM3&PDE4B&B3GAT1\tabularnewline
+4&QKI&PPAP2B&PPIB&ABCA9&{\bfseries {SNAP91}}&TYW1&{\bfseries {CDS1}}&C3orf1&PTPRZ1&GPR177\tabularnewline
+5&SYPL1&{\bfseries {GLE1L}}&{\bfseries {MAP1B}}&C5orf4&{\bfseries {RGS17}}&{\bfseries {RPIB9}}&{\bfseries {CELSR3}}&CPT2&FGFR2&PPAP2A\tabularnewline
+6&C8orf61&{\bfseries {RUSC1}}&{\bfseries {TTC19}}&HIP1&TP53AP1&ISOC1&LRRC8D&DAD1&SLC31A2&HIP1R\tabularnewline
+7&CD9&HHLA3&DFFA&ATP6V0E1&EDNRB&LYPLAL1&{\bfseries {CAMSAP1L1}}&LYRM2&CRTAP&PXMP3\tabularnewline
+8&SPAG9&PPP2R5C&MOG&TMEM42&TMEM165&{\bfseries {ZMYND17}}&SERPINI1&PRTFDC1&NCAM2&PRMT2\tabularnewline
+9&{\bfseries {RNF150}}&{\bfseries {PRKCE}}&MAPRE1&ABCA8&FANCL&{\bfseries {SYT4}}&{\bfseries {SUZ12}}&OMG&CHCHD8&CDC14B\tabularnewline
+10&HSPA2&CLDN11&ARMC10&PRG-3&TNRC5&C10orf78&HNMT&SEC22C&CKS1B&{\bfseries {GFOD1}}\tabularnewline
+11&CGI-38&NSDHL&{\bfseries {ALS2CR13}}&SUMF1&SPTLC2&FEZ1&PXK&GSN&{\bfseries {FAM80B}}&COPE\tabularnewline
+12&PEPD&C12orf31&{\bfseries {SERBP1}}&{\bfseries {MYCBP2}}&IQCK&BRP44L&GALNT10&{\bfseries {CPEB3}}&C10orf58&LAMP2\tabularnewline
+13&PRDX4&AASS&IGSF11&PIR&C14orf24&C20orf23&PAOX&NLGN3&{\bfseries {ZYG11B}}&HSD17B6\tabularnewline
+14&PMF1&YBX1P2&{\bfseries {ZNF398}}&TUBA1A&{\bfseries {SCN2A}}&RNF13&ATG3&{\bfseries {ZNF540}}&SLC44A1&KLHL4\tabularnewline
+15&ATP5S&GPR27&TMEM59&SH3BGR&RNH1&TMEM87A&{\bfseries {BSN}}&C19orf42&SFT2D1&{\bfseries {EDC4}}\tabularnewline
+16&{\bfseries {LIN9}}&PHF16&{\bfseries {RARS}}&SLC25A26&DTD1&C6orf48&ZMAT5&GATM&ACO2&SLCO3A1\tabularnewline
+17&ABTB2&RHBDD1&SGPL1&ALG14&TTYH2&TYMS&GTDC1&{\bfseries {NRIP3}}&SLC24A2&LGALS3BP\tabularnewline
+18&RAG1AP1&CREG1&SLC9A9&SPCS1&{\bfseries {LEPREL2}}&MAPRE2&FLJ40142&STOM&{\bfseries {MMS19L}}&C1orf122\tabularnewline
+19&GMPR2&{\bfseries {GPR135}}&PTTG1IP&DSCAML1&TMBIM4&ACBD5&TTLL7&USP54&PSEN1&FBXO7\tabularnewline
+20&PSMB2&C10orf26&{\bfseries {PLEKHA5}}&MLYCD&NCSTN&C6orf72&DHRS7&PDGFRA&UGT8&FA2H\tabularnewline
+21&SCRG1&{\bfseries {SPIRE1}}&{\bfseries {FLJ20054}}&CNDP1&DOCK10&APBB2&DYNC1I2&CTSL1&CXorf57&POLR2G\tabularnewline
+22&MRPL24&{\bfseries {CNOT6}}&DHRS7B&D15WSU75E&RFFL&{\bfseries {CHD9}}&{\bfseries {WDFY1}}&MTM1&NRBP2&YIF1B\tabularnewline
+23&KNOP1&ACOT8&{\bfseries {FBXL10}}&NSMCE1&ARL6IP6&POLD4&C10orf90&{\bfseries {SNAPC4}}&{\bfseries {STK36}}&{\bfseries {PHKA2}}\tabularnewline
+24&EIF2AK1&DAZAP2&HSD17B12&GAPDH&GBA&TMED10&EIF3S2&FKSG30&LGMN&TMCO1\tabularnewline
+25&KIAA0196&{\bfseries {CDC2L5}}&LIPA&ECH1&{\bfseries {ARPP-21}}&IVD&{\bfseries {FAM13A1}}&ASPA&DYNLT1&M6PRBP1\tabularnewline
+26&{\bfseries {SETDB2}}&ERCC1&{\bfseries {SH3GL2}}&PQLC3&ETFA&EDIL3&ZDHHC9&JTV1&C1orf57&DCTN6\tabularnewline
+27&COX6A1&SOX10&AK2&{\bfseries {RYR2}}&{\bfseries {RAB3GAP1}}&ANXA5&TCEA2&C11orf49&ENPP6&{\bfseries {ELOVL4}}\tabularnewline
+28&CAPN13&RNF130&{\bfseries {KIAA1853}}&C18orf10&CDKN1C&{\bfseries {ZNF562}}&PFDN1&TM4SF11&NDN&CA14\tabularnewline
+29&C1orf19&TRIM45&SLC45A3&PIGK&PHYHIPL&CADM4&{\bfseries {TNFRSF25}}&RIPK2&DNAPTP6&C20orf169-DBNDD2\tabularnewline
+30&{\bfseries {SLC30A7}}&ENPP2&{\bfseries {RPS6KA4}}&CD82&BTG3&ALAD&CYP27A1&ARMCX6&KIAA0256&ERBB3\tabularnewline
+31&{\bfseries {FOXO3A}}&DERA&RPAIN&ZNF488&CDKAL1&CLCN3&KLK6&SEC11C&CHCHD5&MYO1D\tabularnewline
+32&RHBDL2&PHF11&ENOSF1&C9orf46&GREM1&TMEM98&{\bfseries {AHCTF1}}&{\bfseries {DIAPH1}}&LARS2&RPN1\tabularnewline
+33&{\bfseries {USP47}}&ZNF174&C20orf116&{\bfseries {EPC2}}&DHRS4&{\bfseries {PCDHAC1}}&{\bfseries {GALNT9}}&MYLK&TMEM63A&{\bfseries {TAF5}}\tabularnewline
+34&NOLA2&PAQR4&{\bfseries {FRMD6}}&SCCPDH&{\bfseries {RAB11FIP5}}&{\bfseries {RSAD1}}&GAL3ST1&PTPN13&ADC&{\bfseries {KCNQ2}}\tabularnewline
+35&{\bfseries {DEFB103B}}&SRPX&GM2A&TMEM125&POLR2F&PSPH&{\bfseries {BICD1}}&SLCO1A2&{\bfseries {HSF2}}&SEMA4D\tabularnewline
+36&NDUFA11&CNTN2&{\bfseries {MALT1}}&{\bfseries {C11orf31}}&CHRNB1&{\bfseries {MAP3K12}}&SHC4&PADI2&KCTD18&SLC25A20\tabularnewline
+37&{\bfseries {FOXJ2}}&SUMF2&HRASLS3&RPS2P8&ARPP-19&DMRT2&GOLGA7&{\bfseries {NCOA3}}&{\bfseries {SNAP25}}&ADSSL1\tabularnewline
+38&GPR37&{\bfseries {RPUSD4}}&HSD17B4&ACTL6A&AP3B1&C3orf63&{\bfseries {ZIM2}}&{\bfseries {PRRT2}}&CDC123&GLT25D2\tabularnewline
+39&GLTP&{\bfseries {ZNF529}}&EVI2A&{\bfseries {ARL5A}}&SALL1&EMG1&ARHGAP1&{\bfseries {KIAA0672}}&S100B&{\bfseries {TUFT1}}\tabularnewline
+40&CCNE2&DDX19A&GAB1&SNAP23&{\bfseries {PIP3-E}}&CAP1&TST&{\bfseries {ZHX1}}&NINJ2&VPS52\tabularnewline
+\newpage
+41&{\bfseries {TSPAN9}}&TM9SF1&FOLH1&{\bfseries {CCNB1}}&AP1GBP1&DTYMK&BTBD16&INTU&AFMID&LACTB2\tabularnewline
+42&TMEM136&{\bfseries {MAG1}}&SERF2&NUDCD2&C10orf32&{\bfseries {LRRC37B}}&CA2&MON1B&CCDC21&HOXD1\tabularnewline
+43&YIPF1&{\bfseries {RPS6KB1}}&PLCL1&KIF13B&{\bfseries {SETD6}}&HPN&CRTAC1&{\bfseries {MAP3K5}}&{\bfseries {LOC731950}}&EXOSC5\tabularnewline
+44&LITAF&COL16A1&BVES&{\bfseries {KIAA0240}}&MOBKL2B&MGC35308&NMB&RAB33A&RASSF2&RRNAD1\tabularnewline
+45&{\bfseries {COL4A3BP}}&GPAA1&PMP22&SLC5A11&GPX4&{\bfseries {PLEKHA6}}&CLU&{\bfseries {UGCG}}&STX2&UBE2G1\tabularnewline
+46&{\bfseries {FSTL5}}&DSCR3&{\bfseries {POLG}}&CXADR&{\bfseries {ZNF521}}&RTKN&TAX1BP1&HLCS&HSD17B10&{\bfseries {ZNF354A}}\tabularnewline
+47&{\bfseries {ADARB1}}&{\bfseries {KBTBD8}}&LTC4S&SLC35F1&TGFA&{\bfseries {ZNF547}}&CCS&{\bfseries {TRIM13}}&PHC2&CRADD\tabularnewline
+48&TALDO1&TBCC&DAK&{\bfseries {GABRB3}}&GJB1&BTF3&{\bfseries {KCTD2}}&{\bfseries {RIMS3}}&ZNF326&{\bfseries {WDR42A}}\tabularnewline
+49&NUDT5&TSPAN3&AHCY&{\bfseries {SCN3A}}&{\bfseries {CAPZA2}}&DLL1&CD302&LZTS2&FAM55C&ELOVL6\tabularnewline
+50&{\bfseries {CRYGS}}&ADIPOR1&CYB561D2&AGPAT3&{\bfseries {PER2}}&ZMAT3&ABCF2&{\bfseries {PPP2R5E}}&TMEM16D&HIAT1\tabularnewline
+51&{\bfseries {THRAP2}}&&&&&&&&&\tabularnewline
+\bottomrule
+\end{longtable}
+
+}}
+
+{\scriptsize {
+
+%latex.default(prefrontal.top500.tab, file = "top500_genes_tabled_by_area_pval_rank_final.tex",     caption = c("The 500 most strongly COMT-correlated genes (ranking on correlation p-value) in Prefrontal Cortex."),     caption.loc = c("top"), colheads = c(""), rowlabel = c(""),     colnamesTexCmd = "bfseries", booktabs = TRUE, label = c("tab:top500.pf"),     na.blank = TRUE, vbar = FALSE, longtable = TRUE, table.env = TRUE,     center = c("center"), continued = c("Top 500 Positively Correlated Genes in PF Crtx Continued"),     first.hline.double = FALSE, append = FALSE)%
+\setlongtables\begin{longtable}{l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l}
+\caption{The 500 most strongly {\textit {COMT}}\den correlated genes (ranking on correlation p-value) in Temporal Cortex.} \tabularnewline
+\toprule
+\multicolumn{1}{l}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }\tabularnewline
+\midrule
+\endfirsthead\caption[]{\em (Top 500 Positively Correlated Genes in Temp Crtx Continued)} \tabularnewline
+\midrule
+\multicolumn{1}{l}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }\tabularnewline
+\midrule
+\endhead
+\midrule
+\endfoot
+\label{tab:top500.pf}
+1&GATM&CAT&MMP28&SNAP23&CDC14B&THSD1&PTTG1IP&DTYMK&PPAP2B&COMT\tabularnewline
+2&ALDH2&EDNRB&ECH1&ARL6IP6&SLC25A20&GLUL&MEGF10&IL17RB&GSTM2&HSCB\tabularnewline
+3&PIR&DPY19L3&PNPO&SLC39A12&HIST1H2AC&MTM1&LRP4&CSTB&CLDN10&RGC32\tabularnewline
+4&ACY1&ASRGL1&CRB1&PGM1&LRRC3B&ARHGAP24&CYP2J2&WDFY2&RAB9A&C2orf34\tabularnewline
+5&AASS&AQP4&PTPRZ1&MLC1&PON2&SASH1&ZFAND3&RIT1&{\bfseries {PSMC1}}&MERTK\tabularnewline
+6&QKI&DOCK7&MYO6&RANBP3L&LIMS1&AGXT2L1&C3orf70&IQCK&HIP1&APCDD1\tabularnewline
+7&THBS4&HSD17B6&RGN&SPAG9&ITPR2&TNFSF13&SGPL1&ACAA2&NR2E1&TPD52L1\tabularnewline
+8&GPR177&EMX2&BBS2&ATP1B2&ACP6&GPR98&TTLL4&PXMP3&CBR1&MGST1\tabularnewline
+9&CHDH&RAB5C&ALDH6A1&C4orf19&RELA&PITPNC1&TP53BP2&C14orf159&PSAT1&PXMP2\tabularnewline
+10&LAMA1&LRIG1&ATP6V0E1&PPP2R5C&SLC1A2&LHX2&PCDHGC3&CHST7&COQ9&{\bfseries {CADPS2}}\tabularnewline
+11&IDH1&CHCHD8&CA2&APOE&TSC22D4&AGPAT3&CHPT1&LGALS3&FYN&SLCO1C1\tabularnewline
+12&TJP2&CLU&VPS72&LARS2&POLR2F&CPT2&{\bfseries {CCNB1}}&EDG1&DFFA&DDR1\tabularnewline
+13&MARCKSL1&CLCC1&ZFHX4&DBI&PDLIM3&SYPL1&IDH2&BCAN&SLC15A2&ZNF22\tabularnewline
+14&SCRG1&TMEM136&ACSBG1&PIPOX&ZHX2&{\bfseries {FLJ32310}}&ACOX2&GRN&DVL3&ZMAT5\tabularnewline
+15&{\bfseries {CYP4X1}}&ACTL6A&{\bfseries {RAD1}}&CDKN2C&ATPAF1&PNKD&ELOVL2&SOX21&{\bfseries {RFC2}}&ETFDH\tabularnewline
+16&GNG12&IL33&PRDX4&HIP1R&GPAM&FAM89A&HRSP12&RHBDD1&DYNLT1&AK3L2\tabularnewline
+17&EPB41L5&RPL18P13&CTSH&PPIB&COPE&PHLPP&MIF4GD&MAPRE1&SOX9&ETFA\tabularnewline
+18&C6orf72&KRT10&C12orf39&FBXO8&LINC00299&PPAPDC1B&ACAA1&FAM36A&PCCB&SLC9A9\tabularnewline
+19&GALNT10&APPL2&OLIG1&ABHD3&GNA12&RGS20&C4orf18&{\bfseries {CCDC25}}&PCDHGA12&PIK3C2A\tabularnewline
+20&GPR37L1&PFN1&YBX1P2&PSD2&ACO2&{\bfseries {TMEM70}}&LDHD&TNIK&TMEM123&NPL\tabularnewline
+21&{\bfseries {TRAF5}}&NKX2-2&{\bfseries {INPP5A}}&C1orf122&CST3&BCKDHA&CXorf38&HSPA2&EIF4EBP3&{\bfseries {IRX5}}\tabularnewline
+22&GLI3&{\bfseries {SLC30A9}}&IL10RB&SCAMP2&PDE6D&IRF2BP2&TST&SFT2D1&MSI2&ATP1A2\tabularnewline
+23&SLC7A10&IGFBP7&GNA13&KUA-UEV&SEC22C&PARP4&C10orf110&GNG5&{\bfseries {RARS}}&NTRK2\tabularnewline
+24&AP3M1&{\bfseries {HNRPU}}&GPSN2&TMEM38B&{\bfseries {PDE1A}}&GSTK1&{\bfseries {MPP3}}&{\bfseries {SUPT16H}}&{\bfseries {ZNF622}}&PRKD1\tabularnewline
+25&FGF2&TTYH1&{\bfseries {TTC21B}}&NWD1&C9orf61&TM9SF1&OAF&BCAR3&{\bfseries {CDKN3}}&GSN\tabularnewline
+26&PHKG1&{\bfseries {CAMSAP1L1}}&{\bfseries {ARL15}}&PHGDH&TNFAIP6&C5orf32&{\bfseries {UBP1}}&ITGAV&HIBCH&GPT2\tabularnewline
+27&GNAI2&{\bfseries {RAD9B}}&PGCP&ADORA2B&{\bfseries {ABCA5}}&PPAP2A&{\bfseries {C9orf123}}&PLA2G5&{\bfseries {C5orf5}}&S100A13\tabularnewline
+28&GALNT4&SPARCL1&ADA&BBOX1&TSPAN12&{\bfseries {RUSC1}}&SPON1&TNRC5&MSRB2&{\bfseries {BEST4}}\tabularnewline
+29&PDGFRA&RBM4B&IGSF11&AKR7A3&PCDHB5&SERF2&LSAMP&{\bfseries {CUL3}}&CSRP1&{\bfseries {LMO7}}\tabularnewline
+30&{\bfseries {LRCH1}}&PARP3&C5orf4&{\bfseries {USP15}}&FZD8&FADS1&CRYL1&MTUS1&TRPS1&{\bfseries {CASC1}}\tabularnewline
+31&DHRS4L2&TBC1D14&CHRNB1&{\bfseries {PLA2R1}}&{\bfseries {SH3GL2}}&SLC44A3&AMOT&C3orf63&S100A1&ADHFE1\tabularnewline
+32&{\bfseries {SHH}}&KIAA1161&CLK3&ACSL6&{\bfseries {TLK1}}&{\bfseries {TCEAL4}}&LYN&RHOBTB3&ALDH7A1&C9orf46\tabularnewline
+33&ABTB2&SLC7A6OS&DNASE2&NUDT5&ZBTB20&{\bfseries {HSF2}}&SORCS2&GPR17&EPHX1&NLGN3\tabularnewline
+34&{\bfseries {RET}}&SFRS15&METT11D1&ACOX1&{\bfseries {EIF2B3}}&POU3F2&ELP4&CD37&GRHPR&PYCR2\tabularnewline
+35&DDO&PYGM&H3F3AP4&DERA&OPHN1&PHF21B&CCDC121&{\bfseries {UBE2D2}}&FNTA&NPAS3\tabularnewline
+36&DHX32&ITGB5&TUBB2B&APOC2&PARP9&CDC42EP4&{\bfseries {APRIN}}&{\bfseries {POLR3C}}&STOX1&LOC400455\tabularnewline
+37&{\bfseries {CHSY-2}}&RFTN2&RNF182&WASF3&{\bfseries {CALB1}}&EPHX2&{\bfseries {KIAA0789}}&SH3BP4&{\bfseries {GFM1}}&HSF1\tabularnewline
+38&FTL&{\bfseries {TOMM70A}}&{\bfseries {ERO1L}}&DOCK1&C22orf9&{\bfseries {C20orf107}}&SH3BGRL3&DHRS4&{\bfseries {LCN8}}&FAM102A\tabularnewline
+39&DAG1&{\bfseries {ELOVL4}}&C16orf14&EFHD1&{\bfseries {C1orf74}}&RAB7L1&CYFIP1&MON1B&{\bfseries {PI4KII}}&CD82\tabularnewline
+40&{\bfseries {SEL1L}}&{\bfseries {DKFZP686D0972}}&FAH&{\bfseries {PHF17}}&{\bfseries {PER2}}&C19orf54&NME6&OLIG2&{\bfseries {NEK10}}&{\bfseries {SLC30A5}}\tabularnewline
+\newpage
+41&SLC35B2&{\bfseries {GRSF1}}&FAM96A&TSEN34&C2orf18&{\bfseries {BA16L21.2.1}}&CD302&ZNF385&C1orf198&ELOVL5\tabularnewline
+42&OMA1&{\bfseries {CDC37L1}}&{\bfseries {USP14}}&NUBP1&SLC7A11&ANKFY1&{\bfseries {POLR3A}}&DHTKD1&SLC4A4&OTX1\tabularnewline
+43&SRI&{\bfseries {ZWILCH}}&TH1L&KCTD18&KAL1&STAT3&PEPD&DLL1&{\bfseries {TMEM127}}&CADM4\tabularnewline
+44&SGCE&{\bfseries {APP}}&RERG&PCBD1&{\bfseries {ARPC5L}}&TLCD1&{\bfseries {BAAT}}&{\bfseries {UBE3A}}&CNTFR&MRPL53\tabularnewline
+45&GPX7&{\bfseries {SAMD5}}&{\bfseries {PCMT1}}&TMEM80&RYR1&{\bfseries {SH3BP5}}&TPP1&C20orf72&ALDH4A1&PHACTR4\tabularnewline
+46&POGZ&{\bfseries {FLT3}}&CSRP2&DIRC2&F3&HHLA3&RFXANK&{\bfseries {EPB41L3}}&{\bfseries {MIXL1}}&HSD17B10\tabularnewline
+47&{\bfseries {LMNB1}}&GAL3ST4&{\bfseries {RHEBL1}}&CTNNA1&{\bfseries {TTC19}}&{\bfseries {MCF2}}&FAM118B&{\bfseries {LMX1B}}&IVD&{\bfseries {GBP7}}\tabularnewline
+48&{\bfseries {TAF5}}&{\bfseries {ZNF544}}&{\bfseries {ZNF263}}&MRPL41&HIGD2A&GPR56&ALAD&LEPROT&TM4SF18&TP53AP1\tabularnewline
+49&{\bfseries {STS}}&ASCL1&{\bfseries {UBE2J1}}&HLA-A&KIAA0195&PPP1R3D&COL5A3&SELENBP1&HERPUD2&{\bfseries {LZTFL1}}\tabularnewline
+50&ANKRD15&ASXL2&MCCC2&GNG7&NFE2L2&BZRAP1&NKAIN4&{\bfseries {ZWINT}}&{\bfseries {MAT1A}}&LRRC8A\tabularnewline
+51&AKR1C3&&&&&&&&&\tabularnewline
+\bottomrule
+\end{longtable}
+
+}}
+
+{\scriptsize {
+
+%latex.default(prefrontal.top500.tab, file = "top500_genes_tabled_by_area_pval_rank_final.tex",     caption = c("The 500 most strongly COMT-correlated genes (ranking on correlation p-value) in Prefrontal Cortex."),     caption.loc = c("top"), colheads = c(""), rowlabel = c(""),     colnamesTexCmd = "bfseries", booktabs = TRUE, label = c("tab:top500.pf"),     na.blank = TRUE, vbar = FALSE, longtable = TRUE, table.env = TRUE,     center = c("center"), continued = c("Top 500 Positively Correlated Genes in PF Crtx Continued"),     first.hline.double = FALSE, append = FALSE)%
+\setlongtables\begin{longtable}{l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l >{\itshape}l}
+\caption{The 500 most strongly {\textit {COMT}}\den correlated genes (ranking on correlation p-value) in Pons.} \tabularnewline
+\toprule
+\multicolumn{1}{l}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }\tabularnewline
+\midrule
+\endfirsthead\caption[]{\em (Top 500 Positively Correlated Genes in Pons Continued)} \tabularnewline
+\midrule
+\multicolumn{1}{l}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }&\multicolumn{1}{c}{\bfseries }\tabularnewline
+\midrule
+\endhead
+\midrule
+\endfoot
+\label{tab:top500.pf}
+1&KLK3&KUA-UEV&COMT&HIST1H2AC&SYPL1&FNTA&TMEM170&PRDX4&GATM&CAT\tabularnewline
+2&PSEN1&CLU&SLCO3A1&SPAG9&MEGF10&C20orf23&HSPA2&AGPS&QKI&B3GAT1\tabularnewline
+3&ADIPOR1&PIGM&PIGT&ARL6IP6&LRRC63&GSN&MOG&MTM1&SEC22C&LGALS3BP\tabularnewline
+4&THRAP6&TMBIM4&C7orf11&UGT8&PPIB&SPTLC2&POLR2F&PET112L&TP53AP1&CD9\tabularnewline
+5&PFN1&PCSK6&HIST1H4H&DTYMK&TJP2&SEPT10&SFT2D1&CBR1&C9orf77&BRP44L\tabularnewline
+6&RAB9A&CHCHD8&KLHL4&BVES&STX2&ACTL6A&BTD&PGCP&FNTB&C6orf129\tabularnewline
+7&ATG3&SLC9A9&PIR&MARCKSL1&TLE4&C10orf78&SCHIP1&EDIL3&HIP1&C8orf61\tabularnewline
+8&SSR4&MYO1D&LRRC8D&FA2H&SNAP23&{\bfseries {PRELID1}}&MOBKL2B&DYNC1I2&STXBP3&DYNLT1\tabularnewline
+9&AASS&SEPP1&PPP2R5C&DAD1&PTTG1IP&ABCA9&{\bfseries {EEF2K}}&PXK&USH1C&SLC31A2\tabularnewline
+10&AFMID&C1orf122&KCTD3&TIMP2&ACTG1&{\bfseries {CAMSAP1L1}}&STAMBP&HSCB&C2orf28&PRKCSH\tabularnewline
+11&CDKN1C&DAZAP2&DHRS4L2&KRT10&PAPSS1&HINT3&RHBDD1&PHF16&MYLK&ATP8A1\tabularnewline
+12&MAPRE2&ELOVL6&DIXDC1&GPR27&MYO6&CKS1B&TMEM87A&PIGG&TALDO1&TMEM116\tabularnewline
+13&ALDH3A2&DICER1&MPDZ&PQLC3&IGSF11&NRBP2&SLC44A1&KLK6&AGPAT3&ANXA5\tabularnewline
+14&SCCPDH&ABCA8&EMILIN2&C20orf4&HRASLS3&RNH1&FBXO32&NFE2L3&BTG3&POLR2G\tabularnewline
+15&MED8&TIA1&CTNNA1&TSPAN8&DHRS4&{\bfseries {FLJ11506}}&SALL1&ENPP6&KIAA1026&ENPP2\tabularnewline
+16&C9orf164&{\bfseries {ARHGEF12}}&RKHD1&TMEM38B&CTTNBP2&WDFY2&{\bfseries {FLOT2}}&ATP5S&C5orf4&ST18\tabularnewline
+17&SASH1&EXDL2&ATP6V0E1&DSCAML1&C22orf5&NLN&PDE4B&CRYL1&LASS2&MIF4GD\tabularnewline
+18&MYO1E&MLH1&PPAP2A&ELOVL1&SEC23B&EIF2B1&MTSS1&CDC14B&C10orf32&LITAF\tabularnewline
+19&CYP27A1&REEP3&{\bfseries {GPC5}}&{\bfseries {RARS}}&C3orf63&SGCE&FBXO7&C5orf37&BRD7&TFCP2\tabularnewline
+20&BRMS1&HMGCL&GLTP&PDE6D&WDR57&TMEM5&C3orf70&PSPH&MTUS1&PARP4\tabularnewline
+21&{\bfseries {RAB11FIP5}}&NSMCE1&AK2&SCRG1&HIAT1&CA14&C20orf116&RFFL&APBB2&PADI2\tabularnewline
+22&PCCB&CRIPT&RRNAD1&CADM4&SERF2&ZMYM5&TMC7&CLDN11&YIF1A&COL16A1\tabularnewline
+23&ZFAND3&C1orf77&TMEM59&ERBB2IP&LIPA&CMTM5&KIAA0196&{\bfseries {PRPF19}}&UBE2G1&{\bfseries {HARS}}\tabularnewline
+24&EFS&HHLA3&OMA1&CYP2J2&{\bfseries {KIAA0672}}&M6PRBP1&HNRPC&{\bfseries {DNAJC5}}&LYRM2&STT3A\tabularnewline
+25&PGLS&CECR1&C6orf72&INTS4&{\bfseries {BCAP31}}&SNX24&SIRT2&TRIP4&KIAA0892&SLC12A2\tabularnewline
+26&BBX&PLEKHG4&PMF1&PRPSAP2&CYB5A&TTLL4&SORT1&ALG13&SCNM1&H3F3AP4\tabularnewline
+27&ITGAV&TESK2&KIAA0776&FIS1&SS18&{\bfseries {CPEB3}}&{\bfseries {SRPRB}}&{\bfseries {CDS1}}&RBM4B&ANGPTL2\tabularnewline
+28&UNC50&RP2&ZDHHC14&KLHDC1&RNF13&CANT1&GALC&SSFA2&INTU&SPP1\tabularnewline
+29&PTPRD&RNF130&BAT5&PHF11&{\bfseries {LUZP1}}&SGK2&C10orf90&CNTNAP4&VAMP3&IMPDH2\tabularnewline
+30&HOXD1&{\bfseries {NETO2}}&PIK3C2A&FBXO8&{\bfseries {ARPC5L}}&{\bfseries {FAM123B}}&ACY1&TOR1AIP1&{\bfseries {UBP1}}&CYP20A1\tabularnewline
+31&GM2A&HIST2H2BE&TTLL11&PXMP3&EFCBP1&DKFZP434A0131&OACT2&C20orf39&ARMC10&MAP7\tabularnewline
+32&C11orf67&C1orf198&ANAPC5&ATG4C&ZCCHC11&{\bfseries {B4GALNT1}}&DYRK4&ZMAT5&{\bfseries {ELOVL4}}&LDLRAP1\tabularnewline
+33&{\bfseries {YAF2}}&LAMP2&TMEM140&ELOVL2&CXADR&TTYH2&TTLL7&ANKFY1&{\bfseries {ST3GAL3}}&{\bfseries {RALBP1}}\tabularnewline
+34&PHF5A&{\bfseries {C1orf135}}&NSMCE4A&{\bfseries {PRKCE}}&FAM13C1&CAPN3&DDX19A&SP2&NEK7&GEMIN8\tabularnewline
+35&{\bfseries {KIAA0319}}&TBC1D2&ASCC1&{\bfseries {INSM2}}&{\bfseries {PDXK}}&{\bfseries {RPIB9}}&DOCK10&RHBDL2&{\bfseries {OPRL1}}&FUSIP1\tabularnewline
+36&GRM3&ADCY5&DVL3&FAM38B&POLR2I&SOX10&{\bfseries {KIAA1217}}&GRHPR&{\bfseries {SUPV3L1}}&FN3KRP\tabularnewline
+37&{\bfseries {MTP18}}&{\bfseries {C20orf46}}&PPIE&PPAP2B&{\bfseries {FBXW7}}&HNRPK&MGC3731&PEMT&KIF13B&RTKN\tabularnewline
+38&SERPINI1&MGC3207&{\bfseries {CAPZA2}}&ASPA&NVL&DOLPP1&CRYAB&HPS5&AGPAT4&{\bfseries {CLASP1}}\tabularnewline
+39&MAPRE1&ZNF277P&MAL&TMEM125&{\bfseries {PSMC1}}&NUDT5&C18orf54&APOD&NKX2-2&{\bfseries {CNOT4}}\tabularnewline
+40&{\bfseries {TTC19}}&SFT2D3&TNRC5&EPB41L2&PIGO&HIP1R&TMEM165&GAL3ST1&KIAA0256&{\bfseries {C6orf106}}\tabularnewline
+\newpage
+41&C3orf1&RHOG&{\bfseries {KIAA0100}}&NAPE-PLD&APIP&FEZ1&HNRPDL&LIPT1&C14orf24&LOC732402\tabularnewline
+42&GPR37&{\bfseries {POLR3A}}&POU3F2&TGFA&{\bfseries {PLCB1}}&TTF2&RIPK2&C10orf39&PRRG1&TMEM42\tabularnewline
+43&RPLP0&DPP3&SGPL1&NPC1&STMN1&PAQR4&{\bfseries {C14orf122}}&RPL18P13&FAM96A&NCAPD2\tabularnewline
+44&SLC35B2&LSM7&EFHD1&ACAA2&PPAP2C&CHMP2B&{\bfseries {FBXO31}}&SAV1&SLC39A6&DPF2\tabularnewline
+45&STX16&EIF1&{\bfseries {SYNJ1}}&{\bfseries {FUNDC2}}&SPTLC1&SLCO1A2&SEC61B&ACBD5&ISOC1&{\bfseries {DACH1}}\tabularnewline
+46&EI24&{\bfseries {CCNB1}}&{\bfseries {DDX28}}&{\bfseries {PDE4A}}&{\bfseries {SDAD1}}&AP3M1&C1orf19&ABTB2&{\bfseries {MGC59937}}&HIATL2\tabularnewline
+47&{\bfseries {DUSP3}}&KIF6&TMEM46&SLC13A3&COPE&{\bfseries {GPR3}}&TMEM63A&C20orf149&PIGN&ARID1A\tabularnewline
+48&CKMT2&MGC16169&SYVN1&RELA&ATP5G2&ALS2CR2&FLJ14803&TMED4&EXOSC5&{\bfseries {ADCY9}}\tabularnewline
+49&{\bfseries {PJA2}}&TBC1D5&PIP5K2A&DDX5&ZFYVE26&{\bfseries {C8orf72}}&SEMA4D&{\bfseries {RIOK1}}&{\bfseries {SNAP91}}&{\bfseries {KRAS}}\tabularnewline
+50&RDX&{\bfseries {SLC9A1}}&FKSG30&HPN&PHPT1&CUTC&ADC&PCM1&ZNF536&{\bfseries {PEX26}}\tabularnewline
+51&CA2&&&&&&&&&\tabularnewline
+\bottomrule
+\end{longtable}
+}}
+
+\end{landscape}
+\end{document}

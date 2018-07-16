@@ -1,0 +1,614 @@
+\documentclass[11pt]{article}
+\usepackage{rotating}
+\usepackage{graphicx, subfig}
+\usepackage{float}
+\pagenumbering{arabic}
+\usepackage{enumerate}
+\usepackage{Sweave}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{framed}
+\usepackage{longtable}
+\usepackage{tablefootnote}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{textcomp}
+\usepackage{tabularx}
+
+\setlength\parindent{0pt}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{keep.source=TRUE} 
+
+\author{James L. Dannemiller \\ Rice University}
+\title{COMT Expression Correlations in Four Brain Areas}
+\maketitle
+\today \\
+Gene Network\\
+Spring, 2018\\
+{\textit {COMT}} catalyzes degradation of catecholamines including dopamine, norepinephrine and epinephrine.\\
+
+\textlangle{}{\textit {pre post recovery missing stats v1.Rnw}}\textrangle{}: Program to generate tables pre- and post- preprocessing of the data on number of rows with missing observations on various variables. Additionally, some chromosomes were initiaslly listed as 'Un' for unknown.\\
+
+
+<<include=FALSE,echo=FALSE,message=FALSE,warning=FALSE>>=
+
+library(base)
+library(knitr)
+library(openxlsx)
+library(xtable)
+options(xtable.floating = TRUE)
+options(xtable.timestamp = "")
+library(magrittr)
+library(tables)
+library(plyr)
+library(scales)
+library(utils)
+# library(ggman)
+library(dplyr)
+library(biomaRt)
+library(stringr)
+library(curl)
+library(git2r)
+library(githubinstall)
+library(devtools)
+library('xml2')
+library(RCurl)
+library(XML)
+library(rentrez)
+library(data.table)
+library(pracma)
+library(SOAR)
+library(roxygen2)
+library(GlobalOptions)
+library(tidyr)
+library(Hmisc)
+library(tibble)
+
+#opts_chunk$set(include=FALSE,echo=FALSE,message=FALSE,warning=FALSE)
+
+# Function to catch warnings that a sheet has no data yet and returns NAs 
+readPrime = function(x,y,z) {     
+     tryCatch(data.frame(read.xlsx(x,sheet = y)),
+            warning = function(w) {print(paste("no data ", y));
+            return(z)},
+            error = function(e) {print(paste("error reading data", y));
+            return(z)}
+)
+}
+
+work.path <- c('/Volumes/Macintosh_HD_3/genetics/genenetwork2/')
+
+setwd(work.path)
+
+options(scipen = 999, digits = 5, width = 60, knitr.table.format = "latex")
+opts_chunk$set(include=FALSE,echo=FALSE,message=FALSE,warning=FALSE,results=tex)
+@
+
+<<include=FALSE,echo=FALSE,message=FALSE,warning=FALSE>>=
+
+################ READ THIS LIST OF TO-BE SOURCED FUNCTIONS AND PROGRAMS IN #################
+
+fileConn<-file('sourced_functions_programs.txt')
+     sourced.Funcs <- 
+          data.frame(rfunc=readLines(con=fileConn),stringsAsFactors = FALSE)
+
+     temp.Funcs <- str_replace(sourced.Funcs$rfunc,',','.R')
+          sourced.Funcs <- data.frame(rfunc=as.character(temp.Funcs),stringsAsFactors = FALSE)
+     temp2.Funcs <- paste(work.path,sourced.Funcs$rfunc,sep='') 
+          sourced.Funcs <- data.frame(rfunc=as.character(temp2.Funcs),stringsAsFactors = FALSE)
+close(fileConn)
+
+source(sourced.Funcs$rfunc[1:length(sourced.Funcs)])
+
+
+stand.Col.names.lc <- c("prefrontal",
+                        "cerebellum",
+                        "temporal",
+                        "pons")
+
+opt <- setGlobalOptions(
+          recordTimestamps = FALSE,
+          delta = 1,
+          read.data = TRUE
+          
+)
+
+@
+
+
+<<include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, results=hide>>=
+# Generate a unique ID for this program by path and filename. This unique ID is attached to this file using a tag in the filesystem.
+
+          fname <- csf()   # function to get current path including file name
+
+          prog.Name <- unique.ID(fname)
+
+          prog.Name   # unique ID based on hash of file name
+
+# Write out the file_name, unique ID and date/time to '.Rscriptnames'
+
+          rec.script(eval(fname),eval(prog.Name))
+
+@
+
+<<read_data,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, results=hide>>=
+
+################# Already processed data ######################
+
+if(opt('read.data')) {
+
+wball <- loadWorkbook('comt_correlations_20000_all_areas_augmentedNew.xlsx')   
+
+# now tell R to read that workbook and which sheet
+  prefront.Data <- data.frame(read.xlsx(wball,sheet = "prefrontal"))
+  
+  cbell.Data <- data.frame(read.xlsx(wball,sheet = "cerebellum"))
+
+  tempor.Data <- data.frame(read.xlsx(wball,sheet = "temporal"))
+
+  pons.Data <- data.frame(read.xlsx(wball,sheet = "pons"))
+  
+  Store(prefront.Data,
+        cbell.Data,
+        tempor.Data,
+        pons.Data)
+
+
+# create a list with these data frames to be used when the same operation is applied to all area
+  
+major.Area <- list(pf=prefront.Data,
+                   cb=cbell.Data,
+                   tm=tempor.Data,
+                   po=pons.Data)
+
+} else {
+     
+}
+
+################# END Already processed data #######################
+
+
+@
+
+<<pre.post.ChrUn.Table,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, results=tex >>=
+
+# summ.pre.post.Stats <- list()
+# 
+# 
+# ib <- seq_len(4)
+# 
+# 
+# count.Un.pre.post <- data.frame(matrix(rep(0,12),ncol=4))
+# 
+# for (lm in ib) {
+#      
+#      
+#      
+#      DT <- data.table(x=as.character(orig.major.Area[[lm]]$Location),
+#                  y=as.character(major.Area[[lm]]$loc)
+#                  )
+# 
+#      DT[,test1 := (grepl('^ChrUn',x)), by=x]
+#      
+#      DT[,test2 := (is.na(y)), by=y]
+#      
+#      count.Un.pre.post[1,lm] <- dim(major.Area[[lm]])[1]
+#      count.Un.pre.post[2,lm] <- count.Un.pre.post[1,lm] - sum(DT$test1)
+#      count.Un.pre.post[3,lm] <- count.Un.pre.post[1,lm] - sum(DT$test2)
+# 
+#      
+# } # end brain area loop
+# 
+# colnames(count.Un.pre.post) <- stand.Col.names.lc
+# 
+# row.names(count.Un.pre.post) <- c('Number of probes',
+#                                   'Original',
+#                                   'Processed')
+# 
+# summ.pre.post.Stats[[1]] <- count.Un.pre.post
+# 
+# summ.pre.post.ChrUnNA.tab <- xtable(summ.pre.post.Stats[[1]],
+#                                   align=c('l','X','X','X','X'),
+#                                   caption='Total numbers of probes (Row 1), original number of probes with chromosome names identified (Row 2), number of probes with chromosome names identified after processing (Row 3).',
+#                                   digits=c(rep(0,5))
+#                                   )
+# 
+# print(summ.pre.post.ChrUnNA.tab,rownames=TRUE,caption.placement = "top",
+#       hline.after=c(-1, 0, 3),
+#       rotate.colnames = TRUE,
+#       tabular.environment = "tabularx", 
+#       width = "\\textwidth"
+#       )
+
+@
+
+
+<<genes.per.chromosome,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, results=tex >>=
+
+data.posr <- list()
+data.negr <- list()
+data.posr.loc <- list()
+data.negr.loc <- list()
+data.posnegr <- list()
+dfneg <- list()
+dfpos <- list()
+dfpossort <- list()
+dfnegsort <- list()
+
+for (im in ib)  {
+     
+     data.posr[[im]] <-
+          major.Area[[im]]  %>%
+               filter(as.logical(corsign == '1')) 
+
+     
+     data.posr.loc[[im]] <- data.posr[[im]]$loc
+     
+
+     data.negr[[im]] <-
+          major.Area[[im]]  %>%
+               filter(as.logical(corsign == '-1')) 
+     
+     data.negr.loc[[im]] <- data.negr[[im]]$loc
+     
+     
+     data.posnegr[[im]] <- na.omit(major.Area[[im]][order(major.Area[[im]]$corsign,decreasing=TRUE),])
+     
+
+     dfpos[[im]] <- data.frame(table(na.omit(data.posr.loc[[im]])))
+     
+     dfneg[[im]] <- data.frame(table(na.omit(data.negr.loc[[im]])))
+
+     
+     dfpos[[im]] <- data.frame(dfpos[[im]],chr=c(1,10,11,12,13,14,15,16,17,18,19,2,20,21,22,3,4,5,6,7,8,9,23,24))
+     dfpos[[im]]$chr <- as.numeric(dfpos[[im]]$chr)
+     dfpossort[[im]] <-dfpos[[im]][order(dfpos[[im]]$chr), ]
+     print(dfpossort[[im]][,1:2])
+     
+     dfneg[[im]] <- data.frame(dfneg[[im]],chr=c(1,10,11,12,13,14,15,16,17,18,19,2,20,21,22,3,4,5,6,7,8,9,23,24))
+     dfneg[[im]]$chr <- as.numeric(dfneg[[im]]$chr)
+     dfnegsort[[im]] <-dfneg[[im]][order(dfneg[[im]]$chr), ]
+     print(dfnegsort[[im]][,1:2]) 
+}
+
+
+probes.per.chromosome <- data.frame(pfpos=c(rep(NA,24)),
+                                    pfneg=c(rep(NA,24)),
+                                    cbpos=c(rep(NA,24)),
+                                    cbneg=c(rep(NA,24)),
+                                    tmpos=c(rep(NA,24)),
+                                    tmneg=c(rep(NA,24)),
+                                    popos=c(rep(NA,24)),
+                                    poneg=c(rep(NA,24)),
+                                    sumpos=c(rep(NA,24)),
+                                    sumneg=c(rep(NA,24))
+                                    )
+nchr <- seq_len(24)
+
+probes.per.chromosome[,1] <- as.integer(dfpossort[[1]][,2])
+probes.per.chromosome[,2] <- as.integer(dfnegsort[[1]][,2])
+
+probes.per.chromosome[,3] <- as.integer(dfpossort[[2]][,2])
+probes.per.chromosome[,4] <- as.integer(dfnegsort[[2]][,2])
+
+probes.per.chromosome[,5] <- as.integer(dfpossort[[3]][,2])
+probes.per.chromosome[,6] <- as.integer(dfnegsort[[3]][,2])
+
+probes.per.chromosome[,7] <- as.integer(dfpossort[[4]][,2])
+probes.per.chromosome[,8] <- as.integer(dfnegsort[[4]][,2])
+
+
+
+     for (ik in nchr)  {
+          probes.per.chromosome[ik,9] <- sum(probes.per.chromosome[ik,c(1,3,5,7)])
+          probes.per.chromosome[ik,10] <- sum(probes.per.chromosome[ik,c(2,4,6,8)])
+     }
+
+for (im in seq_len(2*max(ib)+2))  {
+     
+     probes.per.chromosome[25,im] <- sum(probes.per.chromosome[nchr,im])
+     
+     probes.per.chromosome[25,im] <- sum(probes.per.chromosome[nchr,im])
+     
+}
+
+row.names(probes.per.chromosome) <- c(as.character(seq_len(22)),'X','Y','Total')
+
+probes.per.chromosome.tab <- xtable(probes.per.chromosome,
+                                    caption='Number of probes with expression positively (Columns 1, 3, 5, 7) and negatively (Columns 2, 4, 6, 8) correlated with COMT expression by brain area. Sums are in the last row and by chromosome across brain areas in Column 9 (positively correlated) and Column 10 (negatively correlated).',
+                                    align=c('r',rep('X',10)),
+                                    digits=c(rep(0,11))
+                                    )
+
+
+probes.per.chromosome.tab2 <- latex(probes.per.chromosome.tab,file='',
+                   caption = paste0('Number of probes with expression positively (Columns 1, 3, 5, 7) and negatively (Columns 2, 4, 6, 8) correlated with COMT expression by brain area. Sums are in the last row and by chromosome across brain areas in Column 9 (positively correlated) and Column 10 (negatively correlated).',sep=''),
+                      caption.loc = c('top'),
+                      cgroup = c('Prefrontal','','Cerebellum','','Temporal',
+                                 '','Pons','','Positive','','Negative'),
+                      n.cgroup = c(2,1,2,1,2,1,2,1,1,1,1),
+#                     colheads = add.col.Groups,
+                      extracolheads = c('Brain Area'),
+                      rowlabel = 'Chromosome',
+                      rowlabel.just = c('r'),
+#                     rowname = stand.Col.names[2:4],
+                      colheads = c(rep(c('positive','negative'),2),rep('Sum',2)),
+#                      colnamesTexCmd="bfseries",
+                     booktabs=TRUE,
+                     label=c('tab:probesperchrom'),
+                     na.blank = TRUE,
+                     vbar = FALSE,
+                     longtable=TRUE,
+                     table.env=TRUE,
+                     center=c('center'),
+                     continued=c('Number of Probes per Chrmosome Continued'),
+                     first.hline.double = FALSE,
+                     append=FALSE
+#                     insert.bottom = bottom.Note,
+#                     insert.bottom.width = c('6in')
+                     )
+
+
+@
+
+
+\vspace{1em}
+
+<<probes.per.gene,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, results=tex >>= 
+
+# prefrontal
+probes.per.gene1 <- table(table(major.Area[[1]]$Symbol))
+probes.per.gene1
+#     1     2     3     4     5     6     7     8 
+# 14235  1651   695    73    13     1     1     1 
+
+categ1 <- as.integers(c(row.names(probes.per.gene1)))
+sum(categ1*probes.per.gene1)
+# [1] 20000
+
+
+probes.per.gene <- list()
+probes.per.gene <- lapply(major.Area[ib], function(x,ib) table(table(x$Symbol)), ib)
+
+
+probes.per.gene$cb[8] <- c(0)
+names(probes.per.gene$cb) <- c(as.character(seq_len(8)))
+
+probes.per.gene.df <- data.frame(t(matrix(unlist(probes.per.gene),ncol=4)))
+row.names(probes.per.gene.df) <- stand.Col.names
+colnames(probes.per.gene.df) <- c(seq_len(8))
+
+hold.sum <- matrix(rep(0,4),ncol=1)
+for (im in ib)   {
+     
+     hold.sum[im] <- sum(il*probes.per.gene.df[im,])
+}
+
+
+probes.per.gene.df[,9] <- hold.sum
+colnames(probes.per.gene.df)[9] <- c('Sum(probes)')
+
+probes.per.gene.tab <- xtable(probes.per.gene.df,
+                              caption=c('Frequencies of genes with 1, 2, 3 ... 8 probes/transcripts.'),
+                              align=c('l',rep('r',8),'c')
+)
+
+probes.per.gene.tab.ltx <- latex(probes.per.gene.tab,file='',
+                   caption = c('Distributions of genes with 1, 2, 3 ... 8 probes per gene by brain area.'),
+                         caption.loc = c('top'),
+#                         rowlabel = 'Brain Area',
+#                         rowlabel.just = c('l'),
+                         colnamesTexCmd="bfseries",
+                         cgroup=c('Number of Probes per Gene',''),
+                         n.cgroup=c(8,1),
+                         rgroup=c('Brain Area'),
+                         n.rgroup=c(4),
+                         booktabs=TRUE,
+                         label=c('tab:probespergene'),
+                         na.blank = TRUE,
+                         vbar = FALSE,
+                         longtable=FALSE,
+                         table.env=TRUE,
+                         center=c('center'),
+                         first.hline.double = FALSE,
+                         append=FALSE
+                         )
+
+
+@
+
+<<probes.per.gene2,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, results=tex>>= 
+# See running notes entry May 1, 2018
+
+gene.Symbol.table.pf <- as.data.frame(table(prefront.Data$Symbol))
+gene.Symbol.table.cb <- as.data.frame(table(cbell.Data$Symbol))
+gene.Symbol.table.tm <- as.data.frame(table(tempor.Data$Symbol))
+gene.Symbol.table.po <- as.data.frame(table(pons.Data$Symbol))
+
+max.probes <- max(max(as.numeric(as.data.frame(table(gene.Symbol.table.pf[,2]))[,1])),
+    max(as.numeric(as.data.frame(table(gene.Symbol.table.cb[,2]))[,1])),
+    max(as.numeric(as.data.frame(table(gene.Symbol.table.tm[,2]))[,1])),
+    max(as.numeric(as.data.frame(table(gene.Symbol.table.po[,2]))[,1])))
+
+probecount.List <- list()
+
+probecount.List[[1]] <- as.data.frame(table(gene.Symbol.table.pf[,2]))
+probecount.List[[2]] <- as.data.frame(table(gene.Symbol.table.cb[,2]))
+probecount.List[[3]] <- as.data.frame(table(gene.Symbol.table.tm[,2]))
+probecount.List[[4]] <- as.data.frame(table(gene.Symbol.table.po[,2]))
+
+for (j in 1:4) {
+if (dim(probecount.List[[j]])[1] < (max.probes+1)) {
+     diff.probe <- max.probes - dim(probecount.List[[j]])[1] + 1
+     
+          probecount.tmp <- data.frame(np=seq(1,(dim(probecount.List[[j]])[1]+diff.probe),1),
+                                   probe.count=rep(0,dim(probecount.List[[j]])[1]+diff.probe))
+          probecount.tmp[,2] <- c(probecount.List[[j]][,2],rep(0,diff.probe))
+          probecount <- probecount.tmp
+          probecount[dim(probecount)[1],2] <- sum(probecount[1:8,2]*probecount[1:8,1])
+          probecount[,1] <- c(seq(1,(dim(probecount)[1]-1),1),'Total')
+          probecount.List[[j]] <- probecount
+          
+} else {}
+
+}
+
+tab.probe.counts <- data.frame('Number of Probes' = probecount.List[[1]][,1],
+                               PfCx = probecount.List[[1]][,2],
+                               Cereb = probecount.List[[2]][,2],
+                               TmpCx = probecount.List[[3]][,2],
+                               Pons = probecount.List[[4]][,2])
+
+@
+
+<<include=FALSE,echo=FALSE,results=hide>>=
+# Plot the distribution of probes per gene for each area
+
+stacked.data.Form <- stack(tab.probe.counts[1:8,])
+stacked.data.Form[,3] <- c(rep(seq(1,8,1),4))
+stacked.data.Form[,4] <- sqrt(stacked.data.Form[,1])
+colnames(stacked.data.Form) <- c('Frequency','Area','ProbesPerGene','SqrtCount')
+
+area_names <- c('PfCx' = "Prefrontal Cortex",
+                    'Cereb' = "Cerebellum",
+                    'TmpCx' = "Temporal Cerebral Wall",
+                    'Pons' = "Pons"
+                    )
+
+p <- ggplot(stacked.data.Form, aes(ProbesPerGene,SqrtCount)) + geom_bar(stat='identity')
+
+p + facet_wrap(~ Area,ncol=2,labeller = as_labeller(area_names)) +
+     theme_bw() +
+     theme(strip.background=element_rect(fill="gray")) +
+     theme(strip.text = element_text(colour = 'black')) +
+     
+     labs(x = c("Number of Probes per Gene"),
+          y = c('Square Root (Frequency)'),
+          title = c('Probes per Gene Distribution by Brain Area')) +
+     theme(axis.text=element_text(size=7),
+        axis.title=element_text(size=9)) +
+     theme(plot.title=element_text(size=10,
+                                   hjust=0.5)) +
+     
+     scale_x_discrete(breaks=c('1','2','3','4','5','6','7','8'),
+          labels=c('1','2','3','4','5','6','7','8'),
+          limits=c('1','2','3','4','5','6','7','8'))
+     
+@
+
+<<use.max.mean.expr,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, results=tex>>=
+area.List.byGene <- list()
+
+for (h in ib) {
+
+Data.bygene <- major.Area[[h]][order(major.Area[[h]]$Symbol),]
+
+
+grouped.Area.gene <- Data.bygene %>% group_by(Data.bygene$Symbol) 
+
+area.Data.maxExpr <- grouped.Area.gene %>% summarise(
+
+     n = n(),
+     maxExpr = round(max(Mean),3)
+
+)
+
+area.Data.maxExpr <- as.data.frame(area.Data.maxExpr)
+
+area.Data.selected <- matrix(rep(NA,dim(area.Data.maxExpr)[1]*dim(Data.bygene)[2]),
+                                 nrow=dim(area.Data.maxExpr)[1],
+                                 ncol=dim(Data.bygene)[2])
+
+area.Data.selected <- as.data.frame(area.Data.selected)
+colnames(area.Data.selected) <- colnames(Data.bygene)
+maxExpr.indx <- matrix(rep(NA,dim(area.Data.maxExpr)[1]),
+                       nrow=dim(area.Data.maxExpr)[1])
+
+true.Indx.bott = 0
+true.Indx.top = 0
+
+num.max <- matrix(rep(NA,dim(area.Data.maxExpr)[1]))
+
+# When there are at least two maximum expression levels that are identical when there are multiple probes per gene, use the probe/row with the maximum abs(r)
+
+select.Rows.mult.max <- c('max.r')   # 'max.r' or 'avg.r'
+
+for (k in 1:dim(area.Data.maxExpr)[1]) {
+
+     true.Indx.bott = true.Indx.top + 1
+     true.Indx.top = true.Indx.bott + (area.Data.maxExpr$n[k] -1)
+     
+     diff.Indx <- true.Indx.top - true.Indx.bott
+     
+     if (diff.Indx == 0) {
+          
+          area.Data.selected[k,] <- Data.bygene[true.Indx.top,]
+          
+     } else if (diff.Indx > 0) {
+          
+          maxExpr.indx <- which(grouped.Area.gene$Mean[true.Indx.bott:true.Indx.top] == max(grouped.Area.gene$Mean[true.Indx.bott:true.Indx.top]))
+          
+          num.max[k] <- length(maxExpr.indx)
+          
+          if (num.max[k] == 1)  {
+               
+               area.Data.selected[k,] <- Data.bygene[true.Indx.bott + (maxExpr.indx - 1),]
+               
+          } else if (num.max[k] > 1) {
+               
+               # avg.r <- sum(Data.bygene$Sample.r[true.Indx.bott + (maxExpr.indx[1:num.max] - 1)])/num.max
+               # area.Data.selected[k,] <- Data.bygene[true.Indx.bott + (maxExpr.indx[1] - 1),]
+               # area.Data.selected$Sample.r[k] <- avg.r
+               
+               pick.Max.r.indx <- which(abs(Data.bygene$Sample.r[true.Indx.bott + (maxExpr.indx[1:num.max[k]] - 1)]) == max(abs(Data.bygene$Sample.r[true.Indx.bott + (maxExpr.indx[1:num.max[k]] - 1)])))
+               area.Data.selected[k,] <- Data.bygene[true.Indx.bott + (pick.Max.r.indx - 1),]
+
+               
+          } else {
+               
+          }
+          
+     } else {
+          
+     }
+     
+     
+}
+
+# The data are not sorted within a brain area by the sign and magnitude of the correlation.
+area.List.byGene[[h]] <- area.Data.selected
+
+} #end loop over the four areas
+
+@
+
+<<order.by.pval>>=
+byOne.Gene.dims <- c(dim(area.List.byGene[[1]])[1],
+                     dim(area.List.byGene[[2]])[1],
+                     dim(area.List.byGene[[3]])[1],
+                     dim(area.List.byGene[[4]])[1])
+
+# prefront.Data.onegene <- area.List.byGene[[1]]
+# cbell.Data.onegene <- area.List.byGene[[2]]
+# tempor.Data.onegene <- area.List.byGene[[3]]
+# pons.Data.onegene <- area.List.byGene[[4]]
+
+# Order the one gene data by Pval
+
+order.by.Pval <- list()
+
+# These are not sorted by sign of correlation
+order.by.Pval <- lapply(area.List.byGene[ib], function(x,ib) x[order(x$Sample.p.r.,decreasing=FALSE),],ib)
+
+# In all four areas, the soluble form of COMT had a higher expression level than the membrane 
+# bound form. For that reason, the membrane bound form (r = 1) was no longer included in the 
+# results when the gene with the maximum expression level was used to represent a gene with multiple probes.
+
+@
+
+
+
+
+\end{document}

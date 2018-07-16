@@ -1,0 +1,626 @@
+% Use this file as an \include to put it at the top of Sweave/R generated latex tables.
+
+\documentclass[letterpaper,12pt]{article}
+
+%\usepackage{dgjournal}
+
+
+%%% Note: remove the next two lines to submit article %%%%%%%%%%
+\usepackage{setspace}
+%\linespread{2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%       
+
+%% The mathptmx package is recommended for Times compatible math symbols.
+%% Use mtpro2 or mathtime instead of mathptmx if you have the commercially
+%% available MathTime fonts.
+%% Other options are txfonts (free) or belleek (free) or TM-Math (commercial)
+\usepackage{mathptmx}
+\usepackage{tensor}
+\usepackage{nicefrac}
+\usepackage{units}
+\usepackage{mathtools}
+\usepackage{mathrsfs}
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+\usepackage{nth}
+\usepackage{epsfig}
+\usepackage[makeroom]{cancel}
+\newcommand\Ccancel[2][black]{\renewcommand\CancelColor{\color{#1}}\cancel{#2}}
+\newcommand\Bcancel[2][black]{\renewcommand\CancelColor{\color{#1}}\bcancel{#2}}
+
+\usepackage{geometry}
+\usepackage{changepage}
+
+
+
+\usepackage[T1]{fontenc}
+\usepackage{makecell}
+\newcolumntype{x}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{tikz}
+\newcommand\diag[4]{%
+  \multicolumn{1}{p{#2}|}{\hskip-\tabcolsep
+  $\vcenter{\begin{tikzpicture}[baseline=0,anchor=south west,inner sep=#1]
+  \path[use as bounding box] (0,0) rectangle (#2+2\tabcolsep,\baselineskip);
+  \node[minimum width={#2+2\tabcolsep},minimum height=\baselineskip+\extrarowheight] (box) {};
+  \draw (box.north west) -- (box.south east);
+  \draw (box.south west) -- (box.south west);
+  \node[anchor=south west] at (box.south west) {#3};
+  \node[anchor=north east] at (box.north east) {#4};
+ \end{tikzpicture}}$\hskip-\tabcolsep}}
+
+
+%% Use the graphics package to include figures
+%\usepackage{graphics}
+
+%% Use natbib with these recommended options
+%\usepackage[authoryear,comma,longnamesfirst,sectionbib]{natbib}
+\usepackage[authoryear,comma,sectionbib]{natbib} 
+
+%%%%%%%%%%% Dannemiller added 01/19/2015 - standard preamble
+\usepackage{fancyhdr} % Headers and footers
+
+\pagestyle{fancyplain} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+\fancyhead[RO,RE]{\thepage} % Custom header text
+\renewcommand{\headrulewidth}{0pt} %0pt for no rule, 2pt thicker etc...
+\setlength{\headheight}{15.0pt}
+
+\usepackage{url}   %this allows us to cite URLs in the text
+
+\usepackage{booktabs}
+\usepackage{pstricks}
+\let\clipbox\relax
+\usepackage{amssymb}
+\usepackage{afterpage}
+\usepackage{transparent}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{multicol}
+%\usepackage{chngpage}
+
+
+\usepackage{enumerate}
+\usepackage{xspace}
+
+\usepackage{abbrevs}
+% example: \newabbrev\ART{American Repetrory Theater (ART)}[ART]
+\newabbrev\ssb{Sum of Squares Between genotypes ($SS_{B}$)}[$SS_{B}$]
+\newabbrev\ssw{Sum of Squares Within genotypes ($SS_{W}$)}[$SS_{W}$]
+\newabbrev\sst{Sum of Squares Total ($SS_{T}$)}[$SS_{T}$]
+\newabbrev\ci{current, intermediate (CI)}[CI]
+\newabbrev\cim{current, intermediate matrix (CI matrix)}[CI matrix]
+\newabbrev\cims{current, intermediate matrices (CI matrices)}[CI matrices]
+\newabbrev\civ{current, intermediate vector (CI vector)}[CI vector]
+\newabbrev\civs{current, intermediate vectors (CI vectors)}[CI vectors]
+\newabbrev\cis{current, intermediate scalar (CI scalar)}[CI scalar]
+\newabbrev\maf{minor allele frequency (MAF)}[MAF]
+
+
+
+%%% The following correct for a flawed if statement in package abbrev
+\makeatletter
+\renewcommand\maybe@space@{%
+  % \@tempswatrue % <= this is in the original
+  \maybe@ictrue % <= this is new
+  \expandafter   \@tfor
+    \expandafter \reserved@a
+    \expandafter :%
+    \expandafter =%
+                 \nospacelist
+                 \do \t@st@ic
+  % \if@tempswa % <= this is in the original
+  \ifmaybe@ic % <= this is new
+    \space
+  \fi
+}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{ textcomp }
+\newcommand\dblquote[1]{\textquotedblleft #1\textquotedblright} 
+\newcommand{\apos}{$\text{'}$}
+\newcommand{\be}{\begin{enumerate}}
+\newcommand{\ee}{\end{enumerate}}
+\newcommand{\bes}{\begin{enumerate*}}
+\newcommand{\ees}{\end{enumerate*}}
+\newcommand{\mb}{\noindent\makebox[\textwidth] }
+\newcommand{\den}{\hspace{2pt}\textendash \,}
+\newcommand{\dem}{\textemdash \,}
+\newcommand{\Eq}{Equation }
+
+
+
+%specific hyphenation
+\hyphenation{e-pi-neph-rine}
+\hyphenation{mol-e-cules}
+%\hyphenation{}
+
+
+\providecommand\phantomsection{}
+
+
+%\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{ colorlinks=false,pdfborderstyle={/S/U/W 1},citebordercolor=0 0 1 }
+\colorlet{transpyellow}{white!10!yellow}
+
+\usepackage{rotate}
+\usepackage{rotating}
+\usepackage{rotfloat}
+
+\usepackage{fontspec}
+\usepackage[lofdepth,lotdepth]{subfig}
+\usepackage{threeparttable} 
+\usepackage{tablefootnote}
+\usepackage{footnote}
+
+\usepackage{array}
+%\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{threeparttablex}
+
+
+\usepackage{pdflscape} 
+\usepackage{tabulary}
+\usepackage{ltxtable}
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\setlength\LTleft{0pt}
+\setlength\LTright{0pt}
+
+
+
+\usepackage{colortbl}
+\definecolor{riceblue}{hsb}{0.6,0.1,0.9}
+\definecolor{greenish}{rgb}{0.3,0.6,0.0}
+\definecolor{myblue}{rgb}{0.3,0.3,0.8}
+\definecolor{kugray5}{RGB}{224,224,224}
+\definecolor{lightgray}{gray}{0.9}
+
+\usepackage{xltxtra}
+\usepackage{nicefrac}
+
+\usepackage{rotating}
+\usepackage{lscape}
+
+\usepackage{graphicx}
+%\usepackage{epstopdf}
+\graphicspath{/Users/dannemil/paperless/ase_manuscript/sagmb/}
+
+\usepackage[normal]{engord}
+
+\usepackage{enumitem}
+%\setlist[enumerate]{parsep=4pt}
+
+\usepackage [normalem] {ulem}
+
+\usepackage{tabularx}
+\newcolumntype{S}{@{\stepcounter{Definition}\theDefinition.~} >{\bfseries}l @{~--~}X@{}}
+\newcounter{Definition}[subsubsection]
+
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{caption}
+%\renewcommand{\tablename}{Table}
+\usepackage{threeparttable}
+
+\usepackage{setspace}% http://ctan.org/pkg/setspace
+\AtBeginEnvironment{tabular}{\singlespacing}% Single spacing in tabular environment
+
+%\usepackage{booktabs}
+\usepackage[detect-all]{siunitx}
+\robustify\bfseries
+
+\usepackage{tabularx,colortbl}
+\newcolumntype{Y}{>{\centering\arraybackslash} X}
+\renewcommand{\arraystretch}{1.5}
+
+\usepackage{amsmath, amsthm, amssymb}
+%\setlength{\mathindent}{0pt}
+
+\usepackage{etoolbox}
+\apptocmd\normalsize{%
+ \abovedisplayskip=12pt plus 3pt minus 9pt
+ \abovedisplayshortskip=0pt plus 3pt
+ \belowdisplayskip=12pt plus 3pt minus 9pt
+ \belowdisplayshortskip=7pt plus 3pt minus 4pt
+}{}{}
+
+
+%\numberwithin{figure}{section}
+
+\makeatletter
+\@addtoreset{footnote}{section}
+\makeatother
+
+\usepackage{mdwlist}
+
+
+\renewcommand*\thesubsection{\arabic{section}.\arabic{subsection}}
+\usepackage[title]{appendix}
+\newcounter{appendix}
+\numberwithin{equation}{appendix}
+\usepackage{tablefootnote}
+\usepackage{yhmath}
+\usepackage{ragged2e}
+
+\newcolumntype{C}[1]{>{\Centering\arraybackslash}p{#1}}
+
+\usepackage{makecell}
+\renewcommand\theadfont{\normalsize\bfseries}
+\renewcommand\theadalign{bc}
+\usepackage{cellspace}
+\setlength\cellspacetoplimit{5pt}
+\setlength\cellspacebottomlimit{5pt}
+
+\setlength{\LTpre}{0pt}
+\setlength{\LTpost}{12pt}
+%\setlength\LTleft\parindent
+%\setlength\LTright\fill
+
+
+%\setmainfont{Times}
+\setmainfont{Baskerville}
+%\setmainfont{Alegreya}
+%\setmainfont{Cardo}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\mtx}[1]{\mathbf{#1}}
+
+
+
+\DeclareMathSizes{12pt}{11pt}{8pt}{6pt}
+\everymath=\expandafter{\the\everymath\displaystyle}
+
+\setcounter{secnumdepth}{5}
+
+\usepackage{footnote}
+\makesavenoteenv{tabular}
+\makesavenoteenv{table}
+\usepackage{tablefootnote}
+\usepackage{adjustbox}
+\setlength\heavyrulewidth{.06em}
+\setlength\lightrulewidth{.04em}
+
+
+
+\begin{document}
+
+\noindent
+
+{\small {
+% latex table generated in R 3.4.4 by xtable 1.8-2 package
+% Thu Apr 26 06:57:39 2018
+\begin{table}[ht]
+\centering
+\begin{tabular}{rl}
+  \hline
+ & x \\ 
+  \hline
+    1 & AGTCGCCACGG{\colorbox{yellow}{A}}CTCGGGGCA \\ 
+    2 & CCCGCCCGCCACGGCCTGCGT \\ 
+    3 & GCAACTCGCGGGGCGGCGCTG \\ 
+    4 & GCTGGTTCCTG{\colorbox{yellow}{A}}AAGGATGTA \\ 
+    5 & AACGGGCCTTCTTGCGACGCT \\ 
+    6 & GTAGCCGTGACGTGCACGCCG \\ 
+    7 & ACCTGTAGACGTCGGCCACGC \\ 
+    8 & GAATGAAGCGCCACGGAACAG \\ 
+    9 & TGCCCTGTGGAACATTCCGGT \\ 
+  10 & GGACGGCGGGGCGGTGACGTC \\ 
+  11 & GGCCGGCAAGCAGGGCTGCAG \\ 
+  12 & CAGGGGGACCTACTATCCGGC \\ 
+  13 & TCGGTGCCCTCGCTCAACATG \\ 
+  14 & CAGTGGCGGCGCGGCCCAGGG \\ 
+  15 & CTCTCTTTGCTTTTCCCCACG \\ 
+  16 & CCTCTTCTTCCAGACTCTCGG \\ 
+  17 & TCTCCTGGGAAGAGTAGTTCT \\ 
+  18 & CCTCCCCGCCCCTTGGTTCCG \\ 
+  19 & CGGCTCGGGTTACCCGCCCCC \\ 
+  20 & CTCGCGACTGCGGCTCTTCCT \\ 
+  21 & TCCCGGAAGTGATTTCCTCTG \\ 
+  22 & CCTCAGCCCCCATTGTCCCTG \\ 
+  23 & GGGGCTTCAGAGCGGCCGCTG \\ 
+  24 & AAGCTCCCCTTGCTTTCCGCG \\ 
+  25 & CGCTTCGCTCTCCCCGGCCAA \\ 
+  26 & ACGCCTCGCCCATCCGCGCCG \\ 
+  27 & CCGCAGAATTTAGTCCCACCG \\ 
+  28 & CTCTCCCCTTCGCAGATAATG \\ 
+  29 & TGCTTCCGGCTGACGTGTCTT \\ 
+  30 & TGACGTCCTCAGAAGTTGAGC \\ 
+  31 & GACCCCCGTCGCTCCGCCCCC \\ 
+  32 & TTGCTTGAAGACTGACAAGAT \\ 
+  33 & GCCGCCCCGGCAGTTGGTGCA \\ 
+  34 & CCTCCTTGCCCAGCCGCTCCC \\ 
+  35 & TTCTATCCACTATAATTTGTT \\ 
+  36 & GGCGGTGCTTCCCCTTCTCCC \\ 
+  37 & TCTTTTTAAAGGACCTCGTGA \\ 
+  38 & CGAATCCCAGCAAGCAGTACG \\ 
+  39 & TGGAAGTGCGTCCCCGGAAGT \\ 
+  40 & CGGCGCGCGGCCTCTTCCTGT \\ 
+  41 & CCGCGTTGCGTCACTTCTGCC \\ 
+  42 & ACTTCGCTCGTCCTTGCTCTC \\ 
+  43 & CGGAGGGGGCGGGGTCCAGGC \\ 
+  44 & CTGCCAGCCCGGACCCGGTCG \\ 
+  45 & TTCCTGCCTATATCTGGCTTG \\ 
+  46 & TTTGCGTTCCCAGAGTTCCTA \\ 
+  47 & GCGGGAGCTGAGGGGAGAGAG \\ 
+  48 & CCGCGGCGCTCACCGCCGACC \\ 
+  49 & AAGAAAATGACACTAGAGTAG \\ 
+  50 & TCCTTCCTCCCTCCCTCGGTC \\ 
+  51 & TTCCCTCTATTGACTGAGCCG \\ 
+  52 & CCCGCCTTTCCATTGGCTGCC \\ 
+  53 & GCCCGCCAGGCCCAGCGTTAG \\ 
+  54 & AGGCGGGGCCCGGCCCGTTAA \\ 
+  55 & GCGCAGGCGTACTAGCGACGG \\ 
+  56 & CCACAGAGAGATTTCCGCAGT \\ 
+  57 & GCAGCGCCGCCTGAACTGAGG \\ 
+  58 & TTGGAGTGGGCAGCAGTTGGG \\ 
+  59 & ACCGGCGCTCCCCTTTCCCCT \\ 
+  60 & TGGACAAGTCTGGGATCCTTG \\ 
+  61 & AGGGAGACTACAGTTAAAAAC \\ 
+  62 & AGGGCGGGCGCGTGGCGAGGG \\ 
+  63 & AGGGCCCCACCATCGTTTCCC \\ 
+  64 & ACTTGGGACGGGTCCCTGAGT \\ 
+  65 & GTTATCTTTATCTCATATCTA \\ 
+  66 & CGGAACGAACTACATCTCCCG \\ 
+  67 & CTCAGGGCGCCGCCATGACGA \\ 
+  68 & GCGCGCGGCCTGGAGGGGCGG \\ 
+  69 & GCGGCGCGCTGGAAATATGAA \\ 
+  70 & ACATTACTGTGGTTTTTCTCT \\ 
+  71 & CTGCCACGCCCATCGAAGCGG \\ 
+  72 & TCGCGCCCTTTATACTCACTT \\ 
+  73 & GTTAGCGGTGGCTGGGACCGA \\ 
+  74 & TGTATATTTACACATTCACAC \\ 
+  75 & GATCATGTGGGTTTTGGCGTA \\ 
+  76 & AGGATGGTGGTATTAATCCCT \\ 
+  77 & CCGGAAGTGACGTGCTGCGCT \\ 
+  78 & GCTCCTGCCCAGTGTTTAGGG \\ 
+  79 & CGGCGCAGCGCAGAAGTTTGC \\ 
+  80 & CAGAGGGTATAAACAGTGCTG \\ 
+  81 & GGAGCCGAGTGCGCGGGGCGG \\ 
+  82 & GCGCCGCCGAAGAGCCAATGG \\ 
+  83 & CGGCGGCAGAAGCGGCGCTCG \\ 
+  84 & ACCCACGCTTTAGCACATGCG \\ 
+  85 & TGGCCTGGACTGTGGAGGGGG \\ 
+  86 & CGGAGACGGTTAGAAATGGCG \\ 
+  87 & GCATGCGCCGCGGCCGAGCCG \\ 
+  88 & TGGAGGGTCTACACGAAGCGC \\ 
+  89 & TGTAATTCAGCGGTTTCCGGA \\ 
+  90 & GGAGGAGTCCCGGCTGGGCTG \\ 
+  91 & AACTACCTATAAAAGCGGCCA \\ 
+  92 & CCCCCCACCCCCTGCCTCCCC \\ 
+  93 & GGAGGCCGGGCCAGTTAGATT \\ 
+  94 & AGCGAGTGACGGCGGCGCAAA \\ 
+  95 & TCGGGCCGCGCAGGCGCACCA \\ 
+  96 & GGCGGGGCAGGACCGGCGACC \\ 
+  97 & CTTTGTAGGGGAAACGAACTG \\ 
+  98 & GGGGGCGCGGGAGGCGGGGCT \\ 
+  99 & GCCGGGGAGGGGACGCGAGCG \\ 
+  100 & CGCTCCCCCCTCCCCCCGAGC \\ 
+  101 & GGATGGCGAGCCTTTACGTCG \\ 
+  102 & ATCCCCTTCTGAAACGTCCTG \\ 
+  103 & CAGCTCCTGCTCGGTGTCCAA \\ 
+  104 & GTTTGTGCCTTTTTTCTTTTG \\ 
+  105 & CGCTCAGCGGCCGGGCGTGTA \\ 
+  106 & GGTTTCCCCTCCTCCTTCACC \\ 
+  107 & GGCGCGAGCCCGAGGGGGCGG \\ 
+  108 & GGAGGACGTCTGAGCCATGCT \\ 
+  109 & AGTGCCGCGGAGTTGGAGCGG \\ 
+  110 & CCCCCGGAGCCATTTCCGGGA \\ 
+  111 & GAGCTCTCCTCGTAAAACTAT \\ 
+  112 & GAGACCAGCTTAATGTCAGTG \\ 
+  113 & TAGGAGATCCTGAGATGAAAG \\ 
+  114 & TTGGTAGCAGGCACTCCCTGG \\ 
+  115 & TGGAAGAGCTCATTTTGAAGA \\ 
+  116 & CGGCACCGGAAGTCTCGTTTT \\ 
+  117 & AGCAGGGAACCGCGCGGTCGC \\ 
+  118 & AACGAGTGCGCATGTGCGCGC \\ 
+  119 & CGGCCGCGGCTGCCCTCTGCC \\ 
+  120 & CCCCCACCGGCGACACCACTG \\ 
+  121 & GGCGGCGGGGCAGCGCGCAGG \\ 
+  122 & ACCACTGGTAAGCGAAGTGGG \\ 
+  123 & TAATAAAGCGGGCAGGGATTT \\ 
+  124 & CCGCGGCGCGCACAGCCGGGC \\ 
+  125 & GTATCTCCCCTCACTTCCCTC \\ 
+  126 & CGCCTTCCTTTCCCGCAGGGT \\ 
+  127 & CAAATCAGCCCGGCGGACTCC \\ 
+  128 & TCGGAGGGATGGGCCGTGTCC \\ 
+  129 & CACACGGGAACCCGGAACCCT \\ 
+  130 & GGGAACGCCGCGTTCGCGTTC \\ 
+  131 & TCAACGGCATCCAGAAAGCCA \\ 
+  132 & GCCGCAGGCTATCCAGCGTGG \\ 
+  133 & CGTGGGGCGGCCCATTTCCTC \\ 
+  134 & CGCGCCTGCGCACTGCCGTCC \\ 
+  135 & GCGCGGTGGCGGTGGCCGGGG \\ 
+  136 & GAGCTGGTTTTAGCCACAGAG \\ 
+  137 & AACATGGGAGGGTCACACCCT \\ 
+  138 & TTATTGGCTAGTGTCTCTTCC \\ 
+  139 & GGTGACCCACCACACGTTGCC \\ 
+  140 & TTCCGGTGACCACGAAGGCGG \\ 
+  141 & CACGTCCCCTCGCAGTTCGGC \\ 
+  142 & GCGCCGTGGGGATCCCGGGGC \\ 
+  143 & CTCGCTGAGGCCCCGACGCAG \\ 
+  144 & AGGCATGCCCCAGAAGTCCAG \\ 
+  145 & CGCGGAACCTCGGTGCCGGAG \\ 
+  146 & CCGCCCCGGCCCGTCGCCATG \\ 
+  147 & GTCCGGGGCGGGGCCTGAGTG \\ 
+  148 & AAAGCCACGAGGCCGCCCGCT \\ 
+  149 & CTCTTTCCTGAGGGGCACTGG \\ 
+  150 & TGGTTTCTGGAAATCGAAAGT \\ 
+  151 & CCTTAGTGCGCTCCGGGCCCG \\ 
+  152 & GTCGGCTGAGTCCGCCTCAGA \\ 
+  153 & CGCTTGCGCGCCTCTTTCTCA \\ 
+  154 & CGACACGGCTCACTCGCGCCC \\ 
+  155 & GCGGACGTGACGCAAATGCGT \\ 
+  156 & CCCCGCTCCCGCCCCGCCCCG \\ 
+  157 & ACTACCCAGGAAGGCGGAGCT \\ 
+  158 & CCGCGAGGAGGGCCCCATTCA \\ 
+  159 & GCTCCGGCGCGAGCCCCGATT \\ 
+  160 & ATGCCCGGCTATTTTTTGTAT \\ 
+  161 & TGGGGAAAGAAGGACCCGGTC \\ 
+  162 & GCCACAGTAGCTGACTGGTCA \\ 
+  163 & CCCGCGCCCCCATCCCCATCC \\ 
+  164 & TCCCCGGGGCTGTTGACGCCC \\ 
+  165 & CCTGGCCCCGCCCCGGCCCAG \\ 
+  166 & TTCCGCCGCTGGTGGCCACCC \\ 
+  167 & CCGCTAGATCCCTCTTGACCC \\ 
+  168 & CGCCTCGGTATCGCAGCGGGT \\ 
+  169 & ATGGGGTGTGGGGCGAGAGGA \\ 
+  170 & GAGCCGGGAGGAATCGGTCCA \\ 
+  171 & TTCCTGGCCGCATTTGAAACA \\ 
+  172 & TTGAATGTAGCGGCTGCCGTT \\ 
+  173 & TTTAATGCGACCTCATCTTTG \\ 
+  174 & GGGCGAGCCGGGCCTGCGCGG \\ 
+  175 & GGGCGGACCCCAGAGGGGGCG \\ 
+  176 & CCTCCTGAGCCGAGTAGATAT \\ 
+  177 & CGGCGCAGTGGCGCCCGCCCA \\ 
+  178 & CGGGGCTACGGAAGCTGGCGA \\ 
+  179 & GGGCTCTTCGCAGTCGCGCGG \\ 
+  180 & TTCTTTCCTGCCTTCCTCCGC \\ 
+  181 & CCCGCCCCGGAAGATAAGGCC \\ 
+  182 & CGTGCTGCGTTTCTCCTTACG \\ 
+  183 & GCGACTGAGATCAGCATTTTC \\ 
+  184 & CCGCCGCCCTCAGTCTCACCG \\ 
+  185 & CTCGGCGCCTCGGGCTCCGCG \\ 
+  186 & AGGAGGGGACATCGTGACAAA \\ 
+  187 & GGCCCCTCCCCGGCCTTCCCC \\ 
+  188 & CCGCCCCGCCCACCCCAGCGA \\ 
+  189 & CCCCGACGCAGGGACTCGGCC \\ 
+  190 & CGGGGTCAGCCCGAGCCCGTG \\ 
+  191 & GCACCGCCCTGTCCGCCCGCC \\ 
+  192 & CCCAGGCGCTAGCTGACTGGG \\ 
+  193 & CCAGCTGGTTGTATAAATTCC \\ 
+  194 & CCCTGCTGAAACCGGACGCCG \\ 
+  195 & AGGACTGGCGTGCAGACGAGG \\ 
+  196 & CCTCCTCCGGCAGAGCTTGGG \\ 
+  197 & GAAGAGGGGAAGGAGGAGGAG \\ 
+  198 & GGCGGGGCGGGGCTCTGGAAG \\ 
+  199 & ACGCCCGGCCCGGAAGCGCTC \\ 
+  200 & GGGGGCGGGGCCTGGCTCGGA \\ 
+  201 & GCGCGGGACCCGCCCTCCCCG \\ 
+  202 & AGGAATGGGAACTCCCTGACC \\ 
+  203 & TGAGCCGTCCCAGGGTGCCCC \\ 
+  204 & TCCTGGCCACTGATTGGTCGC \\ 
+  205 & GACCGGAAGCCGGGGTATTGA \\ 
+  206 & ACGTGGGGCCTCAGAAAAGAC \\ 
+  207 & TACGAAATTTTAATAAATATC \\ 
+  208 & CCGGCAAGATCGTGATGTTAT \\ 
+  209 & CGGCTCGAAAGGAATGGAAAA \\ 
+  210 & CTGGCGTTTCCGTTGCTTGGA \\ 
+  211 & GGCGTGGCCGGAACGTCTCTC \\ 
+  212 & GTCGGAGGGGCGGGGCATGCG \\ 
+  213 & TCCGGTCCCGCAGTTCCGGCT \\ 
+  214 & AGACCTCGTAGCCCGGGCCCG \\ 
+  215 & TGTACACTTTCAGCTGTCACA \\ 
+  216 & GCGGCCGCCGAGCGGAGCCAG \\ 
+  217 & TCCGGTGGAGGGAGGGTGCCG \\ 
+  218 & GATGGAGGTACGCTGCGCCGC \\ 
+  219 & CTCTGGAGCCCAGCTCTTGGG \\ 
+  220 & CGCCACTCGGCACTCACTGCC \\ 
+  221 & CAAGGGGCGGCGCGGAGCTCT \\ 
+  222 & AGGAGCAGGAGGTTCCCCGCG \\ 
+  223 & GCTCGCCTTGCACGCGCCTGA \\ 
+  224 & CCCCATCCCCCAGCCTCGGTG \\ 
+  225 & TGAGGGCGGATGGAGGGGCCC \\ 
+  226 & TCCTCCTCCGCCTCCTCCTCC \\ 
+  227 & CCGGGCCCGCCCTCCTTCCCT \\ 
+  228 & GCCTGACGTCAGGAAGTCGAA \\ 
+  229 & ACGCGTCCGGCGCGCCCCCTC \\ 
+  230 & CGCTCGCTCCTCCCGCACCCA \\ 
+  231 & CCGCCGCTCCTCCACGCTCGT \\ 
+  232 & GGCCTTCTGCCGAAGAAGTAG \\ 
+  233 & CCTTTAACCCCCTATTCCGAA \\ 
+  234 & GGGGGCGGTGTAGCGACCCGA \\ 
+  235 & TTGCTGGGGCTGGGCTCTTCC \\ 
+  236 & CTCGGCGGGCGGCGGGCGGCA \\ 
+  237 & AAAGAAGGGAAGAAGGAAGAA \\ 
+  238 & GTTTCCACTCTCGCTCTCCTT \\ 
+  239 & GAGCCAGACTTAAAAGGGAGA \\ 
+  240 & AAGGGCAGGACCACAAGCCTG \\ 
+  241 & CACCGGGCTATAAAAACCGGC \\ 
+  242 & GCCCCGGGAATGGCCAGGGCC \\ 
+  243 & TCCTGGAAACTCATTGGCTCC \\ 
+  244 & GGAGCGTGGGGAGGGAGGCCG \\ 
+  245 & AGCAGGGGCGGGGCCCGCGGA \\ 
+  246 & GCCTCCCCTACCATGAGGGAC \\ 
+  247 & CGCCTCTCCCCGTGATCCCTC \\ 
+  248 & TTCCGGTGCTCGCCCGAGCAG \\ 
+  249 & CTTAATCAGCCATTTTTTTAA \\ 
+  250 & TTTTTTTTTTTTTTTTTTGCT \\ 
+  251 & ACGGGAAGTTGGGGCAATTTG \\ 
+  252 & CTCCCCCCGCCCGCGAACCCG \\ 
+  253 & TTTAAAAGAATGAAAAGGCGG \\ 
+  254 & CGAGCCAGTACGCAGCTCTGT \\ 
+  255 & TGTGACGTAAAAGGGAGGAGG \\ 
+  256 & GCCACTTGAAGGCACTTCCGC \\ 
+  257 & CGTTCAGCTTTGTCTGACGGG \\ 
+  258 & CCATCCTCCCTGGGCAGAGGG \\ 
+  259 & CTCCCTTTCCTGTGCCCCTCC \\ 
+  260 & CGGCGGCGGCGGCGGCCGCGG \\ 
+  261 & GCCGGGCCAGCCTGGCTGCCG \\ 
+  262 & GAGTGGCGGCCGGGCGACGAG \\ 
+  263 & CCCCGCCCGTTGTCGGAAGCC \\ 
+  264 & TTTGTGCAGCTGGCCCTGGCT \\ 
+  265 & GAGTCGAGACTGGAGGTAAGA \\ 
+  266 & GCACGGGCTCGGCTGGGGCCC \\ 
+  267 & GCTGGAGGGGCAGAGCATCAG \\ 
+  268 & CCAGCGCAGGCGCGGTGGCGC \\ 
+  269 & TCCACCTTTTTAACTTTGTCA \\ 
+  270 & AGGGCTGAGCTGGGCGGAGCA \\ 
+  271 & GACAGAGCCTTAGCAAAGCCG \\ 
+  272 & GCGGAAATCGGTGCGCGCCGA \\ 
+  273 & GAAAGCGGAGTGGCGCTCCGG \\ 
+  274 & CTAAGTGGGCCAGGGACGCCC \\ 
+  275 & ATCCACCTTCATTGTTACCTT \\ 
+  276 & ACCTCTGCCCTATCTCGGCAG \\ 
+  277 & GCGGCGGCGCGGGCGGCGGCT \\ 
+  278 & AGATGAGCTCACGGCGGGCCC \\ 
+  279 & GCTATCCCATCACACCCCGCG \\ 
+  280 & TGATAGGAGGAGCCAGCAAGT \\ 
+  281 & TCTCGAGTTTGAAAAGAGACA \\ 
+  282 & CGAGAGGGAGGGAGGAAGAAA \\ 
+  283 & TGAGAGAAACAAAACCACAAA \\ 
+  284 & CCTCCTTCCGCGACTCGGGCG \\ 
+  285 & TCAGCTCCCTCATGGCCCTGT \\ 
+  286 & TGGGGGCTTTTGCTGGTGCGC \\ 
+  287 & CCTTCTATTCCCAGAATCACT \\ 
+  288 & GTGGGGCAGGCGACGGTGGGG \\ 
+  289 & AAGACTTGAGCATGCGCACAT \\ 
+  290 & AAAATAAGATCACATGAGAGG \\ 
+  291 & CCGCGGGATGGGACAGGCACC \\ 
+  292 & CCCTGGCGACCATGGCGCACC \\ 
+  293 & GGCGGGGCTGGGAGTATTTGA \\ 
+  294 & AAGATCATAATGAGACAGGAA \\ 
+  295 & CGCTGGGGAGCCCGCGACCCG \\ 
+  296 & TCTGGGGGCGGGGCCTGCCGA \\ 
+  297 & CTCCGCCCTGGGGGCGGAGCT \\ 
+  298 & GGGCGGGATACAAAAAGTGCT \\ 
+  299 & AGAGCCGACCGCGAGCGACCG \\ 
+  300 & GCCCTTCTACTGCGCCCCGCC \\ 
+  301 & GGGGGTGGGTGGGCTGAGAGC \\ 
+  302 & CGGGGAGGGGCGGGTTCCCAG \\ 
+  303 & GCGAGTGGGACGTGCGTGGCG \\ 
+  304 & GCGCTCGCCTCCCGCAGCCCG \\ 
+  305 & TGCCCTGCCAGACAGAGCCCC \\ 
+  306 & CCCCCTGCGGAGTTGTGTTTT \\ 
+  307 & TGAGTGAGAGCAGGGGAATTT \\ 
+  308 & TCCTGGCCCATAAGGCCCTCG \\ 
+  309 & TAGGCGTCAACACAGGAAGTG \\ 
+  310 & AGCCAGCCCAGCATTAACCAA \\ 
+  311 & TTGGGGGCGGGGCTCGTGCTG \\ 
+  312 & GCTTCGGCGGCGGCGCTCAGC \\ 
+  313 & CTCGCACCGCCAAACTTTCCT \\ 
+  314 & GTTATTTCTACTTTTGTGTTC \\ 
+  315 & ATCGCCTTGCCCGTGGGATTT \\ 
+  316 & GAGACGGCCATAGACACTGGC \\ 
+  317 & GTGCGAGCCGAGCGCGTTGCT \\ 
+  318 & CTCACCGCAGCGGCCAGGAAC \\ 
+  319 & CTCGGACCTACCCTGTGGTCC \\ 
+   \hline
+\end{tabular}
+\end{table}}}
+\end{document}

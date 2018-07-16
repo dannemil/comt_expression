@@ -1,0 +1,19 @@
+%latex.default(hypergeom.Tests.tab, file = "hypergeometric_tests_negative_final.tex",     caption = c("Hypergeomtric test probabilities - Column 1: Number of negitive correlations in the 500 most strongly correlated genes compared to the number expected given the proportion of negitive correlations in the full sample of genes. Column 2: Number of negitive correlations in the genes unique to each brain area (within the top 500 most strongly COMT-correlated genes) compared to the number of negitive correlations expected given the proportion of negitive correlations in the full sample of genes."),     caption.loc = c("top"), colheads = c("neg. r in top 500 genes",         "neg. r in genes unique to each area"), rowlabel = c(""),     colnamesTexCmd = "bfseries", booktabs = TRUE, label = c("tab:hypergeometric"),     na.blank = TRUE, vbar = FALSE, longtable = TRUE, table.env = TRUE,     center = c("center"), continued = c("Hypergeometric Tests Continued"),     first.hline.double = FALSE, append = FALSE)%
+\setlongtables\begin{longtable}{lll}\caption{Hypergeomtric test probabilities - Column 1: Number of negitive correlations in the 500 most strongly correlated genes compared to the number expected given the proportion of negitive correlations in the full sample of genes. Column 2: Number of negitive correlations in the genes unique to each brain area (within the top 500 most strongly COMT-correlated genes) compared to the number of negitive correlations expected given the proportion of negitive correlations in the full sample of genes.} \tabularnewline
+\toprule
+\multicolumn{1}{l}{\bfseries }&\multicolumn{1}{c}{\bfseries neg. r in top 500 genes}&\multicolumn{1}{c}{\bfseries neg. r in genes unique to each area}\tabularnewline
+\midrule
+\endfirsthead\caption[]{\em (Hypergeometric Tests Continued)} \tabularnewline
+\midrule
+\multicolumn{1}{l}{\bfseries }&\multicolumn{1}{c}{\bfseries neg. r in top 500 genes}&\multicolumn{1}{c}{\bfseries neg. r in genes unique to each area}\tabularnewline
+\midrule
+\endhead
+\midrule
+\endfoot
+\label{tab:hypergeometric}
+Prefrontal&3.26e-38&5.01e-01\tabularnewline
+Cerebellum&6.54e-75&1.25e-14\tabularnewline
+Temporal&5.73e-106&3.78e-28\tabularnewline
+Pons&3.13e-108&2.08e-39\tabularnewline
+\bottomrule
+\end{longtable}

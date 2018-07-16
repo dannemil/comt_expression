@@ -1,0 +1,1 @@
+list(GOMFID = "GO:0051377", Pvalue = 0.0000204874956701934, OddsRatio = Inf, ExpCount = 0.0822916666666667, Count = 3, Size = 3, Term = "mannose-ethanolamine phosphotransferase activity", hgnc_symbol = c("PIGN", "PIGG", "PIGO"))

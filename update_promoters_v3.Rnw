@@ -1,0 +1,260 @@
+\documentclass{article}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+<<>>=
+readanswer <- function()
+{ 
+  answ <- readline(prompt="Do you want to source the core input data script (Y/N)?: ")
+  if(!grepl("^[YN]+$",answ))
+  {
+    return(readanswer())
+  }
+  
+  return(answ)
+}
+
+if (readanswer() == 'Y')   {
+     source('core_comt_global_data_v2.R')
+} else {
+     
+}
+
+@
+
+<<include=FALSE, echo=FALSE, results=hide>>=
+# Generate a unique ID for this program by path and filename. This unique ID is attached to this file using a tag in the filesystem.
+fname <- csf()   # function to get current path including file name
+
+          prog.Name <- unique.ID(fname)
+
+          prog.Name   # unique ID based on hash of file name
+
+# Write out the file_name, unique ID and date/time to '.Rscriptnames'
+
+          rec.script(eval(fname),eval(prog.Name))
+@
+
+This program has the unique ID: \Sexpr{prog.Name}.
+
+
+<<newpromoters>>=
+
+ahub <- AnnotationHub(hub=getAnnotationHubOption("URL"), cache=getAnnotationHubOption("CACHE"), proxy=getAnnotationHubOption("PROXY"), localHub=FALSE)
+ah <- subset(ahub, species == "Homo sapiens")
+# retrieve records with, e.g., 'object[["AH18522"]]' 
+
+library(GenomicRanges)
+library(BSgenome.Hsapiens.UCSC.hg19)
+BSgenome.Hsapiens.UCSC.hg19
+# or
+Hsapiens
+class(Hsapiens)
+
+##BSgenome contains the DNA sequences
+
+#############
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+Txdb<- TxDb.Hsapiens.UCSC.hg19.knownGene
+Txdb
+class(Txdb)
+
+library(Homo.sapiens)
+ghs<- GenomicFeatures::genes(Homo.sapiens)
+tssgr<- resize( ghs, 1)    # get TSSs
+#gn <- sort(GenomicFeatures::genes(txdb))
+gn <- sort(ghs)
+upstream_pad<- 1000 
+downstream_pad<- 600
+
+promoters <- promoters(gn, upstream_pad, downstream_pad)
+
+###### Need to determine which direction sequence gets returned.
+
+
+# testTranscriptPlus <- GRanges(seqnames='chr1', ranges=IRanges(start=19000000, end=19000900), strand='+')
+# 
+# testTranscriptMinus <- GRanges(seqnames='chr1', ranges=IRanges(start=19000000, end=19000900), strand='-')
+# 
+# getSeq(Hsapiens, testTranscriptPlus)
+# getSeq(Hsapiens, testTranscriptMinus)
+
+# Always returns the 5' to 3' sequence.
+
+#  +   ATCCTG
+#  -   CAGGAT
+
+# Strand + promoters sequences TSS - 1000 to TSS + 600 
+# Strand - promoters sequences reverseComplement(END(of gene) - 600 to END + 1000)
+# The returned sequences from borth strands are 5' to 3'. The 5' to 3' on the - strand is 3' to 5' on the + strand.
+# It doesn't matter what the strand is as long as both sequences are -1000 TSS to TSS + 600.
+
+# ---------TSS--------------------------END--------------    5' to 3'   + strand
+
+# ---------END--------------------------TSS--------------    5' to 3'   - strand
+
+# No other transformation needs to be done depending on the strand because all sequences are aligned 5' to 3' at their TSSs
+
+# This has the promoter sequences of all genes in the genome
+promoter_seq <- getSeq(BSgenome.Hsapiens.UCSC.hg19, promoters)
+
+#proms.indx <- match(as.character(hold.Lowest.pvals.pos$pf$ENTREZID),names(promoter_seq))
+
+annotation <- AnnotationDbi::select(Homo.sapiens, key=names(promoter_seq), keytype="ENTREZID", 
+columns=c("SYMBOL", "ENTREZID","TXSTRAND","TXSTART","TXEND"))
+
+
+# proms.pos.indx <- list()
+# proms.neg.indx <- list()
+# proms.all.indx <- list()
+
+proms.pos.indx.s <- list()    # ref to promoter_seq
+proms.neg.indx.s <- list()    # ref to promoter_seq
+proms.all.indx.s <- list()    # ref to promoter_seq
+
+proms.pos.entrez <- list()
+proms.neg.entrez <- list()
+proms.all.entrez <- list()
+
+proms.pos.strand <- list()
+proms.neg.strand <- list()
+proms.all.strand <- list()
+
+proms.pos.txstart <- list()
+proms.neg.txstart <- list()
+proms.all.txstart <- list()
+
+proms.pos.txend <- list()
+proms.neg.txend <- list()
+proms.all.txend <- list()
+
+# proms.pos.indx <- lapply(hold.Lowest.pvals.pos[ib], function(x,ib) match(as.character(x$ENTREZID),annotation$ENTREZID), ib)
+# 
+# proms.neg.indx <- lapply(hold.Lowest.pvals.neg[ib], function(x,ib) match(as.character(x$ENTREZID),annotation$ENTREZID), ib)
+# 
+# proms.all.indx <- lapply(gene.Major[ib], function(x,ib) match(as.character(x$ENTREZID),annotation$ENTREZID), ib)
+
+
+# More 'annotation' entries than 'promoter_seq'
+proms.pos.indx.s <- lapply(hold.Lowest.pvals.pos[ib], function(x,ib) match(as.character(x$ENTREZID),names(promoter_seq)), ib)
+
+proms.neg.indx.s <- lapply(hold.Lowest.pvals.neg[ib], function(x,ib) match(as.character(x$ENTREZID),names(promoter_seq)), ib)
+
+proms.all.indx.s <- lapply(gene.Major[ib], function(x,ib) match(as.character(x$ENTREZID),names(promoter_seq)), ib)
+
+
+     proms.pos.entrez <- lapply(proms.pos.indx.s[ib], function(x,ib)  annotation$ENTREZID[na.omit(x)], ib)     
+
+     proms.neg.entrez <- lapply(proms.neg.indx.s[ib], function(x,ib)  annotation$ENTREZID[na.omit(x)], ib)
+
+     proms.all.entrez <- lapply(proms.all.indx.s[ib], function(x,ib)  annotation$ENTREZID[na.omit(x)], ib)
+
+     proms.pos.strand <- lapply(proms.pos.indx.s[ib], function(x,ib)  annotation$TXSTRAND[na.omit(x)], ib)     
+
+     proms.neg.strand <- lapply(proms.neg.indx.s[ib], function(x,ib)  annotation$TXSTRAND[na.omit(x)], ib)
+
+     proms.all.strand <- lapply(proms.all.indx.s[ib], function(x,ib)  annotation$TXSTRAND[na.omit(x)], ib)
+     
+
+     
+     
+# These are contingent on the strand + or minus -. The strand designation is the same in both annotation files for a given gene.
+     
+ 
+               
+      proms.pos.txstart[[im]] <- annotation$TXSTART[na.omit(proms.pos.indx.s[[im]])] 
+      proms.neg.txstart[[im]] <- annotation$TXSTART[na.omit(proms.neg.indx.s[[im]])]
+      proms.all.txstart[[im]] <- annotation$TXSTART[na.omit(proms.all.indx.s[[im]])]
+      
+      proms.pos.txend[[im]] <- annotation$TXSTART[na.omit(proms.pos.indx.s[[im]])] 
+      proms.neg.txend[[im]] <- annotation$TXSTART[na.omit(proms.neg.indx.s[[im]])]
+      proms.all.txend[[im]] <- annotation$TXSTART[na.omit(proms.all.indx.s[[im]])]
+      
+               
+          
+
+
+
+@
+
+
+<<>>=
+proms.pos <- list()
+proms.neg <- list()
+proms.all <- list()
+
+
+
+
+
+
+
+
+
+
+proms.pos <- lapply(proms.pos.indx.s[ib], function(x,ib)  promoter_seq[c(na.omit(x)),], ib)
+proms.neg <- lapply(proms.neg.indx.s[ib], function(x,ib)  promoter_seq[c(na.omit(x)),], ib)
+proms.all <- lapply(proms.all.indx.s[ib], function(x,ib)  promoter_seq[c(na.omit(x)),], ib)
+
+
+
+all.avail.proms.count <- matrix(rep(NA,4*5),ncol=5)
+row.names(all.avail.proms.count) <- stand.Col.names.aug
+
+all.avail.proms.count[,1] <- unlist(lapply(proms.all[ib], function(x,ib) length(x), ib))
+colnames(all.avail.proms.count) <- c('Gene Count', DNA_BASES)
+
+promoters.fasta <- list(pos = proms.pos,
+                        neg = proms.neg)
+
+
+
+# # write out promoter sequences in fasta format
+# writeXStringSet(proms.all[[1]], "fasta_500_promoter_seq_pf_final.fa", append=FALSE,
+#                 compress=FALSE, compression_level=NA, format="fasta",width=2000)
+# 
+# writeXStringSet(proms.all[[2]], "fasta_500_promoter_seq_cb_final.fa", append=FALSE,
+#                 compress=FALSE, compression_level=NA, format="fasta",width=2000)
+# 
+# writeXStringSet(proms.all[[3]], "fasta_500_promoter_seq_tm_final.fa", append=FALSE,
+#                 compress=FALSE, compression_level=NA, format="fasta",width=2000)
+# 
+# writeXStringSet(proms.all[[4]], "fasta_500_promoter_seq_po_final.fa", append=FALSE,
+#                 compress=FALSE, compression_level=NA, format="fasta",width=2000)
+
+
+
+
+# write out pos/neg fasta separately
+writeXStringSet(proms.pos[[1]], "fasta_500_promoter_seq_pf_pos.fa", append=FALSE,
+                compress=FALSE, compression_level=NA, format="fasta")
+
+writeXStringSet(proms.neg[[1]], "fasta_500_promoter_seq_pf_neg.fa", append=FALSE,
+                compress=FALSE, compression_level=NA, format="fasta")
+
+writeXStringSet(proms.pos[[2]], "fasta_500_promoter_seq_cb_pos.fa", append=FALSE,
+                compress=FALSE, compression_level=NA, format="fasta")
+
+writeXStringSet(proms.neg[[2]], "fasta_500_promoter_seq_cb_neg.fa", append=FALSE,
+                compress=FALSE, compression_level=NA, format="fasta")
+
+writeXStringSet(proms.pos[[3]], "fasta_500_promoter_seq_tm_pos.fa", append=FALSE,
+                compress=FALSE, compression_level=NA, format="fasta")
+
+writeXStringSet(proms.neg[[3]], "fasta_500_promoter_seq_tm_neg.fa", append=FALSE,
+                compress=FALSE, compression_level=NA, format="fasta")
+
+writeXStringSet(proms.pos[[4]], "fasta_500_promoter_seq_po_pos.fa", append=FALSE,
+                compress=FALSE, compression_level=NA, format="fasta")
+
+writeXStringSet(proms.neg[[4]], "fasta_500_promoter_seq_po_neg.fa", append=FALSE,
+                compress=FALSE, compression_level=NA, format="fasta")
+
+
+############## END get promoter sequences and writing out FASTA formatted files
+
+@
+
+
+\end{document}

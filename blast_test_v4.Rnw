@@ -1,0 +1,1430 @@
+% try to recover chromosome and starting position information for genes starting with LOC
+
+\documentclass[11pt]{article}
+\usepackage{graphicx, subfig}
+\usepackage{float}
+\pagenumbering{arabic}
+\usepackage{enumerate}
+\usepackage{Sweave}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{framed}
+\usepackage{longtable}
+\usepackage{tablefootnote}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{keep.source=TRUE} 
+
+\hspace{-1.5em}Gene Network\\
+COMT expression correlations in Four Brain Areas\\
+Fall, 2017\\
+
+
+
+<<echo=FALSE>>=
+#' blast_test_v3.Rnw
+#' Program to recover symbols, chromosomes and starting positions for genes with symbols that start with LOC
+#' First blastn is run on the Reporter.Sequence(s) of the probes corresponding to genes starting with LOC. The file format is FASTA
+#' After BLASTn returns its information, entrez gene is queried using the returned Accession numbers. The results from these queries are then integrated as appropriate into the primary data files (e.g., prefrontal.Data). 
+
+library(base)
+library(knitr)
+library(openxlsx)
+library(xtable)
+library(magrittr)
+library(tables)
+library(plyr)
+library(scales)
+library(utils)
+# library(ggman)
+library(dplyr)
+library(biomaRt)
+library(stringr)
+library(curl)
+library(git2r)
+library(githubinstall)
+library(devtools)
+library('xml2')
+library(RCurl)
+library(XML)
+library(rentrez)
+library(data.table)
+library(pracma)
+library(SOAR)
+library(roxygen2)
+library(GlobalOptions)
+library(tidyr)
+
+work.path <- c('/Volumes/Macintosh_HD_3/genetics/genenetwork2/')
+
+setwd(work.path)
+
+# Include sourced programs here.
+source.prog <- data.frame(rcode='func_cbind_na',
+                          'func_rbind_na',
+                          'func_write_primary_data_one_set',
+                          'func_test_getdir',
+                          'func_obj_size_Mb',
+                          'new_objects',
+                          'func_new_objects',
+                          'func_tstamp',
+                          'unique_id_generator',
+                          'func_prog_id',
+                          'countNA.R'
+                          )
+
+source(paste(work.path,source.prog$rcode,'.R',sep=''))
+
+stand.Col.names.lc <- c("prefrontal",
+                        "cerebellum",
+                        "temporal",
+                        "pons")
+
+opt <- setGlobalOptions(
+          recordTimestamps = TRUE
+)
+
+@
+
+
+<<init, include=FALSE >>=
+opts_chunk$set(include=FALSE,
+               echo=FALSE,
+               message=FALSE,
+               warning=FALSE)
+
+# Function to catch warnings that a sheet has no data yet and returns NAs 
+readPrime = function(x,y,z) {     
+     tryCatch(data.frame(read.xlsx(x,sheet = y)),
+            warning = function(w) {print(paste("no data ", y));
+            return(z)},
+            error = function(e) {print(paste("error reading data", y));
+            return(z)}
+)
+}
+@
+
+<<include=FALSE, echo=FALSE, results=hide>>=
+# Generate a unique ID for this program by path and filename. This unique ID is attached to this file using a tag in the filesystem.
+
+fname <- csf()   # function to get current path including file name
+
+prog.Name <- unique.ID(fname)
+
+prog.Name   # unique ID based on hash of file name
+
+# Write out the file_name, unique ID and date/time to '.Rscriptnames'
+
+rec.script(eval(fname),eval(prog.Name))
+
+@
+
+<< bioconductor_libs >>=
+source("https://bioconductor.org/biocLite.R")
+
+#biocLite('rBLAST')
+install_github("mhahsler/rBLAST")
+
+library(biomaRt)
+
+biocLite('Biostrings')
+library('Biostrings')
+library('rBLAST')
+
+biocLite('annotate')
+
+library('annotate')
+
+biocLite("org.Hs.eg.db")   
+
+library("org.Hs.eg.db")
+library("limma")
+
+biocLite('ACME')
+library('ACME')
+
+biocLite('GenomicRanges')
+library('GenomicRanges')
+
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
+
+@
+
+<< read_data >>=
+#wball <- loadWorkbook('comt_correlations_20000_all_areas_augmentedNew.xlsx')
+
+###################### DEBUG use previous data
+wball <- loadWorkbook('comt_correlations_20000_all_areas_augmentedNewOLD10.xlsx')   
+##############################################
+
+# now tell R to read that workbook and which sheet
+  prefront.Data <- data.frame(read.xlsx(wball,sheet = "prefrontal"))
+  
+  cbell.Data <- data.frame(read.xlsx(wball,sheet = "cerebellum"))
+
+  tempor.Data <- data.frame(read.xlsx(wball,sheet = "temporal"))
+
+  pons.Data <- data.frame(read.xlsx(wball,sheet = "pons"))
+  
+  Store(prefront.Data,
+        cbell.Data,
+        tempor.Data,
+        pons.Data)
+
+
+# create a list with these data frames to be used when the same operation is applied to all area
+  
+major.Area <- list(pf=prefront.Data,
+                   cb=cbell.Data,
+                   tm=tempor.Data,
+                   po=pons.Data)
+
+ib <- c(1:4)
+
+# Running: major.Area[[area.now]], cerebellum
+
+area.now <- c(1)
+
+# Read in the illumina_humanref_8_v2 excel file to get the entrez ids and gene symbols for all of the data from the 4 brain areas to get probe Reporter.Sequence
+
+wbillum <- loadWorkbook('illumina_human_ref_8_v2v3.xlsx')   
+
+# now tell R to read that workbook and which sheet
+  illumina8v2.Data <- data.frame(read.xlsx(wbillum,sheet = "illumina_v2"))
+
+@
+
+<< Loc_gene_symbols >>=
+  
+  symb.LOC <- list()
+  
+  symb.LOC <- lapply(major.Area[ib], function(x,ib) which(grepl('^LOC',x$Symbol)), ib)
+  hold.entrez <- major.Area[[area.now]]$ENTREZID[unlist(symb.LOC[[area.now]])]
+  
+  match.Ilum <- list()
+  
+  for (im in 1:4)  {
+  
+  match.Ilum[[im]] <- match(major.Area[[im]]$Record[unlist(symb.LOC[[im]])],
+                            illumina8v2.Data$ilmn)
+  } 
+  
+@
+
+<< get_probe_seq >>=
+  missing.Seqs <- list()
+  
+  missing.Seqs <- lapply(match.Ilum[ib], function(x,ib) substr(illumina8v2.Data$Reporter.Sequence[unlist(x)],1,50), ib)
+  
+@
+
+
+<< fasta_format >>=
+
+# write out the sequences so that they look like this:
+  
+  # > idENTREZID
+  # ATTGCCGT...
+  
+# get the ENTREZIDs of the rows missing Chr names
+  
+  fasta.entrez <- list()
+  
+  for (im in 1:4)   {
+  
+     fasta.entrez[[im]] <- major.Area[[im]]$ENTREZID[unlist(symb.LOC[im])]
+  
+  }
+
+fasta.symb.LOC <- list()
+area.suffix <- c('_pf',
+                 '_cb',
+                 '_tm',
+                 '_po')
+
+fasta.symb.LOC.1perline <- list()
+  
+for (im in 1:4)    {
+
+     fasta.symb.LOC[[im]] <- c(rep(NA,length(fasta.entrez[[im]])))
+     fasta.symb.LOC.1perline[[im]] <- c(rep(NA,2*length(fasta.entrez[[im]])))
+     
+     
+     fasta.symb.LOC[[im]][1] <- c(paste('>id_',fasta.entrez[[im]][1],area.suffix[im],'\n',
+                                        missing.Seqs[[im]][1],'\n',sep=''))
+     fasta.symb.LOC.1perline[[im]][1] <- c(paste('>id_',
+                                        fasta.entrez[[im]][1],area.suffix[im],sep=''))
+     fasta.symb.LOC.1perline[[im]][2] <- c(paste(missing.Seqs[[im]][1],sep=''))
+
+     for (ji in 2:length(fasta.entrez[[im]]))   {
+    
+  
+    fasta.symb.LOC[[im]][ji] <- c(paste(fasta.symb.LOC[[im]][ji-1],'>id_',
+                                        fasta.entrez[[im]][ji],area.suffix[im],'\n',
+                                        missing.Seqs[[im]][ji],'\n',sep=''))
+    
+    fasta.symb.LOC.1perline[[im]][(2*(ji-1) + 1)] <- c(paste('>id_',
+                                        fasta.entrez[[im]][ji],area.suffix[im],sep=''))
+    fasta.symb.LOC.1perline[[im]][(2*(ji-1) + 2)] <- c(paste(missing.Seqs[[im]][ji],sep=''))
+    
+    
+    
+     }
+     
+    fasta.symb.LOC[[im]] <- fasta.symb.LOC[[im]][length(fasta.entrez[[im]])]
+    
+    # Remove '\n' from the last sequence in each area
+    fasta.symb.LOC[[im]] <- gsub('.{2}$','',fasta.symb.LOC[[im]])
+    
+}
+
+
+
+fileConn<-file("chr_LOC_by_fasta_pf.txt")
+     writeLines(noquote(fasta.symb.LOC.1perline[[1]]), fileConn)
+close(fileConn)
+
+fileConn<-file("chr_LOC_by_fasta_cb.txt")
+     writeLines(noquote(fasta.symb.LOC.1perline[[2]]), fileConn)
+close(fileConn)
+
+fileConn<-file("chr_LOC_by_fasta_tm.txt")
+     writeLines(noquote(fasta.symb.LOC.1perline[[3]]), fileConn)
+close(fileConn)
+
+fileConn<-file("chr_LOC_by_fasta_po.txt")
+     writeLines(noquote(fasta.symb.LOC.1perline[[4]]), fileConn)
+close(fileConn)
+
+
+
+@
+
+<< alternative_blast >>=
+
+# read in the results of the blastn search that were stored
+
+# blast.out <- read.delim('/Volumes/Macintosh_HD_3/genetics/genenetwork2/fasta_search_pf_tab.txt',header=FALSE,sep='\t',stringsAsFactors = FALSE,dec='.',colClasses=c('character','character',
+#                          'numeric','numeric','numeric','numeric','numeric','character',
+#                          'numeric','numeric'))
+  
+  # try tabular output
+
+ #  blast.out.pf <- system2('/Volumes/Macintosh_HD_3/genetics/genenetwork2/ncbi-blast-2.7.1+/bin/blastn', c('-db',"'nt'", '-remote', 
+ # # '-out', "'/Volumes/Macintosh_HD_3/genetics/genenetwork2/fasta_search_pf_tab.txt'",
+ # '-perc_identity',"'.96'",
+ #          '-outfmt', "'6 qseqid sseqid pident qlen length mismatch gaps staxids evalue bitscore'"), input=fasta.symb.LOC.1perline[[2]], stdout=TRUE)
+
+
+blast.out.temp <- system2('/Volumes/Macintosh_HD_3/genetics/genenetwork2/ncbi-blast-2.7.1+/bin/blastn', c('-db',"'nt'", '-remote',
+ # '-out', "'/Volumes/Macintosh_HD_3/genetics/genenetwork2/fasta_search_cb_tab.txt'",
+ '-perc_identity',"'.96'",
+          '-outfmt', "'6 qseqid sseqid pident qlen length mismatch gaps staxids evalue bitscore'"), input=noquote(fasta.symb.LOC.1perline[[area.now]]), stdout=TRUE)
+
+blast.out.temp <- noquote(blast.out.temp)
+
+ temp.split <- gsub('\\t',' ',blast.out.temp)
+ temp.split <- data.frame(do.call('rbind', strsplit(temp.split,' ')))
+
+colnames(temp.split) <- c('id', 'gi.ref.Access','percent.Match',
+                              'qlen','length','mismatch','gaps','taxon.Code','evalue','bitscore')
+
+blast.out.A <- temp.split
+
+temp.split.A <- matrix(unlist(strsplit(as.character(blast.out.A$gi.ref.Access),'\\|{1}[a-z]{2,}\\|{1}')), ncol=2,byrow = TRUE)
+
+temp.split.B <- matrix(rep(NA,2*dim(temp.split.A)[1]),ncol=2)
+temp.split.B[,1] <- gsub('gi\\|{1}','',temp.split.A[,1])
+temp.split.B[,2] <- gsub('\\|{1}','',temp.split.A[,2])
+
+blast.out <- data.frame(id=as.character(blast.out.A[,1]),
+                        gi.Access=as.character(temp.split.B[,1]),
+                        ref.Access=as.character(temp.split.B[,2]),
+                        percent.Match=as.double(as.character(blast.out.A[,3])),
+                        qlen=as.integer(as.character(blast.out.A[,4])),
+                        length=as.integer(as.character(blast.out.A[,5])),
+                        mismatch=as.integer(as.character(blast.out.A[,6])),
+                        gaps=as.integer(as.character(blast.out.A[,7])),
+                        taxon.Code=as.character(blast.out.A[,8]),
+                        evalue=as.double(as.character(blast.out.A[,9])),
+                        bitscore=as.double(as.character(blast.out.A[,10])),
+                        stringsAsFactors = FALSE)
+
+  
+  # Add a column that only contains the ENTREZID contained in the middle of the ID
+  # in "id_731390_pf" 731390 is the ENTREZID
+  # Also add a column that only has the brain area e.g., cerebellumf for the id above
+  # Don't need to extract the pf - this file is exclusively pf
+  
+  blast.out$area <- c(rep('prefrontal',dim(blast.out)[1]))
+  
+  # Extract the ENTREZID
+  temp.out <- gsub('id_','',blast.out$id)
+  temp.out.a <- gsub('_[a-z]+','',temp.out)
+  blast.out$ENTREZID <- temp.out.a
+  
+  colnames(blast.out) <- c('id','gi.Access','ref.Access','percent.Match',
+                           'qlen','length','mismatch','gaps','taxon.Code','evalue',
+                           'bitscore','area','ENTREZID')
+@
+  
+  
+<< subset_9606 >>=  
+  # Now subset by taxon.Code = 9606 (Homo sapiens)
+  
+  blast.out9606 <- subset(blast.out,blast.out$taxon.Code == '9606')
+
+  # Store only the hit rows with bitscore >= 93.5 & percent.Match > 94%
+  
+  blast.out9606 <- subset(blast.out9606, (as.numeric(blast.out9606$bitscore) >= 93.5 & as.numeric(blast.out9606$percent.Match) > 94))
+  
+  # Table/count the number of unique ENTREZIDs
+  
+  entrezid.count <- data.frame(count(blast.out9606,blast.out9606$ENTREZID))
+  colnames(entrezid.count) <- c('entrezid','n')
+  unique.blast.entrezid <- unique(blast.out9606$ENTREZID)
+  
+  position.entrezid <- match(unique.blast.entrezid,entrezid.count$entrezid)
+  pos.inc <- data.frame(starte=rep(NA,length(unique.blast.entrezid)),
+                        ende=rep(NA,length(unique.blast.entrezid)))
+  
+  
+  # get the order in the sequence of returned rows where each new unique entrezid starts and how many rows are occupied by that entrezid
+  for (im in 1:length(unique.blast.entrezid))  {
+       
+       pos.inc[im,1] <- position.entrezid[im]
+            
+       pos.inc[im,2] <- pos.inc[im,1] + (entrezid.count[position.entrezid[im],2] -1)
+       
+  }
+  
+# Now set up a data frame with the id (e.g., uid) and ref.Access number to query the gene database using the ref.Access numbers.
+  
+  query.ref.Access <- data.frame(id=rep(NA,dim(blast.out9606)[1]),
+                                 access=rep(NA,dim(blast.out9606)[1]),
+                                 entrez=rep(NA,dim(blast.out9606)[1]),
+                                 stringsAsFactors = FALSE)
+  
+  
+  
+  start.indx <- c(1)
+  end.indx <- c(0)
+  
+  for (iw in 1:dim(entrezid.count)[1])   {
+  
+       end.indx <- start.indx + (entrezid.count[position.entrezid[iw],2] -1) 
+       
+       query.ref.Access$id[start.indx:end.indx] <- rep(blast.out9606$id[start.indx],
+                                                     entrezid.count[position.entrezid[iw],2])
+       query.ref.Access$access[start.indx:end.indx] <- blast.out9606$ref.Access[start.indx:end.indx]
+       query.ref.Access$entrez[start.indx:end.indx] <- rep(blast.out9606$ENTREZID[start.indx],entrezid.count[position.entrezid[iw],2])
+            
+       start.indx <- end.indx + 1
+  
+  } 
+
+  
+ # Write out the queries to entrez gene db with Accession numbers so it doesn't have to be repeated.
+
+     # need two workbooks because can't overwrite data table in existing workbook     
+     
+     # create workbook with worksheets
+     
+     wkbook.current.A <- createWorkbook()
+          addWorksheet(wkbook.current.A,'prefrontal')
+          addWorksheet(wkbook.current.A,'cerebellum')
+          addWorksheet(wkbook.current.A,'temporal')
+          addWorksheet(wkbook.current.A,'pons')
+          
+
+nothing.df.A <- data.frame(id=NA,
+                         access=NA,
+                         entrez=NA)
+
+hold.write.A <- list()
+     
+if(file.exists('queryAccession.xlsx'))      {
+   
+  wkbook.current.B <- loadWorkbook('queryAccession.xlsx') 
+
+# now tell R to read that workbook and which sheet
+
+for (iv in seq_len(4))  {
+     
+     hold.write.A[[iv]] <- readPrime(wkbook.current.B,stand.Col.names.lc[iv],nothing.df.A)
+
+     }
+
+}
+
+     hold.write.A[[area.now]] <- query.ref.Access
+ 
+for (iw in seq_len(4)) {
+             
+  writeDataTable(wkbook.current.A,stand.Col.names.lc[iw],hold.write.A[[iw]],colNames=TRUE,rowNames=FALSE)
+     
+}
+  
+  saveWorkbook(wkbook.current.A, "queryAccession.xlsx", overwrite = TRUE)
+
+rm(hold.write.A)
+rm(wkbook.current.A)
+rm(wkbook.current.B)
+rm(nothing.df.A)
+  
+@
+
+<< read_in_accession_queries >>=
+
+hold.rentrez.by.rentrez <- list()
+
+for (ic in ib)   {
+
+area.now <- ic
+
+# Only do this if repeating post-query results processing for a given area
+   wbAq <- loadWorkbook('queryAccession.xlsx')   
+# 
+# # now tell R to read that workbook and which sheet
+#   
+   query.ref.Access <- data.frame(read.xlsx(wbAq,sheet = stand.Col.names.lc[area.now]))  
+# @
+
+
+# << accession_queries_thresholded_hits >>=
+# Need to get entrezgene ids based on accession queries for the thresholded hits
+  # Only by getting the entrezgene IDs can the returned hits be matched to the ENTREZIDs that were in the LOC list, to filter the returned hits for matches, so that the new infromation can potentially be used.
+
+## Start here
+
+# entrez_dbs()   # to see list of avaliable databases
+# entrez_db_searchable(db='gene')   # to see list of search terms
+
+loop.delay <- c(3)   # in seconds
+rentrez.results <- list()
+
+
+count.returned <- list(matrix(rep(NA,dim(query.ref.Access)[1]),ncol=1),
+                       matrix(rep(NA,dim(query.ref.Access)[1]),ncol=1),
+                       matrix(rep(NA,dim(query.ref.Access)[1]),ncol=1),
+                       matrix(rep(NA,dim(query.ref.Access)[1]),ncol=1)
+)
+
+extract.feats <- c('uid','name','chromosome','chrstart')
+     null.rentrez <- c(rep(NA,4))
+
+     ################ Working on Prefrontal #################
+# for (ic in area.now:area.now)   {
+     
+     rentrez.results.temp <- data.frame(uid=rep(NA,dim(query.ref.Access)[1]),
+                                   name=rep(NA,dim(query.ref.Access)[1]),
+                                   chromosome=rep(NA,dim(query.ref.Access)[1]),
+                                   start.pos=rep(NA,dim(query.ref.Access)[1])
+                                   )
+
+num.hits <- c(0)  
+
+############### DEBUG ##################
+#### Start from last completed iteration
+
+#restart.queries <- c(1886)
+im <- c(1)
+
+    
+          while (im < (dim(query.ref.Access)[1] + 1)) {
+     
+# for (im in restart.queries:dim(query.ref.Access)[1])  {
+
+########################################
+############### END DEBUG ##############
+#    for (im in 1:dim(query.ref.Access)[1])  {
+
+          query <- c(query.ref.Access$access[im])
+     
+     
+         res <- try(
+                    try.rentrez <- entrez_search(db='gene',query,timeout=20)
+                    )
+               if(inherits(res, "try-error"))
+                    {
+                     #error handling code, try once more
+                    try(
+                         try.rentrez <- entrez_search(db='gene',query,timeout=20)
+                    )
+                         if(inherits(res, "try-error"))
+                    {
+                         im <- im -1
+                    }
+                    
+                    }
+                    #rest of iteration for case of no error
+
+               
+               
+               cat('count = ',as.character(try.rentrez$count),'\n')
+               found.match <- c(FALSE)
+               ik <- c(0)
+               
+          if (try.rentrez$count > 0)   {
+               count.returned[[ic]][im] <- try.rentrez$count
+           
+          
+#               for (ik in 1:try.rentrez$count)  {
+                    while (!isTRUE(found.match) & ik < try.rentrez$count + 1)   {
+                         ik <- ik + 1
+                    cat('query entrez',as.character(c(query.ref.Access$entrez[im])),' returned ',try.rentrez$ids[ik],' ') 
+                    
+                    if (!is.na(try.rentrez$ids[ik])) {
+                         if (try.rentrez$ids[ik] == as.character(query.ref.Access$entrez[im]))  {
+                              cat(' matched \n')
+                              found.match <- c(TRUE)
+                              num.hits <- num.hits + 1
+                         temp.esumm <- entrez_summary(db='gene',id=try.rentrez$ids[ik])
+               rentrez.results.temp[im,1:4] <- extract_from_esummary(temp.esumm,extract.feats)
+               
+                 }   else {
+                    cat(' no match \n')
+                 }
+                    } else {
+                         
+                    cat(' uid was NA \n')
+                    }
+          }  # end while loop     
+               
+          } else {
+               
+               count.returned[[ic]][im] <- c(0)
+               rentrez.results.temp[im,1:4] <- null.rentrez  # fill with NA   
+          }
+               
+
+          
+     Sys.sleep(loop.delay)    # because the entrez gene server will accept no more than 3 queries per second
+     print(paste('brain area ',stand.Col.names[ic],' iteration ',im,sep=''))
+
+# } # end query ref.Access loop
+
+               im <- im + 1
+          } # end while statement
+
+
+     rentrez.results.temp$start.pos <- as.numeric(rentrez.results.temp$start.pos)
+     rentrez.results.temp$start.pos <- rentrez.results.temp$start.pos/1000000.
+     
+     rentrez.results[[ic]] <- rentrez.results.temp
+     
+     
+     blank.in.chr <- which(rentrez.results[[ic]]$chromosome == '')  # none
+     nines.in.startpos <- which(rentrez.results[[ic]]$start.pos == 999.999999)  # about 14
+     
+     rentrez.res.A <- subset(rentrez.results[[ic]],!is.na(rentrez.results[[ic]]$uid))
+     rentrez.res.A.dt <- data.table(rentrez.res.A,stringsAsFactors = TRUE)
+     
+     setkeyv(rentrez.res.A.dt, c('uid'))
+     
+     rentrez.results.by.entrez <- na.omit(subset(unique(rentrez.res.A.dt)))
+     
+     ir.l <- length(rentrez.results.by.entrez$start.pos)
+     
+     for (ir in seq_len(ir.l)) {
+          
+          if (rentrez.results.by.entrez$start.pos[ir] == 999.999999)  {
+               rentrez.results.by.entrez$start.pos[ir] = NA
+          } else {
+               
+          }
+     }
+     
+     rentrez.results.by.entrez[,1:3] <- data.frame(lapply(rentrez.results.by.entrez[,1:3], as.character), stringsAsFactors=FALSE)
+     
+     hold.rentrez.by.rentrez[[area.now]] <- rentrez.results.by.entrez
+
+ 
+# } # end brain area loop
+     
+# Write out the results of querying entrez gene db with Accession numbers so it doesn't have to be repeated.
+
+     # need two workbooks because can't overwrite data table in existing workbook     
+     
+     # create workbook with worksheets
+     
+     wkbook.current.1 <- createWorkbook()
+          addWorksheet(wkbook.current.1,'prefrontal')
+          addWorksheet(wkbook.current.1,'cerebellum')
+          addWorksheet(wkbook.current.1,'temporal')
+          addWorksheet(wkbook.current.1,'pons')
+          
+# Function to catch warnings that a sheet has no data yet and return NAs 
+readPrime = function(x,y,z) {     
+     tryCatch(data.frame(read.xlsx(x,sheet = y)),
+            warning = function(w) {print(paste("no data ", y));
+            return(z)},
+            error = function(e) {print(paste("error reading data", y));
+            return(z)}
+)
+}
+
+nothing.df <- data.frame(uid=NA,
+                         name=NA,
+                         chromosome=NA,
+                         start.pos=NA)
+
+hold.write <- list()
+     
+if(file.exists('query_Accession_results.xlsx'))      {
+   
+  wkbook.current.2 <- loadWorkbook('query_Accession_results.xlsx') 
+
+# now tell R to read that workbook and which sheet
+
+for (iv in seq_len(4))  {
+     
+     hold.write[[iv]] <- readPrime(wkbook.current.2,stand.Col.names.lc[iv],nothing.df)
+
+     }
+
+}
+
+#     hold.write[[area.now]] <- rentrez.results.by.entrez
+hold.write[[area.now]] <- hold.rentrez.by.rentrez[[area.now]]
+ 
+for (iw in seq_len(4)) {
+             
+  writeDataTable(wkbook.current.1,stand.Col.names.lc[iw],hold.write[[iw]],colNames=TRUE,rowNames=FALSE)
+     
+}
+  
+  saveWorkbook(wkbook.current.1, "query_Accession_results.xlsx", overwrite = TRUE)
+
+rm(nothing.df) 
+rm(wkbook.current.1)
+rm(wkbook.current.2)
+
+} # end brain area loop
+
+   @
+   
+<< read_Accession_query_results >>=
+# Only do this if repeating post-query results processing for a given area
+   wbAq <- loadWorkbook('query_Accession_results.xlsx')   
+# 
+# # now tell R to read that workbook and which sheet
+#   
+   rentrez.results.by.entrez <- data.frame(read.xlsx(wbAq,sheet = stand.Col.names.lc[area.now]))  
+  
+@
+  
+  
+  << use_new_rentrez >>=
+     
+#   where.rentrez.symb.Loc <- match(rentrez.results.by.entrez$uid,major.Area[[area.now]]$ENTREZID)
+where.rentrez.symb.Loc <- match(rentrez.results.by.entrez$uid,major.Area[[area.now]]$ENTREZID[unlist(symb.LOC[[area.now]])])
+  
+  useable.results.indx <- which(!is.na(where.rentrez.symb.Loc))
+  
+   rentrez.results.hit <- list()
+
+#   
+  # not LOC symbols
+  symbname <- data.frame(symbName=which(!grepl('^LOC',rentrez.results.by.entrez$name)))
+  
+  # chromosome = NA
+  chrname <-  data.frame(chrName=which(is.na(rentrez.results.by.entrez$chromosome)))
+  
+  # start.pos = NA
+  start_pos <- data.frame(startPos=which(is.na(rentrez.results.by.entrez$start.pos)))
+  
+  rentrez.results.hit <- list(symbname,
+                              chrname,
+                              start_pos)
+  
+  # Compare the relevant values in major.Area[[area.now]]$xxx with the available values in rentrez.results.by.entrez
+  
+  comp.avail.needed <- data.frame(rep(NA,length(useable.results.indx)),
+                                  rep(NA,length(useable.results.indx)),
+                                  rep(NA,length(useable.results.indx)),
+                                  rep(NA,length(useable.results.indx)),
+                                  rep(NA,length(useable.results.indx)),
+                                  rep(NA,length(useable.results.indx)),
+                                  rep(NA,length(useable.results.indx)),
+                                  rep(NA,length(useable.results.indx)),
+                                  stringsAsFactors = FALSE)
+  
+  comp.avail.needed[,1] <- as.character(rentrez.results.by.entrez$uid[c(useable.results.indx)])
+  comp.avail.needed[,2] <- as.character(major.Area[[area.now]]$ENTREZID[unlist(symb.LOC[[area.now]][where.rentrez.symb.Loc[c(useable.results.indx)]])])
+  comp.avail.needed[,3] <- as.character(rentrez.results.by.entrez$name[c(useable.results.indx)])
+  comp.avail.needed[,4] <- as.character(major.Area[[area.now]]$Symbol[unlist(symb.LOC[[area.now]][where.rentrez.symb.Loc[c(useable.results.indx)]])])
+  comp.avail.needed[,5] <- as.character(rentrez.results.by.entrez$chromosome[c(useable.results.indx)])
+  comp.avail.needed[,6] <- as.character(major.Area[[area.now]]$loc[unlist(symb.LOC[[area.now]][where.rentrez.symb.Loc[c(useable.results.indx)]])])
+  comp.avail.needed[,7] <- as.numeric(rentrez.results.by.entrez$start.pos[c(useable.results.indx)])
+  comp.avail.needed[,8] <- round(as.numeric(major.Area[[area.now]]$bp[unlist(symb.LOC[[area.now]][where.rentrez.symb.Loc[c(useable.results.indx)]])]),6)
+
+  if (sum(na.omit(comp.avail.needed[,7] == 999.999999)) > 0)   {
+       
+       nines.indx <- which(comp.avail.needed[,7] == 999.999999)
+       comp.avail.needed[c(nines.indx),7] <- NA
+  } else {
+       
+  }
+    
+  # for (ig in 1:length(useable.results.indx))   {
+  #    
+  #      if (comp.avail.needed[ig,7] == 999.999999) {
+  #           comp.avail.needed[ig,7] = NA
+  #      } else {
+  #           
+  #      }
+  # }
+  
+    colnames(comp.avail.needed) <- c('r.entrez',
+                                   'm.entrez',
+                                   'r.symb',
+                                   'm.symb',
+                                   'r.chr',
+                                   'm.chr',
+                                   'r.startpos',
+                                   'm.startpos')
+  
+  for (ig in 1:length(useable.results.indx))   {
+       
+       # replace m.symb in column 4 with r.symb in column 3, but only if r.symb !is.na or not LOC
+       if (!is.na(comp.avail.needed[ig,3]) | !grepl('^LOC',comp.avail.needed[ig,3]))   {
+          comp.avail.needed[ig,4] <- comp.avail.needed[ig,3]
+       } else {
+       }
+       
+       # replace column 6 locs with those from column 5 (only if c5 is not NA)
+       if (!is.na(comp.avail.needed[ig,5]))   {
+          comp.avail.needed[ig,6] <- comp.avail.needed[ig,5]
+       } else {
+       }
+       
+       # replace column 8 startpos with column 7 startpos only if r.startpos !is.na
+        if (!is.na(comp.avail.needed[ig,7]))   {
+          comp.avail.needed[ig,8] <- comp.avail.needed[ig,7]
+       } else {
+       }
+
+  }
+  
+
+  
+  num.can <- dim(comp.avail.needed)[1]
+  
+@
+
+<< genes_from_startpos >>=
+# only do this if the gene symbols begin with LOC and the start positions are known (col. 7)
+# ensembl=useMart("ensembl",dataset="hsapiens_gene_ensembl")
+# 
+#   genes.from.starts <- list()
+#     queried.indx <- data.frame(indx=rep(NA,dim(comp.avail.needed)[1]),
+#                                entrezid=rep(NA,dim(comp.avail.needed)[1]))
+#  for (iu in 1:dim(comp.avail.needed)[1])   {
+#       
+#       temp.true <- grepl('^LOC',comp.avail.needed[iu,3])
+#       start.true <- !is.na(comp.avail.needed[iu,7])
+# 
+#           if (temp.true & start.true)   {
+#                queried.indx[iu,1] <- iu
+#                queried.indx[iu,2] <- comp.avail.needed$r.entrez[iu]
+#                genes.from.starts[[iu]] <- getBM(c("ensembl_gene_id","hgnc_symbol","start_position",
+#                                             'entrezgene',"chromosome_name"), 
+#                                           filters = c("chromosome_name",
+#                                              "start"), values = list(comp.avail.needed[iu,c(5)],1000000*comp.avail.needed[iu,c(7)]), mart = ensembl)
+#                
+#           } else {
+#                
+#           }
+#  } 
+# 
+#     
+#       
+#   num.can <- dim(comp.avail.needed)[1]
+#  
+#   df.null <- data.frame(ensembl_gene_id=NA,
+#                       hgnc_symbol=NA,
+#                       start_position=NA,
+#                       entrezgene=NA,
+#                       chromosome_name=NA) 
+#    
+#   
+#   diff.l <- dim(comp.avail.needed)[1] - length(genes.from.starts)
+#   for (iy in seq_len(diff.l))  {
+#        
+#        genes.from.starts[[iy + length(genes.from.starts)]] <- df.null
+#   }
+#  
+# hold.new.matches <- list()
+# 
+# for (dh in seq_len(num.can))  {
+#  
+# ############# DEBUG ##########################
+# #dh <- c(2)     
+# ############# END DEBUG ######################
+#      if (!is.null(genes.from.starts[[dh]])) {
+#          
+#         if (!is.na(genes.from.starts[[dh]]$entrezgene))     {
+#           
+#           hold.new.matches[[dh]] <- which(str_detect(string=as.character(unique(genes.from.starts[[dh]]$entrezgene)),pattern=as.character(comp.avail.needed$r.entrez[dh])))
+#           
+#      
+#          } else {
+#              hold.new.matches[[dh]] <- 0 
+#          }
+#           
+#      } else {
+#           hold.new.matches[[dh]] <- NA
+#           
+#      }
+# }
+ 
+@  
+<< one_off_Corrections >>= 
+# check nonLOC symbols in column r.symb by hand at Gene NCBI
+  
+  genes.to.check.indx <- which(!grepl('^LOC',comp.avail.needed$r.symb))
+  hand.check <- data.frame(matrix(rep(NA,5*length(genes.to.check.indx)),ncol=5))
+  colnames(hand.check) <- c('rowName',colnames(comp.avail.needed[c(1,3,5,8)]))
+
+print(comp.avail.needed[c(genes.to.check.indx),])
+
+# check all genes with nonLOC symbols returned by the accession number query of Gene
+  # row 1 of hand.check, row 4 of comp.avail.needed
+
+hand.check[NA,] <- c(row,'entrez','symbol','Chr name',txStart)  # template
+
+# prefrontal
+hand.check[1,] <- c(3,'100289124','FAM27E1','9',41647674)
+hand.check[2,] <- c(6,'85452','CFAP74','1',1921951)  
+hand.check[3,] <- c(7,'653567','TMEM236','10',17752110)
+hand.check[4,] <- c(16,'401296','LNCRI','7',1690812)
+hand.check[5,] <- c(36,'653308','ASAH2B','10',50739688)
+hand.check[6,] <- c(42,'100289462','DEFB4B','8',7414863)
+
+
+# cerebellum
+hand.check[1,] <- c(5,'282808','RAB40AL','X',102937272)
+hand.check[2,] <- c(6,'85452','CFAP74','1',1921951)  
+hand.check[3,] <- c(37,'100289462','DEFB4B','8',7414863)
+
+# temporal
+hand.check[1,] <- c(8,'282808','RAB40AL','X',102937272)
+hand.check[2,] <- c(9,'653567','TMEM236','10',17752110)
+
+# pons
+# skip to closest gene chunk
+
+
+# replace: entrez
+comp.avail.needed[c(na.omit(as.integer(hand.check[,1]))),c(1,2)] <- matrix(c(na.omit(hand.check[,2]),na.omit(hand.check[,2])),ncol=2)
+
+# replace: symbol
+comp.avail.needed[c(na.omit(as.integer(hand.check[,1]))),c(3,4)] <- matrix(c(na.omit(hand.check[,3]),na.omit(hand.check[,3])),ncol=2)
+
+
+# replace: chromosome name
+comp.avail.needed[c(as.integer(na.omit(hand.check[,1]))),c(5,6)] <- matrix(c(na.omit(hand.check[,4]),na.omit(hand.check[,4])),ncol=2)
+
+
+# replace: start position ### Divide by 1000000
+comp.avail.needed[c(na.omit(as.integer(hand.check[,1]))),c(7,8)] <- matrix(c(na.omit(as.numeric(hand.check[,5]))/1000000,as.numeric(na.omit(hand.check[,5]))/1000000),ncol=2)
+#######
+
+# Now replace any symbol, entrez, chr_names, txStarts for rows in column r.symb that are LOC, and that have nonLoc in column m.symb
+genes.to.check.indx <- which(!grepl('^LOC',comp.avail.needed$m.symb))
+  hand.check <- data.frame(matrix(rep(NA,5*length(genes.to.check.indx)),ncol=5))
+  colnames(hand.check) <- c('rowName',colnames(comp.avail.needed[c(1,3,5,8)]))
+
+hold.LOC.r.symb <-
+     comp.avail.needed %>%
+          filter(grepl('^LOC',comp.avail.needed$r.symb)) %>%
+               
+       
+hold.nonLOC.m.symb <-
+     hold.LOC.r.symb   %>%
+       filter(!grepl('^LOC',hold.LOC.r.symb$m.symb))
+
+match(hold.nonLOC.m.symb$r.entrez,comp.avail.needed$r.entrez)
+  
+hold.replace.indx <- match(hold.nonLOC.m.symb$r.entrez,comp.avail.needed$r.entrez)
+
+# now replace the r.symb LOC symbols with nonLOC symbols in m.symb
+# replace: symbol
+comp.avail.needed$r.symb[c(as.integer(hold.replace.indx))] <- hold.nonLOC.m.symb$m.symb
+
+############## END One-off corrections ##########################
+#################################################################
+@
+
+<< nonLOC_returns >>=
+  
+# nonLOC.returns <-
+#        comp.avail.needed %>%
+#           filter(!grepl('^LOC',r.symb))
+#                
+# where.nonLOC.comp.avail <- match(nonLOC.returns$r.entrez,comp.avail.needed$m.entrez)
+#   
+# 
+# comp.avail.needed[c(where.nonLOC.comp.avail),c()]
+  
+  
+
+  
+@
+
+<< closest_gene >>= 
+  
+closest.gene <- list()
+  null.df <- data.frame(geneName=NA,
+                        name=NA,
+                        'chrom strand'=NA,
+                        txStart=NA,
+                        txEnd=NA,
+                        cdsStart=NA,
+                        cdsEnd=NA,
+                        exonCount=NA,
+                        Distance=NA)
+
+ query.closest <- data.frame(chr=rep(NA,num.can),
+                             genloc=rep(NA,num.can),
+                             genome=rep(NA,num.can),
+                             position=rep(NA,num.can)
+                             ) 
+
+ 
+ # construct findClosestGene queries
+for (dh in seq_len(num.can))  {
+       
+       if (!is.na(comp.avail.needed$m.startpos[dh]) & !identical(comp.avail.needed$m.chr[dh],'Un'))   {
+       query.closest[dh,1] <- as.character(paste('chr',comp.avail.needed$r.chr[dh],sep='')) 
+       query.closest[dh,2] <- as.integer(comp.avail.needed$m.startpos[dh]*1000000)
+       query.closest[dh,3] <- 'hg17'
+       query.closest[dh,4] <- "txStart"
+      
+       } else {
+            
+       }
+     
+  }
+ 
+    for (dh in seq_len(num.can))  {
+       
+       if (!is.na(comp.avail.needed$m.startpos[dh]) & !identical(comp.avail.needed$m.chr[dh],'Un'))   {
+       closest.gene[[dh]] <- findClosestGene(as.character(query.closest[dh,1]), as.integer(query.closest[dh,2]), genome = as.character(query.closest[dh,3]), position = as.character(query.closest[dh,4]))
+       
+       } else {
+            
+          closest.gene[[dh]] <- null.df  
+       }
+     
+    }
+ 
+ 
+ # temp.ensembl <- getBM(c("ensembl_gene_id","hgnc_symbol","start_position",
+ #                                            'entrezgene',"chromosome_name"),
+ #                                          filters = c("ensembl_gene_id"), values = 'NM_003473', mart = ensembl)
+ 
+  @
+
+<<between_Txstart_Txend >>=
+
+  bp.betw <- data.frame(symbA=rep(NA,num.can),
+                        symbMine=rep(NA,num.can),
+                        txStart=rep(NA,num.can),
+                        bp=rep(NA,num.can),
+                        txEnd=rep(NA,num.can),
+                        distance=rep(NA,num.can),
+                        mydist=rep(NA,num.can),
+                        in.middle=rep(NA,num.can),
+                        entrezMine=rep(NA,num.can))
+  
+  
+  for (ij in seq_len(num.can))   {
+       
+       if (!is.na(closest.gene[[ij]]$txStart[1]))   {
+            
+           bp.betw$symbA[ij] <- as.character(closest.gene[[ij]]$geneName[1])
+           bp.betw$symbMine[ij] <- comp.avail.needed$r.symb[ij]
+           bp.betw$txStart[ij] <- closest.gene[[ij]]$txStart[1]
+           bp.betw$bp[ij] <- 1000000*comp.avail.needed$m.startpos[ij]
+           bp.betw$txEnd[ij] <- closest.gene[[ij]]$txEnd[1]
+           bp.betw$distance[ij] <- closest.gene[[ij]]$Distance[1]
+           
+           if (identical(as.character(closest.gene[[ij]]$strand[1]),'+')) {
+               bp.betw$mydist[ij] <- (min(closest.gene[[ij]]$txStart[1],closest.gene[[ij]]$txEnd[1]) - 1000000*comp.avail.needed$m.startpos[ij])
+           } else {
+            bp.betw$mydist[ij] <- (max(closest.gene[[ij]]$txStart[1],closest.gene[[ij]]$txEnd[1]) - 1000000*comp.avail.needed$m.startpos[ij])
+       }
+           
+           bp.betw$entrezMine[ij] <- comp.avail.needed$r.entrez[ij]
+           
+           
+           if (between(1000000*comp.avail.needed$m.startpos[ij],
+                       min(closest.gene[[ij]]$txStart[1],closest.gene[[ij]]$txEnd[1]),
+                       max(closest.gene[[ij]]$txStart[1],closest.gene[[ij]]$txEnd[1])))   {
+                
+                bp.betw$in.middle[ij] <- TRUE
+                
+           }   else {
+                            
+                bp.betw$in.middle[ij] <- FALSE
+                       }
+            
+       }   else {
+          
+     }
+}
+
+
+  
+inside.gene <- 
+     bp.betw %>%
+          group_by(in.middle) %>%
+               summarise(Mean = mean(abs(mydist)),
+                         Range = max(mydist) - min(mydist))
+
+# use consistent criterion for proximity threshold for gene based on temporal +/-204363
+#near.thresh <- c(204363)
+
+
+# Only accept those genes whewre the current start position lies inside [txStart to txEnd]
+accept.gene <-
+     bp.betw %>%
+#          filter(in.middle == 'TRUE' | between(mydist,(-1)*near.thresh,near.thresh))
+     filter(in.middle == 'TRUE')
+
+temp.newsymb <-
+     accept.gene %>%
+          filter(!grepl('^LOC',symbA))
+
+accept.gene.indx <- match(temp.newsymb$entrezMine,comp.avail.needed$m.entrez)
+
+
+comp.avail.needed$m.symb[c(accept.gene.indx)] <- temp.newsymb$symbA
+
+  @
+
+<< one_off_after_closest_gene >>=
+
+# check nonLOC symbols in column m.symb by hand at Gene NCBI
+  
+  genes.to.check.indx <- which(!grepl('^LOC',comp.avail.needed$m.symb))
+  hand.check <- data.frame(matrix(rep(NA,5*length(genes.to.check.indx)),ncol=5))
+  colnames(hand.check) <- c('rowName',colnames(comp.avail.needed[c(1,3,5,8)]))
+
+print(comp.avail.needed[c(genes.to.check.indx),])
+
+# check all genes with nonLOC symbols returned by the accession number query of Gene
+
+hand.check[NA,] <- c(row,'entrez','symbol','Chr name',txStart)  # template
+
+# prefrontal
+hand.check[1,] <- c(2,'65385','ACTR3C','7',149881359)
+hand.check[2,] <- c(4,'100507321','ERVK13-1','16',2658389)
+hand.check[3,] <- c(7,'8027','STAM','10',17644125)  
+hand.check[4,] <- c(9,'100506127','GVQW3','11',76381303)
+hand.check[5,] <- c(10,'2113','ETS1','11',128458761)
+hand.check[6,] <- c(15,'442075','EMC3-AS1','3',9986893)
+hand.check[7,] <- c(16,'401296','LNCRI','7',1690812)
+hand.check[8,] <- c(17,'55750','AGK','7',141551278)
+hand.check[9,] <- c(22,'23400','ATP13A2','1',16985958)
+hand.check[10,] <- c(24,'346157','ZNF391','6',27374635)
+hand.check[11,] <- c(31,'23325','WASHC4','12',105107714)
+hand.check[12,] <- c(34,'399744','LINC00999','10',38428146)
+hand.check[13,] <- c(43,'91522','COL23A1','5',178237616)
+hand.check[14,] <- c(46,'80216','ALPK1','4',112285995)
+hand.check[15,] <- c(47,'5522','PPP2R2C','4',6320578)
+
+# set hand.check to the prefrontal entries above to find already existing gene information
+temp.hand <- na.omit(hand.check)
+
+# cerebellum
+hand.check[1,] <- c(5,'282808','RAB40AL','X',102937272)
+hand.check[2,] <- c(6,'85452','CFAP74','1',1921951)  
+hand.check[3,] <- c(37,'100289462','DEFB4B','8',7414863)
+
+# add in genes from the cerebellum hand.check
+# set hand.check to cerebellum hand.check, then keep only first 3 rows
+hand.check <- hand.check[1:3,]
+
+temp.hand <- rbind(temp.hand,hand.check)
+
+# temporal
+# Now set hand.check to the ones from the temporal data lookup below
+# First set the indices in hand.check from temporal to 1:4
+# check for the remaining missing entries in hand.check
+# temporal
+# PHRF1
+hand.check[1,c(2,3,4,5)] <- c('57661','PHRF1','11',576446)
+# RGPD2
+hand.check[2,c(2,3,4,5)] <- c('729857','RGPD2','2',87757198)
+# RBFOX1
+hand.check[3,c(2,3,4,5)] <- c('54715','RBFOX1','16',5239752)
+# SHISA7
+hand.check[4,c(2,3,4,5)] <- c('729956','SHISA7','19',55428738)
+
+hand.check <- hand.check[1:4,]
+
+temp.hand <- rbind(temp.hand,hand.check)
+
+hl <- length(comp.avail.needed$m.symb[c(genes.to.check.indx)])
+hc.coln <- colnames(hand.check)
+hand.check <- data.frame(matrix(rep(NA,5*hl),ncol=5))
+colnames(hand.check) <- c(hc.coln)
+
+check.rows <- comp.avail.needed$m.symb[c(genes.to.check.indx)]
+hand.check[,3] <- check.rows
+match.symb.indx <- match(check.rows,temp.hand$r.symb)
+not.nas <- which(!is.na(match.symb.indx))
+
+align.vects <- data.frame(temph=as.integer(not.nas),
+                          hand=as.integer(na.omit(match.symb.indx)))
+
+hand.check$r.entrez[c(align.vects$temph)] <- temp.hand$r.entrez[c(align.vects$hand)]
+hand.check$r.chr[c(align.vects$temph)] <- temp.hand$r.chr[c(align.vects$hand)]
+hand.check$m.startpos[c(align.vects$temph)] <- temp.hand$m.startpos[c(align.vects$hand)]
+
+########## Leverage existing preprocessed data ####################
+na.left <- which(is.na(hand.check$r.entrez))
+major1.match <- match(hand.check$r.symb[is.na(hand.check$r.entrez)],major.Area[[3]]$Symbol)
+
+align.vects2 <- data.frame(na.left=as.integer(na.left),
+                          major1=as.integer(major1.match))
+
+align.vects3 <-
+     align.vects2 %>%
+          filter(!is.na(align.vects2$major1))
+
+hand.check$r.entrez[c(align.vects3$na.left)] <- major.Area[[1]]$ENTREZID[c(align.vects3$major1)]
+hand.check$r.chr[c(align.vects3$na.left)] <- major.Area[[1]]$loc[c(align.vects3$major1)]
+hand.check$m.startpos[c(align.vects3$na.left)] <- round(1000000*as.numeric(major.Area[[1]]$bp[c(align.vects3$major1)]),0)
+
+# Repeat using data from "Leverage existing preprocessed data" above
+# for pons, none of the additional information in cerebellum or temporal was useful
+
+
+# check for the remaining missing entries in hand.check
+# temporal
+# PHRF1
+hand.check[5,c(2,3,4,5)] <- c('57661','PHRF1','11',576446)
+# RGPD2
+hand.check[10,c(2,3,4,5)] <- c('729857','RGPD2','2',87757198)
+# RBFOX1
+hand.check[13,c(2,3,4,5)] <- c('54715','RBFOX1','16',5239752)
+# SHISA7
+hand.check[4,c(2,3,4,5)] <- c('729956','SHISA7','19',55428738)
+
+# check for the remaining missing entries in hand.check
+# pons
+# FAM27E1
+hand.check[4,c(2,3,4,5)] <- c('100289124','FAM27E1','9',41647674)
+# RAR2
+hand.check[6,c(2,3,4,5)] <- c('282808','RAB40AL','X',102937272)
+# FAM95B1
+hand.check[17,c(2,3,4,5)] <- c('100133036','FAM95B1','9',40323571)
+
+# Now find the indices in comp.avail.needed for which the symbols match those in hand.check
+# set the rowName column in hand.check to these indices
+
+match.symb.indx <- as.integer(match(hand.check$r.symb,comp.avail.needed$m.symb))
+
+# Because the symbol in row 8 of comp.avail.needed was replaced with a new symbol in hand.check row 6, match.symb.indx contains an NA in position 6
+
+# Find the match in comp.avail.needed based on both chr name and start position of row 6 in hand.check
+na.indx <- which(is.na(match.symb.indx))
+c.a.n.indx <- NA
+for (iw in seq_len(dim(comp.avail.needed)[1])) {
+
+     if((hand.check$r.chr[na.indx] == comp.avail.needed$m.chr[iw]) & between(as.numeric(comp.avail.needed$m.startpos[iw]),0.98*as.numeric(hand.check$m.startpos[na.indx])/1000000,
+        1.02*as.numeric(hand.check$m.startpos[na.indx])/1000000))  {
+          
+          c.a.n.indx <- iw
+
+     } else {
+     
+}
+        
+}
+## one-off na.indx = 6; c.a.n.indx = 8
+match.symb.indx[na.indx] <- c.a.n.indx
+
+
+hand.check$rowName <- match.symb.indx
+
+# replace: entrez
+comp.avail.needed[c(na.omit(as.integer(hand.check[,1]))),c(1,2)] <- matrix(c(na.omit(hand.check[,2]),na.omit(hand.check[,2])),ncol=2)
+
+# replace: symbol
+comp.avail.needed[c(na.omit(as.integer(hand.check[,1]))),c(3,4)] <- matrix(c(na.omit(hand.check[,3]),na.omit(hand.check[,3])),ncol=2)
+
+
+# replace: chromosome name
+comp.avail.needed[c(as.integer(na.omit(hand.check[,1]))),c(5,6)] <- matrix(c(na.omit(hand.check[,4]),na.omit(hand.check[,4])),ncol=2)
+
+
+# replace: start position ### Divide by 1000000
+comp.avail.needed[c(na.omit(as.integer(hand.check[,1]))),c(7,8)] <- matrix(c(na.omit(as.numeric(hand.check[,5]))/1000000,as.numeric(na.omit(hand.check[,5]))/1000000),ncol=2)
+#######
+
+# One-off: only missing startpos in comp.avail.needed
+# HMCN2
+
+comp.avail.needed[15,c(1,2)] <- c('256158','256158')
+comp.avail.needed[15,c(3,4)] <- c('HMCN2','HMCN2')
+comp.avail.needed[15,c(5,6)] <- c('9','9')
+comp.avail.needed[15,c(7,8)] <- c(round(as.numeric(130265742/1000000),6),
+                                  round(as.numeric(130265742/1000000),6))
+
+
+
+# Now replace any symbol, entrez, chr_names, txStarts for rows in column r.symb that are LOC, and that have nonLoc in column m.symb
+# genes.to.check.indx <- which(!grepl('^LOC',comp.avail.needed$m.symb))
+#   hand.check <- data.frame(matrix(rep(NA,5*length(genes.to.check.indx)),ncol=5))
+#   colnames(hand.check) <- c('rowName',colnames(comp.avail.needed[c(1,3,5,8)]))
+# 
+# hold.LOC.r.symb <-
+#      comp.avail.needed %>%
+#           filter(grepl('^LOC',comp.avail.needed$r.symb)) %>%
+#                
+#        
+# hold.nonLOC.m.symb <-
+#      hold.LOC.r.symb   %>%
+#        filter(!grepl('^LOC',hold.LOC.r.symb$m.symb))
+# 
+# match(hold.nonLOC.m.symb$r.entrez,comp.avail.needed$r.entrez)
+#   
+# hold.replace.indx <- match(hold.nonLOC.m.symb$r.entrez,comp.avail.needed$r.entrez)
+# 
+# # now replace the r.symb LOC symbols with nonLOC symbols in m.symb
+# # replace: symbol
+# comp.avail.needed$r.symb[c(as.integer(hold.replace.indx))] <- hold.nonLOC.m.symb$m.symb
+
+
+# one-off prefrontal
+comp.avail.needed[39,c(1,2)] <- c('1234','1234')
+comp.avail.needed[39,c(3,4)] <- c('CCR5','CCR5')
+comp.avail.needed[39,c(7,8)] <- c(46.370142,46.370142)
+
+major.Area[[1]]$Symbol[69] <- c('NKAIN4')
+major.Area[[1]]$ENTREZID[69] <- c('128414')
+major.Area[[1]]$loc[69] <- c('20')
+major.Area[[1]]$bp[69] <- c('63.240780')
+major.Area[[1]]$new.symbol[69] <- c('NKAIN4')
+major.Area[[1]]$orig.symbol[69] <- c('C20ORF58')
+
+major.Area[[2]]$Symbol[8667] <- c('NKAIN4')
+major.Area[[2]]$ENTREZID[8667] <- c('128414')
+major.Area[[2]]$loc[8667] <- c('20')
+major.Area[[2]]$bp[8667] <- c('63.240780')
+major.Area[[2]]$new.symbol[8667] <- c('NKAIN4')
+major.Area[[2]]$orig.symbol[8667] <- c('C20ORF58')
+
+
+bw <- c(1,734)
+major.Area[[bw[1]]]$Symbol[bw[2]] <- c('MEFV')
+major.Area[[bw[1]]]$ENTREZID[bw[2]] <- c('4210')
+#major.Area[[bw[1]]]$loc[bw[2]] <- c('20')
+#major.Area[[bw[1]]]$bp[bw[2]] <- c('63.240780')
+major.Area[[bw[1]]]$new.symbol[bw[2]] <- c('MEFV')
+major.Area[[bw[1]]]$orig.symbol[bw[2]] <- c('MEFV')
+major.Area[[bw[1]]]$symbol_change[bw[2]] <- FALSE
+
+
+@
+
+
+<< reconcile_columns >>=
+# Reconcile the columns of comp.avail.needed
+
+for (ig in 1:length(useable.results.indx))   {
+       
+       # replace m.symb in column 4 with r.symb from column 3, but only if r.symb is not LOC
+       if (!grepl('^LOC',comp.avail.needed[ig,3]))   {
+          comp.avail.needed[ig,4] <- comp.avail.needed[ig,3]
+       } else {
+       }
+     # 
+     # # NOW replace r.symb in column 3 with m.symb from column 4, but only if m.symb is not LOC
+     #   if (!grepl('^LOC',comp.avail.needed[ig,4]))   {
+     #      comp.avail.needed[ig,3] <- comp.avail.needed[ig,4]
+     #   } else {
+     #   }
+     
+
+       # # replace column 6 locs with those from column 5 (only if c5 is not NA)
+       # if (!is.na(comp.avail.needed[ig,5]))   {
+       #    comp.avail.needed[ig,6] <- comp.avail.needed[ig,5]
+       # } else {
+       # }
+       
+       # # replace column 8 startpos with column 7 startpos only if r.startpos !is.na
+       #  if (!is.na(comp.avail.needed[ig,7]))   {
+       #    comp.avail.needed[ig,8] <- comp.avail.needed[ig,7]
+       # } else {
+       # }
+     
+     # NOW replace column 7 startpos with column 8 startpos only if m.startpos !is.na and r.startpos is.na
+        if (!is.na(comp.avail.needed[ig,8]) & is.na(comp.avail.needed[ig,7]))   {
+          comp.avail.needed[ig,7] <- comp.avail.needed[ig,8]
+       } else {
+       }
+
+  }
+  
+@
+  
+
+
+<< replace_Major_primary >>=    
+# These are the indices in major.Area[[1]] where information was recovered that can be substituted for the existing information at those indices.
+  
+  indices <- symb.LOC[[area.now]][where.rentrez.symb.Loc[c(useable.results.indx)]]
+  
+ # Replacements 
+  major.Area[[area.now]]$ENTREZID[c(indices)] <- comp.avail.needed[,2]
+  major.Area[[area.now]]$Symbol[c(indices)] <- comp.avail.needed[,4]
+  major.Area[[area.now]]$loc[c(indices)] <- comp.avail.needed[,6]
+  major.Area[[area.now]]$bp[c(indices)] <- as.numeric(comp.avail.needed[,8])
+  
+
+# Choose the correct primary data file to replace
+  
+ prefront.Data <- major.Area[[1]]   
+ # cbell.Data <- major.Area[[2]]
+ # tempor.Data <- major.Area[[3]]
+ # pons.Data <- major.Area[[4]]
+     
+ @
+
+<< write_data_out >>=
+
+#### >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> NEED AREA FILENAME HERE 
+success.of.write <- write.primary.one(prefront.Data,'prefrontal')
+
+     # success.of.write <- unlist(lapply(success.of.write[ib], function(x,ib) {if (x[ib]) {x[ib] = 'succeeded'} else {x[ib] = 'failed'}}, ib))
+     # 
+     success.of.write
+ 
+ 
+      
+     
+# also write out the comp.avail.needed for each area as it is processed
+
+fname <- paste('comp_avail_needed_',stand.Col.names.lc[area.now],'.txt',sep='')
+fileConn <- file(as.character(fname))
+  
+       write.csv(as.data.frame(comp.avail.needed),file=fileConn,
+                 na='NA',row.names=FALSE)
+close(fileConn)     
+
+@
+        
+
+\end{document}

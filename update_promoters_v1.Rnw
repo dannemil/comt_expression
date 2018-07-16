@@ -1,0 +1,122 @@
+\documentclass{article}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+<<newpromoters>>=
+
+ahub <- AnnotationHub(hub=getAnnotationHubOption("URL"), cache=getAnnotationHubOption("CACHE"), proxy=getAnnotationHubOption("PROXY"), localHub=FALSE)
+ah <- subset(ahub, species == "Homo sapiens")
+# retrieve records with, e.g., 'object[["AH18522"]]' 
+
+library(GenomicRanges)
+library(BSgenome.Hsapiens.UCSC.hg19)
+BSgenome.Hsapiens.UCSC.hg19
+# or
+Hsapiens
+class(Hsapiens)
+
+##BSgenome contains the DNA sequences
+
+#############
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+Txdb<- TxDb.Hsapiens.UCSC.hg19.knownGene
+Txdb
+class(Txdb)
+
+
+
+unique(ah$dataprovider)
+# [1] "Ensembl" "Gencode" "dbSNP"  
+unique(ah$rdataclass)
+# [1] "FaFile"     "GRanges"    "TwoBitFile" "VcfFile"
+
+
+ensembl <- useMart("ensembl", dataset = "hsapiens_gene_ensembl")   
+
+
+normal.chroms <- c(1:22, "X", "Y", "M")
+
+
+# orgs <- AnnotationHub::query(ah, "org.Hs.eg.db")   
+# 
+# gene.DB <- orgs[["AH18522"]]
+
+# qhs <- AnnotationHub::query(ah, "RefSeq")
+
+ghs <- AnnotationHub::query(ah, "genes")
+
+ghs$genome
+
+# [1] "hg19"   "hg19"   "hg19"   "hg19"   "hg19"   "hg19"  
+#   [7] "hg19"   "hg19"   "hg19"   "hg19"   "hg19"   "hg19"  
+# ...  
+#  [97] "hg19"   "hg19"   "hg19"   "hg19"   "hg19"   "hg19"  
+# [103] "hg19"   "hg19"   "hg19"   "GRCh38" "GRCh38" NA      
+# [109] NA       NA       NA       NA
+
+ghs$genome[106]
+# [1] "GRCh38"
+
+ghs$title
+
+gene.db <- ghs[ghs$genome == "hg19" & ghs$title == "Geneid Genes"]
+
+gene.db.gene_id <- gene.db[[1]]
+
+hg19_genes<- genes(TxDb.Hsapiens.UCSC.hg19.knownGene)
+
+promoters <- promoters(hg19_genes, use.names=TRUE,
+                       upstream=1000, downstream=600)
+
+proms.indx <- match(as.character(hold.Lowest.pvals.pos$pf$ENTREZID),promoters$gene_id)
+
+prom.info <- promoters[na.omit(proms,indx)]
+
+start(prom.info)
+end(prom.info)
+width(prom.info)
+seqnames(prom.info)
+names(prom.info)
+
+ir <- IRanges(start = start(prom.info),
+              width = width(prom.info))
+df1 <- DataFrame(iranges = ir)
+df1
+df1$iranges
+
+df2 <- data.frame(iranges = ir)
+
+prom.seq <- getSeq(Hsapiens, start=df1$iranges)
+
+library(Homo.sapiens)
+ghs<- genes(Homo.sapiens)
+tssgr<- resize( ghs, 1)    # get TSSs
+upstream_pad<- 1000 
+downstream_pad<- 600
+promoters<- promoters(tssgr, upstream_pad, downstream_pad)
+
+promoter_seq <- getSeq(Hsapiens, promoters)
+
+names(promoter_seq)
+promoter_seq[1,2]
+
+proms.indx <- match(as.character(hold.Lowest.pvals.pos$pf$ENTREZID),names(promoter_seq))
+
+annotation<- select(Homo.sapiens, key=names(promoter_seq), keytype="ENTREZID", 
+columns=c("SYMBOL", "ENTREZID"))
+
+proms.indx <- match(as.character(hold.Lowest.pvals.pos$pf$ENTREZID),annotation$ENTREZID)
+
+writeXStringSet(promoter_seq[c(na.omit(proms.indx)),], 
+                "new_promoters_1600_pf_pos.fa", append=FALSE,
+                compress=FALSE,compression_level=NA, format="fasta") 
+
+
+
+
+
+@
+
+
+\end{document}

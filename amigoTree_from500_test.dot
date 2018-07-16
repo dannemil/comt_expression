@@ -1,0 +1,767 @@
+digraph test {
+	graph [ratio=fill,
+		size="12,8"
+	];
+	node [color=black,
+		fillcolor=white,
+		fontcolor=black,
+		fontsize=10,
+		label="\N",
+		shape=plaintext,
+		style=filled
+	];
+	edge [fontsize=10];
+	node1	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0046907<br/>intracellular<br />transport</TD></TR></TABLE>>];
+	node2	 [color="#000000",
+		fillcolor="#FF6347",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0048489<br/>synaptic vesicle<br />transport</TD></TR></TABLE>>];
+	node1 -> node2	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node10	 [color="#000000",
+		fillcolor="#FF6347",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0016079<br/>synaptic vesicle<br />exocytosis</TD></TR></TABLE>>];
+	node2 -> node10	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node3	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0016192<br/>vesicle-mediated<br />transport</TD></TR></TABLE>>];
+	node4	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0006887<br/>exocytosis</TD></TR></TABLE>>];
+	node3 -> node4	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node11	 [color="#000000",
+		fillcolor="#FF6347",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0099003<br/>vesicle-mediated<br />transport in synapse</TD></TR></TABLE>>];
+	node3 -> node11	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node32	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0045055<br/>regulated exocytosis</TD></TR></TABLE>>];
+	node4 -> node32	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node58	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0140029<br/>exocytic process</TD></TR></TABLE>>];
+	node4 -> node58	 [arrowhead=none,
+		arrowtail=normal,
+		color="#add8e6",
+		style=bold];
+	node5	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0008150<br/>biological_process</TD></TR></TABLE>>];
+	node6	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0051179<br/>localization</TD></TR></TABLE>>];
+	node5 -> node6	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node12	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0009987<br/>cellular process</TD></TR></TABLE>>];
+	node5 -> node12	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node18	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0023052<br/>signaling</TD></TR></TABLE>>];
+	node5 -> node18	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node23	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0065007<br/>biological regulation</TD></TR></TABLE>>];
+	node5 -> node23	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node49	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0071840<br/>cellular component<br />organization or<br />biogenesis</TD></TR></TABLE>>];
+	node5 -> node49	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node52	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0051234<br/>establishment of<br />localization</TD></TR></TABLE>>];
+	node6 -> node52	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node61	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0051641<br/>cellular localization</TD></TR></TABLE>>];
+	node6 -> node61	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node7	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0022607<br/>cellular component<br />assembly</TD></TR></TABLE>>];
+	node8	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0065003<br/>protein-containing<br />complex assembly</TD></TR></TABLE>>];
+	node7 -> node8	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node13	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0034622<br/>cellular<br />protein-containing<br />complex assembly</TD></TR></TABLE>>];
+	node8 -> node13	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node9	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0017156<br/>calcium ion regulated<br />exocytosis</TD></TR></TABLE>>];
+	node9 -> node10	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node14	 [color="#000000",
+		fillcolor="#FF6347",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0016082<br/>synaptic vesicle<br />priming</TD></TR></TABLE>>];
+	node10 -> node14	 [arrowhead=none,
+		arrowtail=normal,
+		color="#add8e6",
+		style=bold];
+	node11 -> node2	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node21	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0007154<br/>cell communication</TD></TR></TABLE>>];
+	node12 -> node21	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node44	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0016043<br/>cellular component<br />organization</TD></TR></TABLE>>];
+	node12 -> node44	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node47	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0032940<br/>secretion by cell</TD></TR></TABLE>>];
+	node12 -> node47	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node12 -> node58	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node13 -> node14	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node15	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>CL:0000211<br/>electrically active<br />cell</TD></TR></TABLE>>];
+	node16	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>CL:0000404<br/>electrically<br />signaling cell</TD></TR></TABLE>>];
+	node15 -> node16	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node26	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>CL:0000393<br/>electrically<br />responsive cell</TD></TR></TABLE>>];
+	node15 -> node26	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node28	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>CL:0000540<br/>neuron</TD></TR></TABLE>>];
+	node16 -> node28	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node17	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>CL:0000003<br/>native cell</TD></TR></TABLE>>];
+	node17 -> node15	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node42	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>CL:0000255<br/>eukaryotic cell</TD></TR></TABLE>>];
+	node17 -> node42	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node60	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>CL:0002371<br/>somatic cell</TD></TR></TABLE>>];
+	node17 -> node60	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node22	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0007267<br/>cell-cell signaling</TD></TR></TABLE>>];
+	node18 -> node22	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node19	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0005575<br/>cellular_component</TD></TR></TABLE>>];
+	node20	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0005623<br/>cell</TD></TR></TABLE>>];
+	node19 -> node20	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node29	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0044464<br/>cell part</TD></TR></TABLE>>];
+	node19 -> node29	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node50	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0045202<br/>synapse</TD></TR></TABLE>>];
+	node19 -> node50	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node59	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0044456<br/>synapse part</TD></TR></TABLE>>];
+	node19 -> node59	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node20 -> node29	 [arrowhead=none,
+		arrowtail=normal,
+		color="#add8e6",
+		style=bold];
+	node53	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0051649<br/>establishment of<br />localization in cell</TD></TR></TABLE>>];
+	node20 -> node53	 [arrowhead=none,
+		arrowtail=normal,
+		color="#66CDAA",
+		style=bold];
+	node21 -> node22	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node48	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0023061<br/>signal release</TD></TR></TABLE>>];
+	node22 -> node48	 [arrowhead=none,
+		arrowtail=normal,
+		color="#add8e6",
+		style=bold];
+	node55	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0099536<br/>synaptic signaling</TD></TR></TABLE>>];
+	node22 -> node55	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node70	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0065008<br/>regulation of<br />biological quality</TD></TR></TABLE>>];
+	node23 -> node70	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node24	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0007268<br/>chemical synaptic<br />transmission</TD></TR></TABLE>>];
+	node25	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0007269<br/>neurotransmitter<br />secretion</TD></TR></TABLE>>];
+	node24 -> node25	 [arrowhead=none,
+		arrowtail=normal,
+		color="#add8e6",
+		style=bold];
+	node25 -> node10	 [arrowhead=none,
+		arrowtail=normal,
+		color="#add8e6",
+		style=bold];
+	node26 -> node28	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node27	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>CL:0000000<br/>cell</TD></TR></TABLE>>];
+	node27 -> node17	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node27 -> node28	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node56	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0097458<br/>neuron part</TD></TR></TABLE>>];
+	node28 -> node56	 [arrowhead=none,
+		arrowtail=normal,
+		color="#add8e6",
+		style=bold];
+	node34	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0005622<br/>intracellular</TD></TR></TABLE>>];
+	node29 -> node34	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node29 -> node56	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node30	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0051640<br/>organelle<br />localization</TD></TR></TABLE>>];
+	node31	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0051648<br/>vesicle localization</TD></TR></TABLE>>];
+	node30 -> node31	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node66	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0051656<br/>establishment of<br />organelle<br />localization</TD></TR></TABLE>>];
+	node30 -> node66	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node67	 [color="#000000",
+		fillcolor="#FF6347",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0097479<br/>synaptic vesicle<br />localization</TD></TR></TABLE>>];
+	node31 -> node67	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node73	 [color="#000000",
+		fillcolor="#FF6347",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0051650<br/>establishment of<br />vesicle localization</TD></TR></TABLE>>];
+	node31 -> node73	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node32 -> node9	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node33	 [color="#000000",
+		fillcolor="#FF6347",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0097480<br/>establishment of<br />synaptic vesicle<br />localization</TD></TR></TABLE>>];
+	node33 -> node2	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node34 -> node1	 [arrowhead=none,
+		arrowtail=normal,
+		color="#66CDAA",
+		style=bold];
+	node35	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0006810<br/>transport</TD></TR></TABLE>>];
+	node35 -> node1	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node35 -> node3	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node36	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0006836<br/>neurotransmitter<br />transport</TD></TR></TABLE>>];
+	node35 -> node36	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node41	 [color="#000000",
+		fillcolor="#FF6347",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0099504<br/>synaptic vesicle<br />cycle</TD></TR></TABLE>>];
+	node35 -> node41	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node62	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0046903<br/>secretion</TD></TR></TABLE>>];
+	node35 -> node62	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node36 -> node25	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node37	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>OBA:0000116<br/>neurotransmitter<br />levels</TD></TR></TABLE>>];
+	node38	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0001505<br/>regulation of<br />neurotransmitter<br />levels</TD></TR></TABLE>>];
+	node37 -> node38	 [arrowhead=none,
+		arrowtail=normal,
+		color="#2F4F4F",
+		style=bold];
+	node38 -> node25	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node39	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>OBA:0000001<br/>biological attribute</TD></TR></TABLE>>];
+	node40	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>OBA:0100004<br/>chemical entity<br />attribute</TD></TR></TABLE>>];
+	node39 -> node40	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node39 -> node70	 [arrowhead=none,
+		arrowtail=normal,
+		color="#2F4F4F",
+		style=bold];
+	node40 -> node37	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node41 -> node10	 [arrowhead=none,
+		arrowtail=normal,
+		color="#add8e6",
+		style=bold];
+	node43	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>CL:0000548<br/>animal cell</TD></TR></TABLE>>];
+	node42 -> node43	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node46	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>CL:0002319<br/>neural cell</TD></TR></TABLE>>];
+	node43 -> node46	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node44 -> node7	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node45	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0043933<br/>protein-containing<br />complex subunit<br />organization</TD></TR></TABLE>>];
+	node44 -> node45	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node45 -> node8	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node46 -> node28	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node47 -> node4	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node47 -> node48	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node51	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0099643<br/>signal release from<br />synapse</TD></TR></TABLE>>];
+	node48 -> node51	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node49 -> node44	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node68	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0044085<br/>cellular component<br />biogenesis</TD></TR></TABLE>>];
+	node49 -> node68	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node50 -> node11	 [arrowhead=none,
+		arrowtail=normal,
+		color="#66CDAA",
+		style=bold];
+	node50 -> node51	 [arrowhead=none,
+		arrowtail=normal,
+		color="#66CDAA",
+		style=bold];
+	node50 -> node59	 [arrowhead=none,
+		arrowtail=normal,
+		color="#add8e6",
+		style=bold];
+	node51 -> node10	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node51 -> node25	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node52 -> node35	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node52 -> node53	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node52 -> node66	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node53 -> node1	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node53 -> node25	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node53 -> node41	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node53 -> node73	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node54	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0098793<br/>presynapse</TD></TR></TABLE>>];
+	node54 -> node25	 [arrowhead=none,
+		arrowtail=normal,
+		color="#66CDAA",
+		style=bold];
+	node54 -> node41	 [arrowhead=none,
+		arrowtail=normal,
+		color="#66CDAA",
+		style=bold];
+	node55 -> node51	 [arrowhead=none,
+		arrowtail=normal,
+		color="#add8e6",
+		style=bold];
+	node69	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0099537<br/>trans-synaptic<br />signaling</TD></TR></TABLE>>];
+	node55 -> node69	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node56 -> node54	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node57	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>CARO:0000003<br/>anatomical structure</TD></TR></TABLE>>];
+	node57 -> node27	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node58 -> node14	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node59 -> node54	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node60 -> node46	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node61 -> node1	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node61 -> node30	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node61 -> node53	 [arrowhead=none,
+		arrowtail=normal,
+		color="#add8e6",
+		style=bold];
+	node62 -> node47	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node63	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>PATO:0000001<br/>quality</TD></TR></TABLE>>];
+	node63 -> node39	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node64	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>CARO:0030000<br/>biological entity</TD></TR></TABLE>>];
+	node65	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>CARO:0000000<br/>anatomical entity</TD></TR></TABLE>>];
+	node64 -> node65	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node72	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>CARO:0000006<br/>material anatomical<br />entity</TD></TR></TABLE>>];
+	node65 -> node72	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node66 -> node73	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node67 -> node2	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node67 -> node33	 [arrowhead=none,
+		arrowtail=normal,
+		color="#add8e6",
+		style=bold];
+	node68 -> node7	 [arrowhead=none,
+		arrowtail=normal,
+		color="#add8e6",
+		style=bold];
+	node71	 [color="#000000",
+		fillcolor="#ffffff",
+		fontcolor="#000000",
+		label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"><TR><TD>GO:0098916<br/>anterograde<br />trans-synaptic<br />signaling</TD></TR></TABLE>>];
+	node69 -> node71	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node70 -> node38	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node71 -> node24	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node72 -> node57	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+	node73 -> node33	 [arrowhead=none,
+		arrowtail=normal,
+		color="#000000",
+		style=bold];
+}
+

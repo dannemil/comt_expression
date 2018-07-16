@@ -1,0 +1,363 @@
+% Use this file as an \include to put it at the top of Sweave/R generated latex tables.
+
+\documentclass[letterpaper,12pt]{article}
+
+%\usepackage{dgjournal}
+
+
+%%% Note: remove the next two lines to submit article %%%%%%%%%%
+\usepackage{setspace}
+%\linespread{2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%       
+
+%% The mathptmx package is recommended for Times compatible math symbols.
+%% Use mtpro2 or mathtime instead of mathptmx if you have the commercially
+%% available MathTime fonts.
+%% Other options are txfonts (free) or belleek (free) or TM-Math (commercial)
+\usepackage{mathptmx}
+\usepackage{tensor}
+\usepackage{nicefrac}
+\usepackage{units}
+\usepackage{mathtools}
+\usepackage{mathrsfs}
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+\usepackage{nth}
+\usepackage{epsfig}
+\usepackage[makeroom]{cancel}
+\newcommand\Ccancel[2][black]{\renewcommand\CancelColor{\color{#1}}\cancel{#2}}
+\newcommand\Bcancel[2][black]{\renewcommand\CancelColor{\color{#1}}\bcancel{#2}}
+
+\usepackage{geometry}
+\usepackage{changepage}
+
+
+
+\usepackage[T1]{fontenc}
+\usepackage{makecell}
+\newcolumntype{x}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{tikz}
+\newcommand\diag[4]{%
+  \multicolumn{1}{p{#2}|}{\hskip-\tabcolsep
+  \vcenter{\begin{tikzpicture}[baseline=0,anchor=south west,inner sep=#1]
+  \path[use as bounding box] (0,0) rectangle (#2+2\tabcolsep,\baselineskip);
+  \node[minimum width={#2+2\tabcolsep},minimum height=\baselineskip+\extrarowheight] (box) {};
+  \draw (box.north west) -- (box.south east);
+  \draw (box.south west) -- (box.south west);
+  \node[anchor=south west] at (box.south west) {#3};
+  \node[anchor=north east] at (box.north east) {#4};
+ \end{tikzpicture}}\hskip-\tabcolsep}}
+
+
+%% Use the graphics package to include figures
+%\usepackage{graphics}
+
+%% Use natbib with these recommended options
+%\usepackage[authoryear,comma,longnamesfirst,sectionbib]{natbib}
+\usepackage[authoryear,comma,sectionbib]{natbib} 
+
+%%%%%%%%%%% Dannemiller added 01/19/2015 - standard preamble
+\usepackage{fancyhdr} % Headers and footers
+
+\pagestyle{fancyplain} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+\fancyhead[RO,RE]{\thepage} % Custom header text
+\renewcommand{\headrulewidth}{0pt} %0pt for no rule, 2pt thicker etc...
+\setlength{\headheight}{15.0pt}
+
+\usepackage{url}   %this allows us to cite URLs in the text
+
+\usepackage{booktabs}
+\usepackage{pstricks}
+\let\clipbox\relax
+\usepackage{amssymb}
+\usepackage{afterpage}
+\usepackage{transparent}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{multicol}
+%\usepackage{chngpage}
+
+
+\usepackage{enumerate}
+\usepackage{xspace}
+
+\usepackage{abbrevs}
+% example: \newabbrev\ART{American Repetrory Theater (ART)}[ART]
+\newabbrev\ssb{Sum of Squares Between genotypes (SS_{B})}[SS_{B}]
+\newabbrev\ssw{Sum of Squares Within genotypes (SS_{W})}[SS_{W}]
+\newabbrev\sst{Sum of Squares Total (SS_{T})}[SS_{T}]
+\newabbrev\ci{current, intermediate (CI)}[CI]
+\newabbrev\cim{current, intermediate matrix (CI matrix)}[CI matrix]
+\newabbrev\cims{current, intermediate matrices (CI matrices)}[CI matrices]
+\newabbrev\civ{current, intermediate vector (CI vector)}[CI vector]
+\newabbrev\civs{current, intermediate vectors (CI vectors)}[CI vectors]
+\newabbrev\cis{current, intermediate scalar (CI scalar)}[CI scalar]
+\newabbrev\maf{minor allele frequency (MAF)}[MAF]
+
+
+
+%%% The following correct for a flawed if statement in package abbrev
+\makeatletter
+\renewcommand\maybe@space@{%
+  % \@tempswatrue % <= this is in the original
+  \maybe@ictrue % <= this is new
+  \expandafter   \@tfor
+    \expandafter \reserved@a
+    \expandafter :%
+    \expandafter =%
+                 \nospacelist
+                 \do \t@st@ic
+  % \if@tempswa % <= this is in the original
+  \ifmaybe@ic % <= this is new
+    \space
+  \fi
+}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{ textcomp }
+\newcommand\dblquote[1]{\textquotedblleft #1\textquotedblright} 
+\newcommand{\apos}{\text{'}}
+\newcommand{\be}{\begin{enumerate}}
+\newcommand{\ee}{\end{enumerate}}
+\newcommand{\bes}{\begin{enumerate*}}
+\newcommand{\ees}{\end{enumerate*}}
+\newcommand{\mb}{\noindent\makebox[\textwidth] }
+\newcommand{\den}{\hspace{2pt}\textendash \,}
+\newcommand{\dem}{\textemdash \,}
+\newcommand{\Eq}{Equation }
+
+
+
+%specific hyphenation
+\hyphenation{e-pi-neph-rine}
+\hyphenation{mol-e-cules}
+%\hyphenation{}
+
+
+\providecommand\phantomsection{}
+
+
+%\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{ colorlinks=false,pdfborderstyle={/S/U/W 1},citebordercolor=0 0 1 }
+\colorlet{transpyellow}{white!10!yellow}
+
+\usepackage{rotate}
+\usepackage{rotating}
+\usepackage{rotfloat}
+
+\usepackage{fontspec}
+\usepackage[lofdepth,lotdepth]{subfig}
+\usepackage{threeparttable} 
+\usepackage{tablefootnote}
+\usepackage{footnote}
+
+\usepackage{array}
+%\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+
+\usepackage{threeparttablex}
+
+
+\usepackage{pdflscape} 
+\usepackage{tabulary}
+\usepackage{ltxtable}
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\setlength\LTleft{0pt}
+\setlength\LTright{0pt}
+
+
+
+\usepackage{colortbl}
+\definecolor{riceblue}{hsb}{0.6,0.1,0.9}
+\definecolor{greenish}{rgb}{0.3,0.6,0.0}
+\definecolor{myblue}{rgb}{0.3,0.3,0.8}
+\definecolor{kugray5}{RGB}{224,224,224}
+\definecolor{lightgray}{gray}{0.9}
+
+\usepackage{xltxtra}
+\usepackage{nicefrac}
+
+\usepackage{rotating}
+\usepackage{lscape}
+
+\usepackage{graphicx}
+%\usepackage{epstopdf}
+\graphicspath{/Users/dannemil/paperless/ase_manuscript/sagmb/}
+
+\usepackage[normal]{engord}
+
+\usepackage{enumitem}
+%\setlist[enumerate]{parsep=4pt}
+
+\usepackage [normalem] {ulem}
+
+\usepackage{tabularx}
+\newcolumntype{S}{@{\stepcounter{Definition}\theDefinition.~} >{\bfseries}l @{~--~}X@{}}
+\newcounter{Definition}[subsubsection]
+
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{caption}
+%\renewcommand{\tablename}{Table}
+\usepackage{threeparttable}
+
+\usepackage{setspace}% http://ctan.org/pkg/setspace
+\AtBeginEnvironment{tabular}{\singlespacing}% Single spacing in tabular environment
+
+%\usepackage{booktabs}
+\usepackage[detect-all]{siunitx}
+\robustify\bfseries
+
+\usepackage{tabularx,colortbl}
+\newcolumntype{Y}{>{\centering\arraybackslash} X}
+\renewcommand{\arraystretch}{1.5}
+
+\usepackage{amsmath, amsthm, amssymb}
+%\setlength{\mathindent}{0pt}
+
+\usepackage{etoolbox}
+\apptocmd\normalsize{%
+ \abovedisplayskip=12pt plus 3pt minus 9pt
+ \abovedisplayshortskip=0pt plus 3pt
+ \belowdisplayskip=12pt plus 3pt minus 9pt
+ \belowdisplayshortskip=7pt plus 3pt minus 4pt
+}{}{}
+
+
+%\numberwithin{figure}{section}
+
+\makeatletter
+\@addtoreset{footnote}{section}
+\makeatother
+
+\usepackage{mdwlist}
+
+
+\renewcommand*\thesubsection{\arabic{section}.\arabic{subsection}}
+\usepackage[title]{appendix}
+\newcounter{appendix}
+\numberwithin{equation}{appendix}
+\usepackage{tablefootnote}
+\usepackage{yhmath}
+\usepackage{ragged2e}
+
+\newcolumntype{C}[1]{>{\Centering\arraybackslash}p{#1}}
+
+\usepackage{makecell}
+\renewcommand\theadfont{\normalsize\bfseries}
+\renewcommand\theadalign{bc}
+\usepackage{cellspace}
+\setlength\cellspacetoplimit{5pt}
+\setlength\cellspacebottomlimit{5pt}
+
+\setlength{\LTpre}{0pt}
+\setlength{\LTpost}{12pt}
+%\setlength\LTleft\parindent
+%\setlength\LTright\fill
+
+
+%\setmainfont{Times}
+\setmainfont{Baskerville}
+%\setmainfont{Alegreya}
+%\setmainfont{Cardo}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\mtx}[1]{\mathbf{#1}}
+
+
+
+\DeclareMathSizes{12pt}{11pt}{8pt}{6pt}
+\everymath=\expandafter{\the\everymath\displaystyle}
+
+\setcounter{secnumdepth}{5}
+
+\usepackage{footnote}
+\makesavenoteenv{tabular}
+\makesavenoteenv{table}
+\usepackage{tablefootnote}
+\usepackage{adjustbox}
+\usepackage{tabu}
+\newcommand*{\boldrow}{%
+  \global\let\rowfont\bfseries
+  \bfseries
+}
+\newcommand*{\unboldrow}{%
+  \global\let\rowfont\relax
+  \mdseries
+}
+\newcommand*{\rowfont}{}
+
+\newcommand*{\italrow}{%
+  \global\let\fontrow\textit
+  \textit
+}
+\newcommand*{\unitalrow}{%
+  \global\let\fontrow\relax
+  \mdseries
+}
+\newcommand*{\fontrow}{}
+
+\begin{document}
+
+\noindent
+\begin{landscape}
+{\small {
+\begin{longtable}{c >{\rowfont}r >{\rowfont}r >{\rowfont}c >{\rowfont}r >{\rowfont}r >{\rowfont}c >{\rowfont}r >{\rowfont}r >{\rowfont}c >{\rowfont}r >{\rowfont}r >{\rowfont}c | >{\rowfont}c >{\rowfont}c}
+\caption{Number of probes with expression positively (Columns 1, 3, 5, 7) and negatively (Columns 2, 4, 6, 8) correlated with {\textit COMT} expression by brain area. Sums are in the last row and by chromosome across brain areas in Column 9 (positively correlated) and Column 10 (negatively correlated).} \\ 
+\toprule
+&\multicolumn{12}{c}{{\bfseries Brain Area}} &\multicolumn{2}{c}{}\tabularnewline
+\cline{2-12}
+\multicolumn{1}{c}{\bfseries Chromosome}&\multicolumn{2}{c}{\bfseries Prefrontal}&\multicolumn{1}{c}{\bfseries }&\multicolumn{2}{c}{\bfseries Cerebellum}&\multicolumn{1}{c}{\bfseries }&\multicolumn{2}{c}{\bfseries Temporal}&\multicolumn{1}{c}{\bfseries }&\multicolumn{2}{c}{\bfseries Pons}&\multicolumn{1}{c}{\bfseries }&\multicolumn{2}{c}{\bfseries Sum}\tabularnewline
+\cline{2-3} \cline{5-6} \cline{8-9} \cline{11-12} \cline{14-15}
+\multicolumn{1}{r}{}&\multicolumn{1}{c}{positive}&\multicolumn{1}{c}{negative}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{positive}&\multicolumn{1}{c}{negative}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{positive}&\multicolumn{1}{c}{negative}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{positive}&\multicolumn{1}{c}{negative}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{positive}&\multicolumn{1}{c}{negative}\tabularnewline
+\midrule
+\endfirsthead\caption[]{\em (Number of Probes per Chromosome Continued)} \tabularnewline
+\midrule
+&\multicolumn{12}{c}{{\bfseries Brain Area}} &\multicolumn{2}{c}{}\tabularnewline
+\cline{2-12}
+\multicolumn{1}{c}{\bfseries Chromosome}&\multicolumn{2}{c}{\bfseries Prefrontal}&\multicolumn{1}{c}{\bfseries }&\multicolumn{2}{c}{\bfseries Cerebellum}&\multicolumn{1}{c}{\bfseries }&\multicolumn{2}{c}{\bfseries Temporal}&\multicolumn{1}{c}{\bfseries }&\multicolumn{2}{c}{\bfseries Pons}&\multicolumn{1}{c}{\bfseries }&\multicolumn{2}{c}{\bfseries Sum}\tabularnewline
+\cline{2-3} \cline{5-6} \cline{8-9} \cline{11-12} \cline{14-15}
+\multicolumn{1}{r}{}&\multicolumn{1}{c}{positive}&\multicolumn{1}{c}{negative}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{positive}&\multicolumn{1}{c}{negative}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{positive}&\multicolumn{1}{c}{negative}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{positive}&\multicolumn{1}{c}{negative}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{positive}&\multicolumn{1}{c}{negative}\tabularnewline
+\midrule
+\endhead
+\midrule
+\endfoot
+\label{tab:probesperchrom}
+1& 743& 1309&& 761& 1283&& 672& 1397&& 804& 1245&& 2980& 5234\tabularnewline
+2& 403&  870&& 501&  749&& 367&  908&& 509&  755&& 1780& 3282\tabularnewline
+3& 398&  694&& 439&  656&& 349&  739&& 464&  637&& 1650& 2726\tabularnewline
+4& 216&  542&& 274&  465&& 217&  534&& 292&  460&&  999& 2001\tabularnewline
+5& 246&  625&& 344&  534&& 229&  651&& 322&  555&& 1141& 2365\tabularnewline
+6& 379&  697&& 389&  703&& 326&  739&& 398&  657&& 1492& 2796\tabularnewline
+7& 333&  575&& 355&  551&& 302&  585&& 380&  530&& 1370& 2241\tabularnewline
+8& 235&  454&& 260&  418&& 231&  464&& 262&  413&&  988& 1749\tabularnewline
+9& 347&  446&& 305&  492&& 308&  495&& 334&  446&& 1294& 1879\tabularnewline
+10& 270&  489&& 301&  458&& 251&  518&& 314&  450&& 1136& 1915\tabularnewline
+11& 450&  841&& 427&  854&& 406&  885&& 483&  808&& 1766& 3388\tabularnewline
+12& 365&  688&& 357&  682&& 335&  714&& 402&  643&& 1459& 2727\tabularnewline
+13& 112&  223&& 138&  190&& 101&  232&& 146&  189&&  497&  834\tabularnewline
+14& 239&  386&& 265&  360&& 209&  421&& 266&  362&&  979& 1529\tabularnewline
+15& 200&  382&& 252&  332&& 184&  406&& 243&  352&&  879& 1472\tabularnewline
+16& 348&  473&& 296&  528&& 324&  484&& 331&  492&& 1299& 1977\tabularnewline
+17& 458&  687&& 400&  759&& 402&  738&& 466&  695&& 1726& 2879\tabularnewline
+18&  96&  172&& 112&  149&&  84&  179&& 114&  154&&  406&  654\tabularnewline
+19& 592&  693&& 382&  920&& 517&  761&& 490&  800&& 1981& 3174\tabularnewline
+20& 246&  369&& 231&  391&& 201&  411&& 247&  361&&  925& 1532\tabularnewline
+21&  95&  195&& 100&  195&&  87&  205&& 125&  170&&  407&  765\tabularnewline
+22& 222&  269&& 177&  311&& 188&  286&& 185&  308&&  772& 1174\tabularnewline
+X& 235&  571&& 288&  543&& 238&  598&& 280&  544&& 1041& 2256\tabularnewline
+Y&   9&   34&&   8&   37&&   3&   41&&  12&   33&&   32&  145\tabularnewline
+\boldrow Total&7237&12684&&7362&12560&&6531&13391&&7869&12059&&28999&50694\tabularnewline
+\bottomrule
+\end{longtable}
+}}
+\end{landscape}
+\end{document}

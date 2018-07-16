@@ -1,0 +1,777 @@
+\documentclass{article}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+<<>>=
+readanswer <- function()
+{ 
+  answ <- readline(prompt="Do you want to source the core input data script (Y/N)?: ")
+  if(!grepl("^[YN]+$",answ))
+  {
+    return(readanswer())
+  }
+  
+  return(answ)
+}
+
+if (readanswer() == 'Y')   {
+     source('core_comt_global_data_v2.R')
+} else {
+     
+}
+
+@
+
+<<include=FALSE, echo=FALSE, results=hide>>=
+# Generate a unique ID for this program by path and filename. This unique ID is attached to this file using a tag in the filesystem.
+fname <- csf()   # function to get current path including file name
+
+          prog.Name <- unique.ID(fname)
+
+          prog.Name   # unique ID based on hash of file name
+
+# Write out the file_name, unique ID and date/time to '.Rscriptnames'
+
+          rec.script(eval(fname),eval(prog.Name))
+@
+
+This program has the unique ID: \Sexpr{prog.Name}.
+
+
+<<newpromoters>>=
+
+ahub <- AnnotationHub(hub=getAnnotationHubOption("URL"), cache=getAnnotationHubOption("CACHE"), proxy=getAnnotationHubOption("PROXY"), localHub=FALSE)
+ah <- subset(ahub, species == "Homo sapiens")
+# retrieve records with, e.g., 'object[["AH18522"]]' 
+
+library(GenomicRanges)
+library(BSgenome.Hsapiens.UCSC.hg19)
+BSgenome.Hsapiens.UCSC.hg19
+# or
+Hsapiens
+class(Hsapiens)
+
+##BSgenome contains the DNA sequences
+
+#############
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+Txdb<- TxDb.Hsapiens.UCSC.hg19.knownGene
+Txdb
+class(Txdb)
+
+library(Homo.sapiens)
+ghs<- genes(Homo.sapiens)
+tssgr<- resize( ghs, 1)    # get TSSs
+upstream_pad.plus<- 1000 
+downstream_pad.plus<- 600
+
+# Note: The TSS start site for a gene transcribed off the "-" strand is actually the end of the transcript, so things have to be reversed.
+upstream_pad.minus<- 1000 
+downstream_pad.minus<- 600
+promoters.plus <- promoters(tssgr, upstream_pad.plus, downstream_pad.plus)
+promoters.minus <- promoters(tssgr, upstream_pad.minus, downstream_pad.minus)
+
+promoter_seq <- getSeq(Hsapiens, promoters.plus)    # This has the promoter sequences of all genes in the genome
+
+promoter_seq.minus <- getSeq(Hsapiens, promoters.minus)    # This has the promoter sequences of all genes in the genome
+
+
+###### Need to determine which direction sequence gets returned.
+
+
+# testTranscriptPlus <- GRanges(seqnames='chr1', ranges=IRanges(start=19000000, end=19000900), strand='+')
+# 
+# testTranscriptMinus <- GRanges(seqnames='chr1', ranges=IRanges(start=19000000, end=19000900), strand='-')
+# 
+# getSeq(Hsapiens, testTranscriptPlus)
+# getSeq(Hsapiens, testTranscriptMinus)
+
+# Always returns the 5' to 3' sequence.
+
+#  +   ATCCTG
+#  -   CAGGAT
+
+#proms.indx <- match(as.character(hold.Lowest.pvals.pos$pf$ENTREZID),names(promoter_seq))
+
+annotation <- select(Homo.sapiens, key=names(promoter_seq), keytype="ENTREZID", 
+columns=c("SYMBOL", "ENTREZID","TXSTRAND","TXSTART","TXEND"))
+
+annotation.minus <- select(Homo.sapiens, key=names(promoter_seq.minus), keytype="ENTREZID", 
+columns=c("SYMBOL", "ENTREZID","TXSTRAND","TXSTART","TXEND"))
+
+
+proms.pos.indx <- list()
+proms.neg.indx <- list()
+proms.all.indx <- list()
+
+proms.pos.indx.s <- list()    # ref to promoter_seq
+proms.neg.indx.s <- list()    # ref to promoter_seq
+proms.all.indx.s <- list()    # ref to promoter_seq
+
+proms.pos.entrez <- list()
+proms.neg.entrez <- list()
+proms.all.entrez <- list()
+
+proms.pos.strand <- list()
+proms.neg.strand <- list()
+proms.all.strand <- list()
+
+proms.pos.txstart <- list()
+proms.neg.txstart <- list()
+proms.all.txstart <- list()
+
+proms.pos.txend <- list()
+proms.neg.txend <- list()
+proms.all.txend <- list()
+
+proms.pos.indx <- lapply(hold.Lowest.pvals.pos[ib], function(x,ib) match(as.character(x$ENTREZID),annotation$ENTREZID), ib)
+
+proms.neg.indx <- lapply(hold.Lowest.pvals.neg[ib], function(x,ib) match(as.character(x$ENTREZID),annotation$ENTREZID), ib)
+
+proms.all.indx <- lapply(gene.Major[ib], function(x,ib) match(as.character(x$ENTREZID),annotation$ENTREZID), ib)
+
+
+# More 'annotation' entries than 'promoter_seq'
+proms.pos.indx.s <- lapply(hold.Lowest.pvals.pos[ib], function(x,ib) match(as.character(x$ENTREZID),names(promoter_seq)), ib)
+
+proms.neg.indx.s <- lapply(hold.Lowest.pvals.neg[ib], function(x,ib) match(as.character(x$ENTREZID),names(promoter_seq)), ib)
+
+proms.all.indx.s <- lapply(gene.Major[ib], function(x,ib) match(as.character(x$ENTREZID),names(promoter_seq)), ib)
+
+
+     proms.pos.entrez <- lapply(proms.pos.indx[ib], function(x,ib)  annotation$ENTREZID[na.omit(x)], ib)     
+
+     proms.neg.entrez <- lapply(proms.neg.indx[ib], function(x,ib)  annotation$ENTREZID[na.omit(x)], ib)
+
+     proms.all.entrez <- lapply(proms.all.indx[ib], function(x,ib)  annotation$ENTREZID[na.omit(x)], ib)
+
+     proms.pos.strand <- lapply(proms.pos.indx[ib], function(x,ib)  annotation$TXSTRAND[na.omit(x)], ib)     
+
+     proms.neg.strand <- lapply(proms.neg.indx[ib], function(x,ib)  annotation$TXSTRAND[na.omit(x)], ib)
+
+     proms.all.strand <- lapply(proms.all.indx[ib], function(x,ib)  annotation$TXSTRAND[na.omit(x)], ib)
+     
+
+     
+     
+# These are contingent on the strand + or minus -. The strand designation is the same in both annotation files for a given gene.
+     
+ for (im in ib)  {
+      
+          if (proms.pos.strand == "+")    {
+               
+      proms.pos.txstart[[im]] <- annotation$TXSTART[na.omit(proms.pos.indx[[im]])] 
+      proms.neg.txstart[[im]] <- annotation$TXSTART[na.omit(proms.neg.indx[[im]])]
+      proms.all.txstart[[im]] <- annotation$TXSTART[na.omit(proms.all.indx[[im]])]
+      
+      proms.pos.txend[[im]] <- annotation$TXSTART[na.omit(proms.pos.indx[[im]])] 
+      proms.neg.txend[[im]] <- annotation$TXSTART[na.omit(proms.neg.indx[[im]])]
+      proms.all.txend[[im]] <- annotation$TXSTART[na.omit(proms.all.indx[[im]])]
+      
+     } else {
+      proms.pos.txstart[[im]] <- annotation.minus$TXSTART[na.omit(proms.pos.indx[[im]])] 
+      proms.neg.txstart[[im]] <- annotation.minus$TXSTART[na.omit(proms.neg.indx[[im]])]
+      proms.all.txstart[[im]] <- annotation.minus$TXSTART[na.omit(proms.all.indx[[im]])]
+      
+      proms.pos.txend[[im]] <- annotation.minus$TXSTART[na.omit(proms.pos.indx[[im]])] 
+      proms.neg.txend[[im]] <- annotation.minus$TXSTART[na.omit(proms.neg.indx[[im]])]
+      proms.all.txend[[im]] <- annotation.minus$TXSTART[na.omit(proms.all.indx[[im]])]    
+           
+     }
+           
+      } # end brain area loop
+      
+               
+          
+     # proms.pos.txstart <- lapply(proms.pos.indx[ib], function(x,ib)  annotation$TXSTART[na.omit(x)], ib)     
+     # 
+     # proms.neg.txstart <- lapply(proms.neg.indx[ib], function(x,ib)  annotation$TXSTART[na.omit(x)], ib)
+     # 
+     # proms.all.txstart <- lapply(proms.all.indx[ib], function(x,ib)  annotation$TXSTART[na.omit(x)], ib)
+     # 
+     # proms.pos.txend <- lapply(proms.pos.indx[ib], function(x,ib)  annotation$TXEND[na.omit(x)], ib)     
+     # 
+     # proms.neg.txend <- lapply(proms.neg.indx[ib], function(x,ib)  annotation$TXEND[na.omit(x)], ib)
+     # 
+     # proms.all.txend <- lapply(proms.all.indx[ib], function(x,ib)  annotation$TXEND[na.omit(x)], ib)
+     # 
+     #      } else {
+     #           
+     # proms.pos.txstart <- lapply(proms.pos.indx[ib], function(x,ib)  annotation.minus$TXSTART[na.omit(x)], ib)     
+     # 
+     # proms.neg.txstart <- lapply(proms.neg.indx[ib], function(x,ib)  annotation.minus$TXSTART[na.omit(x)], ib)
+     # 
+     # proms.all.txstart <- lapply(proms.all.indx[ib], function(x,ib)  annotation.minus$TXSTART[na.omit(x)], ib)
+     # 
+     # proms.pos.txend <- lapply(proms.pos.indx[ib], function(x,ib)  annotation.minus$TXEND[na.omit(x)], ib)     
+     # 
+     # proms.neg.txend <- lapply(proms.neg.indx[ib], function(x,ib)  annotation.minus$TXEND[na.omit(x)], ib)
+     # 
+     # proms.all.txend <- lapply(proms.all.indx[ib], function(x,ib)  annotation.minus$TXEND[na.omit(x)], ib)  
+               
+
+#           }
+# }
+
+
+proms.pos.p <- list()
+proms.neg.p <- list()
+proms.all.p <- list()    # all available COMT project genes with full variable information
+
+proms.pos.p <- lapply(proms.pos.indx.s[ib], function(x,ib)  promoter_seq[c(na.omit(x)),], ib)
+proms.neg.p <- lapply(proms.neg.indx.s[ib], function(x,ib)  promoter_seq[c(na.omit(x)),], ib)
+proms.all.p <- lapply(proms.all.indx.s[ib], function(x,ib)  promoter_seq[c(na.omit(x)),], ib)
+
+proms.pos.p.rc <- list()
+proms.neg.p.rc <- list()
+proms.all.p.rc <- list()    # all available COMT project genes with full variable information
+
+proms.pos.p.rc <- lapply(proms.pos.indx.s[ib], function(x,ib)  reverseComplement(promoter_seq[c(na.omit(x)),]), ib)
+proms.neg.p.rc <- lapply(proms.neg.indx.s[ib], function(x,ib)  reverseComplement(promoter_seq[c(na.omit(x)),]), ib)
+proms.all.p.rc <- lapply(proms.all.indx.s[ib], function(x,ib)  reverseComplement(promoter_seq[c(na.omit(x)),]), ib)
+
+
+proms.pos.m <- list()
+proms.neg.m <- list()
+proms.all.m <- list()  
+
+proms.pos.m <- lapply(proms.pos.indx.s[ib], function(x,ib)  promoter_seq.minus[c(na.omit(x)),], ib)
+proms.neg.m <- lapply(proms.neg.indx.s[ib], function(x,ib)  promoter_seq.minus[c(na.omit(x)),], ib)
+proms.all.m <- lapply(proms.all.indx.s[ib], function(x,ib)  promoter_seq.minus[c(na.omit(x)),], ib)
+
+proms.pos.m.rc <- list()
+proms.neg.m.rc <- list()
+proms.all.m.rc <- list()  
+
+proms.pos.m.rc <- lapply(proms.pos.indx.s[ib], function(x,ib)  reverseComplement(promoter_seq.minus[c(na.omit(x)),]), ib)
+proms.neg.m.rc <- lapply(proms.neg.indx.s[ib], function(x,ib)  reverseComplement(promoter_seq.minus[c(na.omit(x)),]), ib)
+proms.all.m.rc <- lapply(proms.all.indx.s[ib], function(x,ib)  reverseComplement(promoter_seq.minus[c(na.omit(x)),]), ib)
+
+@
+
+<<revcomp>>=
+# Proceed from here by just analysing the reversecomplemented sequences, not both
+proms.pos.p <- proms.pos.p.rc
+proms.neg.p <- proms.neg.p.rc
+proms.all.p <- proms.all.p.r 
+
+proms.pos.m <- proms.pos.m.rc
+proms.neg.m <- proms.neg.m.rc
+proms.all.m <- proms.all.m.rc 
+
+@
+
+
+<<>>=
+proms.pos <- list()
+proms.neg <- list()
+proms.all <- list() 
+
+
+for (im in ib)   {
+     
+     proms.pos.temp <- matrix(rep(NA,length(proms.pos.strand[[im]])),ncol=1)
+     proms.neg.temp <- matrix(rep(NA,length(proms.neg.strand[[im]])),ncol=1)
+     proms.all.temp <- matrix(rep(NA,length(proms.all.strand[[im]])),ncol=1)
+     
+     for (ju in 1:length(proms.pos.strand[[im]]))    {
+     
+    if (proms.pos.strand[[im]][ju] == "+")   {
+         
+          proms.pos.temp[ju] <- proms.pos.p[[im]][ju]
+          
+         
+    }  else {
+      
+          proms.pos.temp[ju]<- proms.pos.m[[im]][ju]
+          
+    }
+
+     }
+     
+     proms.pos[[im]] <- proms.pos.temp
+     
+          for (ju in 1:length(proms.neg.strand[[im]]))    {
+     
+    if (proms.neg.strand[[im]][ju] == "+")   {
+         
+          
+          proms.neg.temp[ju] <- proms.neg.p[[im]][ju]
+          
+         
+    }  else {
+      
+          
+          proms.neg.temp[ju] <- proms.neg.m[[im]][ju]
+          
+    }
+
+          }
+     
+     proms.neg[[im]] <- proms.neg.temp
+     
+          for (ju in 1:length(proms.all.strand[[im]]))    {
+     
+    if (proms.all.strand[[im]][ju] == "+")   {
+         
+          
+          proms.all.temp[ju] <- proms.all.p[[im]][ju]
+         
+    }  else {
+      
+          
+          proms.all.temp[ju] <- proms.all.m[[im]][ju]
+    }
+
+          }
+     
+     proms.all[[im]] <- proms.all.temp
+
+} # end brain area loop
+
+
+
+all.avail.proms.count <- matrix(rep(NA,4*5),ncol=5)
+row.names(all.avail.proms.count) <- stand.Col.names.aug
+
+all.avail.proms.count[,1] <- unlist(lapply(proms.all[ib], function(x,ib) length(x), ib))
+colnames(all.avail.proms.count) <- c('Gene Count', DNA_BASES)
+
+promoters.fasta <- list(pos = proms.pos,
+                        neg = proms.neg)
+
+## If necessary, get the transcription start sites
+refgene <- makeTxDbFromUCSC(genome="hg19", tablename="refGene") 
+transcripts <- transcripts(refgene,columns=c("tx_name")) 
+tss <- resize(transcripts, width=1, fix='start')
+vss <- resize(transcripts, width=1, fix='end')
+
+
+# Conversion from entrez to refseq
+## Bimap interface:
+gx <- org.Hs.egREFSEQ
+# Get the entrez gene identifiers that are mapped to any RefSeq ID
+mapped_genes <- mappedkeys(gx)
+# Convert to a list
+gxx <- as.list(gx[mapped_genes])
+
+
+############### positive ##################
+
+wh.refseq <- list()
+#wh.refseq <- xx[promsRC.pos.entrez[[1]]]   # This holds the refseq IDs of the various COMT genes
+
+wh.refseq <- lapply(promsRC.pos.entrez[ib], function(y,ib) gxx[y], ib)
+
+
+     hold.eq <- list()
+     hold.eq <- lapply(wh.refseq[ib], function(x,ib) match(x,mcols(tss)), ib)
+     
+     txstart.pos <- list()
+     txstart.pos <- lapply(hold.eq[ib], function(x,ib) tss[na.omit(unlist(x))], ib)
+     
+     #### Do the same thing for the TXEND data
+     
+     wold.eq <- list()
+     wold.eq <- lapply(wh.refseq[ib], function(x,ib) match(x,mcols(vss)), ib)
+     
+     txend.pos <- list()
+     txend.pos <- lapply(hold.eq[ib], function(x,ib) vss[na.omit(unlist(x))], ib)
+
+     ####### Note: the transcription start site for transcripts from the minus strand, is actually the END of the transcript. This is because to refer to a gene's position consistently as starting at xxyxyw, it always has to be from the same end of the chromosome. Otherwise, the position would be different if it were determined nfrom the othe end of the chromosome for genes transcribed on the minus strand.     
+
+     
+     
+ mult.start.pos <- list()
+ mult.end.pos <- list()
+ num.starts <- c()
+ num.ends <- c()
+ num.tx <- list()
+ num.tx.end <- list()
+     for (im in ib)   {
+
+          num.starts <- c()
+          num.ends <- c()
+               for (bk in 1:length(hold.eq[[im]]))  {
+# max(start(ranges(tss[na.omit(hold.eq[[1]][['1312']])])))
+
+          num.starts[bk] <- length(ranges(tss[na.omit(unlist(hold.eq[[im]][bk]))]))
+          num.ends[bk] <- length(ranges(vss[na.omit(unlist(wold.eq[[im]][bk]))]))
+          
+          mult.start.pos[[im]] <- start(ranges(tss[na.omit(unlist(hold.eq[[1]][,1]))]))
+          mult.end.pos[[im]] <- end(ranges(vss[na.omit(unlist(wold.eq[[1]][,1]))]))
+
+               }
+          
+          num.tx[[im]] <- num.starts
+          num.tx.end[[im]] <- num.ends
+     }
+
+# num.starts shows how many transcripts there are for each gene
+# mult.start.pos holds all of the Tx start positions for those transcripts
+     # sum(num.starts) = length(mult.starts.pos)
+     
+ ########### Need to sort the start positions into groups of size num.starts[bk]
+      #### e.g.,
+      ####
+      #### l          num.starts (i)    row.nums (j)        end.col (k)
+      ####                                                    0
+      #### 1               3              1                   3
+      #### 2               1              4                   4
+      #### 3               4              5                   8
+      
+      #### l                             k(l-1) + 1         k(l-1) + i    
+     
+
+# For each brain area x corr sign, set up a matrix that shows for the set of transcripts within a gene where to find the tx start and end for the set. So if there are 3 transcripts for the 2nd gene then this matrix will look like this on the 2nd row:
+ 
+# gene#  number_txs  start (position:mult.start.pos[[im]]) start (position:mult.start.pos[[im]])
+#  2         3           start                                 end
+ 
+start.end <- list()    # serial index within the mult.start.pos[[1]] vector
+      
+for (im in ib)      {
+     
+     s.e <- matrix(rep(NA,4*length(hold.eq[[im]])),ncol=4)
+          s.e[,1] <- c(1:length(hold.eq[[im]]))
+          s.e[,2] <- num.tx[[im]]
+          s.e[1,3] <- c(1)
+          s.e[1,4] <- num.tx[[im]][1]
+          
+ 
+     for (gs in 2:length(hold.eq[[im]]))  {  
+          
+          s.e[gs,3] <- s.e[(gs-1),4] + 1
+          s.e[gs,4] <- s.e[(gs-1),4] + num.tx[[im]][gs]
+
+     }
+          start.end[[im]] <- s.e
+          
+}
+
+
+
+# Now use serial indices for a given gene to recover the TSS for those transcripts, and within those find the maximum/minimum (most 3') site depending on the sign of the strand.
+TSS.pos.subset <- list()
+TSS.pos.plus <- list()
+TSS.pos.minus <- list()
+for (im in ib)     {
+     
+     TSS.loc.plus <- c()
+     TSS.loc.minus <- c()
+     TSS.loc.pm <- c()
+     
+     for (hy in 1:length(hold.eq[[im]]))   {
+          
+          
+          temp.locs <- c((start.end[[im]][hy,3]):(start.end[[im]][hy,4]))
+          TSS.loc.plus[hy] <-  max(mult.start.pos[[im]][c(temp.locs)])
+          TSS.loc.minus[hy] <- min(mult.end.pos[[im]][c(temp.locs)])
+          
+          if (proms.pos.strand[[im]][hy] == "+")    {
+               
+               TSS.loc.pm[hy] <- TSS.loc.plus[hy]
+          } else {
+               
+               TSS.loc.pm[hy] <- TSS.loc.minus[hy]
+          }
+          
+     }
+     TSS.pos.plus[[im]] <- TSS.loc.plus
+     TSS.pos.minus[[im]] <- TSS.loc.minus
+     TSS.pos.subset[[im]] <- TSS.loc.pm
+}
+############### end positive ##################
+
+############### negative ##################
+
+wh.refseq <- list()
+#wh.refseq <- xx[promsRC.neg.entrez[[1]]]   # This holds the refseq IDs of the various COMT genes
+
+wh.refseq <- lapply(promsRC.neg.entrez[ib], function(y,ib) gxx[y], ib)
+
+
+     hold.eq <- list()
+     hold.eq <- lapply(wh.refseq[ib], function(x,ib) match(x,mcols(tss)), ib)
+     
+     txstart.neg <- list()
+     txstart.neg <- lapply(hold.eq[ib], function(x,ib) tss[na.omit(unlist(x))], ib)
+     
+     #### Do the same thing for the TXEND data
+     
+     wold.eq <- list()
+     wold.eq <- lapply(wh.refseq[ib], function(x,ib) match(x,mcols(vss)), ib)
+     
+     txend.neg <- list()
+     txend.neg <- lapply(hold.eq[ib], function(x,ib) vss[na.omit(unlist(x))], ib)
+
+     ####### Note: the transcription start site for transcripts from the minus strand, is actually the END of the transcript. This is because to refer to a gene's negition consistently as starting at xxyxyw, it always has to be from the same end of the chromosome. Otherwise, the negition would be different if it were determined nfrom the othe end of the chromosome for genes transcribed on the minus strand.     
+
+     
+     
+ mult.start.neg <- list()
+ mult.end.neg <- list()
+ num.starts <- c()
+ num.ends <- c()
+ num.tx <- list()
+ num.tx.end <- list()
+     for (im in ib)   {
+
+          num.starts <- c()
+          num.ends <- c()
+               for (bk in 1:length(hold.eq[[im]]))  {
+# max(start(ranges(tss[na.omit(hold.eq[[1]][['1312']])])))
+
+          num.starts[bk] <- length(ranges(tss[na.omit(unlist(hold.eq[[im]][bk]))]))
+          num.ends[bk] <- length(ranges(vss[na.omit(unlist(wold.eq[[im]][bk]))]))
+          
+          mult.start.neg[[im]] <- start(ranges(tss[na.omit(unlist(hold.eq[[1]][,1]))]))
+          mult.end.neg[[im]] <- end(ranges(vss[na.omit(unlist(wold.eq[[1]][,1]))]))
+
+               }
+          
+          num.tx[[im]] <- num.starts
+          num.tx.end[[im]] <- num.ends
+     }
+
+# num.starts shows how many transcripts there are for each gene
+# mult.start.neg holds all of the Tx start negitions for those transcripts
+     # sum(num.starts) = length(mult.starts.neg)
+     
+ ########### Need to sort the start negitions into groups of size num.starts[bk]
+      #### e.g.,
+      ####
+      #### l          num.starts (i)    row.nums (j)        end.col (k)
+      ####                                                    0
+      #### 1               3              1                   3
+      #### 2               1              4                   4
+      #### 3               4              5                   8
+      
+      #### l                             k(l-1) + 1         k(l-1) + i    
+     
+
+# For each brain area x corr sign, set up a matrix that shows for the set of transcripts within a gene where to find the tx start and end for the set. So if there are 3 transcripts for the 2nd gene then this matrix will look like this on the 2nd row:
+ 
+# gene#  number_txs  start (negition:mult.start.neg[[im]]) start (negition:mult.start.neg[[im]])
+#  2         3           start                                 end
+ 
+start.end <- list()    # serial index within the mult.start.neg[[1]] vector
+      
+for (im in ib)      {
+     
+     s.e <- matrix(rep(NA,4*length(hold.eq[[im]])),ncol=4)
+          s.e[,1] <- c(1:length(hold.eq[[im]]))
+          s.e[,2] <- num.tx[[im]]
+          s.e[1,3] <- c(1)
+          s.e[1,4] <- num.tx[[im]][1]
+          
+ 
+     for (gs in 2:length(hold.eq[[im]]))  {  
+          
+          s.e[gs,3] <- s.e[(gs-1),4] + 1
+          s.e[gs,4] <- s.e[(gs-1),4] + num.tx[[im]][gs]
+
+     }
+          start.end[[im]] <- s.e
+          
+}
+
+
+
+# Now use serial indices for a given gene to recover the TSS for those transcripts, and within those find the maximum/minimum (most 3') site depending on the sign of the strand.
+TSS.neg.subset <- list()
+TSS.neg.plus <- list()
+TSS.neg.minus <- list()
+for (im in ib)     {
+     
+     TSS.loc.plus <- c()
+     TSS.loc.minus <- c()
+     TSS.loc.pm <- c()
+     
+     for (hy in 1:length(hold.eq[[im]]))   {
+          
+          
+          temp.locs <- c((start.end[[im]][hy,3]):(start.end[[im]][hy,4]))
+          TSS.loc.plus[hy] <-  max(mult.start.neg[[im]][c(temp.locs)])
+          TSS.loc.minus[hy] <- min(mult.end.neg[[im]][c(temp.locs)])
+          
+          if (proms.neg.strand[[im]][hy] == "+")    {
+               
+               TSS.loc.pm[hy] <- TSS.loc.plus[hy]
+          } else {
+               
+               TSS.loc.pm[hy] <- TSS.loc.minus[hy]
+          }
+          
+     }
+     TSS.neg.plus[[im]] <- TSS.loc.plus
+     TSS.neg.minus[[im]] <- TSS.loc.minus
+     TSS.neg.subset[[im]] <- TSS.loc.pm
+}
+############### end negative ##################
+
+
+
+promoter.Full <- list()
+promoter.entrez.lst <- list()
+
+for (im in ib)   {
+
+     # promoter.Full$prom.Seq[[im]] <- noquote(as.character(paste(promoter.Seq$up[[im]]$coding_gene_flank[na.omit(c(match.E$up[[im]]))],promoter.Seq$down[[im]]$coding_gene_flank[na.omit(c(match.E$down[[im]]))],sep='')))
+     # promoter.Full$entrezgene[[im]] <- as.character(promoter.Seq$up[[im]]$entrezgene[na.omit(c(match.E$up[[im]]))])
+     # 
+     # promoter.entrez.lst[[im]] <- as.character(promoter.Seq$up[[im]]$entrezgene[na.omit(c(match.E$up[[im]]))])
+     
+          promoter.Full$prom.Seq[[im]] <- noquote(as.character(c(promoters.fasta$pos[[im]],
+                                                  promoters.fasta$neg[[im]],sep='')))
+          
+          
+          promoter.Full$entrezgene[[im]] <- as.character(c(c(proms.pos.entrez[[im]]),c(proms.neg.entrez[[im]])))
+          
+          promoter.entrez.lst[[im]] <- promoter.Full$entrezgene[[im]]
+
+}
+
+for (im in ib)    {
+     
+     if (length(promoter.Full$prom.Seq[[im]]) > (length(promoters.fasta$pos[[im]]) + 
+                                                  length(promoters.fasta$neg[[im]]))) {
+               
+              promoter.Full$prom.Seq[[im]] <- promoter.Full$prom.Seq[[im]][1:(length(promoters.fasta$pos[[im]]) + length(promoters.fasta$neg[[im]]))]
+               
+          } else {
+                    
+               }
+     
+}
+
+
+match.entrez500.indx <- list()
+for (im in ib)   {
+     
+     match.entrez500.indx[[im]] <- match(promoter.entrez.lst[[im]],as.character(hold.Lowest.pvals[[im]]$ENTREZID))
+
+}
+
+promoter.Full$corsign <- list()
+promoter.Full$Symbol <- list()
+promoter.Full$header <- list()
+promoter.Full$Sample.r <- list()
+
+promoter.Full$corsign[[1]] <- hold.Lowest.pvals[[1]]$corsign[na.omit(c(match.entrez500.indx[[1]]))]
+promoter.Full$Symbol[[1]] <- hold.Lowest.pvals[[1]]$Symbol[na.omit(c(match.entrez500.indx[[1]]))]
+promoter.Full$header[[1]] <- hold.Lowest.pvals[[1]]$ENTREZID[na.omit(c(match.entrez500.indx[[1]]))]
+promoter.Full$Sample.r[[1]] <- hold.Lowest.pvals[[1]]$Sample.r[na.omit(c(match.entrez500.indx[[1]]))]
+
+
+promoter.Full$corsign[[2]] <- hold.Lowest.pvals[[2]]$corsign[na.omit(c(match.entrez500.indx[[2]]))]
+promoter.Full$Symbol[[2]] <- hold.Lowest.pvals[[2]]$Symbol[na.omit(c(match.entrez500.indx[[2]]))]
+promoter.Full$header[[2]] <- hold.Lowest.pvals[[2]]$ENTREZID[na.omit(c(match.entrez500.indx[[2]]))]
+promoter.Full$Sample.r[[2]] <- hold.Lowest.pvals[[2]]$Sample.r[na.omit(c(match.entrez500.indx[[2]]))]
+
+promoter.Full$corsign[[3]] <- hold.Lowest.pvals[[3]]$corsign[na.omit(c(match.entrez500.indx[[3]]))]
+promoter.Full$Symbol[[3]] <- hold.Lowest.pvals[[3]]$Symbol[na.omit(c(match.entrez500.indx[[3]]))]
+promoter.Full$header[[3]] <- hold.Lowest.pvals[[3]]$ENTREZID[na.omit(c(match.entrez500.indx[[3]]))]
+promoter.Full$Sample.r[[3]] <- hold.Lowest.pvals[[3]]$Sample.r[na.omit(c(match.entrez500.indx[[3]]))]
+
+
+promoter.Full$corsign[[4]] <- hold.Lowest.pvals[[4]]$corsign[na.omit(c(match.entrez500.indx[[4]]))]
+promoter.Full$Symbol[[4]] <- hold.Lowest.pvals[[4]]$Symbol[na.omit(c(match.entrez500.indx[[4]]))]
+promoter.Full$header[[4]] <- hold.Lowest.pvals[[4]]$ENTREZID[na.omit(c(match.entrez500.indx[[4]]))]
+promoter.Full$Sample.r[[4]] <- hold.Lowest.pvals[[4]]$Sample.r[na.omit(c(match.entrez500.indx[[4]]))]
+
+for (im in ib)    {
+     
+count.proms.Full[[im]] <- data.frame(prom.Seq=length(promoter.Full$prom.Seq[[im]]),
+                               corsign=length(promoter.Full$corsign[[im]]),
+                              Symbol=length(promoter.Full$Symbol[[im]]),
+                              entrez=length(promoter.Full$entrezgene[[im]]),
+                              header=length(promoter.Full$header[[im]]),
+                              Sample.r=length(promoter.Full$Sample.r[[im]]),
+                              expected=(length(promoters.fasta$pos[[im]]) + 
+                                                  length(promoters.fasta$neg[[im]]))   
+                                   )     
+}
+
+## write out promoter fasta sequences
+
+
+# write out positively and negatively correlated separately
+
+fasta.500.pos <- list()
+fasta.500.neg <- list()
+
+for (im in ib) {
+     fasta.500.pos$indx[[im]] <- which(promoter.Full$corsign[[im]] == 1)
+     fasta.500.neg$indx[[im]] <- which(promoter.Full$corsign[[im]] == -1)
+     
+     fasta.500.pos$seq[[im]] <- promoter.Full$prom.Seq[[im]][unlist(fasta.500.pos$indx[[im]])]
+     fasta.500.neg$seq[[im]] <- promoter.Full$prom.Seq[[im]][unlist(fasta.500.neg$indx[[im]])]
+
+     fasta.500.pos$header[[im]] <- promoter.Full$header[[im]][unlist(fasta.500.pos$indx[[im]])]
+     fasta.500.neg$header[[im]] <- promoter.Full$header[[im]][unlist(fasta.500.neg$indx[[im]])]
+     
+     fasta.500.pos$header[[im]] <- paste(fasta.500.pos$header[[im]],sep='')
+     fasta.500.neg$header[[im]] <- paste(fasta.500.neg$header[[im]],sep='')
+
+     }               
+
+# write out promoter sequences in fasta format
+write.fasta(sequences=str_split(promoter.Full$prom.Seq[[1]],''),names=promoter.Full$header[[1]],file.out='fasta_500_promoter_seq_pf_final_REVCOMP.fa',nbchar=1600)
+
+write.fasta(sequences=str_split(promoter.Full$prom.Seq[[2]],''),names=promoter.Full$header[[2]],file.out='fasta_500_promoter_seq_cb_final_REVCOMP.fa',nbchar=1600)
+
+write.fasta(sequences=str_split(promoter.Full$prom.Seq[[3]],''),names=promoter.Full$header[[3]],file.out='fasta_500_promoter_seq_tm_final_REVCOMP.fa',nbchar=1600)
+
+write.fasta(sequences=str_split(promoter.Full$prom.Seq[[4]],''),names=promoter.Full$header[[4]],file.out='fasta_500_promoter_seq_po_final_REVCOMP.fa',nbchar=1600)
+
+# # write out positively and negatively correlated separately
+# 
+# fasta.500.pos <- list()
+# fasta.500.neg <- list()
+# 
+# for (im in ib) {
+#      fasta.500.pos$indx[[im]] <- which(promoter.Full$corsign[[im]] == 1)
+#      fasta.500.neg$indx[[im]] <- which(promoter.Full$corsign[[im]] == -1)
+#      
+#      fasta.500.pos$seq[[im]] <- promoter.Full$prom.Seq[[im]][unlist(fasta.500.pos$indx[[im]])]
+#      fasta.500.neg$seq[[im]] <- promoter.Full$prom.Seq[[im]][unlist(fasta.500.neg$indx[[im]])]
+# 
+#      fasta.500.pos$header[[im]] <- promoter.Full$header[[im]][unlist(fasta.500.pos$indx[[im]])]
+#      fasta.500.neg$header[[im]] <- promoter.Full$header[[im]][unlist(fasta.500.neg$indx[[im]])]
+#      
+#      fasta.500.pos$header[[im]] <- paste('>',fasta.500.pos$header[[im]],sep='')
+#      fasta.500.neg$header[[im]] <- paste('>',fasta.500.neg$header[[im]],sep='')
+# 
+#      }               
+# write out pos/neg fasta separately
+write.fasta(sequences=str_split(fasta.500.pos$seq[[1]],''),names=fasta.500.pos$header[[1]],file.out='fasta_500_promoter_seq_pf_pos_REVCOMP.fa',nbchar=1600)
+write.fasta(sequences=str_split(fasta.500.neg$seq[[1]],''),names=fasta.500.neg$header[[1]],file.out='fasta_500_promoter_seq_pf_neg_REVCOMP.fa',nbchar=1600)
+
+write.fasta(sequences=str_split(fasta.500.pos$seq[[2]],''),names=fasta.500.pos$header[[2]],file.out='fasta_500_promoter_seq_cb_pos_REVCOMP.fa',nbchar=1600)
+write.fasta(sequences=str_split(fasta.500.neg$seq[[2]],''),names=fasta.500.neg$header[[2]],file.out='fasta_500_promoter_seq_cb_neg_REVCOMP.fa',nbchar=1600)
+
+write.fasta(sequences=str_split(fasta.500.pos$seq[[3]],''),names=fasta.500.pos$header[[3]],file.out='fasta_500_promoter_seq_tm_pos_REVCOMP.fa',nbchar=1600)
+write.fasta(sequences=str_split(fasta.500.neg$seq[[3]],''),names=fasta.500.neg$header[[3]],file.out='fasta_500_promoter_seq_tm_neg_REVCOMP.fa',nbchar=1600)
+
+write.fasta(sequences=str_split(fasta.500.pos$seq[[4]],''),names=fasta.500.pos$header[[4]],file.out='fasta_500_promoter_seq_po_pos_REVCOMP.fa',nbchar=1600)
+write.fasta(sequences=str_split(fasta.500.neg$seq[[4]],''),names=fasta.500.neg$header[[4]],file.out='fasta_500_promoter_seq_po_neg_REVCOMP.fa',nbchar=1600)
+
+
+############## END get promoter sequences and writing out FASTA formatted files
+
+@
+
+<<ncbi>>=
+
+# ncbi<- genes(hsgen)
+# tssgr<- resize( ghs, 1)    # get TSSs
+# upstream_pad<- 1000 
+# downstream_pad<- 600
+# promoters<- promoters(tssgr, upstream_pad, downstream_pad)
+
+@
+
+
+\end{document}

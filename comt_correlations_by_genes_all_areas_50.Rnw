@@ -1,6 +1,6 @@
 % NEW based on COMT-MB data
 <<include=FALSE, echo=FALSE, results=hide>>=
-# Generate a uinique ID for this program by path and filename. This unique ID is attached to this file using a tag in the filesystem.
+# Generate a unique ID for this program by path and filename. This unique ID is attached to this file using a tag in the filesystem.
 source('unique_id_generator.R')
 
 fname <- c("/Volumes/Macintosh_HD_3/genetics/genenetwork2/comt_correlations_by_genes_all_areas_50.Rnw")

@@ -16,7 +16,7 @@ source(paste(work.path,source.prog$rcode,'.R',sep=''))
 
 # Generate a unique ID for this program by path and filename. This unique ID is attached to this file using a tag in the filesystem.
      
-     source('unique_id_generator.R')
+     source('func_unique_id_generator.R')
 
 fname <- csf()   # function to get current path including file name
 

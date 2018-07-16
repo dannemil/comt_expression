@@ -1,0 +1,632 @@
+% Use this file as an \include to put it at the top of Sweave/R generated latex tables.
+
+\documentclass[letterpaper,12pt]{article}
+
+%\usepackage{dgjournal}
+
+
+%%% Note: remove the next two lines to submit article %%%%%%%%%%
+\usepackage{setspace}
+%\linespread{2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%       
+
+%% The mathptmx package is recommended for Times compatible math symbols.
+%% Use mtpro2 or mathtime instead of mathptmx if you have the commercially
+%% available MathTime fonts.
+%% Other options are txfonts (free) or belleek (free) or TM-Math (commercial)
+\usepackage{mathptmx}
+\usepackage{tensor}
+\usepackage{nicefrac}
+\usepackage{units}
+\usepackage{mathtools}
+\usepackage{mathrsfs}
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+\usepackage{nth}
+\usepackage{epsfig}
+\usepackage[makeroom]{cancel}
+\newcommand\Ccancel[2][black]{\renewcommand\CancelColor{\color{#1}}\cancel{#2}}
+\newcommand\Bcancel[2][black]{\renewcommand\CancelColor{\color{#1}}\bcancel{#2}}
+
+\usepackage{geometry}
+\usepackage{changepage}
+
+
+
+\usepackage[T1]{fontenc}
+\usepackage{makecell}
+\newcolumntype{x}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{tikz}
+\newcommand\diag[4]{%
+  \multicolumn{1}{p{#2}|}{\hskip-\tabcolsep
+  $\vcenter{\begin{tikzpicture}[baseline=0,anchor=south west,inner sep=#1]
+  \path[use as bounding box] (0,0) rectangle (#2+2\tabcolsep,\baselineskip);
+  \node[minimum width={#2+2\tabcolsep},minimum height=\baselineskip+\extrarowheight] (box) {};
+  \draw (box.north west) -- (box.south east);
+  \draw (box.south west) -- (box.south west);
+  \node[anchor=south west] at (box.south west) {#3};
+  \node[anchor=north east] at (box.north east) {#4};
+ \end{tikzpicture}}$\hskip-\tabcolsep}}
+
+
+%% Use the graphics package to include figures
+%\usepackage{graphics}
+
+%% Use natbib with these recommended options
+%\usepackage[authoryear,comma,longnamesfirst,sectionbib]{natbib}
+\usepackage[authoryear,comma,sectionbib]{natbib} 
+
+%%%%%%%%%%% Dannemiller added 01/19/2015 - standard preamble
+\usepackage{fancyhdr} % Headers and footers
+
+\pagestyle{fancyplain} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+\fancyhead[RO,RE]{\thepage} % Custom header text
+\renewcommand{\headrulewidth}{0pt} %0pt for no rule, 2pt thicker etc...
+\setlength{\headheight}{15.0pt}
+
+\usepackage{url}   %this allows us to cite URLs in the text
+
+\usepackage{booktabs}
+\usepackage{pstricks}
+\let\clipbox\relax
+\usepackage{amssymb}
+\usepackage{afterpage}
+\usepackage{transparent}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{multicol}
+%\usepackage{chngpage}
+
+
+\usepackage{enumerate}
+\usepackage{xspace}
+
+\usepackage{abbrevs}
+% example: \newabbrev\ART{American Repetrory Theater (ART)}[ART]
+\newabbrev\ssb{Sum of Squares Between genotypes ($SS_{B}$)}[$SS_{B}$]
+\newabbrev\ssw{Sum of Squares Within genotypes ($SS_{W}$)}[$SS_{W}$]
+\newabbrev\sst{Sum of Squares Total ($SS_{T}$)}[$SS_{T}$]
+\newabbrev\ci{current, intermediate (CI)}[CI]
+\newabbrev\cim{current, intermediate matrix (CI matrix)}[CI matrix]
+\newabbrev\cims{current, intermediate matrices (CI matrices)}[CI matrices]
+\newabbrev\civ{current, intermediate vector (CI vector)}[CI vector]
+\newabbrev\civs{current, intermediate vectors (CI vectors)}[CI vectors]
+\newabbrev\cis{current, intermediate scalar (CI scalar)}[CI scalar]
+\newabbrev\maf{minor allele frequency (MAF)}[MAF]
+
+
+
+%%% The following correct for a flawed if statement in package abbrev
+\makeatletter
+\renewcommand\maybe@space@{%
+  % \@tempswatrue % <= this is in the original
+  \maybe@ictrue % <= this is new
+  \expandafter   \@tfor
+    \expandafter \reserved@a
+    \expandafter :%
+    \expandafter =%
+                 \nospacelist
+                 \do \t@st@ic
+  % \if@tempswa % <= this is in the original
+  \ifmaybe@ic % <= this is new
+    \space
+  \fi
+}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{ textcomp }
+\newcommand\dblquote[1]{\textquotedblleft #1\textquotedblright} 
+\newcommand{\apos}{$\text{'}$}
+\newcommand{\be}{\begin{enumerate}}
+\newcommand{\ee}{\end{enumerate}}
+\newcommand{\bes}{\begin{enumerate*}}
+\newcommand{\ees}{\end{enumerate*}}
+\newcommand{\mb}{\noindent\makebox[\textwidth] }
+\newcommand{\den}{\hspace{2pt}\textendash \,}
+\newcommand{\dem}{\textemdash \,}
+\newcommand{\Eq}{Equation }
+
+
+
+%specific hyphenation
+\hyphenation{e-pi-neph-rine}
+\hyphenation{mol-e-cules}
+%\hyphenation{}
+
+
+\providecommand\phantomsection{}
+
+
+%\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{ colorlinks=false,pdfborderstyle={/S/U/W 1},citebordercolor=0 0 1 }
+\colorlet{transpyellow}{white!10!yellow}
+
+\usepackage{rotate}
+\usepackage{rotating}
+\usepackage{rotfloat}
+
+\usepackage{fontspec}
+\usepackage[lofdepth,lotdepth]{subfig}
+\usepackage{threeparttable} 
+\usepackage{tablefootnote}
+\usepackage{footnote}
+
+\usepackage{array}
+%\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{threeparttablex}
+
+
+\usepackage{pdflscape} 
+\usepackage{tabulary}
+\usepackage{ltxtable}
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\setlength\LTleft{0pt}
+\setlength\LTright{0pt}
+
+
+
+\usepackage{colortbl}
+\definecolor{riceblue}{hsb}{0.6,0.1,0.9}
+\definecolor{greenish}{rgb}{0.3,0.6,0.0}
+\definecolor{myblue}{rgb}{0.3,0.3,0.8}
+\definecolor{kugray5}{RGB}{224,224,224}
+\definecolor{lightgray}{gray}{0.9}
+
+\usepackage{xltxtra}
+\usepackage{nicefrac}
+
+\usepackage{rotating}
+\usepackage{lscape}
+
+\usepackage{graphicx}
+%\usepackage{epstopdf}
+\graphicspath{/Users/dannemil/paperless/ase_manuscript/sagmb/}
+
+\usepackage[normal]{engord}
+
+\usepackage{enumitem}
+%\setlist[enumerate]{parsep=4pt}
+
+\usepackage [normalem] {ulem}
+
+\usepackage{tabularx}
+\newcolumntype{S}{@{\stepcounter{Definition}\theDefinition.~} >{\bfseries}l @{~--~}X@{}}
+\newcounter{Definition}[subsubsection]
+
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{caption}
+%\renewcommand{\tablename}{Table}
+\usepackage{threeparttable}
+
+\usepackage{setspace}% http://ctan.org/pkg/setspace
+\AtBeginEnvironment{tabular}{\singlespacing}% Single spacing in tabular environment
+
+%\usepackage{booktabs}
+\usepackage[detect-all]{siunitx}
+\robustify\bfseries
+
+\usepackage{tabularx,colortbl}
+\newcolumntype{Y}{>{\centering\arraybackslash} X}
+\renewcommand{\arraystretch}{1.5}
+
+\usepackage{amsmath, amsthm, amssymb}
+%\setlength{\mathindent}{0pt}
+
+\usepackage{etoolbox}
+\apptocmd\normalsize{%
+ \abovedisplayskip=12pt plus 3pt minus 9pt
+ \abovedisplayshortskip=0pt plus 3pt
+ \belowdisplayskip=12pt plus 3pt minus 9pt
+ \belowdisplayshortskip=7pt plus 3pt minus 4pt
+}{}{}
+
+
+%\numberwithin{figure}{section}
+
+\makeatletter
+\@addtoreset{footnote}{section}
+\makeatother
+
+\usepackage{mdwlist}
+
+
+\renewcommand*\thesubsection{\arabic{section}.\arabic{subsection}}
+\usepackage[title]{appendix}
+\newcounter{appendix}
+\numberwithin{equation}{appendix}
+\usepackage{tablefootnote}
+\usepackage{yhmath}
+\usepackage{ragged2e}
+
+\newcolumntype{C}[1]{>{\Centering\arraybackslash}p{#1}}
+
+\usepackage{makecell}
+\renewcommand\theadfont{\normalsize\bfseries}
+\renewcommand\theadalign{bc}
+\usepackage{cellspace}
+\setlength\cellspacetoplimit{5pt}
+\setlength\cellspacebottomlimit{5pt}
+
+\setlength{\LTpre}{0pt}
+\setlength{\LTpost}{12pt}
+%\setlength\LTleft\parindent
+%\setlength\LTright\fill
+
+
+%\setmainfont{Times}
+\setmainfont{Baskerville}
+%\setmainfont{Alegreya}
+%\setmainfont{Cardo}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\mtx}[1]{\mathbf{#1}}
+
+
+
+\DeclareMathSizes{12pt}{11pt}{8pt}{6pt}
+\everymath=\expandafter{\the\everymath\displaystyle}
+
+\setcounter{secnumdepth}{5}
+
+\usepackage{footnote}
+\makesavenoteenv{tabular}
+\makesavenoteenv{table}
+\usepackage{tablefootnote}
+\usepackage{adjustbox}
+\setlength\heavyrulewidth{.06em}
+\setlength\lightrulewidth{.04em}
+
+
+
+\begin{document}
+
+\noindent
+
+{\small {
+% latex table generated in R 3.4.4 by xtable 1.8-2 package
+% Thu Apr 26 06:57:39 2018
+\begin{longtable}{l l l l l }\caption{Genes from the top 500 genes in each brain area ranked by p-values shared in common between: Prefrontal and Cerebellum} \tabularnewline
+\toprule
+\multicolumn{1}{l}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}\tabularnewline
+%\midrule
+\endfirsthead\caption[]{\em (Prefrontal and Cerebellum continued)} \tabularnewline
+%\midrule
+\multicolumn{1}{l}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}\tabularnewline
+\midrule
+\endhead
+\midrule
+\endfoot
+\label{tab:genes.in.common.pval.ranked}
+1&CAT&COMT&CHCHD8&GATM\tabularnewline
+2&MYO6&C1orf122&YBX1P2&CDC14B\tabularnewline
+3&EDNRB&C6orf48&PGCP&PPIB\tabularnewline
+4&ECH1&DTYMK&POLR2F&HIP1R\tabularnewline
+5&RPS2P8&CLU&SERF2&PTTG1IP\tabularnewline
+6&COPE&AASS&SPAG9&SNAP23\tabularnewline
+7&PPAP2B&ZMAT5&C3orf70&RUSC1\tabularnewline
+8&CAMSAP1L1&PDE6D&GSN&IVD\tabularnewline
+9&QKI&HSD17B6&ELOVL4&RAB11FIP5\tabularnewline
+10&PIR&CPT2&DFFA&RAB3GAP1\tabularnewline
+11&CHCHD5&SLC25A20&ARL6IP6&IQCK\tabularnewline
+12&ABTB2&RARS&RAG1AP1&PRDX4\tabularnewline
+13&PCCB&ALAD&RHBDD1&PMF1\tabularnewline
+14&DIRC2&MYCBP2&SH3GL2&ATP6V0E1\tabularnewline
+15&MAPRE1&CBR1&CCNB1&GALNT10\tabularnewline
+16&SGPL1&C6orf72&MON1B&PTPRZ1\tabularnewline
+17&PFN1&NSMCE1&TST&HIP1\tabularnewline
+18&HSF2&AGPAT3&RAB9A&DYNLT1\tabularnewline
+19&SNAP91&LGALS3BP&SYT4&CD302\tabularnewline
+20&KUA-UEV&HSD17B10&GRHPR&TMEM136\tabularnewline
+21&GM2A&VPS52&ACO2&TP53AP1\tabularnewline
+22&MTM1&SYPL1&OACT2&PYCR2\tabularnewline
+23&PIP3-E&ANXA5&DERA&C9orf46\tabularnewline
+24&CAPZA2&TMBIM4&MARCKSL1&C10orf26\tabularnewline
+25&PPAP2A&C5orf4&S100B&PPP2R5C\tabularnewline
+26&CRTAC1&PXMP3&TTC19&USP54\tabularnewline
+27&FUCA2&RRNAD1&ADARB1&FGFR2\tabularnewline
+28&ACTL6A&ZYG11B&SLC9A9&GPR177\tabularnewline
+29&HHLA3&ALS2CR13&CD82&C3orf63\tabularnewline
+30&AK2&RPIB9&DLL1&MAG1\tabularnewline
+%\bottomrule
+\end{longtable}
+\vspace{2em}
+
+%latex.default(genes.in.common.tabs[[nj]], file = "genes_in_common_pval_ranked_final.tex",     caption = paste("The top 500 genes ranked by p-values shared in common between: ",         comp.areas[nj, 3], sep = ""), caption.loc = c("top"),     booktabs = TRUE, label = c("tab:genes.in.common.pval.ranked"),     na.blank = TRUE, rowlabel = c(""), colheads = c(rep("", rows.for.tabs)),     vbar = FALSE, longtable = TRUE, continued = paste(comp.areas[nj,         3], " continued", sep = ""), table.env = TRUE, center = c("center"),     first.hline.double = FALSE, append = TRUE)%
+\setlongtables\begin{longtable}{lllll}\caption{Genes from the top 500 genes in each brain area ranked by p-values shared in common between: Prefrontal and Temporal} \tabularnewline
+\toprule
+\multicolumn{1}{l}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}\tabularnewline
+%\midrule
+\endfirsthead\caption[]{\em (Prefrontal and Temporal continued)} \tabularnewline
+%\midrule
+\multicolumn{1}{l}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}\tabularnewline
+\midrule
+\endhead
+\midrule
+\endfoot
+\label{tab:genes.in.common.pval.ranked}
+1&RPL18P13&CAT&COMT&ACY1\tabularnewline
+2&CHCHD8&GATM&MYO6&C1orf122\tabularnewline
+3&YBX1P2&CDC14B&EDNRB&PDLIM3\tabularnewline
+4&UBP1&PGCP&CADPS2&PPIB\tabularnewline
+5&ECH1&DTYMK&HSCB&TTLL4\tabularnewline
+6&PNKD&CSTB&MEGF10&POLR2F\tabularnewline
+7&HIP1R&ZFAND3&CLU&SERF2\tabularnewline
+8&PTTG1IP&COPE&AASS&C12orf39\tabularnewline
+9&SPAG9&LIMS1&SNAP23&PPAP2B\tabularnewline
+10&ZMAT5&BCAN&NKAIN4&UBE3A\tabularnewline
+11&C3orf70&RUSC1&ELP4&CAMSAP1L1\tabularnewline
+12&PDE6D&GSN&THSD1&MMP28\tabularnewline
+13&LRRC3B&ALDH2&IDH2&ADA\tabularnewline
+14&ABCA5&IVD&QKI&GRSF1\tabularnewline
+15&HSD17B6&ELOVL4&PGM1&APOE\tabularnewline
+16&PIR&RGC32&OLIG1&ACP6\tabularnewline
+17&CPT2&DFFA&GPSN2&APCDD1\tabularnewline
+18&MLC1&SLC25A20&ARL6IP6&ARHGAP24\tabularnewline
+19&ZHX2&IQCK&LZTFL1&PIK3C2A\tabularnewline
+20&ACAA2&ABTB2&RARS&PRDX4\tabularnewline
+21&PCCB&ALAD&FAM36A&RHBDD1\tabularnewline
+22&SCAMP2&STAT3&HIST1H2AC&TTYH1\tabularnewline
+23&DIRC2&SH3GL2&ATP6V0E1&MAPRE1\tabularnewline
+24&GPR17&S100A13&H3F3AP4&CBR1\tabularnewline
+25&WDFY2&ELOVL2&CYP2J2&CCNB1\tabularnewline
+26&GALNT10&SGPL1&GLUL&PLA2G5\tabularnewline
+27&KRT10&SASH1&CRB1&C6orf72\tabularnewline
+28&RELA&MON1B&PSMC1&PHGDH\tabularnewline
+29&PTPRZ1&GNG5&PFN1&SEL1L\tabularnewline
+30&CHDH&TNFSF13&PCDHGC3&NME6\tabularnewline
+31&CTNNA1&MCF2&CXorf38&LRP4\tabularnewline
+32&TST&GNAI2&NUBP1&FTL\tabularnewline
+33&HIP1&HSF2&AGPAT3&ATPAF1\tabularnewline
+34&RAB9A&DYNLT1&AKR7A3&CLK3\tabularnewline
+35&EIF4EBP3&IGFBP7&CD302&KUA-UEV\tabularnewline
+36&DAG1&LDHD&CDC37L1&HSD17B10\tabularnewline
+37&DPY19L3&GRHPR&VPS72&TMEM136\tabularnewline
+38&HLA-A&CST3&C5orf5&GRN\tabularnewline
+39&ACO2&TP53AP1&MTM1&PARP4\tabularnewline
+40&GSTM2&SYPL1&MRPL53&FAM102A\tabularnewline
+\newpage
+41&PXMP2&MGST1&GNG12&PON2\tabularnewline
+42&C16orf14&SELENBP1&RFXANK&NPL\tabularnewline
+43&CASC1&BCKDHA&TSC22D4&APRIN\tabularnewline
+44&FAH&ARL15&C2orf18&CRYL1\tabularnewline
+45&SFRS15&PYCR2&CLDN10&DOCK1\tabularnewline
+46&DERA&RANBP3L&ITGB5&C2orf34\tabularnewline
+47&GPR37L1&MERTK&ASRGL1&TOMM70A\tabularnewline
+48&PCDHGA12&IRF2BP2&GNA13&FADS1\tabularnewline
+49&PITPNC1&PCMT1&CTSH&ZBTB20\tabularnewline
+50&C9orf46&ADHFE1&MARCKSL1&SLC30A5\tabularnewline
+51&AGXT2L1&ACOX2&OLIG2&PNPO\tabularnewline
+52&MSRB2&AP3M1&DBI&ZFHX4\tabularnewline
+53&EDG1&ADORA2B&CYP4X1&PPAP2A\tabularnewline
+54&FBXO8&C5orf4&EPHX2&PPP2R5C\tabularnewline
+55&GNA12&ABHD3&TSPAN12&PXMP3\tabularnewline
+56&TTC19&TP53BP2&CUL3&FYN\tabularnewline
+57&EPB41L3&NR2E1&SLC39A12&MIF4GD\tabularnewline
+58&SLC7A6OS&ACTL6A&SLC9A9&GPR177\tabularnewline
+59&ACSBG1&RIT1&HHLA3&PI4KII\tabularnewline
+60&SORCS2&LGALS3&UBE2D2&PIPOX\tabularnewline
+61&PHLPP&CD82&EPB41L5&ACOX1\tabularnewline
+62&C3orf63&ACAA1&KIAA1161&SLCO1C1\tabularnewline
+63&RGS20&C5orf32&C1orf198&DLL1\tabularnewline
+64&PSAT1&IDH1&&\tabularnewline
+%\bottomrule
+\end{longtable}
+
+\vspace{2em}
+%latex.default(genes.in.common.tabs[[nj]], file = "genes_in_common_pval_ranked_final.tex",     caption = paste("The top 500 genes ranked by p-values shared in common between: ",         comp.areas[nj, 3], sep = ""), caption.loc = c("top"),     booktabs = TRUE, label = c("tab:genes.in.common.pval.ranked"),     na.blank = TRUE, rowlabel = c(""), colheads = c(rep("", rows.for.tabs)),     vbar = FALSE, longtable = TRUE, continued = paste(comp.areas[nj,         3], " continued", sep = ""), table.env = TRUE, center = c("center"),     first.hline.double = FALSE, append = TRUE)%
+\setlongtables\begin{longtable}{lllll}\caption{Genes from the top 500 genes in each brain area ranked by p-values shared in common between: Prefrontal and Pons} \tabularnewline
+\toprule
+\multicolumn{1}{l}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}\tabularnewline
+%\midrule
+\endfirsthead\caption[]{\em (Prefrontal and Pons continued)} \tabularnewline
+%\midrule
+\multicolumn{1}{l}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}\tabularnewline
+\midrule
+\endhead
+\midrule
+\endfoot
+\label{tab:genes.in.common.pval.ranked}
+1&RPL18P13&CAT&COMT&ACY1\tabularnewline
+2&CHCHD8&GATM&MYO6&C1orf122\tabularnewline
+3&CDC14B&UBP1&PGCP&PPIB\tabularnewline
+4&DTYMK&HSCB&TTLL4&MEGF10\tabularnewline
+5&POLR2F&HIP1R&ZFAND3&CLU\tabularnewline
+6&SERF2&PTTG1IP&COPE&AASS\tabularnewline
+7&SPAG9&SNAP23&PPAP2B&ZMAT5\tabularnewline
+8&SCNM1&C3orf70&CAMSAP1L1&PDE6D\tabularnewline
+9&GSN&PGLS&QKI&ELOVL4\tabularnewline
+10&RAB11FIP5&PIR&ARL6IP6&PIK3C2A\tabularnewline
+11&ACAA2&ABTB2&RARS&YIF1A\tabularnewline
+12&PRDX4&PCCB&RHBDD1&SDAD1\tabularnewline
+13&HIST1H2AC&PMF1&PJA2&ATP6V0E1\tabularnewline
+14&MAPRE1&H3F3AP4&CBR1&WDFY2\tabularnewline
+15&ELOVL2&CYP2J2&CCNB1&SGPL1\tabularnewline
+16&KRT10&SASH1&C6orf72&RELA\tabularnewline
+17&PSMC1&PFN1&NSMCE1&CTNNA1\tabularnewline
+18&CECR1&HIP1&AGPAT3&RAB9A\tabularnewline
+19&DYNLT1&SNAP91&LGALS3BP&KUA-UEV\tabularnewline
+20&GRHPR&GM2A&PHPT1&TP53AP1\tabularnewline
+21&MTM1&PARP4&SYPL1&SYNJ1\tabularnewline
+22&OACT2&CRYL1&ANXA5&PLCB1\tabularnewline
+23&PRKCSH&C2orf28&CAPZA2&TMBIM4\tabularnewline
+24&MARCKSL1&AP3M1&PPAP2A&FBXO8\tabularnewline
+25&C5orf4&RPLP0&PPP2R5C&PXMP3\tabularnewline
+26&TTC19&RRNAD1&SS18&MIF4GD\tabularnewline
+27&ACTL6A&SLC9A9&HHLA3&C6orf129\tabularnewline
+28&CYB5A&C3orf63&AK2&RIOK1\tabularnewline
+29&RPIB9&C1orf198&&\tabularnewline
+%\bottomrule
+\end{longtable}
+
+\vspace{2em}
+%latex.default(genes.in.common.tabs[[nj]], file = "genes_in_common_pval_ranked_final.tex",     caption = paste("The top 500 genes ranked by p-values shared in common between: ",         comp.areas[nj, 3], sep = ""), caption.loc = c("top"),     booktabs = TRUE, label = c("tab:genes.in.common.pval.ranked"),     na.blank = TRUE, rowlabel = c(""), colheads = c(rep("", rows.for.tabs)),     vbar = FALSE, longtable = TRUE, continued = paste(comp.areas[nj,         3], " continued", sep = ""), table.env = TRUE, center = c("center"),     first.hline.double = FALSE, append = TRUE)%
+\setlongtables\begin{longtable}{lllll}\caption{Genes from the top 500 genes in each brain area ranked by p-values shared in common between: Cerebellum and Temporal} \tabularnewline
+\toprule
+\multicolumn{1}{l}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}\tabularnewline
+%\midrule
+\endfirsthead\caption[]{\em (Cerebellum and Temporal continued)} \tabularnewline
+%\midrule
+\multicolumn{1}{l}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}\tabularnewline
+\midrule
+\endhead
+\midrule
+\endfoot
+\label{tab:genes.in.common.pval.ranked}
+1&PGCP&CAT&PCCB&RAB9A\tabularnewline
+2&COMT&KUA-UEV&CBR1&GRHPR\tabularnewline
+3&PFN1&MARCKSL1&PYCR2&FNTA\tabularnewline
+4&MYO6&PDE6D&C3orf70&DIRC2\tabularnewline
+5&QKI&PPAP2B&PPIB&PTPRZ1\tabularnewline
+6&GPR177&SYPL1&C5orf4&CPT2\tabularnewline
+7&PPAP2A&RUSC1&TTC19&HIP1\tabularnewline
+8&TP53AP1&HIP1R&HHLA3&DFFA\tabularnewline
+9&ATP6V0E1&EDNRB&CAMSAP1L1&PXMP3\tabularnewline
+10&SPAG9&PPP2R5C&MAPRE1&CHCHD8\tabularnewline
+11&CDC14B&HSPA2&TNRC5&SEC22C\tabularnewline
+12&GSN&COPE&PEPD&IQCK\tabularnewline
+13&GALNT10&PRDX4&AASS&IGSF11\tabularnewline
+14&PIR&NLGN3&HSD17B6&YBX1P2\tabularnewline
+15&SFT2D1&RARS&ZMAT5&GATM\tabularnewline
+16&ACO2&ABTB2&RHBDD1&SGPL1\tabularnewline
+17&SLC9A9&C1orf122&PTTG1IP&C6orf72\tabularnewline
+18&PDGFRA&SCRG1&MTM1&ARL6IP6\tabularnewline
+19&ECH1&IVD&DYNLT1&SH3GL2\tabularnewline
+20&ETFA&ELOVL4&CADM4&CD82\tabularnewline
+21&ALAD&DERA&C9orf46&LARS2\tabularnewline
+22&DHRS4&TAF5&POLR2F&HSF2\tabularnewline
+23&CHRNB1&KCTD18&SLC25A20&ACTL6A\tabularnewline
+24&C3orf63&SNAP23&TST&TM9SF1\tabularnewline
+25&CCNB1&DTYMK&TMEM136&SERF2\tabularnewline
+26&CA2&MON1B&CLU&HSD17B10\tabularnewline
+27&NUDT5&DLL1&CD302&AGPAT3\tabularnewline
+28&PER2&&&\tabularnewline
+%\bottomrule
+\end{longtable}
+
+\vspace{2em}
+%latex.default(genes.in.common.tabs[[nj]], file = "genes_in_common_pval_ranked_final.tex",     caption = paste("The top 500 genes ranked by p-values shared in common between: ",         comp.areas[nj, 3], sep = ""), caption.loc = c("top"),     booktabs = TRUE, label = c("tab:genes.in.common.pval.ranked"),     na.blank = TRUE, rowlabel = c(""), colheads = c(rep("", rows.for.tabs)),     vbar = FALSE, longtable = TRUE, continued = paste(comp.areas[nj,         3], " continued", sep = ""), table.env = TRUE, center = c("center"),     first.hline.double = FALSE, append = TRUE)%
+\setlongtables\begin{longtable}{lllll}\caption{Genes from the top 500 genes in each brain area ranked by p-values shared in common between: Cerebellum and Pons} \tabularnewline
+\toprule
+\multicolumn{1}{l}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}\tabularnewline
+%\midrule
+\endfirsthead\caption[]{\em (Cerebellum and Pons continued)} \tabularnewline
+%\midrule
+\multicolumn{1}{l}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}\tabularnewline
+\midrule
+\endhead
+\midrule
+\endfoot
+\label{tab:genes.in.common.pval.ranked}
+1&PGCP&CAT&PCCB&TMEM170\tabularnewline
+2&RAB9A&OACT2&ARHGEF12&COMT\tabularnewline
+3&ACTG1&SEPP1&KUA-UEV&CBR1\tabularnewline
+4&PIGT&GRHPR&PFN1&MARCKSL1\tabularnewline
+5&FNTA&MYO6&PDE6D&C3orf70\tabularnewline
+6&GRM3&PDE4B&B3GAT1&QKI\tabularnewline
+7&PPAP2B&PPIB&ABCA9&SNAP91\tabularnewline
+8&CDS1&C3orf1&SYPL1&C5orf4\tabularnewline
+9&RPIB9&PPAP2A&C8orf61&TTC19\tabularnewline
+10&HIP1&TP53AP1&ISOC1&LRRC8D\tabularnewline
+11&DAD1&SLC31A2&HIP1R&CD9\tabularnewline
+12&HHLA3&ATP6V0E1&CAMSAP1L1&LYRM2\tabularnewline
+13&PXMP3&SPAG9&PPP2R5C&MOG\tabularnewline
+14&TMEM42&TMEM165&SERPINI1&PRKCE\tabularnewline
+15&MAPRE1&ABCA8&CHCHD8&CDC14B\tabularnewline
+16&HSPA2&CLDN11&ARMC10&TNRC5\tabularnewline
+17&C10orf78&SEC22C&CKS1B&SPTLC2\tabularnewline
+18&FEZ1&PXK&GSN&COPE\tabularnewline
+19&BRP44L&CPEB3&LAMP2&PRDX4\tabularnewline
+20&AASS&IGSF11&PIR&C14orf24\tabularnewline
+21&C20orf23&PMF1&RNF13&ATG3\tabularnewline
+22&SLC44A1&KLHL4&ATP5S&GPR27\tabularnewline
+23&TMEM59&RNH1&TMEM87A&SFT2D1\tabularnewline
+24&PHF16&RARS&ZMAT5&GATM\tabularnewline
+25&SLCO3A1&ABTB2&RHBDD1&SGPL1\tabularnewline
+26&TTYH2&LGALS3BP&SLC9A9&MAPRE2\tabularnewline
+27&C1orf122&PTTG1IP&DSCAML1&TMBIM4\tabularnewline
+28&ACBD5&TTLL7&PSEN1&FBXO7\tabularnewline
+29&C6orf72&UGT8&FA2H&SCRG1\tabularnewline
+30&DOCK10&APBB2&DYNC1I2&POLR2G\tabularnewline
+31&RFFL&MTM1&NRBP2&NSMCE1\tabularnewline
+32&ARL6IP6&C10orf90&DAZAP2&FKSG30\tabularnewline
+33&KIAA0196&LIPA&ASPA&DYNLT1\tabularnewline
+34&M6PRBP1&PQLC3&EDIL3&SOX10\tabularnewline
+35&AK2&ANXA5&ENPP6&ELOVL4\tabularnewline
+36&RNF130&CDKN1C&CA14&C1orf19\tabularnewline
+37&CADM4&RIPK2&ENPP2&BTG3\tabularnewline
+38&CYP27A1&KIAA0256&KLK6&MYO1D\tabularnewline
+39&RHBDL2&PHF11&C20orf116&DHRS4\tabularnewline
+40&MYLK&TMEM63A&PAQR4&SCCPDH\tabularnewline
+\newpage
+41&RAB11FIP5&GAL3ST1&ADC&GM2A\tabularnewline
+42&TMEM125&POLR2F&PSPH&SLCO1A2\tabularnewline
+43&SEMA4D&PADI2&HRASLS3&GPR37\tabularnewline
+44&ACTL6A&C3orf63&GLTP&SALL1\tabularnewline
+45&KIAA0672&DDX19A&SNAP23&CCNB1\tabularnewline
+46&DTYMK&INTU&AFMID&SERF2\tabularnewline
+47&C10orf32&CA2&HOXD1&KIF13B\tabularnewline
+48&HPN&EXOSC5&LITAF&COL16A1\tabularnewline
+49&BVES&MOBKL2B&RRNAD1&CLU\tabularnewline
+50&STX2&UBE2G1&CXADR&RTKN\tabularnewline
+51&TGFA&TALDO1&NUDT5&CAPZA2\tabularnewline
+52&ELOVL6&ADIPOR1&AGPAT3&HIAT1\tabularnewline
+%\bottomrule
+\end{longtable}
+
+\vspace{2em}
+%latex.default(genes.in.common.tabs[[nj]], file = "genes_in_common_pval_ranked_final.tex",     caption = paste("The top 500 genes ranked by p-values shared in common between: ",         comp.areas[nj, 3], sep = ""), caption.loc = c("top"),     booktabs = TRUE, label = c("tab:genes.in.common.pval.ranked"),     na.blank = TRUE, rowlabel = c(""), colheads = c(rep("", rows.for.tabs)),     vbar = FALSE, longtable = TRUE, continued = paste(comp.areas[nj,         3], " continued", sep = ""), table.env = TRUE, center = c("center"),     first.hline.double = FALSE, append = TRUE)%
+\setlongtables\begin{longtable}{lllll}\caption{Genes from the top 500 genes in each brain area ranked by p-values shared in common between: Temporal and Pons} \tabularnewline
+\toprule
+\multicolumn{1}{l}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}\tabularnewline
+%\midrule
+\endfirsthead\caption[]{\em (Temporal and Pons continued)} \tabularnewline
+%\midrule
+\multicolumn{1}{l}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}\tabularnewline
+\midrule
+\endhead
+\midrule
+\endfoot
+\label{tab:genes.in.common.pval.ranked}
+1&GATM&CAT&SNAP23&CDC14B\tabularnewline
+2&PTTG1IP&DTYMK&PPAP2B&COMT\tabularnewline
+3&ARL6IP6&MEGF10&HSCB&PIR\tabularnewline
+4&HIST1H2AC&MTM1&ACY1&CYP2J2\tabularnewline
+5&WDFY2&RAB9A&AASS&SASH1\tabularnewline
+6&ZFAND3&PSMC1&QKI&MYO6\tabularnewline
+7&C3orf70&HIP1&SPAG9&SGPL1\tabularnewline
+8&ACAA2&TTLL4&PXMP3&CBR1\tabularnewline
+9&RELA&ATP6V0E1&PPP2R5C&CHCHD8\tabularnewline
+10&CA2&AGPAT3&TJP2&CLU\tabularnewline
+11&POLR2F&CCNB1&MARCKSL1&SYPL1\tabularnewline
+12&SCRG1&DVL3&ZMAT5&ACTL6A\tabularnewline
+13&ELOVL2&PRDX4&HIP1R&RHBDD1\tabularnewline
+14&DYNLT1&RPL18P13&PPIB&COPE\tabularnewline
+15&MIF4GD&MAPRE1&C6orf72&KRT10\tabularnewline
+16&FBXO8&PCCB&SLC9A9&PIK3C2A\tabularnewline
+17&PFN1&NKX2-2&C1orf122&HSPA2\tabularnewline
+18&PDE6D&SFT2D1&KUA-UEV&SEC22C\tabularnewline
+19&PARP4&RARS&AP3M1&TMEM38B\tabularnewline
+20&GSN&CAMSAP1L1&UBP1&ITGAV\tabularnewline
+21&PGCP&PPAP2A&TNRC5&RBM4B\tabularnewline
+22&IGSF11&SERF2&C5orf4&CRYL1\tabularnewline
+23&MTUS1&DHRS4L2&C3orf63&ABTB2\tabularnewline
+24&NUDT5&POU3F2&GRHPR&H3F3AP4\tabularnewline
+25&FNTA&DHRS4&ELOVL4&EFHD1\tabularnewline
+26&SLC35B2&FAM96A&C1orf198&OMA1\tabularnewline
+27&ANKFY1&POLR3A&CADM4&SGCE\tabularnewline
+28&ARPC5L&HHLA3&CTNNA1&TTC19\tabularnewline
+29&TP53AP1&&&\tabularnewline
+%\bottomrule
+\end{longtable}
+
+\end{document}

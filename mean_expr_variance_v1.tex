@@ -1,0 +1,29 @@
+%%%%%%%%%%%
+%
+% Selecting genes based on the variance in their mean expression levels across brain areas
+%
+%%%%%%%%%%%
+
+\input{/Volumes/Macintosh_HD_3/genetics/genenetwork2/ltx_preamble.tex}
+
+\usepackage{Sweave}
+\begin{document}
+\input{mean_expr_variance_v1-concordance}
+
+\begin{Schunk}
+\begin{Sinput}
+> readanswer <- function()
++ { 
++   answ <- readline(prompt="Do you want to source the core input data script (Y/N)?: ")
++   if(!grepl("^[YN]+$",answ))
++   {
++     return(readanswer())
++   }
++   
++   return(answ)
++ }
+> if (readanswer() == 'Y')   {
++      source('core_comt_global_data_v2.R')
++ } else {
++      
++ }

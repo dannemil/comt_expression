@@ -1,0 +1,315 @@
+June 1, 2018
+Chi-square tests of AT vs CG promoter content in all four brain areas.
+
+
+PREFRONTAL
+$statistic
+X-squared 
+   2074.4 
+
+$parameter
+df 
+ 1 
+
+$p.value
+[1] 0
+
+$method
+[1] "Pearson's Chi-squared test with Yates' continuity correction"
+
+$data.name
+[1] "promoter.content.atVcg"
+
+$observed
+        AT     CG
+pos 251196 265604
+neg 145210 123590
+
+$expected
+        AT     CG
+pos 260772 256028
+neg 135634 133166
+
+$residuals
+         AT      CG
+pos -18.753  18.926
+neg  26.002 -26.242
+
+$stdres
+         AT      CG
+pos -45.548  45.548
+neg  45.548 -45.548
+
+
+CEREBELLUM
+$statistic
+X-squared 
+   25.267 
+
+$parameter
+df 
+ 1 
+
+$p.value
+[1] 0.00000049926
+
+$method
+[1] "Pearson's Chi-squared test with Yates' continuity correction"
+
+$data.name
+[1] "promoter.content.atVcg"
+
+$observed
+        AT     CG
+pos 303645 297955
+neg  95731  91469
+
+$expected
+        AT     CG
+pos 304595 297005
+neg  94781  92419
+
+$residuals
+         AT      CG
+pos -1.7215  1.7433
+neg  3.0860 -3.1252
+
+$stdres
+         AT      CG
+pos -5.0292  5.0292
+neg  5.0292 -5.0292
+
+
+TEMPORAL
+$statistic
+X-squared 
+   224.28 
+
+$parameter
+df 
+ 1 
+
+$p.value
+[1] 0.00000000000000000000000000000000000000000000000001055
+
+$method
+[1] "Pearson's Chi-squared test with Yates' continuity correction"
+
+$data.name
+[1] "promoter.content.atVcg"
+
+$observed
+        AT     CG
+pos 317814 320586
+neg  78102  72298
+
+$expected
+        AT     CG
+pos 320427 317973
+neg  75489  74911
+
+$residuals
+         AT      CG
+pos -4.6160  4.6338
+neg  9.5102 -9.5468
+
+$stdres
+         AT      CG
+pos -14.979  14.979
+neg  14.979 -14.979
+
+
+PONS
+$statistic
+X-squared 
+   83.914 
+
+$parameter
+df 
+ 1 
+
+$p.value
+[1] 0.000000000000000000051687
+
+$method
+[1] "Pearson's Chi-squared test with Yates' continuity correction"
+
+$data.name
+[1] "promoter.content.atVcg"
+
+$observed
+        AT     CG
+pos 343502 334898
+neg  53462  55338
+
+$expected
+        AT     CG
+pos 342099 336301
+neg  54865  53935
+
+$residuals
+         AT      CG
+pos  2.3986 -2.4192
+neg -5.9895  6.0409
+
+$stdres
+         AT      CG
+pos  9.1637 -9.1637
+neg -9.1637  9.1637
+
+[[1]]
+[[1]]$statistic
+X-squared 
+   2074.4 
+
+[[1]]$parameter
+df 
+ 1 
+
+[[1]]$p.value
+[1] 0
+
+[[1]]$method
+[1] "Pearson's Chi-squared test with Yates' continuity correction"
+
+[[1]]$data.name
+[1] "promoter.content.atVcg"
+
+[[1]]$observed
+        AT     CG
+pos 251196 265604
+neg 145210 123590
+
+[[1]]$expected
+        AT     CG
+pos 260772 256028
+neg 135634 133166
+
+[[1]]$residuals
+         AT      CG
+pos -18.753  18.926
+neg  26.002 -26.242
+
+[[1]]$stdres
+         AT      CG
+pos -45.548  45.548
+neg  45.548 -45.548
+
+
+[[2]]
+[[2]]$statistic
+X-squared 
+   25.267 
+
+[[2]]$parameter
+df 
+ 1 
+
+[[2]]$p.value
+[1] 0.00000049926
+
+[[2]]$method
+[1] "Pearson's Chi-squared test with Yates' continuity correction"
+
+[[2]]$data.name
+[1] "promoter.content.atVcg"
+
+[[2]]$observed
+        AT     CG
+pos 303645 297955
+neg  95731  91469
+
+[[2]]$expected
+        AT     CG
+pos 304595 297005
+neg  94781  92419
+
+[[2]]$residuals
+         AT      CG
+pos -1.7215  1.7433
+neg  3.0860 -3.1252
+
+[[2]]$stdres
+         AT      CG
+pos -5.0292  5.0292
+neg  5.0292 -5.0292
+
+
+[[3]]
+[[3]]$statistic
+X-squared 
+   224.28 
+
+[[3]]$parameter
+df 
+ 1 
+
+[[3]]$p.value
+[1] 0.00000000000000000000000000000000000000000000000001055
+
+[[3]]$method
+[1] "Pearson's Chi-squared test with Yates' continuity correction"
+
+[[3]]$data.name
+[1] "promoter.content.atVcg"
+
+[[3]]$observed
+        AT     CG
+pos 317814 320586
+neg  78102  72298
+
+[[3]]$expected
+        AT     CG
+pos 320427 317973
+neg  75489  74911
+
+[[3]]$residuals
+         AT      CG
+pos -4.6160  4.6338
+neg  9.5102 -9.5468
+
+[[3]]$stdres
+         AT      CG
+pos -14.979  14.979
+neg  14.979 -14.979
+
+
+[[4]]
+[[4]]$statistic
+X-squared 
+   83.914 
+
+[[4]]$parameter
+df 
+ 1 
+
+[[4]]$p.value
+[1] 0.000000000000000000051687
+
+[[4]]$method
+[1] "Pearson's Chi-squared test with Yates' continuity correction"
+
+[[4]]$data.name
+[1] "promoter.content.atVcg"
+
+[[4]]$observed
+        AT     CG
+pos 343502 334898
+neg  53462  55338
+
+[[4]]$expected
+        AT     CG
+pos 342099 336301
+neg  54865  53935
+
+[[4]]$residuals
+         AT      CG
+pos  2.3986 -2.4192
+neg -5.9895  6.0409
+
+[[4]]$stdres
+         AT      CG
+pos  9.1637 -9.1637
+neg -9.1637  9.1637
+
+

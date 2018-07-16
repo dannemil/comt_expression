@@ -1,0 +1,362 @@
+% Use this file as an \include to put it at the top of Sweave/R generated latex tables.
+
+\documentclass[letterpaper,12pt]{article}
+
+%\usepackage{dgjournal}
+
+
+%%% Note: remove the next two lines to submit article %%%%%%%%%%
+\usepackage{setspace}
+%\linespread{2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%       
+
+%% The mathptmx package is recommended for Times compatible math symbols.
+%% Use mtpro2 or mathtime instead of mathptmx if you have the commercially
+%% available MathTime fonts.
+%% Other options are txfonts (free) or belleek (free) or TM-Math (commercial)
+\usepackage{mathptmx}
+\usepackage{tensor}
+\usepackage{nicefrac}
+\usepackage{units}
+\usepackage{mathtools}
+\usepackage{mathrsfs}
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+\usepackage{nth}
+\usepackage{epsfig}
+\usepackage[makeroom]{cancel}
+\newcommand\Ccancel[2][black]{\renewcommand\CancelColor{\color{#1}}\cancel{#2}}
+\newcommand\Bcancel[2][black]{\renewcommand\CancelColor{\color{#1}}\bcancel{#2}}
+
+\usepackage{geometry}
+\usepackage{changepage}
+
+
+
+\usepackage[T1]{fontenc}
+\usepackage{makecell}
+\newcolumntype{x}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{tikz}
+\newcommand\diag[4]{%
+  \multicolumn{1}{p{#2}|}{\hskip-\tabcolsep
+  $\vcenter{\begin{tikzpicture}[baseline=0,anchor=south west,inner sep=#1]
+  \path[use as bounding box] (0,0) rectangle (#2+2\tabcolsep,\baselineskip);
+  \node[minimum width={#2+2\tabcolsep},minimum height=\baselineskip+\extrarowheight] (box) {};
+  \draw (box.north west) -- (box.south east);
+  \draw (box.south west) -- (box.south west);
+  \node[anchor=south west] at (box.south west) {#3};
+  \node[anchor=north east] at (box.north east) {#4};
+ \end{tikzpicture}}$\hskip-\tabcolsep}}
+
+
+%% Use the graphics package to include figures
+%\usepackage{graphics}
+
+%% Use natbib with these recommended options
+%\usepackage[authoryear,comma,longnamesfirst,sectionbib]{natbib}
+\usepackage[authoryear,comma,sectionbib]{natbib} 
+
+%%%%%%%%%%% Dannemiller added 01/19/2015 - standard preamble
+\usepackage{fancyhdr} % Headers and footers
+
+\pagestyle{fancyplain} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+\fancyhead[RO,RE]{\thepage} % Custom header text
+\renewcommand{\headrulewidth}{0pt} %0pt for no rule, 2pt thicker etc...
+\setlength{\headheight}{15.0pt}
+
+\usepackage{url}   %this allows us to cite URLs in the text
+
+\usepackage{booktabs}
+\usepackage{pstricks}
+\let\clipbox\relax
+\usepackage{amssymb}
+\usepackage{afterpage}
+\usepackage{transparent}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{multicol}
+%\usepackage{chngpage}
+
+
+\usepackage{enumerate}
+\usepackage{xspace}
+
+\usepackage{abbrevs}
+% example: \newabbrev\ART{American Repetrory Theater (ART)}[ART]
+\newabbrev\ssb{Sum of Squares Between genotypes ($SS_{B}$)}[$SS_{B}$]
+\newabbrev\ssw{Sum of Squares Within genotypes ($SS_{W}$)}[$SS_{W}$]
+\newabbrev\sst{Sum of Squares Total ($SS_{T}$)}[$SS_{T}$]
+\newabbrev\ci{current, intermediate (CI)}[CI]
+\newabbrev\cim{current, intermediate matrix (CI matrix)}[CI matrix]
+\newabbrev\cims{current, intermediate matrices (CI matrices)}[CI matrices]
+\newabbrev\civ{current, intermediate vector (CI vector)}[CI vector]
+\newabbrev\civs{current, intermediate vectors (CI vectors)}[CI vectors]
+\newabbrev\cis{current, intermediate scalar (CI scalar)}[CI scalar]
+\newabbrev\maf{minor allele frequency (MAF)}[MAF]
+
+
+
+%%% The following correct for a flawed if statement in package abbrev
+\makeatletter
+\renewcommand\maybe@space@{%
+  % \@tempswatrue % <= this is in the original
+  \maybe@ictrue % <= this is new
+  \expandafter   \@tfor
+    \expandafter \reserved@a
+    \expandafter :%
+    \expandafter =%
+                 \nospacelist
+                 \do \t@st@ic
+  % \if@tempswa % <= this is in the original
+  \ifmaybe@ic % <= this is new
+    \space
+  \fi
+}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{ textcomp }
+\newcommand\dblquote[1]{\textquotedblleft #1\textquotedblright} 
+\newcommand{\apos}{$\text{'}$}
+\newcommand{\be}{\begin{enumerate}}
+\newcommand{\ee}{\end{enumerate}}
+\newcommand{\bes}{\begin{enumerate*}}
+\newcommand{\ees}{\end{enumerate*}}
+\newcommand{\mb}{\noindent\makebox[\textwidth] }
+\newcommand{\den}{\hspace{2pt}\textendash \,}
+\newcommand{\dem}{\textemdash \,}
+\newcommand{\Eq}{Equation }
+
+
+
+%specific hyphenation
+\hyphenation{e-pi-neph-rine}
+\hyphenation{mol-e-cules}
+%\hyphenation{}
+
+
+\providecommand\phantomsection{}
+
+
+%\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{ colorlinks=false,pdfborderstyle={/S/U/W 1},citebordercolor=0 0 1 }
+\colorlet{transpyellow}{white!10!yellow}
+
+\usepackage{rotate}
+\usepackage{rotating}
+\usepackage{rotfloat}
+
+\usepackage{fontspec}
+\usepackage[lofdepth,lotdepth]{subfig}
+\usepackage{threeparttable} 
+\usepackage{tablefootnote}
+\usepackage{footnote}
+
+\usepackage{array}
+%\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{threeparttablex}
+
+
+\usepackage{pdflscape} 
+\usepackage{tabulary}
+\usepackage{ltxtable}
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\setlength\LTleft{0pt}
+\setlength\LTright{0pt}
+
+
+
+\usepackage{colortbl}
+\definecolor{riceblue}{hsb}{0.6,0.1,0.9}
+\definecolor{greenish}{rgb}{0.3,0.6,0.0}
+\definecolor{myblue}{rgb}{0.3,0.3,0.8}
+\definecolor{kugray5}{RGB}{224,224,224}
+\definecolor{lightgray}{gray}{0.9}
+
+\usepackage{xltxtra}
+\usepackage{nicefrac}
+
+\usepackage{rotating}
+\usepackage{lscape}
+
+\usepackage{graphicx}
+%\usepackage{epstopdf}
+\graphicspath{/Users/dannemil/paperless/ase_manuscript/sagmb/}
+
+\usepackage[normal]{engord}
+
+\usepackage{enumitem}
+%\setlist[enumerate]{parsep=4pt}
+
+\usepackage [normalem] {ulem}
+
+\usepackage{tabularx}
+\newcolumntype{S}{@{\stepcounter{Definition}\theDefinition.~} >{\bfseries}l @{~--~}X@{}}
+\newcounter{Definition}[subsubsection]
+
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{caption}
+%\renewcommand{\tablename}{Table}
+\usepackage{threeparttable}
+
+\usepackage{setspace}% http://ctan.org/pkg/setspace
+\AtBeginEnvironment{tabular}{\singlespacing}% Single spacing in tabular environment
+
+%\usepackage{booktabs}
+\usepackage[detect-all]{siunitx}
+\robustify\bfseries
+
+\usepackage{tabularx,colortbl}
+\newcolumntype{Y}{>{\centering\arraybackslash} X}
+\renewcommand{\arraystretch}{1.5}
+
+\usepackage{amsmath, amsthm, amssymb}
+%\setlength{\mathindent}{0pt}
+
+\usepackage{etoolbox}
+\apptocmd\normalsize{%
+ \abovedisplayskip=12pt plus 3pt minus 9pt
+ \abovedisplayshortskip=0pt plus 3pt
+ \belowdisplayskip=12pt plus 3pt minus 9pt
+ \belowdisplayshortskip=7pt plus 3pt minus 4pt
+}{}{}
+
+
+%\numberwithin{figure}{section}
+
+\makeatletter
+\@addtoreset{footnote}{section}
+\makeatother
+
+\usepackage{mdwlist}
+
+
+\renewcommand*\thesubsection{\arabic{section}.\arabic{subsection}}
+\usepackage[title]{appendix}
+\newcounter{appendix}
+\numberwithin{equation}{appendix}
+\usepackage{tablefootnote}
+\usepackage{yhmath}
+\usepackage{ragged2e}
+
+\newcolumntype{C}[1]{>{\Centering\arraybackslash}p{#1}}
+
+\usepackage{makecell}
+\renewcommand\theadfont{\normalsize\bfseries}
+\renewcommand\theadalign{bc}
+\usepackage{cellspace}
+\setlength\cellspacetoplimit{5pt}
+\setlength\cellspacebottomlimit{5pt}
+
+\setlength{\LTpre}{0pt}
+\setlength{\LTpost}{12pt}
+%\setlength\LTleft\parindent
+%\setlength\LTright\fill
+
+
+%\setmainfont{Times}
+\setmainfont{Baskerville}
+%\setmainfont{Alegreya}
+%\setmainfont{Cardo}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\mtx}[1]{\mathbf{#1}}
+
+
+
+\DeclareMathSizes{12pt}{11pt}{8pt}{6pt}
+\everymath=\expandafter{\the\everymath\displaystyle}
+
+\setcounter{secnumdepth}{5}
+
+\usepackage{footnote}
+\makesavenoteenv{tabular}
+\makesavenoteenv{table}
+\usepackage{tablefootnote}
+\usepackage{adjustbox}
+\setlength\heavyrulewidth{.06em}
+\setlength\lightrulewidth{.04em}
+
+
+
+\begin{document}
+
+\noindent
+
+\begin{landscape}
+
+{\footnotesize {
+\setlength\LTleft{-1cm}
+\setlength\LTright{-1cm}
+% latex table generated in R 3.4.4 by xtable 1.8-2 package
+% Wed May 30 14:15:39 2018
+\begin{longtable}{lrrrrrl}
+\caption{CC Ontology for the positively correlated genes with the lowest p-values for expression correlations with COMT: Prefrontal Cortex} \\ 
+  \toprule
+GOCCID & Pvalue & OddsRatio & ExpCount & Count & Size & Term \\ 
+  \midrule
+GO:1903561 & 0.00000000000000024 & 2.87 & 50.50 & 109 & 2454 & extracellular vesicle \\ 
+  GO:0043230 & 0.00000000000000026 & 2.86 & 50.54 & 109 & 2456 & extracellular organelle \\ 
+  GO:0070062 & 0.00000000000000041 & 2.85 & 50.13 & 108 & 2436 & extracellular exosome \\ 
+  GO:0031982 & 0.00000000000000048 & 2.61 & 77.01 & 142 & 3742 & vesicle \\ 
+  GO:0044444 & 0.00000000000000071 & 2.72 & 166.92 & 235 & 8111 & cytoplasmic part \\ 
+  GO:0005737 & 0.00000000000082354 & 2.65 & 199.46 & 256 & 9692 & cytoplasm \\ 
+  GO:0044421 & 0.00000000000462783 & 2.32 & 69.60 & 123 & 3382 & extracellular region part \\ 
+  GO:0005615 & 0.00000000001365252 & 2.30 & 65.71 & 117 & 3193 & extracellular space \\ 
+  GO:0022626 & 0.00000000003209191 & 10.94 & 1.83 & 16 & 89 & cytosolic ribosome \\ 
+  GO:0005925 & 0.00000000041329804 & 4.47 & 7.45 & 29 & 362 & focal adhesion \\ 
+  GO:0005924 & 0.00000000050160335 & 4.43 & 7.51 & 29 & 365 & cell-substrate adherens junction \\ 
+  GO:0005576 & 0.00000000063024476 & 2.08 & 81.64 & 131 & 3967 & extracellular region \\ 
+  GO:0030055 & 0.00000000064722500 & 4.37 & 7.59 & 29 & 369 & cell-substrate junction \\ 
+  GO:0005739 & 0.00000000096640907 & 2.55 & 30.44 & 66 & 1479 & mitochondrion \\ 
+  GO:0005912 & 0.00000000743007459 & 3.69 & 9.51 & 31 & 462 & adherens junction \\ 
+  GO:0044391 & 0.00000001137424763 & 6.43 & 3.07 & 17 & 149 & ribosomal subunit \\ 
+  GO:0070161 & 0.00000001645334515 & 3.56 & 9.84 & 31 & 478 & anchoring junction \\ 
+  GO:0043227 & 0.00000007580812769 & 2.11 & 216.35 & 257 & 10513 & membrane-bounded organelle \\ 
+  GO:0005777 & 0.00000011204105717 & 6.79 & 2.39 & 14 & 116 & peroxisome \\ 
+  GO:0042579 & 0.00000011204105717 & 6.79 & 2.39 & 14 & 116 & microbody \\ 
+  GO:0005840 & 0.00000037951801002 & 4.92 & 3.89 & 17 & 189 & ribosome \\ 
+  GO:0022627 & 0.00000042669800856 & 14.45 & 0.72 & 8 & 35 & cytosolic small ribosomal subunit \\ 
+  GO:0044438 & 0.00000089695554239 & 7.61 & 1.69 & 11 & 82 & microbody part \\ 
+  GO:0044439 & 0.00000089695554239 & 7.61 & 1.69 & 11 & 82 & peroxisomal part \\ 
+  GO:0060205 & 0.00000103780239760 & 3.78 & 6.15 & 21 & 299 & cytoplasmic vesicle lumen \\ 
+  GO:0031983 & 0.00000109537100170 & 3.77 & 6.17 & 21 & 300 & vesicle lumen \\ 
+  GO:0044424 & 0.00000118366719758 & 2.24 & 246.36 & 278 & 11971 & intracellular part \\ 
+  GO:1904813 & 0.00000201884371721 & 6.21 & 2.20 & 12 & 107 & ficolin-1-rich granule lumen \\ 
+  GO:0005622 & 0.00000266376505129 & 2.25 & 251.46 & 281 & 12219 & intracellular \\ 
+  GO:0043226 & 0.00000413155819343 & 1.97 & 232.41 & 265 & 11293 & organelle \\ 
+  GO:0044445 & 0.00000507461644738 & 4.22 & 4.20 & 16 & 204 & cytosolic part \\ 
+  GO:0022625 & 0.00000542197669699 & 9.74 & 0.99 & 8 & 48 & cytosolic large ribosomal subunit \\ 
+  GO:0101002 & 0.00000653616342913 & 4.67 & 3.33 & 14 & 162 & ficolin-1-rich granule \\ 
+  GO:0005829 & 0.00000675418085561 & 1.70 & 88.20 & 124 & 4286 & cytosol \\ 
+  GO:0031410 & 0.00000702239309560 & 1.92 & 40.17 & 68 & 1952 & cytoplasmic vesicle \\ 
+  GO:0034774 & 0.00000727934592799 & 3.56 & 5.87 & 19 & 285 & secretory granule lumen \\ 
+  GO:0005782 & 0.00000730603142590 & 11.73 & 0.74 & 7 & 36 & peroxisomal matrix \\ 
+  GO:0031907 & 0.00000730603142590 & 11.73 & 0.74 & 7 & 36 & microbody lumen \\ 
+  GO:0097708 & 0.00000739825710331 & 1.92 & 40.23 & 68 & 1955 & intracellular vesicle \\ 
+  GO:0031974 & 0.00000855933218583 & 1.68 & 90.43 & 126 & 4394 & membrane-enclosed lumen \\ 
+  GO:0043233 & 0.00000855933218583 & 1.68 & 90.43 & 126 & 4394 & organelle lumen \\ 
+  GO:0070013 & 0.00000855933218583 & 1.68 & 90.43 & 126 & 4394 & intracellular organelle lumen \\ 
+  GO:0044429 & 0.00001172190490256 & 2.31 & 18.09 & 38 & 879 & mitochondrial part \\ 
+  GO:0043231 & 0.00001242381406961 & 1.69 & 186.12 & 222 & 9044 & intracellular membrane-bounded organelle \\ 
+  GO:0031012 & 0.00001512318364494 & 2.75 & 10.31 & 26 & 501 & extracellular matrix \\ 
+  GO:0015935 & 0.00001543984996656 & 8.29 & 1.13 & 8 & 55 & small ribosomal subunit \\ 
+  GO:0044446 & 0.00001862235060542 & 1.63 & 157.70 & 194 & 7663 & intracellular organelle part \\ 
+  GO:0044422 & 0.00002494709163455 & 1.62 & 161.37 & 197 & 7841 & organelle part \\ 
+  GO:0030141 & 0.00003842428730998 & 2.34 & 14.88 & 32 & 723 & secretory granule \\ 
+  GO:0044433 & 0.00007278263433876 & 1.95 & 26.40 & 47 & 1283 & cytoplasmic vesicle part \\ 
+  GO:0005759 & 0.00008622505548846 & 2.76 & 8.23 & 21 & 400 & mitochondrial matrix \\ 
+   \bottomrule
+\end{longtable}
+}}
+\end{landscape}
+\end{document}

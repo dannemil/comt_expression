@@ -1,0 +1,12 @@
+May 2, 2018
+These chi-squared tests are using the top 500 genes ranked by Pvalue.
+
+Prefrontal :  Chi-squared = 40.9670394105253 , df = 22 , p = 0.00831581280905458
+Cerebellum :  Chi-squared = 22.3629230577565 , df = 22 , p = 0.438413498203864
+Temporal :  Chi-squared = 30.1575408231868 , df = 22 , p = 0.114685327496086
+Pons :  Chi-squared = 19.9325924469315 , df = 22 , p = 0.587256350913756
+
+Only in prefrontal cortex does the distribution of the top 500 genes across chromosomes differ significantly from the overall distribution of the prefrontal data.
+
+Chi-squared test of independence for Chromosome versus brain ares: counts of genes within the top 500 ranked by Pvalue;
+Chi-squared = 42.2506522382036 , df = 66 , p = 0.989967234826786

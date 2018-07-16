@@ -1,0 +1,1311 @@
+%%%%%%%%%%%
+%
+% Motif analysis of promoter regions of top 500 COMT-correlated genes
+%   ********* The randomization method for estimating null distributions in this case
+%   *********  involves randomizing genes across pos v neg. In other words,
+%   *********  reconstitute a new group that has genes sampled randomnly from the pos and neg % %   *********  subsets
+%
+%%%%%%%%%%%
+
+\input{/Volumes/Macintosh_HD_3/genetics/genenetwork2/ltx_preamble.tex}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+<<>>=
+readanswer <- function()
+{ 
+  answ <- readline(prompt="Do you want to source the core input data script (Y/N)?: ")
+  if(!grepl("^[YN]+$",answ))
+  {
+    return(readanswer())
+  }
+  
+  return(answ)
+}
+
+if (readanswer() == 'Y')   {
+     source('core_comt_global_data_v2.R')
+} else {
+     
+}
+
+@
+
+<<include=FALSE, echo=FALSE, results=hide>>=
+# Generate a unique ID for this program by path and filename. This unique ID is attached to this file using a tag in the filesystem.
+fname <- csf()   # function to get current path including file name
+
+          prog.Name <- unique.ID(fname)
+
+          prog.Name   # unique ID based on hash of file name
+
+# Write out the file_name, unique ID and date/time to '.Rscriptnames'
+
+          rec.script(eval(fname),eval(prog.Name))
+@
+
+This program has the unique ID: \Sexpr{prog.Name}.
+
+
+
+<<motif.read, echo=FALSE>>=
+### Read in putative transcription factors based on motifRG analysis of positively vs. negatively correlated genes in Prefrontal Cortex
+
+fname1 <- c('tfs_pf_motifRG.xlsx')
+
+if (file.exists(fname1))   {
+     wbtf <- loadWorkbook(fname1) 
+  
+# now tell R to read that workbook and which sheet
+  tfs.PvN.pf <- data.frame(read.xlsx(wbtf,sheet = "hs_only"))
+
+  } else {
+     print(paste('The data file ',fname1,' does not exist',sep=''))
+}
+
+@  
+
+<<read.fasta,echo=FALSE>>=
+# read.fasta
+seq.fasta <- list()
+seq.fasta.entrez <- list()
+
+seq.pos.fasta <- list()
+seq.pos.fasta.entrez <- list()
+
+seq.neg.fasta <- list()
+seq.neg.fasta.entrez <- list()
+
+
+for (im in ib)   {
+
+seq.fasta[[im]] <- read.fasta(file=paste('fasta_500_promoter_seq_',area.abbrv[im],
+                                         '_final.txt',sep=''),seqtype='DNA',
+                            forceDNAtolower=FALSE,seqonly=TRUE,strip.desc=FALSE,
+                            as.string=TRUE)
+
+seq.fasta.entrez[[im]] <- read.fasta(file=paste('fasta_500_promoter_seq_',area.abbrv[im],
+                                         '_final.txt',sep=''),seqtype='DNA',
+                            forceDNAtolower=FALSE,seqonly=FALSE,strip.desc=FALSE,
+                            as.string=TRUE)
+
+
+seq.pos.fasta[[im]] <- read.fasta(file=paste('fasta_500_promoter_seq_',area.abbrv[im],
+                                         '_pos.fa',sep=''),seqtype='DNA',
+                            forceDNAtolower=FALSE,seqonly=TRUE,strip.desc=FALSE,
+                            as.string=TRUE)
+
+seq.pos.fasta.entrez[[im]] <- read.fasta(file=paste('fasta_500_promoter_seq_',area.abbrv[im],
+                                         '_pos.fa',sep=''),seqtype='DNA',
+                            forceDNAtolower=FALSE,seqonly=FALSE,strip.desc=FALSE,
+                            as.string=TRUE)
+
+
+seq.neg.fasta[[im]] <- read.fasta(file=paste('fasta_500_promoter_seq_',area.abbrv[im],
+                                         '_neg.fa',sep=''),seqtype='DNA',
+                            forceDNAtolower=FALSE,seqonly=TRUE,strip.desc=FALSE,
+                            as.string=TRUE)
+
+seq.neg.fasta.entrez[[im]] <- read.fasta(file=paste('fasta_500_promoter_seq_',area.abbrv[im],
+                                         '_neg.fa',sep=''),seqtype='DNA',
+                            forceDNAtolower=FALSE,seqonly=FALSE,strip.desc=FALSE,
+                            as.string=TRUE)
+}
+
+##### Compression #############
+
+biocLite('Rsamtools')
+library('Rsamtools')
+razip(c(paste('fasta_500_promoter_seq_',area.abbrv[im],
+                                         '_pos.fa',sep='')), dest='promoter_pos_fasta_compressed', overwrite = FALSE)
+
+razip(c(paste('fasta_500_promoter_seq_',area.abbrv[im],
+                                         '_neg.fa',sep='')), dest='promoter_neg_fasta_compressed.zip', overwrite = FALSE)
+
+@
+
+<<mutual.info,echo=FALSE>>=
+
+fasta.by.lett <- lapply(seq.fasta[ib], function(x,ib) matrix(rep(NA,nchar(x[1])*length(x)),
+                                            ncol=nchar(x[1])), ib)
+names(fasta.by.lett) <- area.abbrv
+
+tot.lett.freq <-lapply(seq.fasta[ib], function(x,ib)  matrix(rep(0,length(x)*4),ncol=4), ib)
+names(tot.lett.freq) <- area.abbrv
+
+jh <- lapply(seq.fasta[ib], function(x,ib) c(1:length(x)), ib)
+
+tot.lett.tab <- lapply(seq.fasta[ib], function(x,ib) matrix(rep(0,(length(x)*4)),
+                                                                 ncol=4), ib)
+for (im in ib)    {
+     
+     
+
+     for (km in jh[[im]])   {
+     
+          fasta.by.lett[[im]][km,] <- unlist(strsplit(as.character(seq.fasta[[im]][km]),NULL))
+          
+          tot.lett.tab[[im]][km,1:4] <- table(c(fasta.by.lett[[im]][km,]))
+          
+          
+     }
+          tot.lett.freq[[im]] <- tot.lett.tab[[im]]
+          colnames(tot.lett.freq[[im]]) <- as.character(DNA_ALPHABET[1:4])
+
+}
+
+# positively correlated genes
+
+fasta.by.lett.pos <- lapply(seq.pos.fasta[ib], 
+                            function(x,ib) matrix(rep(NA,nchar(x[1])*length(x)),
+                                                  ncol=nchar(x[1])), ib)
+names(fasta.by.lett.pos) <- area.abbrv
+
+pos.lett.freq <-lapply(seq.pos.fasta[ib], function(x,ib)  matrix(rep(0,length(x)*4),ncol=4), ib)
+names(pos.lett.freq) <- area.abbrv
+
+
+jg <- lapply(seq.pos.fasta[ib], function(x,ib) c(1:length(x)), ib)
+
+     lett.tab <- lapply(seq.pos.fasta[ib], function(x,ib) matrix(rep(0,(length(x)*4)),
+                                                                 ncol=4), ib)
+     lett.tab.tata <- lapply(seq.pos.fasta[ib], function(x,ib) matrix(rep(0,(length(x)*4)),
+                                                                 ncol=4), ib)
+
+for (im in ib)    {
+     
+     
+     for (kn in jg[[im]])   {
+     
+          fasta.by.lett.pos[[im]][kn,] <- unlist(strsplit(as.character(seq.pos.fasta[[im]][kn]),NULL))
+
+          lett.tab[[im]][kn,1:4] <- table(c(fasta.by.lett.pos[[im]][kn,]))
+          
+          
+     }
+          pos.lett.freq[[im]] <- lett.tab[[im]]
+          colnames(pos.lett.freq[[im]]) <- as.character(DNA_ALPHABET[1:4])
+}
+
+
+#### negatively correlated genes
+
+fasta.by.lett.neg <- lapply(seq.neg.fasta[ib], 
+                            function(x,ib) matrix(rep(NA,nchar(x[1])*length(x)),
+                                                  ncol=nchar(x[1])), ib)
+names(fasta.by.lett.neg) <- area.abbrv
+
+neg.lett.freq <-lapply(seq.neg.fasta[ib], function(x,ib)  matrix(rep(0,length(x)*4),ncol=4), ib)
+names(neg.lett.freq) <- area.abbrv
+
+
+jg <- lapply(seq.neg.fasta[ib], function(x,ib) c(1:length(x)), ib)
+
+     lett.tab <- lapply(seq.neg.fasta[ib], function(x,ib) matrix(rep(0,(length(x)*4)),
+                                                                 ncol=4), ib)
+     lett.tab.tata <- lapply(seq.neg.fasta[ib], function(x,ib) matrix(rep(0,(length(x)*4)),
+                                                                 ncol=4), ib)
+
+for (im in ib)    {
+     
+     
+     for (kn in jg[[im]])   {
+     
+          fasta.by.lett.neg[[im]][kn,] <- unlist(strsplit(as.character(seq.neg.fasta[[im]][kn]),NULL))
+
+          lett.tab[[im]][kn,1:4] <- table(c(fasta.by.lett.neg[[im]][kn,]))
+          
+          
+     }
+          neg.lett.freq[[im]] <- lett.tab[[im]]
+          colnames(neg.lett.freq[[im]]) <- as.character(DNA_ALPHABET[1:4])
+}
+
+# Generate a table with the total, positive and negative average DNA letter content by area
+# Total 
+     
+     dna.content <- list()
+     
+     dna.content[[1]] <- lapply(tot.lett.freq[ib], function(x,ib) colSums(x)/dim(x)[1], ib)
+     dna.content[[2]] <- lapply(pos.lett.freq[ib], function(x,ib) colSums(x)/dim(x)[1], ib)
+     dna.content[[3]] <- lapply(neg.lett.freq[ib], function(x,ib) colSums(x)/dim(x)[1], ib)
+     
+     
+names(dna.content) <- c('Total','Positive','Negative')
+
+
+dna.content.tab <- matrix(c(unlist(dna.content[[1]][1]),  # pf
+                     unlist(dna.content[[2]][1]),
+                     unlist(dna.content[[3]][1]),
+                     unlist(dna.content[[1]][2]),  #cb
+                     unlist(dna.content[[2]][2]),
+                     unlist(dna.content[[3]][2]),
+                     unlist(dna.content[[1]][3]),  # tm
+                     unlist(dna.content[[2]][3]),
+                     unlist(dna.content[[3]][3]),
+                     unlist(dna.content[[1]][4]),  # po
+                     unlist(dna.content[[2]][4]),
+                     unlist(dna.content[[3]][4])
+                     ),ncol=4,byrow=TRUE)
+
+dna.content.tab <- round(dna.content.tab/rowSums(dna.content.tab),4)
+
+colnames(dna.content.tab) <- DNA_ALPHABET[1:4]
+row.names(dna.content.tab) <- c(rep(c('Total','Positive','Negative'),4))
+
+dna.content.xtab <- xtable(dna.content.tab,
+                           caption='Average proportional nucleotide content by brain area.')
+
+# dna.content.xtab <- print.xtable(dna.content.tab.temp,
+#                            caption.placement = 'top',
+#                            tabular.environment = 'tabular',
+#                            hline.after = c(-1,0,nrow(dna.content.tab.temp)),
+#                            include.rownames = FALSE,
+#                            include.colnames = TRUE,
+#                            print.results=TRUE,
+#                            booktabs=TRUE)
+
+dna.content.ltx <- latex(dna.content.xtab, file='',
+                         rgroup=stand.Col.names,
+                         n.rgroup = c(3,3,3,3),
+                         rowlabel=c('DNA Sample'),
+                         booktabs=TRUE,
+                         rowname=c(rep(c('Total','Positive','Negative'),4)),
+                         caption=c('Nucleotide content by brain area and set of genes'),
+                         caption.loc=c('top'),
+                         center=c('center')
+)
+
+
+# mutual information and entropy
+
+
+# MolecularMI(as.character(substring(seq.pos.fasta[[1]][hj],990:1010)),'DNA')
+subseqs.pos.temp <- c()
+subseqs.pos <- list()
+
+loci <- c(960,1010)
+
+for (im in ib)   {
+     
+     subseqs.pos.temp <- c(rep(NA,length(seq.pos.fasta[[im]])))
+     
+     for (hj in 1:length(seq.pos.fasta[[im]]))  {
+          subseqs.pos.temp[hj] <- substring(seq.pos.fasta[[im]][hj],loci[1],loci[2])
+     }
+     
+     subseqs.pos[[im]] <- subseqs.pos.temp
+}
+
+fasta.pos.MI <- list()
+fasta.pos.ME <- list()
+
+fasta.pos.MI <- lapply(subseqs.pos[ib], function(x,ib)   MolecularMI(as.character(x),'DNA'), ib)
+fasta.pos.ME <- lapply(subseqs.pos[ib], function(x,ib)  MolecularEntropy(as.character(x),'DNA'), ib)
+
+loci.r <- c((loci[1] - 1000):(loci[2] - 1000))
+
+fasta.pos.MEfreq <- list()
+
+for (im in ib)   {
+     fasta.pos.MEfreq.m <- matrix(rep(0,5*length(loci.r)),ncol=5)
+     fasta.pos.MEfreq.m[,2:5] <-  t(fasta.pos.ME[[im]]$freq)
+     fasta.pos.MEfreq.m[,1] <-  loci.r
+     fasta.pos.MEfreq[[im]] <- fasta.pos.MEfreq.m
+     colnames(fasta.pos.MEfreq[[im]]) <- c('locus re: TSS',DNA_ALPHABET[1:4])
+}
+
+
+fasta.pos.MEfreq.long <- lapply(fasta.pos.MEfreq[ib], function(x,ib) stack(as.data.frame(x[,2:5])), ib)
+
+for (im in ib)  {
+     
+     fasta.pos.MEfreq.long[[im]][,3] <- c(rep(loci.r,4))
+     colnames(fasta.pos.MEfreq.long[[im]]) <- c('Proportion','Base','Position')
+}
+
+p.temp <- data.frame(matrix(rep(0,2*length(loci.r)),ncol=2))
+p.temp[1,2] <- fasta.pos.MEfreq.long[[1]][1,1]
+p.temp[1,1] <- fasta.pos.MEfreq.long[[1]][1,3]
+
+colnames(p.temp) <- c('Position','Proportion')
+for (im in ib)  {
+     
+     for (hj in 2:length(loci.r-2))   {
+               
+               p.temp[hj,1] <- fasta.pos.MEfreq.long[[1]][hj,3]
+               p.temp[hj,2] <- sum(fasta.pos.MEfreq.long[[1]][c((hj-1):(hj+1)),1])/3
+     }
+     
+}
+
+
+entrop.plot <- ggplot2::ggplot(data=fasta.pos.MEfreq.long[[1]], 
+                       aes(x=Position,y=Proportion,color=Base)) +
+     geom_point() +
+     stat_smooth(aes(x=Position,y=Proportion,color=Base),method=lm, y ~ poly(x,10)) 
+
+
+entrop.plot
+
+
+@
+<<isolate.near.promoter>>=
+# fasta,by.lett.neg is 168 x 1600. That represents the promoter sequences from -1000 to +600 of the 168 most strongly negatively COMT-correlated genes. Isolate the loci from -40 to + 10 (50 nucleotides: 960 to 1010).
+
+### Negative
+near.TSS.prom <- list()
+
+# Negative
+near.TSS.neg <- list()
+near.TSS.neg <- lapply(fasta.by.lett.neg[ib], function(x,ib)  x[,960:1010], ib)
+
+# Positive
+near.TSS.pos <- list()
+near.TSS.pos <- lapply(fasta.by.lett.pos[ib], function(x,ib)  x[,960:1010], ib)
+
+near.TSS.prom <- list(neg=near.TSS.neg,
+                      pos=near.TSS.pos)
+
+@
+
+<<permuted.promoters>>=
+# permute within columns
+
+##### Negative
+test.perm <- sample(near.TSS.prom$neg[[1]][,1],dim(near.TSS.prom$neg[[1]])[1],replace=FALSE)
+nm.genes <- lapply(fasta.by.lett.neg[ib], function(x,ib)  dim(x)[1],ib)
+
+near.TSS.dims <- list(lapply(near.TSS.prom$neg[ib], function(x,ib)  dim(x), ib),
+                      lapply(near.TSS.prom$pos[ib], function(x,ib)  dim(x), ib))
+
+###### Generate the shuffled matrices
+
+mc.reps <- c(1000)
+A.neg <- list()
+
+for (im in ib)    {
+     
+     B.neg <- list()
+     
+     for (ht in 1:mc.reps)     {
+          
+          if(exists('rows.neg')) {
+               rm(rows.neg)
+          } else {
+               
+          }
+          
+     # B.neg[[ht]] <- matrix(rep(NA,near.TSS.dims$neg[[im]][1]*near.TSS.dims$neg[[im]][2]),ncol=near.TSS.dims$neg[[im]][2])
+
+# generate shuffled indices withi columns; The first [[1]] in near.TSS.dims means negatives
+          rows.neg <- matrix(replicate(51,(sample(c(1:nrow(near.TSS.prom$neg[[im]])), near.TSS.dims[[1]][[im]][1], replace = FALSE))),ncol=51)
+
+
+          B.neg[[ht]] <- matrix(rep(NA,dim(rows.neg)[1]*dim(rows.neg)[2]),ncol=dim(rows.neg)[2])
+
+for (ku in 1:dim(rows.neg)[2])  {    # columns
+
+     for (ji in 1:dim(rows.neg)[1])  {     # rows
+     
+     B.neg[[ht]][ji,ku] <- near.TSS.prom$neg[[im]][rows.neg[ji,ku],ku]
+          
+          }  # rows
+     }  # columns
+
+          cat(paste('   iteration ',ht,' brain area ',im,'  ',
+                         round(100*((im + im*(ht - 1))/(ib[4]*mc.reps)),1),
+                    ' % complete \n',sep=''))
+          
+          
+} # end replication samples
+     
+
+          cat(paste('   iteration ',ht,' brain area ',im,'  ',
+                         round(100*((im + im*(ht - 1))/(ib[4]*mc.reps)),1),
+                    ' % complete \n',sep=''))
+
+          A.neg[[im]] <- B.neg
+
+} # end brain area loop
+
+permuted.proms.neg <- A.neg
+
+rm(A.neg,B.neg)
+
+save(permuted.proms.neg, file = 'random_promoters_neg_minus40_plus10_TSS.Rdata',
+     ascii=FALSE)     
+
+Store(permuted.proms.neg)  
+
+############
+# Positive
+
+test.perm <- sample(near.TSS.prom$pos[[1]][,1],dim(near.TSS.prom$pos[[1]])[1],replace=FALSE)
+nm.genes <- lapply(fasta.by.lett.pos[ib], function(x,ib)  dim(x)[1],ib)
+
+near.TSS.dims <- list(lapply(near.TSS.prom$neg[ib], function(x,ib)  dim(x), ib),
+                      lapply(near.TSS.prom$pos[ib], function(x,ib)  dim(x), ib))
+
+###### Generate the shuffled matrices
+
+mc.reps <- c(1000)
+A.pos <- list()
+
+for (im in ib)    {
+     
+     B.pos <- list()
+     
+     for (ht in 1:mc.reps)     {
+          
+          if(exists('rows.pos')) {
+               rm(rows.pos)
+          } else {
+               
+          }
+          
+     # B.pos[[ht]] <- matrix(rep(NA,near.TSS.dims$pos[[im]][1]*near.TSS.dims$pos[[im]][2]),ncol=near.TSS.dims$pos[[im]][2])
+
+# generate shuffled indices withi columns; The first [[1]] in near.TSS.dims means negatives
+          rows.pos <- matrix(replicate(51,(sample(c(1:nrow(near.TSS.prom$pos[[im]])), near.TSS.dims[[2]][[im]][1], replace = FALSE))),ncol=near.TSS.dims[[2]][[im]][2])
+
+
+          B.pos[[ht]] <- matrix(rep(NA,dim(rows.pos)[1]*dim(rows.pos)[2]),ncol=dim(rows.pos)[2])
+
+for (ku in 1:dim(rows.pos)[2])  {    # columns
+
+     for (ji in 1:dim(rows.pos)[1])  {     # rows
+     
+     B.pos[[ht]][ji,ku] <- near.TSS.prom$pos[[im]][rows.pos[ji,ku],ku]
+          
+          }  # rows
+     }  # columns
+
+          
+          cat(paste('   iteration ',ht,' brain area ',im,'  ',
+                         round(100*((im + im*(ht - 1))/(ib[4]*mc.reps)),1),
+                    ' % complete \n',sep=''))
+
+          A.pos[[im]] <- B.pos
+          
+          
+} # end replication samples
+     
+
+
+} # end brain area loop
+
+permuted.proms.pos <- A.pos
+
+rm(A.pos,B.pos)
+
+save(permuted.proms.pos, file = 'random_promoters_pos_minus40_plus10_TSS.Rdata',
+     ascii=FALSE)     
+
+Store(permuted.proms.pos)  
+
+@
+
+
+
+<<compute.MI>>=
+
+########## ACTUAL DATA
+# Use self-generated function get.MI
+
+### Positive ###
+MI.matrix.pos <- list()
+
+
+for (im in ib)   {
+     MI.matrix.temp <- matrix(rep(0,(length(loci.r)^2)),ncol=length(loci.r))
+          
+     
+     for (iy in loci[1]:loci[2])     {
+               for (ix in loci[1]:loci[2])    {
+                    if (iy != ix)   {
+
+                    MI.matrix.temp[(iy-loci[1]+1),(ix-loci[1]+1)] <- get.MI(fasta.by.lett.pos[[im]],iy,ix)[1]
+                    
+                    } else {
+                    
+                    MI.matrix.temp[(iy-loci[1]+1),(ix-loci[1]+1)] <- get.ME(fasta.by.lett.pos[[im]],iy,iy)[1] 
+                    
+                         
+                    }
+          }
+     }
+          MI.matrix.pos[[im]] <- MI.matrix.temp
+}
+
+### Negative ###
+
+MI.matrix.neg <- list()
+
+
+for (im in ib)   {
+     MI.matrix.temp <- matrix(rep(0,(length(loci.r)^2)),ncol=length(loci.r))
+          
+     
+     for (iy in loci[1]:loci[2])     {
+               for (ix in loci[1]:loci[2])    {
+                    if (iy != ix)   {
+
+                    MI.matrix.temp[(iy-loci[1]+1),(ix-loci[1]+1)] <- get.MI(fasta.by.lett.neg[[im]],iy,ix)[1]
+                    
+                    } else {
+                    
+                    MI.matrix.temp[(iy-loci[1]+1),(ix-loci[1]+1)] <- get.ME(fasta.by.lett.neg[[im]],iy,iy)[1] 
+                    
+                         
+                    }
+          }
+     }
+          MI.matrix.neg[[im]] <- MI.matrix.temp
+}
+@
+
+<<MImatrices.permuted>>=
+
+########## PERMUTED DATA
+# Now run the random promoter files through the Mutual Information function to get the matrices of MI for later use in hierarchical clustering
+
+
+# 1000 random permutations of the promoters for each brain area
+# permuted.proms.pos
+# permuted.proms.neg
+
+
+### Positive ###
+
+rand.MI.matrix.pos <- list()
+
+A.perm.MI <- list()
+
+for (im in ib)   {
+     
+     
+     B.perm <- list()
+
+     for (hg in 1:mc.reps)    {
+     
+     ########## Partially run
+     
+#     for (hg in 1:2)    {
+          
+          cat(paste('   iteration ',hg,' brain area ',im,'  ',
+                         round(100*((im + im*(hg - 1))/(ib[4]*mc.reps)),1),
+                    ' % complete \n',sep=''))
+          
+          lpos <- c(1,dim(permuted.proms.pos[[im]][[hg]])[2])
+          
+          rand.MI.matrix.temp <- matrix(rep(NA,((lpos[2])^2)),ncol=lpos[2])
+
+     for (iy in lpos[1]:lpos[2])     {
+               for (ix in lpos[1]:lpos[2])    {
+ 
+                    rand.MI.matrix.temp[iy,ix] <- get.MI(permuted.proms.pos[[im]][[hg]],iy,ix)[1]
+                    
+               }
+          }
+       
+          B.perm[[hg]] <- rand.MI.matrix.temp
+     }             
+
+          A.perm.MI[[im]] <- B.perm
+          
+}   # end brain area loop
+     
+          rand.MI.matrix.pos <- A.perm.MI 
+          
+          
+
+######### Negative
+          
+rand.MI.matrix.neg <- list()
+
+A.perm.MI <- list()
+
+for (im in ib)   {
+     
+     
+     B.perm <- list()
+
+     for (hg in 1:mc.reps)    {
+     
+     ########## Partially run
+     
+#     for (hg in 1:2)    {
+          
+          cat(paste('   iteration ',hg,' brain area ',im,'  ',
+                         round(100*((im + im*(hg - 1))/(ib[4]*mc.reps)),1),
+                    ' % complete \n',sep=''))
+          
+          lneg <- c(1,dim(permuted.proms.neg[[im]][[hg]])[2])
+          
+          rand.MI.matrix.temp <- matrix(rep(NA,((lneg[2])^2)),ncol=lneg[2])
+
+     for (iy in lneg[1]:lneg[2])     {
+               for (ix in lneg[1]:lneg[2])    {
+ 
+                    rand.MI.matrix.temp[iy,ix] <- get.MI(permuted.proms.neg[[im]][[hg]],iy,ix)[1]
+                    
+               }
+          }
+       
+          B.perm[[hg]] <- rand.MI.matrix.temp
+     }             
+
+          A.perm.MI[[im]] <- B.perm
+          
+}   # end brain area loop
+     
+          rand.MI.matrix.neg <- A.perm.MI 
+
+
+@
+
+
+<<>>=
+
+# Get distributions of MI values at paired locations in the 51 x 51 matrix across brain areas
+# Note the distribution at a given point in the matrix is over the 1000 replications at that particular pair of locations  not across the whole matrix
+all.areas.perm.neg <- list()
+
+for (im in ib)  {
+     
+     back.all.areas.perm.neg.y <- list()
+     
+     for (co in 1:dim(back.full.perm.set.neg[[1]][[im]])[1])   {
+          
+          back.full.perm.set.neg.x <- list()
+          
+          for (cp in 1:dim(back.full.perm.set.neg[[1]][[im]])[1])   {
+
+          back.full.perm.set.neg.lowtri <- c()
+
+               for (nperm in 1:length(back.full.perm.set.neg)) {
+                    
+                    ########### DEBUG ###############
+                    #for (nperm in 1:2) {
+                    #################################
+     cat(paste('interation ',nperm,' brain area ',im,'\n',sep=''))
+                         
+     back.full.perm.set.neg[[nperm]][[im]][upper.tri(back.full.perm.set.neg[[nperm]][[im]],diag=TRUE)] <- NA
+     back.full.perm.set.neg.lowtri[nperm] <- back.full.perm.set.neg[[nperm]][[im]][co,cp]
+
+               }
+     back.full.perm.set.neg.x[[cp]] <- back.full.perm.set.neg.lowtri
+
+          }  # cp
+          
+          back.all.areas.perm.neg.y[[co]] <- back.full.perm.set.neg.x
+          
+     }  # co
+     
+     all.areas.perm.neg[[im]] <- back.all.areas.perm.neg.y
+
+}  # im
+
+Store(all.areas.perm.neg)
+
+################ 
+#Do the same thing with the more recently generated random promoter sequences
+# Get distributions of MI values at paired locations in the 51 x 51 matrix across brain areas
+# Note the distribution at a given point in the matrix is over the 1000 replications at that particular pair of locations  not across the whole matrix
+rand.all.areas.perm.neg <- list()
+
+#for (im in ib)  {
+
+     ########### DEBUG ###############
+     for (im in 1:4) {
+     #################################
+          
+          
+     back.all.areas.perm.neg.y <- list()
+     
+#         for (nperm in 1:length(permuted.neg.proms.area[[im]])) {
+                    
+                    ########### DEBUG ###############
+                    for (nperm in 1:10) {
+                    #################################
+     cat(paste('interation ',nperm,' brain area ',im,'\n',sep=''))
+                    
+                    for (co in 1:dim(permuted.neg.proms.area[[im]][[nperm]])[2])   {
+          
+                              back.full.perm.set.neg.x <- list()
+          
+                    for (cp in 1:dim(permuted.neg.proms.area[[im]][[nperm]])[2])   {
+
+                              back.full.perm.set.neg.lowtri <- c()
+                         
+     permuted.neg.proms.area[[im]][[nperm]][upper.tri(permuted.neg.proms.area[[im]][[nperm]],diag=TRUE)] <- NA
+     back.full.perm.set.neg.lowtri[nperm] <- permuted.neg.proms.area[[im]][[nperm]][co,cp]
+
+               }  # nperm
+ 
+              back.full.perm.set.neg.x[[cp]] <- back.full.perm.set.neg.lowtri
+              
+                    }  # cp
+
+          back.all.areas.perm.neg.y[[co]] <- back.full.perm.set.neg.x
+          
+     }  # co
+     
+     rand.all.areas.perm.neg[[im]] <- back.all.areas.perm.neg.y
+
+}  # im
+
+
+
+
+
+###############################
+
+##### Negative
+out.sig <- list()
+quant.rand.neg.Bonfer <- list()
+diffneg.IMval.sig.Bonfer <- list()
+diffneg.temp.Bonfer <- list()
+     
+############### function get.mat ###################     
+     get.mat.neg <- function(x,mc.range,co,cp)  {
+          
+          
+          q.out <- quantile(unlist(lapply(rand.MI.matrix.neg[[im]][mc.range], function(x,mc.range)  x[co,cp], mc.range)),c(0.95),na.rm=FALSE)[1]
+          
+          co <<- co + 1    # This globally increments co
+          
+          return(q.out)
+     }
+############### END function get.mat ################### 
+     
+co <- c(1)
+
+for (im in ib)   {
+
+          temp.r <- list()
+
+          for (cp in 1:51)   {
+
+          co <- c(1)
+          temp.r[[cp]] <- sapply(1:51, function(y) get.mat.neg(rand.MI.matrix.neg[[im]],mc.range,co,cp))
+
+     }
+#          out.sig[[im]] <- temp.r
+          out.sig[[im]] <- matrix(unlist(temp.r),ncol=length(loci.r))
+          
+     diffneg.IMval.sig.Bonfer[[im]] <- (sign(MI.matrix.neg[[im]] -  out.sig[[im]]) + 1)/2
+     diffneg.temp.Bonfer[[im]] <- diffneg.IMval.sig.Bonfer[[im]]
+     diffneg.temp.Bonfer[[im]][upper.tri(diffneg.IMval.sig.Bonfer[[im]],diag=TRUE)] <- 0
+          
+}
+
+quant.rand.neg.Bonfer <- out.sig
+
+
+####### Positive ##################################
+out.sig <- list()
+quant.rand.pos.Bonfer <- list()
+diffpos.IMval.sig.Bonfer <- list()
+diffpos.temp.Bonfer <- list()
+     
+############### function get.mat ###################     
+     get.mat.pos <- function(x,mc.range,co,cp)  {
+          
+          
+          q.out <- quantile(unlist(lapply(rand.MI.matrix.pos[[im]][mc.range], function(x,mc.range)  x[co,cp], mc.range)),c(0.95),na.rm=FALSE)[1]
+          
+          co <<- co + 1    # This globally increments co
+          
+          return(q.out)
+     }
+############### END function get.mat ################### 
+     
+co <- c(1)
+
+for (im in ib)   {
+
+          temp.r <- list()
+
+          for (cp in 1:51)   {
+
+          co <- c(1)
+          temp.r[[cp]] <- sapply(1:51, function(y) get.mat.pos(rand.MI.matrix.pos[[im]],mc.range,co,cp))
+
+     }
+#          out.sig[[im]] <- temp.r
+          out.sig[[im]] <- matrix(unlist(temp.r),ncol=length(loci.r))
+          
+     diffpos.IMval.sig.Bonfer[[im]] <- (sign(MI.matrix.pos[[im]] -  out.sig[[im]]) + 1)/2
+     diffpos.temp.Bonfer[[im]] <- diffpos.IMval.sig.Bonfer[[im]]
+     diffpos.temp.Bonfer[[im]][upper.tri(diffpos.IMval.sig.Bonfer[[im]],diag=TRUE)] <- 0
+          
+}
+
+quant.rand.pos.Bonfer <- out.sig
+ 
+@
+    
+<<plots.Sig.MI>>=
+######### plots #############
+     
+######## Positive     
+col3 <- colorRampPalette(c('white','#c2d0e7', "red"))
+
+col3 <- colorRampPalette(c('white','gray', "blue"))
+col4 <- colorRampPalette(c("#7F0000", "red", "#FF7F00", "yellow", "#7FFF7F",
+                           "cyan", "#007FFF", "blue", "#00007F"))
+
+area.ind <- c(1)
+signif.lev <- c(.05)
+# corrplot(diffpos.temp.Bonfer[[area.ind]],type='lower',
+#          diag=FALSE,method='color',cl.lim=c(0,1),col=col3(100),
+#          tl.cex=c(0.5),tl.col=c('black'),cl.cex=c(0.6),
+#          cl.length=c(2),
+#          tl.pos='ld')
+
+ggcorrplot(diffpos.temp.Bonfer[[area.ind]], type = "lower",
+     outline.col = "white",title = paste("Significant (p < ",signif.lev,") Mutual Information Values \n Between Pairs of Promoter Loci: ",stand.Col.names[area.ind]," Positive Subset ",sep=''),
+     show.legend = FALSE,
+     show.diag = FALSE,
+     colors = c("white", "gray", "blue"),
+     tl.cex = 0.25)
+
+######## Negative     
+col3 <- colorRampPalette(c('white','#c2d0e7', "red"))
+
+col3 <- colorRampPalette(c('white','gray', "blue"))
+col4 <- colorRampPalette(c("#7F0000", "red", "#FF7F00", "yellow", "#7FFF7F",
+                           "cyan", "#007FFF", "blue", "#00007F"))
+
+area.ind <- c(1)
+signif.lev <- c(.05)
+# corrplot(diffneg.temp.Bonfer[[area.ind]],type='lower',
+#          diag=FALSE,method='color',cl.lim=c(0,1),col=col3(100),
+#          tl.cex=c(0.5),tl.col=c('black'),cl.cex=c(0.6),
+#          cl.length=c(2),
+#          tl.pos='ld')
+
+ggcorrplot(diffneg.temp.Bonfer[[area.ind]], type = "lower",
+     outline.col = "white",title = paste("Significant (p < ",signif.lev,") Mutual Information Values \n Between Pairs of Promoter Loci: ",stand.Col.names[area.ind]," Negative Subset ",sep=''),
+     show.legend = FALSE,
+     show.diag = FALSE,
+     colors = c("white", "gray", "blue"),
+     tl.cex = 0.25)
+
+
+
+
+
+
+# hist(all.areas.perm.neg[[1]][[3]][[2]],30)
+# quantile(all.areas.perm.neg[[1]][[51]][[2]], c(.95, .99),na.rm=TRUE)[1]
+
+
+#### corrplots negative
+
+col3 <- colorRampPalette(c("white", "yellow", "red"))
+col4 <- colorRampPalette(c("#7F0000", "red", "#FF7F00", "yellow", "#7FFF7F",
+                           "cyan", "#007FFF", "blue", "#00007F"))
+
+
+for (im in ib)   {
+     pdf(paste(getwd(),'/new_plots/MI_matrix_neg_',stand.Col.names[im],'.pdf',sep=''),width=8,height=6,paper='special') 
+
+     scale.MI.range <- 0.9736555/max(upper.tri(MI.matrix.neg[[im]],
+                                               diag=FALSE)*MI.matrix.neg[[im]])
+     corrplot(scale.MI.range*(upper.tri(MI.matrix.neg[[im]],
+                                   diag=FALSE)*MI.matrix.neg[[im]]),type='upper',
+         diag=FALSE,method='color',cl.lim=c(0,1),col=col3(100),order='FPC',
+         tl.cex=c(0.5),tl.col=c('black'),cl.cex=c(0.6))
+     recordPlot()
+     dev.off()
+}
+
+#### corrplots positive
+
+for (im in ib)   {
+     pdf(paste(getwd(),'/new_plots/MI_matrix_pos_',stand.Col.names[im],'.pdf',sep=''),width=8,height=6,paper='special') 
+
+     scale.MI.range <- 0.9736555/max(upper.tri(MI.matrix.pos[[im]],
+                                               diag=FALSE)*MI.matrix.pos[[im]])
+     corrplot(scale.MI.range*(upper.tri(MI.matrix.pos[[im]],
+                                   diag=FALSE)*MI.matrix.pos[[im]]),type='upper',
+         diag=FALSE,method='color',cl.lim=c(0,1),col=col3(100),order='FPC',
+         tl.cex=c(0.5),tl.col=c('black'),cl.cex=c(0.6))
+     recordPlot()
+     dev.off()
+}
+
+
+#### clustergrams
+#### 
+
+########  Actual data
+leaf.lab <- as.character(c(-40:10))
+
+
+di1 <- -diag(NA,nrow=51)
+di2 <- matrix(-1,nrow=51,ncol=51)
+di3 <- di1 + (-di2)
+di3a <- matrix(1,nrow=51,ncol=51)
+
+dicorr.pos <- list()
+dicorr.neg <- list()
+#di4 <- as.dist(1 - di3*MI.matrix.pos[[2]])
+di4.pos <- lapply(MI.matrix.pos[ib], function(x,ib) as.dist(1 - di3*x), ib)
+di4.neg <- lapply(MI.matrix.neg[ib], function(x,ib) as.dist(1 - di3*x), ib)
+
+di4.pos <- lapply(MI.matrix.pos[ib], function(x,ib) dist(x,method='maximum'), ib)
+di4.neg <- lapply(MI.matrix.neg[ib], function(x,ib) dist(x,method='maximum'), ib)
+
+
+diclust.pos <- lapply(di4.pos[ib], function(x,ib) hclust(x,method='average'), ib)
+diclust.neg <- lapply(di4.neg[ib], function(x,ib) hclust(x,method='average'), ib)
+
+dicoph.pos <- lapply(diclust.pos[ib], function(x,ib)  cophenetic(x), ib)
+dicoph.neg <- lapply(diclust.neg[ib], function(x,ib)  cophenetic(x), ib)
+
+for (im in ib)    {
+     dicorr.pos[[im]] <- cor(di4.pos[[im]],dicoph.pos[[im]])
+      dicorr.neg[[im]] <- cor(di4.neg[[im]],dicoph.neg[[im]])
+}
+
+dicorr.posANDneg <- list(pos=dicorr.pos,
+                         neg=dicorr.neg)
+
+
+
+plot(diclust,hang=c(0.1),labels=leaf.lab,axes=TRUE,
+     frame.plot=FALSE,cex=0.6,
+     main=c('Loci (re: TSS) Relatedness: \n Negatively COMT-Correlated Genes, Prefrontal Cortex'),
+     xlab=c(''),ylab=c('Mutual Information'),sub=c('dist = maximum \n hclust = average (UPGMA)'),cex=c(0.6))
+
+
+########## Permuted data
+di1 <- -diag(NA,nrow=51)
+di2 <- matrix(-1,nrow=51,ncol=51)
+di3 <- di1 + (-di2)
+di3a <- matrix(1,nrow=51,ncol=51)
+
+
+#di4 <- as.dist(1 - di3*rand.MI.matrix.neg[[1]][[1]])
+di4 <- dist(rand.MI.matrix.neg[[4]][[1]],method='maximum')
+
+
+
+diclust <- hclust(di4,method='average')
+dicoph <- cophenetic(diclust)
+dicorr <- cor(di4,dicoph)
+dicorr
+
+plot(diclust,hang=c(0.1),labels=leaf.lab,axes=TRUE,
+     frame.plot=FALSE,cex=0.6,
+     main=c('Loci (re: TSS) Relatedness: \n Negatively COMT-Correlated Genes, Prefrontal Cortex'),
+     xlab=c(''),ylab=c('Mutual Information'),sub=c('dist = maximum \n hclust = average (UPGMA)'),cex=c(0.6))
+
+
+
+
+@
+
+<<cophenetic.null>>=
+# Get the null distributions of the cophenetic correlations
+
+###### Positive
+
+dist.perm.pos <- list()
+dist.hist.pos <- list()
+dicoph.pos <- list()
+
+
+for (im in ib)    {
+
+     dist.perm.pos[[im]] <- lapply(rand.MI.matrix.pos[[im]][mc.range], 
+                        function(x,mc.range) as.dist(1 - di3*x),mc.range)
+
+
+dist.hist.pos[[im]] <- lapply(dist.perm.pos[[im]][mc.range], function(x,mc.range) hclust(x,method='average'),mc.range)
+
+dicoph.pos[[im]] <- lapply(dist.hist.pos[[im]][mc.range], function(x,mc.range) cophenetic(x),mc.range)
+
+}
+
+
+cor.dist.clust.pos <- list()
+
+for (im in ib)      {
+for (jh in mc.range)    {
+
+     cor.dist.clust.pos[[jh]] <- cor(dist.perm.pos[[im]][[jh]],dicoph.pos[[im]][[jh]])
+
+}
+}
+
+cophenetic.sig.levels <- data.frame(positive = unlist(lapply(cor.dist.clust.pos[ib], function(x,ib) quantile(unlist(x),0.99))),
+negative = unlist(lapply(cor.dist.clust.neg[ib], function(x,ib) quantile(unlist(x),0.99))),
+pos = unlist(dicorr.posANDneg$pos),
+neg = unlist(dicorr.posANDneg$neg)
+)
+
+row.names(cophenetic.sig.levels) <- stand.Col.names
+cophenetic.sig.levels.tab <- 
+
+     cophenetic.sig.levels.tab <- xtable(cophenetic.sig.levels,
+                                       caption=c('Cophenetic correlations: 99th Percentiles of Permuted Promoter Loci and the Cophenetic Correlations for the Original Data'))
+
+
+
+
+###### Negative
+dist.perm.neg <- list()
+dist.hist.neg <- list()
+dicoph.neg <- list()
+
+
+for (im in ib)    {
+
+     dist.perm.neg[[im]] <- lapply(rand.MI.matrix.neg[[im]][mc.range], 
+                        function(x,mc.range) as.dist(1 - di3*x),mc.range)
+
+
+dist.hist.neg[[im]] <- lapply(dist.perm.neg[[im]][mc.range], function(x,mc.range) hclust(x,method='average'),mc.range)
+
+dicoph.neg[[im]] <- lapply(dist.hist.neg[[im]][mc.range], function(x,mc.range) cophenetic(x),mc.range)
+
+}
+
+
+cor.dist.clust.neg <- list()
+
+for (im in ib)      {
+for (jh in mc.range)    {
+
+     cor.dist.clust.neg[[jh]] <- cor(dist.perm.neg[[im]][[jh]],dicoph.neg[[im]][[jh]])
+
+     }
+}
+
+hist(unlist(cor.dist.clust.neg),30)
+
+@
+
+
+
+
+
+
+<<>>=
+#### Cerebellum
+dist.metric.neg.cb <- dist(MI.matrix.neg[[2]],method='maximum',diag=FALSE,upper=TRUE)
+
+leaf.lab <- c(as.character(-40:10))
+xclustneg.cb <- hclust(dist.metric.neg.cb,method='average')
+d2 <- cophenetic(xclustneg.cb)
+cor(dist.metric.neg.cb,d2)
+
+plot(xclustneg.cb,hang=c(0.1),labels=leaf.lab,axes=TRUE,
+     frame.plot=FALSE,cex=0.6,
+     main=c('Loci (re: TSS) Relatedness: \n Negatively COMT-Correlated Genes, Cerebellum'),
+     xlab=c(''),ylab=c('Dissimilarity'),sub=c('dist = maximum \n hclust = average (UPGMA)'),cex=c(0.6))
+
+#### Temporal
+dist.metric.neg.tm <- dist(MI.matrix.neg[[3]],method='maximum',diag=FALSE,upper=TRUE)
+
+leaf.lab <- c(as.character(-40:10))
+xclustneg.tm <- hclust(dist.metric.neg.tm,method='average')
+d2 <- cophenetic(xclustneg.tm)
+cor(dist.metric.neg.tm,d2)
+
+plot(xclustneg.tm,hang=c(0.1),labels=leaf.lab,axes=TRUE,
+     frame.plot=FALSE,cex=0.6,
+     main=c('Loci (re: TSS) Relatedness: \n Negatively COMT-Correlated Genes, Temporal Cortex'),
+     xlab=c(''),ylab=c('Dissimilarity'),sub=c('dist = maximum \n hclust = average (UPGMA)'),cex=c(0.6))
+
+
+#### Pons
+dist.metric.neg.po <- dist(MI.matrix.neg[[4]],method='maximum',diag=FALSE,upper=TRUE)
+
+leaf.lab <- c(as.character(-40:10))
+xclustneg.po <- hclust(dist.metric.neg.po,method='average')
+d2 <- cophenetic(xclustneg.cb)
+cor(dist.metric.neg.cb,d2)
+
+plot(xclustneg.po,hang=c(0.1),labels=leaf.lab,axes=TRUE,
+     frame.plot=FALSE,cex=0.6,
+     main=c('Loci (re: TSS) Relatedness: \n Negatively COMT-Correlated Genes, Pons'),
+     xlab=c(''),ylab=c('Dissimilarity'),sub=c('dist = maximum \n hclust = average (UPGMA)'),cex=c(0.6))
+
+
+### Positive clustergram
+### Prefrontal
+dist.metric.pos.pf <- as.dist(MI.matrix.pos[[1]],method='maximum',diag=FALSE,upper=TRUE)
+
+leaf.lab <- c(as.character(-40:10))
+xclustpos.pf <- hclust(dist.metric.pos.pf,method='average')
+d2 <- cophenetic(xclustpos.pf)
+cor(dist.metric.pos.pf,d2)
+
+plot(xclustpos.pf,hang=c(0.1),labels=leaf.lab,axes=TRUE,
+     frame.plot=FALSE,cex=0.6,
+     main=c('Loci (re: TSS) Relatedness: \n Positively COMT-Correlated Genes, Prefrontal Cortex'),
+     xlab=c(''),ylab=c('Dissimilarity'),sub=c('dist = maximum \n hclust = average (UPGMA)'),cex=c(0.6))
+
+
+#### Cerebellum   loci_relatedness_dendrogram_pos_cb
+dist.metric.pos.cb <- dist(MI.matrix.pos[[2]],method='maximum',diag=FALSE,upper=TRUE)
+
+leaf.lab <- c(as.character(-40:10))
+xclustpos.cb <- hclust(dist.metric.pos.cb,method='average')
+d2 <- cophenetic(xclustpos.cb)
+cor(dist.metric.pos.cb,d2)
+
+plot(xclustpos.cb,hang=c(0.1),labels=leaf.lab,axes=TRUE,
+     frame.plot=FALSE,cex=0.6,
+     main=c('Loci (re: TSS) Relatedness: \n Positively COMT-Correlated Genes, Cerebellum'),
+     xlab=c(''),ylab=c('Dissimilarity'),sub=c('dist = maximum \n hclust = average (UPGMA)'),cex=c(0.6))
+
+### Temporal   loci_relatedness_dendrogram_pos_tm
+dist.metric.pos.tm <- dist(MI.matrix.pos[[3]],method='maximum',diag=FALSE,upper=TRUE)
+
+leaf.lab <- c(as.character(-40:10))
+xclustpos.tm <- hclust(dist.metric.pos.tm,method='average')
+d2 <- cophenetic(xclustpos.tm)
+cor(dist.metric.pos.tm,d2)
+
+plot(xclustpos.tm,hang=c(0.1),labels=leaf.lab,axes=TRUE,
+     frame.plot=FALSE,cex=0.6,
+     main=c('Loci (re: TSS) Relatedness: \n Positively COMT-Correlated Genes, Temporal Cortex'),
+     xlab=c(''),ylab=c('Dissimilarity'),sub=c('dist = maximum \n hclust = average (UPGMA)'),cex=c(0.6))
+
+#### Pons   loci_relatedness_dendrogram_pos_cb
+dist.metric.pos.po <- dist(MI.matrix.pos[[4]],method='maximum',diag=FALSE,upper=TRUE)
+
+leaf.lab <- c(as.character(-40:10))
+xclustpos.po <- hclust(dist.metric.pos.po,method='average')
+d2 <- cophenetic(xclustpos.po)
+cor(dist.metric.pos.po,d2)
+
+plot(xclustpos.po,hang=c(0.1),labels=leaf.lab,axes=TRUE,
+     frame.plot=FALSE,cex=0.6,
+     main=c('Loci (re: TSS) Relatedness: \n Positively COMT-Correlated Genes, Pons'),
+     xlab=c(''),ylab=c('Dissimilarity'),sub=c('dist = maximum \n hclust = average (UPGMA)'),cex=c(0.6))
+
+@
+
+<<cophenetic.corrs>>=
+# Using dist = maximum; hclust = average
+leaf.lab <- c(as.character(-40:10))
+
+### Positive
+dist.metric.pos <- lapply(MI.matrix.pos[ib], function(x,ib) dist(x,method='maximum',
+                                                                 diag=FALSE,upper=TRUE), ib)
+xclustpos <- lapply(dist.metric.pos[ib], function(x,i)  hclust(x,method='average'), ib)
+d.cophen.pos <- lapply(xclustpos[ib], function(x,ib)  cophenetic(x), ib)
+
+cophen.cor.pos <- mapply(function(X,Y) {cor(X, Y)},
+                         X=dist.metric.pos, Y=d.cophen.pos)
+
+### Negative
+dist.metric.neg <- lapply(MI.matrix.neg[ib], function(x,ib) dist(x,method='maximum',
+                                                                 diag=FALSE,upper=TRUE), ib)
+xclustneg <- lapply(dist.metric.neg[ib], function(x,i)  hclust(x,method='average'), ib)
+d.cophen.neg <- lapply(xclustneg[ib], function(x,ib)  cophenetic(x), ib)
+
+cophen.cor.neg <- mapply(function(X,Y) {cor(X, Y)},
+                         X=dist.metric.neg, Y=d.cophen.neg)
+
+cophen.cor <- data.frame(Positive=unlist(cophen.cor.pos),
+                         Negative=unlist(cophen.cor.neg))
+
+row.names(cophen.cor) <- stand.Col.names
+
+cophen.cor.tab <- xtable(cophen.cor,
+                         caption=c('Cophenetic correlations: Mutual Information structure of pairwise promoter loci -40 to +10 nucleotides from TSS for positive and negative subsets of the most strongly COMT-correlated genes.'))
+
+
+@
+
+<<NbClust>>=
+
+fviz_nbclust(MI.matrix.pos[[1]], hcut, method = 'silhouette') +
+#    geom_vline(xintercept = 4, linetype = 2)+
+  labs(subtitle = "silhouette")
+
+set.seed(123)
+fviz_nbclust(MI.matrix.pos[[1]], hcut, nstart = 25,  method = "gap_stat", nboot = 50)+
+  labs(subtitle = "Gap statistic method")
+
+hc2 <- agnes(MI.matrix.neg[[4]],method='ward')
+hc2$ac
+pltree(hc2, cex = 0.6, hang = -1, main = "Dendrogram of agnes")
+
+hc4 <- diana(MI.matrix.neg[[1]])
+hc4$dc
+pltree(hc4, cex = 0.6, hang = -1, main = "Dendrogram of agnes") 
+
+m <- c( "average", "single", "complete", "ward")
+names(m) <- c( "average", "single", "complete", "ward")
+
+# function to compute coefficient
+mer <- function(x) {
+  hclust(dist.metric.neg.pf, method = x)$order
+}
+
+map_dbl(m, mer)
+
+@
+
+<<rand.clust>>=
+nrpt <- c(500)
+cophen.cor.rnd <- c(rep(NA,nrpt))
+for (nrpt in 1:nrpt)   {
+     
+     rnd.mtx <- MI.matrix.pos[[1]]   # This puts the ME values in their proper places on the diagonal
+     
+### ***** randomly reorder the row indices; all this does is to change the ORDER in which the rows are filled in RPMIM from UMIM.
+     x.r <- sample(c(1:50),50,replace=FALSE)  # randomly reorder the row indices
+     
+     for (ix in 1:50)  {
+
+          ########## DEBUG ############
+          ix <- c(1)
+          #############################
+                 
+          
+          
+          y.r <- sample(c((x.r[ix]+1):51),length(c((x.r[ix]+1):51)),replace=FALSE) # randomly reorder the column indices
+          
+# now fill up the upper right triangle of the permuted matrix with all the values that appeared in the unpermuted MI matrix (UMIM) matrix, but put them in based on the reodering of the row and column indices.
+          rnd.mtx[x.r[ix],c((x.r[ix]+1):51)] <- MI.matrix.pos[[1]][x.r[ix],c(y.r)]
+     
+
+     }
+
+dist.metric.orig <- dist(MI.matrix.pos[[1]],method='maximum',diag=FALSE,upper=TRUE)     
+dist.metric.pos <- dist(rnd.mtx,method='maximum',diag=FALSE,upper=TRUE)
+xclustpos <- hclust(dist.metric.orig,method='average')
+d.cophen.pos <- cophenetic(xclustpos)
+cophen.cor.rnd[nrpt] <- cor(dist.metric.pos,d.cophen.pos)
+
+
+
+cat(paste('interation',nrpt,'\n',sep=''))
+
+}
+hist(cophen.cor.rnd)
+
+
+
+
+plot(xclustpos,hang=c(0.1),labels=leaf.lab,axes=TRUE,
+     frame.plot=FALSE,cex=0.6,
+     main=c('Loci (re: TSS) Relatedness: \n Positively Random, Prefrontal Cortex'),
+     xlab=c(''),ylab=c('Dissimilarity'),sub=c('dist = maximum \n hclust = average (UPGMA)'),cex=c(0.6))
+
+
+@
+
+\end{document}

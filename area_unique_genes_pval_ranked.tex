@@ -1,0 +1,600 @@
+% Use this file as an \include to put it at the top of Sweave/R generated latex tables.
+
+\documentclass[letterpaper,12pt]{article}
+
+%\usepackage{dgjournal}
+
+
+%%% Note: remove the next two lines to submit article %%%%%%%%%%
+\usepackage{setspace}
+%\linespread{2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%       
+
+%% The mathptmx package is recommended for Times compatible math symbols.
+%% Use mtpro2 or mathtime instead of mathptmx if you have the commercially
+%% available MathTime fonts.
+%% Other options are txfonts (free) or belleek (free) or TM-Math (commercial)
+\usepackage{mathptmx}
+\usepackage{tensor}
+\usepackage{nicefrac}
+\usepackage{units}
+\usepackage{mathtools}
+\usepackage{mathrsfs}
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+\usepackage{nth}
+\usepackage{epsfig}
+\usepackage[makeroom]{cancel}
+\newcommand\Ccancel[2][black]{\renewcommand\CancelColor{\color{#1}}\cancel{#2}}
+\newcommand\Bcancel[2][black]{\renewcommand\CancelColor{\color{#1}}\bcancel{#2}}
+
+\usepackage{geometry}
+\usepackage{changepage}
+
+
+
+\usepackage[T1]{fontenc}
+\usepackage{makecell}
+\newcolumntype{x}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{tikz}
+\newcommand\diag[4]{%
+  \multicolumn{1}{p{#2}|}{\hskip-\tabcolsep
+  $\vcenter{\begin{tikzpicture}[baseline=0,anchor=south west,inner sep=#1]
+  \path[use as bounding box] (0,0) rectangle (#2+2\tabcolsep,\baselineskip);
+  \node[minimum width={#2+2\tabcolsep},minimum height=\baselineskip+\extrarowheight] (box) {};
+  \draw (box.north west) -- (box.south east);
+  \draw (box.south west) -- (box.south west);
+  \node[anchor=south west] at (box.south west) {#3};
+  \node[anchor=north east] at (box.north east) {#4};
+ \end{tikzpicture}}$\hskip-\tabcolsep}}
+
+
+%% Use the graphics package to include figures
+%\usepackage{graphics}
+
+%% Use natbib with these recommended options
+%\usepackage[authoryear,comma,longnamesfirst,sectionbib]{natbib}
+\usepackage[authoryear,comma,sectionbib]{natbib} 
+
+%%%%%%%%%%% Dannemiller added 01/19/2015 - standard preamble
+\usepackage{fancyhdr} % Headers and footers
+
+\pagestyle{fancyplain} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+\fancyhead[RO,RE]{\thepage} % Custom header text
+\renewcommand{\headrulewidth}{0pt} %0pt for no rule, 2pt thicker etc...
+\setlength{\headheight}{15.0pt}
+
+\usepackage{url}   %this allows us to cite URLs in the text
+
+\usepackage{booktabs}
+\usepackage{pstricks}
+\let\clipbox\relax
+\usepackage{amssymb}
+\usepackage{afterpage}
+\usepackage{transparent}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{multicol}
+%\usepackage{chngpage}
+
+
+\usepackage{enumerate}
+\usepackage{xspace}
+
+\usepackage{abbrevs}
+% example: \newabbrev\ART{American Repetrory Theater (ART)}[ART]
+\newabbrev\ssb{Sum of Squares Between genotypes ($SS_{B}$)}[$SS_{B}$]
+\newabbrev\ssw{Sum of Squares Within genotypes ($SS_{W}$)}[$SS_{W}$]
+\newabbrev\sst{Sum of Squares Total ($SS_{T}$)}[$SS_{T}$]
+\newabbrev\ci{current, intermediate (CI)}[CI]
+\newabbrev\cim{current, intermediate matrix (CI matrix)}[CI matrix]
+\newabbrev\cims{current, intermediate matrices (CI matrices)}[CI matrices]
+\newabbrev\civ{current, intermediate vector (CI vector)}[CI vector]
+\newabbrev\civs{current, intermediate vectors (CI vectors)}[CI vectors]
+\newabbrev\cis{current, intermediate scalar (CI scalar)}[CI scalar]
+\newabbrev\maf{minor allele frequency (MAF)}[MAF]
+
+
+
+%%% The following correct for a flawed if statement in package abbrev
+\makeatletter
+\renewcommand\maybe@space@{%
+  % \@tempswatrue % <= this is in the original
+  \maybe@ictrue % <= this is new
+  \expandafter   \@tfor
+    \expandafter \reserved@a
+    \expandafter :%
+    \expandafter =%
+                 \nospacelist
+                 \do \t@st@ic
+  % \if@tempswa % <= this is in the original
+  \ifmaybe@ic % <= this is new
+    \space
+  \fi
+}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{ textcomp }
+\newcommand\dblquote[1]{\textquotedblleft #1\textquotedblright} 
+\newcommand{\apos}{$\text{'}$}
+\newcommand{\be}{\begin{enumerate}}
+\newcommand{\ee}{\end{enumerate}}
+\newcommand{\bes}{\begin{enumerate*}}
+\newcommand{\ees}{\end{enumerate*}}
+\newcommand{\mb}{\noindent\makebox[\textwidth] }
+\newcommand{\den}{\hspace{2pt}\textendash \,}
+\newcommand{\dem}{\textemdash \,}
+\newcommand{\Eq}{Equation }
+
+
+
+%specific hyphenation
+\hyphenation{e-pi-neph-rine}
+\hyphenation{mol-e-cules}
+%\hyphenation{}
+
+
+\providecommand\phantomsection{}
+
+
+%\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{ colorlinks=false,pdfborderstyle={/S/U/W 1},citebordercolor=0 0 1 }
+\colorlet{transpyellow}{white!10!yellow}
+
+\usepackage{rotate}
+\usepackage{rotating}
+\usepackage{rotfloat}
+
+\usepackage{fontspec}
+\usepackage[lofdepth,lotdepth]{subfig}
+\usepackage{threeparttable} 
+\usepackage{tablefootnote}
+\usepackage{footnote}
+
+\usepackage{array}
+%\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{threeparttablex}
+
+
+\usepackage{pdflscape} 
+\usepackage{tabulary}
+\usepackage{ltxtable}
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\setlength\LTleft{0pt}
+\setlength\LTright{0pt}
+
+
+
+\usepackage{colortbl}
+\definecolor{riceblue}{hsb}{0.6,0.1,0.9}
+\definecolor{greenish}{rgb}{0.3,0.6,0.0}
+\definecolor{myblue}{rgb}{0.3,0.3,0.8}
+\definecolor{kugray5}{RGB}{224,224,224}
+\definecolor{lightgray}{gray}{0.9}
+
+\usepackage{xltxtra}
+\usepackage{nicefrac}
+
+\usepackage{rotating}
+\usepackage{lscape}
+
+\usepackage{graphicx}
+%\usepackage{epstopdf}
+\graphicspath{/Users/dannemil/paperless/ase_manuscript/sagmb/}
+
+\usepackage[normal]{engord}
+
+\usepackage{enumitem}
+%\setlist[enumerate]{parsep=4pt}
+
+\usepackage [normalem] {ulem}
+
+\usepackage{tabularx}
+\newcolumntype{S}{@{\stepcounter{Definition}\theDefinition.~} >{\bfseries}l @{~--~}X@{}}
+\newcounter{Definition}[subsubsection]
+
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{caption}
+%\renewcommand{\tablename}{Table}
+\usepackage{threeparttable}
+
+\usepackage{setspace}% http://ctan.org/pkg/setspace
+\AtBeginEnvironment{tabular}{\singlespacing}% Single spacing in tabular environment
+
+%\usepackage{booktabs}
+\usepackage[detect-all]{siunitx}
+\robustify\bfseries
+
+\usepackage{tabularx,colortbl}
+\newcolumntype{Y}{>{\centering\arraybackslash} X}
+\renewcommand{\arraystretch}{1.5}
+
+\usepackage{amsmath, amsthm, amssymb}
+%\setlength{\mathindent}{0pt}
+
+\usepackage{etoolbox}
+\apptocmd\normalsize{%
+ \abovedisplayskip=12pt plus 3pt minus 9pt
+ \abovedisplayshortskip=0pt plus 3pt
+ \belowdisplayskip=12pt plus 3pt minus 9pt
+ \belowdisplayshortskip=7pt plus 3pt minus 4pt
+}{}{}
+
+
+%\numberwithin{figure}{section}
+
+\makeatletter
+\@addtoreset{footnote}{section}
+\makeatother
+
+\usepackage{mdwlist}
+
+
+\renewcommand*\thesubsection{\arabic{section}.\arabic{subsection}}
+\usepackage[title]{appendix}
+\newcounter{appendix}
+\numberwithin{equation}{appendix}
+\usepackage{tablefootnote}
+\usepackage{yhmath}
+\usepackage{ragged2e}
+
+\newcolumntype{C}[1]{>{\Centering\arraybackslash}p{#1}}
+
+\usepackage{makecell}
+\renewcommand\theadfont{\normalsize\bfseries}
+\renewcommand\theadalign{bc}
+\usepackage{cellspace}
+\setlength\cellspacetoplimit{5pt}
+\setlength\cellspacebottomlimit{5pt}
+
+\setlength{\LTpre}{0pt}
+\setlength{\LTpost}{12pt}
+%\setlength\LTleft\parindent
+%\setlength\LTright\fill
+
+%\renewcommand{\sfdefault}{Helvetica Neue}
+
+%\setmainfont{Times}
+%\setmainfont{Baskerville}
+%\setmainfont{Alegreya}
+%\setmainfont{Cardo}
+%\setmainfont{Classico}
+\setmainfont{Helvetica Neue}
+%\setmainfont{Gill Sans MT}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\mtx}[1]{\mathbf{#1}}
+
+
+
+\DeclareMathSizes{12pt}{11pt}{8pt}{6pt}
+\everymath=\expandafter{\the\everymath\displaystyle}
+
+\setcounter{secnumdepth}{5}
+
+\usepackage{footnote}
+\makesavenoteenv{tabular}
+\makesavenoteenv{table}
+\usepackage{tablefootnote}
+\usepackage{adjustbox}
+\setlength\heavyrulewidth{.06em}
+\setlength\lightrulewidth{.04em}
+
+
+
+\begin{document}
+
+%\noindent
+
+{\small {
+% latex table generated in R 3.4.4 by xtable 1.8-2 package
+% Thu Apr 26 06:57:39 2018
+\begin{longtable}[c]{r>{\itshape}l>{\itshape}l>{\itshape}l>{\itshape}l}
+\caption{The 199 genes among the 500 most highly {\itshape {COMT}}\den correlated genes (ranked by p-value) expressed in Prefrontal Cortex but not found among the 500 most highly {\itshape {COMT}}\den correlated genes in Cerebellum, Temporal Cortex, or Pons.} \tabularnewline
+\toprule
+\multicolumn{1}{l}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}\tabularnewline
+\midrule
+\endfirsthead\caption[]{\em (Unique genes Prefrontal continued)} \tabularnewline
+\midrule
+\multicolumn{1}{l}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}\tabularnewline
+\midrule
+\endhead
+\midrule
+\endfoot
+\label{tab:genes.unique.prefrontal.pval.ranked}
+1&RPL18AP3&H3F3C&PKM2&RPL19\tabularnewline
+2&NKRF&RPS14&PABPC1&RPS5\tabularnewline
+3&RPL13A&CCDC28A&RPL12&RPL35P5\tabularnewline
+4&SCAMP1&RPS3&HSD17B8&SH3BGRL2\tabularnewline
+5&WDR69&KPNA4&GABARAPL1&BGLAP\tabularnewline
+6&GPIAP1&DENR&OPTN&PPP2CA\tabularnewline
+7&DNAJA2&S100A16&CIB1&WIPI1\tabularnewline
+8&RBP1&CLCN2&TPT1&NEFM\tabularnewline
+9&MGC35154&NME5&KIF21A&SMARCA2\tabularnewline
+10&THRA&EIF3S4&FAU&SPATA18\tabularnewline
+11&EEF1D&MATR3&PREPL&NT5C\tabularnewline
+12&VPS36&RPS17&SAE1&FER\tabularnewline
+13&ALDH1A1&C9orf23&RPS9&C14orf169\tabularnewline
+14&CINP&ARHGEF3&PSME1&CADPS\tabularnewline
+15&C9orf140&PRR23B&C1orf61&IFITM5\tabularnewline
+16&ATG5&GABRG2&TOMM34&FAM83B\tabularnewline
+17&NDFIP1&TFPT&LOC401589&RPL36\tabularnewline
+18&LIPI&RPL8&RPS11&C11orf48\tabularnewline
+19&CCPG1&KIAA1600&NEFH&PECR\tabularnewline
+20&TRIM37&LIX1L&YARS&LPHN2\tabularnewline
+21&SMAP1&POPDC3&TCEAL2&CD83\tabularnewline
+22&MKL2&SLC6A15&LIN28B&MEF2C\tabularnewline
+23&ATP6V1C1&MTCH1&SLC25A1&IGSF1\tabularnewline
+24&PTPN4&C11orf59&ARSF&TGFB2\tabularnewline
+25&CDH12&ENO2&C15orf37&OXR1\tabularnewline
+26&BCAT2&CACNA2D3&RSPO3&TMEM134\tabularnewline
+27&RPL30&NAPB&C2orf68&SLC25A12\tabularnewline
+28&THYN1&MTA3&TOPBP1&MYH10\tabularnewline
+29&EPN2&PCTK2&ENPP5&DNAJC5G\tabularnewline
+30&CCNF&RPS13&PIP5KL1&CCDC63\tabularnewline
+31&ZNF775&RALYL&AFF2&COL5A2\tabularnewline
+32&WASL&ZNF804B&ACSS1&SLC39A10\tabularnewline
+33&DCP2&HYI&VMA21&WDR16\tabularnewline
+34&RPP40&PRICKLE1&HDGF&MDS032\tabularnewline
+35&FLJ37357&NCKAP1&FAM26C&B3GNT1\tabularnewline
+36&OR5K3&NDEL1&FLJ23049&PANK2\tabularnewline
+37&AP3M2&UCRC&ZNF533&RPS4X\tabularnewline
+38&B4GALNT2&RP1-32F7.2&TAS2R8&KRT222P\tabularnewline
+39&TAX1BP3&AHI1&MC3R&GPRASP2\tabularnewline
+40&LARGE&MLL2&ORC4L&PLAT\tabularnewline
+\newpage
+41&FLJ10986&GLS&DERL2&IL5RA\tabularnewline
+42&FGF1&PACS2&NARS&ACTR6\tabularnewline
+43&KLK7&LUZP4&GRM1&REEP5\tabularnewline
+44&ALX4&OPLAH&AFF3&ZNF490\tabularnewline
+45&CAMTA1&LRFN5&ZNF396&GJB6\tabularnewline
+46&CDC14A&RPL11&LDB2&CDC2L1\tabularnewline
+47&PRC1&LGALS13&NDUFV2&HSDL1\tabularnewline
+48&HLA-F&PELI2&MRPS36&KIAA0528\tabularnewline
+49&EDG7&MTMR4&VDAC3&TUFM\tabularnewline
+50&PCDHGA1&SEC13&ZBTB24&\tabularnewline
+\bottomrule
+\end{longtable}
+}}
+%\end{document}%latex.default(temp.unique.cerebellum.tab, file = "area_unique_genes_pval_ranked.tex",     caption = paste("Genes among the 500 most highly COMT-correlated genes (ranked by p-value) expressed in Cerebellum but not found among the 500 most highly COMT-correlated genes in Prefrontal Cortext, Temporal Cortex, or Pons."),     caption.loc = c("top"), booktabs = TRUE, label = c("tab:genes.unique.cerebellum.pval.ranked"),     na.blank = TRUE, rowlabel = c(""), colheads = c(rep("", rows.for.tabs)),     vbar = FALSE, longtable = TRUE, continued = paste("Unique genes ",         stand.Col.names[2], " continued", sep = ""), table.env = TRUE,     center = c("center"), first.hline.double = FALSE, append = TRUE)%
+
+\vspace{2em}
+\begin{longtable}[c]{r>{\itshape}l>{\itshape}l>{\itshape}l>{\itshape}l}
+\caption{The 236 genes among the 500 most highly {\itshape {COMT}}\den correlated genes (ranked by p-value) expressed in Cerebellum but not found among the 500 most highly {\itshape {COMT}}\den correlated genes in Prefrontal, Temporal Cortex, or Pons.} \tabularnewline
+\toprule
+\multicolumn{1}{l}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}\tabularnewline
+\midrule
+\endfirsthead\caption[]{\em (Unique genes Cerebellum continued)} \tabularnewline
+\midrule
+\multicolumn{1}{l}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}\tabularnewline
+\midrule
+\endhead
+\midrule
+\endfoot
+\label{tab:genes.unique.cerebellum.pval.ranked}
+1&CYB5D2&TMEM106C&VPS41&C1orf71\tabularnewline
+2&TYW1&GLE1L&MAP1B&RGS17\tabularnewline
+3&CELSR3&LYPLAL1&CRTAP&ZMYND17\tabularnewline
+4&PRTFDC1&NCAM2&PRMT2&RNF150\tabularnewline
+5&FANCL&SUZ12&OMG&PRG-3\tabularnewline
+6&HNMT&GFOD1&CGI-38&NSDHL\tabularnewline
+7&SUMF1&FAM80B&C12orf31&SERBP1\tabularnewline
+8&C10orf58&PAOX&ZNF398&TUBA1A\tabularnewline
+9&SCN2A&ZNF540&SH3BGR&BSN\tabularnewline
+10&C19orf42&EDC4&LIN9&SLC25A26\tabularnewline
+11&DTD1&ALG14&TYMS&GTDC1\tabularnewline
+12&NRIP3&SLC24A2&CREG1&SPCS1\tabularnewline
+13&LEPREL2&FLJ40142&STOM&MMS19L\tabularnewline
+14&GMPR2&GPR135&PSMB2&PLEKHA5\tabularnewline
+15&MLYCD&NCSTN&DHRS7&SPIRE1\tabularnewline
+16&FLJ20054&CNDP1&CTSL1&CXorf57\tabularnewline
+17&MRPL24&CNOT6&DHRS7B&D15WSU75E\tabularnewline
+18&CHD9&WDFY1&YIF1B&KNOP1\tabularnewline
+19&ACOT8&FBXL10&POLD4&SNAPC4\tabularnewline
+20&STK36&PHKA2&EIF2AK1&HSD17B12\tabularnewline
+21&GAPDH&GBA&TMED10&EIF3S2\tabularnewline
+22&LGMN&TMCO1&CDC2L5&ARPP-21\tabularnewline
+23&FAM13A1&SETDB2&ERCC1&ZDHHC9\tabularnewline
+24&JTV1&C1orf57&DCTN6&COX6A1\tabularnewline
+25&RYR2&TCEA2&C11orf49&CAPN13\tabularnewline
+26&KIAA1853&C18orf10&ZNF562&PFDN1\tabularnewline
+27&TM4SF11&NDN&TRIM45&SLC45A3\tabularnewline
+28&PIGK&PHYHIPL&TNFRSF25&DNAPTP6\tabularnewline
+29&C20orf169-DBNDD2&SLC30A7&RPS6KA4&ARMCX6\tabularnewline
+30&ERBB3&FOXO3A&RPAIN&ZNF488\tabularnewline
+31&CDKAL1&CLCN3&SEC11C&ENOSF1\tabularnewline
+32&GREM1&TMEM98&AHCTF1&DIAPH1\tabularnewline
+33&RPN1&USP47&ZNF174&EPC2\tabularnewline
+34&PCDHAC1&GALNT9&NOLA2&FRMD6\tabularnewline
+35&RSAD1&PTPN13&KCNQ2&DEFB103B\tabularnewline
+36&SRPX&BICD1&NDUFA11&CNTN2\tabularnewline
+37&MALT1&C11orf31&MAP3K12&SHC4\tabularnewline
+38&FOXJ2&SUMF2&ARPP-19&DMRT2\tabularnewline
+39&GOLGA7&NCOA3&SNAP25&ADSSL1\tabularnewline
+40&RPUSD4&HSD17B4&AP3B1&ZIM2\tabularnewline
+\newpage
+41&PRRT2&CDC123&GLT25D2&ZNF529\tabularnewline
+42&EVI2A&ARL5A&EMG1&ARHGAP1\tabularnewline
+43&TUFT1&CCNE2&GAB1&CAP1\tabularnewline
+44&ZHX1&NINJ2&TSPAN9&FOLH1\tabularnewline
+45&AP1GBP1&BTBD16&LACTB2&NUDCD2\tabularnewline
+46&LRRC37B&CCDC21&YIPF1&RPS6KB1\tabularnewline
+47&PLCL1&SETD6&MAP3K5&LOC731950\tabularnewline
+48&KIAA0240&MGC35308&NMB&RAB33A\tabularnewline
+49&RASSF2&COL4A3BP&GPAA1&PMP22\tabularnewline
+50&SLC5A11&GPX4&PLEKHA6&UGCG\tabularnewline
+51&FSTL5&DSCR3&POLG&ZNF521\tabularnewline
+52&TAX1BP1&HLCS&ZNF354A&KBTBD8\tabularnewline
+53&LTC4S&SLC35F1&ZNF547&CCS\tabularnewline
+54&TRIM13&PHC2&CRADD&TBCC\tabularnewline
+55&DAK&GABRB3&GJB1&BTF3\tabularnewline
+56&KCTD2&RIMS3&ZNF326&WDR42A\tabularnewline
+57&TSPAN3&AHCY&SCN3A&LZTS2\tabularnewline
+58&FAM55C&CRYGS&CYB561D2&ZMAT3\tabularnewline
+59&ABCF2&PPP2R5E&TMEM16D&THRAP2\tabularnewline
+\bottomrule
+\end{longtable}
+
+\vspace{2em}
+%latex.default(temp.unique.temporal.tab, file = "area_unique_genes_pval_ranked.tex",     caption = paste("Genes among the 500 most highly COMT-correlated genes (ranked by p-value) expressed in Temporal Cortex but not found among the 500 most highly COMT-correlated genes in Prefrontal Cortext, Cerebellum, or Pons."),     caption.loc = c("top"), booktabs = TRUE, label = c("tab:genes.unique.temporal.pval.ranked"),     na.blank = TRUE, rowlabel = c(""), colheads = c(rep("", rows.for.tabs)),     vbar = FALSE, longtable = TRUE, continued = paste("Unique genes ",         stand.Col.names[2], " continued", sep = ""), table.env = TRUE,     center = c("center"), first.hline.double = FALSE, append = TRUE)%
+\setlongtables
+\begin{longtable}[c]{r>{\itshape}l>{\itshape}l>{\itshape}l>{\itshape}l}
+\caption{The 209 genes among the 500 most highly {\itshape {COMT}}\den correlated genes (ranked by p-value) expressed in Temporal Cortex but not found among the 500 most highly {\itshape {COMT}}\den correlated genes in Prefrontal Cortext, Cerebellum, or Pons.} \tabularnewline
+\toprule
+\multicolumn{1}{l}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}\tabularnewline
+\midrule
+\endfirsthead\caption[]{\em (Unique genes Cerebellum continued)} \tabularnewline
+\midrule
+\multicolumn{1}{l}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}\tabularnewline
+\midrule
+\endhead
+\midrule
+\endfoot
+\label{tab:genes.unique.temporal.pval.ranked}
+1&IL17RB&AQP4&DOCK7&THBS4\tabularnewline
+2&RGN&ITPR2&TPD52L1&EMX2\tabularnewline
+3&BBS2&ATP1B2&GPR98&RAB5C\tabularnewline
+4&ALDH6A1&C4orf19&C14orf159&LAMA1\tabularnewline
+5&LRIG1&SLC1A2&LHX2&CHST7\tabularnewline
+6&COQ9&CHPT1&DDR1&CLCC1\tabularnewline
+7&SLC15A2&ZNF22&FLJ32310&RAD1\tabularnewline
+8&CDKN2C&SOX21&RFC2&ETFDH\tabularnewline
+9&IL33&GPAM&FAM89A&HRSP12\tabularnewline
+10&AK3L2&SOX9&LINC00299&PPAPDC1B\tabularnewline
+11&APPL2&C4orf18&CCDC25&PSD2\tabularnewline
+12&TMEM70&TNIK&TMEM123&TRAF5\tabularnewline
+13&INPP5A&IRX5&GLI3&SLC30A9\tabularnewline
+14&IL10RB&MSI2&ATP1A2&SLC7A10\tabularnewline
+15&C10orf110&NTRK2&HNRPU&PDE1A\tabularnewline
+16&GSTK1&MPP3&SUPT16H&ZNF622\tabularnewline
+17&PRKD1&FGF2&TTC21B&NWD1\tabularnewline
+18&C9orf61&OAF&BCAR3&CDKN3\tabularnewline
+19&PHKG1&TNFAIP6&HIBCH&GPT2\tabularnewline
+20&RAD9B&C9orf123&GALNT4&SPARCL1\tabularnewline
+21&BBOX1&SPON1&BEST4&PCDHB5\tabularnewline
+22&LSAMP&CSRP1&LMO7&LRCH1\tabularnewline
+23&PARP3&USP15&FZD8&TRPS1\tabularnewline
+24&TBC1D14&PLA2R1&SLC44A3&AMOT\tabularnewline
+25&S100A1&SHH&ACSL6&TLK1\tabularnewline
+26&TCEAL4&LYN&RHOBTB3&ALDH7A1\tabularnewline
+27&DNASE2&EPHX1&RET&METT11D1\tabularnewline
+28&EIF2B3&CD37&DDO&PYGM\tabularnewline
+29&OPHN1&PHF21B&CCDC121&NPAS3\tabularnewline
+30&DHX32&TUBB2B&APOC2&PARP9\tabularnewline
+31&CDC42EP4&POLR3C&STOX1&LOC400455\tabularnewline
+32&CHSY-2&RFTN2&RNF182&WASF3\tabularnewline
+33&CALB1&KIAA0789&SH3BP4&GFM1\tabularnewline
+34&HSF1&ERO1L&C22orf9&C20orf107\tabularnewline
+35&SH3BGRL3&LCN8&C1orf74&RAB7L1\tabularnewline
+36&CYFIP1&DKFZP686D0972&PHF17&C19orf54\tabularnewline
+37&NEK10&TSEN34&BA16L21.2.1&ZNF385\tabularnewline
+38&ELOVL5&USP14&SLC7A11&DHTKD1\tabularnewline
+39&SLC4A4&OTX1&SRI&ZWILCH\tabularnewline
+40&TH1L&KAL1&TMEM127&APP\tabularnewline
+\newpage
+41&RERG&PCBD1&TLCD1&BAAT\tabularnewline
+42&CNTFR&GPX7&SAMD5&TMEM80\tabularnewline
+43&RYR1&SH3BP5&TPP1&C20orf72\tabularnewline
+44&ALDH4A1&PHACTR4&POGZ&FLT3\tabularnewline
+45&CSRP2&F3&MIXL1&LMNB1\tabularnewline
+46&GAL3ST4&RHEBL1&FAM118B&LMX1B\tabularnewline
+47&GBP7&ZNF544&ZNF263&MRPL41\tabularnewline
+48&HIGD2A&GPR56&LEPROT&TM4SF18\tabularnewline
+49&STS&ASCL1&UBE2J1&KIAA0195\tabularnewline
+50&PPP1R3D&COL5A3&HERPUD2&ANKRD15\tabularnewline
+51&ASXL2&MCCC2&GNG7&NFE2L2\tabularnewline
+52&BZRAP1&ZWINT&MAT1A&LRRC8A\tabularnewline
+53&AKR1C3&&&\tabularnewline
+\bottomrule
+\end{longtable}
+
+\vspace{2em}
+%latex.default(temp.unique.pons.tab, file = "area_unique_genes_pval_ranked.tex",     caption = paste("Genes among the 500 most highly COMT-correlated genes (ranked by p-value) expressed in Pons but not found among the 500 most highly COMT-correlated genes in Prefrontal Cortext, Cerebellum, or Temporal Cortex."),     caption.loc = c("top"), booktabs = TRUE, label = c("tab:genes.unique.pons.pval.ranked"),     na.blank = TRUE, rowlabel = c(""), colheads = c(rep("", rows.for.tabs)),     vbar = FALSE, longtable = TRUE, continued = paste("Unique genes ",         stand.Col.names[2], " continued", sep = ""), table.env = TRUE,     center = c("center"), first.hline.double = FALSE, append = TRUE)%
+\setlongtables
+\begin{longtable}[c]{r>{\itshape}l>{\itshape}l>{\itshape}l>{\itshape}l}
+\caption{The 235 genes among the 500 most highly {\itshape {COMT}}\den correlated genes (ranked by p-value) expressed in Pons but not found among the 500 most highly {\itshape {COMT}}\den correlated genes in Prefrontal Cortext, Cerebellum, or Temporal Cortex.} \tabularnewline
+\toprule
+\multicolumn{1}{l}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}\tabularnewline
+\midrule
+\endfirsthead\caption[]{\em (Unique genes Cerebellum continued)} \tabularnewline
+\midrule
+\multicolumn{1}{l}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}\tabularnewline
+\midrule
+\endhead
+\midrule
+\endfoot
+\label{tab:genes.unique.pons.pval.ranked}
+1&KLK3&AGPS&PIGM&LRRC63\tabularnewline
+2&THRAP6&C7orf11&PET112L&PCSK6\tabularnewline
+3&HIST1H4H&SEPT10&C9orf77&BTD\tabularnewline
+4&FNTB&TLE4&SCHIP1&SSR4\tabularnewline
+5&PRELID1&STXBP3&EEF2K&USH1C\tabularnewline
+6&KCTD3&TIMP2&STAMBP&PAPSS1\tabularnewline
+7&HINT3&ATP8A1&DIXDC1&PIGG\tabularnewline
+8&TMEM116&ALDH3A2&DICER1&MPDZ\tabularnewline
+9&EMILIN2&C20orf4&FBXO32&NFE2L3\tabularnewline
+10&MED8&TIA1&TSPAN8&FLJ11506\tabularnewline
+11&KIAA1026&C9orf164&RKHD1&CTTNBP2\tabularnewline
+12&FLOT2&ST18&EXDL2&C22orf5\tabularnewline
+13&NLN&LASS2&MYO1E&MLH1\tabularnewline
+14&ELOVL1&SEC23B&EIF2B1&MTSS1\tabularnewline
+15&REEP3&GPC5&C5orf37&BRD7\tabularnewline
+16&TFCP2&BRMS1&HMGCL&WDR57\tabularnewline
+17&TMEM5&CRIPT&ZMYM5&TMC7\tabularnewline
+18&C1orf77&ERBB2IP&CMTM5&PRPF19\tabularnewline
+19&HARS&EFS&HNRPC&DNAJC5\tabularnewline
+20&STT3A&INTS4&BCAP31&SNX24\tabularnewline
+21&SIRT2&TRIP4&KIAA0892&SLC12A2\tabularnewline
+22&BBX&PLEKHG4&PRPSAP2&SORT1\tabularnewline
+23&ALG13&TESK2&KIAA0776&FIS1\tabularnewline
+24&SRPRB&ANGPTL2&UNC50&RP2\tabularnewline
+25&ZDHHC14&KLHDC1&CANT1&GALC\tabularnewline
+26&SSFA2&SPP1&PTPRD&BAT5\tabularnewline
+27&LUZP1&SGK2&CNTNAP4&VAMP3\tabularnewline
+28&IMPDH2&NETO2&FAM123B&TOR1AIP1\tabularnewline
+29&CYP20A1&HIST2H2BE&TTLL11&EFCBP1\tabularnewline
+30&DKFZP434A0131&C20orf39&MAP7&C11orf67\tabularnewline
+31&ANAPC5&ATG4C&ZCCHC11&B4GALNT1\tabularnewline
+32&DYRK4&LDLRAP1&YAF2&TMEM140\tabularnewline
+33&ST3GAL3&RALBP1&PHF5A&C1orf135\tabularnewline
+34&NSMCE4A&FAM13C1&CAPN3&SP2\tabularnewline
+35&NEK7&GEMIN8&KIAA0319&TBC1D2\tabularnewline
+36&ASCC1&INSM2&PDXK&OPRL1\tabularnewline
+37&FUSIP1&ADCY5&FAM38B&POLR2I\tabularnewline
+38&KIAA1217&SUPV3L1&FN3KRP&MTP18\tabularnewline
+39&C20orf46&PPIE&FBXW7&HNRPK\tabularnewline
+40&MGC3731&PEMT&MGC3207&NVL\tabularnewline
+\newpage
+41&DOLPP1&CRYAB&HPS5&AGPAT4\tabularnewline
+42&CLASP1&ZNF277P&MAL&C18orf54\tabularnewline
+43&APOD&CNOT4&SFT2D3&EPB41L2\tabularnewline
+44&PIGO&C6orf106&RHOG&KIAA0100\tabularnewline
+45&NAPE-PLD&APIP&HNRPDL&LIPT1\tabularnewline
+46&LOC732402&TTF2&C10orf39&PRRG1\tabularnewline
+47&DPP3&NPC1&STMN1&C14orf122\tabularnewline
+48&NCAPD2&LSM7&PPAP2C&CHMP2B\tabularnewline
+49&FBXO31&SAV1&SLC39A6&DPF2\tabularnewline
+50&STX16&EIF1&FUNDC2&SPTLC1\tabularnewline
+51&SEC61B&DACH1&EI24&DDX28\tabularnewline
+52&PDE4A&MGC59937&HIATL2&DUSP3\tabularnewline
+53&KIF6&TMEM46&SLC13A3&GPR3\tabularnewline
+54&C20orf149&PIGN&ARID1A&CKMT2\tabularnewline
+55&MGC16169&SYVN1&ATP5G2&ALS2CR2\tabularnewline
+56&FLJ14803&TMED4&ADCY9&TBC1D5\tabularnewline
+57&PIP5K2A&DDX5&ZFYVE26&C8orf72\tabularnewline
+58&KRAS&RDX&SLC9A1&CUTC\tabularnewline
+59&PCM1&ZNF536&PEX26&\tabularnewline
+\bottomrule
+\end{longtable}
+
+\end{document}

@@ -1,0 +1,860 @@
+{\bfseries {pre_post_recovery_missing_stats_v1.Rnw}}\\
+
+Program to generate tables pre- and post- preprocessing of the data on number of rows with missing observations on various variables and the number of rows with gene symbols that begin with "LOC." Additionally, some chromosomes were initiaslly listed as 'Un' for unknown.\\
+
+\documentclass[11pt]{article}
+\usepackage{graphicx, subfig}
+\usepackage{float}
+\pagenumbering{arabic}
+\usepackage{enumerate}
+\usepackage{Sweave}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{framed}
+\usepackage{longtable}
+\usepackage{tablefootnote}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+
+
+\begin{document}
+\input{mark_changed_symbols_v3-concordance}
+ 
+
+\hspace{-1.5em}Gene Network\\
+COMT expression correlations in Four Brain Areas\\
+Fall, 2017\\
+
+
+
+\begin{Schunk}
+\begin{Soutput}
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_get_match_length.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_get_match_length.R`$value
+function (invec, targ) 
+{
+    len.out <- length(which(invec == targ))
+    return(len.out)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_get_match_length.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_chrom_names.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_chrom_names.R`$value
+function (input.names) 
+{
+    temp.A <- sub("CHR_HSCHR", "", input.names)
+    temp.Init <- grep("^[X-Y]|^[1-9]?|^[1]{1}[0-9]{1}|^[2]{1}[0-2]{1}[^:punct:]", 
+        temp.A, value = TRUE)
+    temp.Init.pf <- substr(temp.Init, 1, 2)
+    temp.Init.pf <- sub("\\_", "", temp.Init.pf)
+    temp.Init.pf[which(temp.Init.pf == "CH")] <- NA
+    temp.Init.pf[which(temp.Init.pf == "KI")] <- NA
+    return(temp.Init.pf)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_chrom_names.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_get_start_pos.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_get_start_pos.R`$value
+function (input.start, scaleDiv) 
+{
+    return(input.start/scaleDiv)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_get_start_pos.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_myBioCLite.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_myBioCLite.R`$value
+function () 
+{
+    suggestedVersions <- old.packages()
+    installedVersions <- installed.packages()[rownames(suggestedVersions), 
+        "Version"]
+    suggestedVersions <- suggestedVersions[, "ReposVer"]
+    needToInstall <- suggestedVersions != installedVersions
+    if (sum(needToInstall) > 0) {
+        installThese <- names(suggestedVersions)[which(needToInstall)]
+        cat("\ncalling biocLite with this list of packages\n", 
+            installThese, "\n")
+        biocLite(installThese, suppressUpdates = TRUE, suppressAutoUpdate = TRUE)
+    }
+    else {
+        cat("\nThere are no new packages to install\n")
+    }
+    cat("\ndone\n\n")
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_myBioCLite.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_genes_are_nums.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_genes_are_nums.R`$value
+function (in.data) 
+{
+    gene.Symbol.table <- as.data.frame(table(in.data$Symbol))
+    num.Or.lett <- grepl("[A-Z]", substring(as.character(gene.Symbol.table[, 
+        1]), 1, 1))
+    genes.As.nums <- length(subset(num.Or.lett, num.Or.lett == 
+        FALSE))
+    indx.Symb <- which(in.data$Symbol %in% as.character(gene.Symbol.table[c(genes.As.nums), 
+        1]))
+    return(indx.Symb)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_genes_are_nums.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_genes_are_locs.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_genes_are_locs.R`$value
+function (in.data, j) 
+{
+    loc.INDX <- grep("LOC", substring(in.data[j]$Symbol, 1, 3))
+    return(loc.INDX)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_genes_are_locs.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_genes2chr.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_genes2chr.R`$value
+function (in.Data, mapIndx, lim1, lim2) 
+{
+    doY <- any.Y(in.Data, lim1, lim2)
+    topPosgenes.By.chr <- table(in.Data$loc[lim1:lim2])[c(mapIndx[1:doY])]
+    topPosgenes.By.chr.percent <- topPosgenes.By.chr/sum(topPosgenes.By.chr)
+    genes.By.chr <- table(in.Data$loc)[c(mapIndx[1:24])]
+    genes.By.chr.percent <- genes.By.chr[1:doY]/sum(genes.By.chr[1:doY])
+    binom.SD <- sqrt(200 * genes.By.chr.percent * (1 - genes.By.chr.percent))
+    topPosgenes.By.chr.enrich <- round(topPosgenes.By.chr.percent/genes.By.chr.percent, 
+        2)
+    topPosgenes.By.chr.pretab <- data.frame(name = map.Chrname.Chrnum$chrnum[1:23], 
+        nums = topPosgenes.By.chr, enrich = topPosgenes.By.chr.enrich)
+    topPosgenes.By.chr.pretab <- topPosgenes.By.chr.pretab[, 
+        c(1, 3, 5)]
+    topPosgenes.By.chr.pretab$expect <- round(200 * genes.By.chr.percent, 
+        1)
+    topPosgenes.By.chr.pretab <- topPosgenes.By.chr.pretab[, 
+        c(1, 2, 4, 3)]
+    binom.zval <- (topPosgenes.By.chr.pretab$nums.Freq - topPosgenes.By.chr.pretab$expect)/binom.SD[1:23]
+    binom.Pval <- round(2 * pnorm(abs(binom.zval), mean = 0, 
+        sd = 1, lower.tail = FALSE), 2)
+    topPosgenes.By.chr.pretab$pval <- binom.Pval
+    colnames(topPosgenes.By.chr.pretab) <- c("Chromosome", "Frequency", 
+        "Expected", "Enrichment", "P value")
+    return(topPosgenes.By.chr.pretab)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_genes2chr.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_anyY.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_anyY.R`$value
+function (in.Data, lim1, lim2) 
+{
+    doY <- c(24)
+    if (is.na(match("Y", in.Data$loc[lim1:lim2]))) {
+        doY <- c(23)
+    }
+    else {
+    }
+    return(doY)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_anyY.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_gene_start_end.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_gene_start_end.R`$value
+function (in.Data) 
+{
+    gene.Starts <- getBM(attributes = c("illumina_humanref_8_v3", 
+        "hgnc_symbol", "chromosome_name", "start_position", "end_position", 
+        "entrezgene"), filters = "illumina_humanref_8_v3", values = as.character(in.Data), 
+        mart = ensembl)
+    return(gene.Starts)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_gene_start_end.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_chisq_genesBychr.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_chisq_genesBychr.R`$value
+function (area.Data, input.Data.tab, mapIndx, lim1, lim2) 
+{
+    doY <- any.Y(area.Data, lim1, lim2)
+    genes.By.chr <- table(area.Data$loc)[c(mapIndx[1:24])]
+    genes.By.chr.percent <- genes.By.chr[1:doY]/sum(genes.By.chr[1:doY])
+    chsq.genes.byChr <- chisq.test(input.Data.tab$Frequency, 
+        y = NULL, correct = FALSE, p = genes.By.chr.percent, 
+        rescale.p = FALSE, simulate.p.value = FALSE, B = 2000)
+    return(chsq.genes.byChr)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_chisq_genesBychr.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_mismatch_hgnc.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_mismatch_hgnc.R`$value
+function (area.Data, tm.All.Data, entrez.Data) 
+{
+    Symb.mismatches.temp <- data.frame(matrix(rep(NA, 4 * dim(area.Data)[1]), 
+        ncol = 4))
+    for (i in 1:dim(area.Data)[1]) {
+        if (is.na(area.Data$Symbol[i]) | is.na(tm.All.Data$Symbol[entrez.Data[i]])) {
+            Symb.mismatches.temp[i, 1] <- c(i)
+            Symb.mismatches.temp[i, 2] <- c("blank")
+            Symb.mismatches.temp[i, 3] <- area.Data$Symbol[i]
+            Symb.mismatches.temp[i, 4] <- tm.All.Data$Symbol[entrez.Data[i]]
+        }
+        else if (!is.na(area.Data$Symbol[i]) & !is.na(tm.All.Data$Symbol[entrez.Data[i]])) {
+            if (area.Data$Symbol[i] == tm.All.Data$Symbol[entrez.Data[i]]) {
+                Symb.mismatches.temp[i, 1] <- c(i)
+                Symb.mismatches.temp[i, 2] <- c("match")
+                Symb.mismatches.temp[i, 3] <- area.Data$Symbol[i]
+                Symb.mismatches.temp[i, 4] <- tm.All.Data$Symbol[entrez.Data[i]]
+            }
+            else {
+                Symb.mismatches.temp[i, 1] <- c(i)
+                Symb.mismatches.temp[i, 2] <- c("mismatch")
+                Symb.mismatches.temp[i, 3] <- area.Data$Symbol[i]
+                Symb.mismatches.temp[i, 4] <- tm.All.Data$Symbol[entrez.Data[i]]
+            }
+        }
+        else {
+        }
+    }
+    return(Symb.mismatches.temp)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_mismatch_hgnc.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_get_miss_Stats.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_get_miss_Stats.R`$value
+function (x, i, cnames, rnames) 
+{
+    miss.Temp <- list()
+    miss.Temp <- data.frame(miss.Symb = num.NA(x$Symbol), miss.entrez = num.NA(x$ENTREZID), 
+        miss.loc = num.NA(x$loc), miss.bp = num.NA(x$bp))
+    return(miss.Temp)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_get_miss_Stats.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_strip_chr.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_strip_chr.R`$value
+function (in.data, j) 
+{
+    loc.temp.a <- sub("\\::*\\s[0-9]*\\.[0-9]*", "", in.data[j]$Location)
+    loc.temp.b <- lapply(loc.temp.a[j], function(x, j) gsub("Chr", 
+        "", x), j)
+    return(loc.temp.b)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_strip_chr.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_strip_bp.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_strip_bp.R`$value
+function (x, l) 
+{
+    temp.bp <- as.numeric(sub(".*\\:", "", x[l]$Location))
+    return(temp.bp)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_strip_bp.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_miss_chr_bp.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_miss_chr_bp.R`$value
+function (in.data, ji) 
+{
+    un.num <- list()
+    no.bp.num <- list()
+    un.num <- lapply(major.Area[ji], function(x, ji) length(which(x$loc == 
+        "Un")))
+    no.bp.num <- lapply(major.Area[ji], function(x, ji) length(which(x$bp == 
+        1)))
+    miss.Chr.bp <- data.frame(matrix(c(un.num, no.bp.num), ncol = 2))
+    colnames(miss.Chr.bp) <- c("Missing Chr", "Missing Start Positions")
+    row.names(miss.Chr.bp) <- stand.Col.names
+    miss.Chr.bp.tab <- xtable(miss.Chr.bp, caption = "Number of missing Chromosome names or numbers and number of missing gene start positions.")
+    return(miss.Chr.bp.tab)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_miss_chr_bp.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_miss_symb_descr.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_miss_symb_descr.R`$value
+function (in.data, ji) 
+{
+    missing.Data.symbol <- list()
+    missing.Data.gene <- list()
+    missing.Data <- data.frame(Missing_Gene_Symbols = rep(NA, 
+        4), Missing_Gene_Descriptions = rep(NA, 4))
+    missing.Data.symbol <- lapply(in.data[ji], function(x, ji) sum(is.na(x[ji]$Symbol)))
+    missing.Data.gene <- lapply(in.data[ji], function(x, ji) sum(is.na(x[ji]$Description)))
+    missing.Data[, 1] <- unlist(missing.Data.symbol)
+    missing.Data[, 2] <- unlist(missing.Data.gene)
+    row.names(missing.Data) <- stand.Col.names
+    num.miss.tab <- xtable(missing.Data, caption = c("Missing gene symbols and gene descriptions by brain area."))
+    return(num.miss.tab)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_miss_symb_descr.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_write_primary_data.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_write_primary_data.R`$value
+function (ax, bx, cx, dx) 
+{
+    success.write <- data.frame(prefront = NA, cbell = NA, tempor = NA, 
+        pons = NA)
+    success.write$prefront <- is.null(try(write.csv(as.data.frame(ax), 
+        "/Volumes/Macintosh_HD_3/genetics/genenetwork2/comt_correlations_20000_prefrontal_augmentedNew.csv.txt", 
+        row.names = FALSE)))
+    success.write$cbell <- is.null(try(write.csv(as.data.frame(bx), 
+        "/Volumes/Macintosh_HD_3/genetics/genenetwork2/comt_correlations_20000_cerebellum_augmentedNew.csv.txt", 
+        row.names = FALSE)))
+    success.write$tempor <- is.null(try(write.csv(as.data.frame(cx), 
+        "/Volumes/Macintosh_HD_3/genetics/genenetwork2/comt_correlations_20000_temporal_augmentedNew.csv.txt", 
+        row.names = FALSE)))
+    success.write$pons <- is.null(try(write.csv(as.data.frame(dx), 
+        "/Volumes/Macintosh_HD_3/genetics/genenetwork2/comt_correlations_20000_pons_augmentedNew.csv.txt", 
+        row.names = FALSE)))
+    return(success.write)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_write_primary_data.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_write_primary_data_one_set.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_write_primary_data_one_set.R`$value
+function (ax, namex) 
+{
+    success.write <- is.null(try(write.csv(as.data.frame(ax), 
+        paste("/Volumes/Macintosh_HD_3/genetics/genenetwork2/comt_correlations_20000_", 
+            namex, "_augmentedNew.csv.txt", sep = ""), row.names = FALSE)))
+    return(success.write)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_write_primary_data_one_set.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_test_getdir.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_test_getdir.R`$value
+function () 
+{
+    cmdArgs = commandArgs(trailingOnly = FALSE)
+    needle = "--file="
+    match = grep(needle, cmdArgs)
+    if (length(match) > 0) {
+        return(normalizePath(sub(needle, "", cmdArgs[match])))
+    }
+    else {
+        ls_vars = ls(sys.frames()[[1]])
+        if ("fileName" %in% ls_vars) {
+            return(normalizePath(sys.frames()[[1]]$fileName))
+        }
+        else {
+            if (!is.null(sys.frames()[[1]]$ofile)) {
+                return(normalizePath(sys.frames()[[1]]$ofile))
+            }
+            else {
+                return(normalizePath(rstudioapi::getActiveDocumentContext()$path))
+            }
+        }
+    }
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_test_getdir.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_obj_size_Mb.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_obj_size_Mb.R`$value
+function (xv) 
+{
+    osize <- round((object.size(xv)/1e+06), 3)
+    osize <- c(paste(osize, " Mb", sep = ""))
+    return(osize)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_obj_size_Mb.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_new_objects.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_new_objects.R`$value
+function (xin, xcurr) 
+{
+    new.ones <- setdiff(xin, xcurr)
+    return(new.ones)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_new_objects.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_tstamp.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_tstamp.R`$value
+function (yin) 
+if (getOption("recordTimestamps")) {
+    wr.success <- try(write(x = paste(deparse(substitute(yin)), 
+        as.POSIXct(origin = "1970-01-01", x = as.double(Sys.time())), 
+        sep = ","), file = ".Rtimestamps", append = TRUE))
+    if (is.null(wr.success)) {
+        write.success <- c("timestamp recorded")
+    }
+    else {
+        write.success <- c("timestamp failed")
+    }
+    return(write.success)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_tstamp.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_countNA.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_countNA.R`$value
+function (in.vec) 
+{
+    out.count.NA <- length(which(is.na(in.vec)))
+    return(out.count.NA)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_countNA.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_where_NA.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_where_NA.R`$value
+function (in.vec) 
+{
+    posNA <- which(is.na(in.vec))
+    return(posNA)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_where_NA.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_squareAxes.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_squareAxes.R`$value
+function (xvar, yvar, title.Text, xlabel.Text, ylabel.Text, corval, 
+    subnum, prob, ptcol) 
+{
+    options(scipen = -3, digits = 1, width = 60)
+    dat <- data.frame(x = c(xvar), y = c(yvar))
+    if (prob < 0.001) {
+        p.out <- c(" < 0.001")
+    }
+    else {
+        p.out <- toString(prob)
+    }
+    range.Lims.x <- c(mean(xvar, na.rm = TRUE) - 4 * sd(xvar, 
+        na.rm = TRUE), mean(xvar, na.rm = TRUE) + 4 * sd(xvar, 
+        na.rm = TRUE))
+    range.Lims.y <- c(mean(yvar, na.rm = TRUE) - 4 * sd(yvar, 
+        na.rm = TRUE), mean(yvar, na.rm = TRUE) + 4 * sd(yvar, 
+        na.rm = TRUE))
+    sq.Plt <- ggplot(dat, aes(x = xvar, y = yvar)) + geom_point(color = "blue", 
+        size = 0.5) + geom_smooth(method = lm, se = FALSE, size = 0.75) + 
+        geom_rug() + geom_abline(intercept = mean(yvar, na.rm = TRUE) + 
+        (-sign(corval)) * (mean(xvar, na.rm = TRUE)/sd(xvar, 
+            na.rm = TRUE)) * sd(yvar, na.rm = TRUE), slope = sign(corval) * 
+        (sd(yvar, na.rm = TRUE)/sd(xvar, na.rm = TRUE)), linetype = "dashed", 
+        size = 1) + scale_y_continuous(name = ylabel.Text, limits = range.Lims.y) + 
+        scale_x_continuous(name = xlabel.Text, limits = range.Lims.x) + 
+        ggtitle(title.Text) + theme_classic() + theme(aspect.ratio = 1) + 
+        theme(axis.line = element_line(colour = "grey80", size = 1), 
+            panel.border = element_rect(colour = "grey80", fill = NA, 
+                size = 2.5)) + theme(plot.title = element_text(color = "black", 
+        size = 12, hjust = 0.5)) + theme(axis.title = element_text(color = "black", 
+        size = 12)) + theme(axis.text.x = element_text(size = 10), 
+        axis.text.y = element_text(size = 10)) + geom_vline(xintercept = mean(xvar, 
+        na.rm = TRUE), col = "red", size = 1) + geom_hline(yintercept = mean(yvar, 
+        na.rm = TRUE), col = "red", size = 1) + annotate("text", 
+        x = mean(xvar, na.rm = TRUE) + 1 * sd(xvar, na.rm = TRUE), 
+        y = mean(yvar, na.rm = TRUE) + 3.8 * sd(yvar, na.rm = TRUE), 
+        label = c(paste("r = ", toString(corval), sep = "")), 
+        color = "black", size = 3, hjust = c(0)) + annotate("text", 
+        x = mean(xvar, na.rm = TRUE) + 1 * sd(xvar, na.rm = TRUE), 
+        y = mean(yvar, na.rm = TRUE) + 3.5 * sd(yvar, na.rm = TRUE), 
+        label = c(paste("p = ", p.out, sep = "")), color = "black", 
+        size = 3, hjust = c(0)) + annotate("text", x = mean(xvar, 
+        na.rm = TRUE) - 2.8 * sd(xvar, na.rm = TRUE), y = mean(yvar, 
+        na.rm = TRUE) + 3.8 * sd(yvar, na.rm = TRUE), label = c(paste("n = ", 
+        toString(subnum), sep = "")), color = "black", size = 3)
+    return(sq.Plt)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_squareAxes.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_histChr.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_histChr.R`$value
+function (onlyChr, numChr, BPref, gname, nbins, binw) 
+{
+    histdata <- hist(onlyChr$BP, nbins, plot = FALSE, right = FALSE)
+    max.count <- 1.2 * max(histdata$counts)
+    histBP <- ggplot(onlyChr, aes(BP)) + geom_histogram(binwidth = binw, 
+        color = cbPalette[6], fill = cbPalette[6]) + scale_x_continuous(name = "Base Pair Position (Mb)", 
+        limits = c(0, 75)) + scale_y_continuous(name = "Count", 
+        limits = c(0, max.count), breaks = pretty_breaks(n = 5)) + 
+        ggtitle(paste("Base Pair Positions of Probes on Chromosome ", 
+            as.character(numChr), sep = "")) + theme_classic() + 
+        theme(aspect.ratio = 0.618) + theme(axis.line = element_line(colour = "black", 
+        size = 0.25)) + theme(plot.title = element_text(color = "black", 
+        face = "bold", size = 10, hjust = 0)) + theme(axis.title = element_text(color = "black", 
+        size = 10, margin = margin(t = 4, r = 4, b = 0, l = 0))) + 
+        theme(axis.text.x = element_text(size = 10, margin = margin(t = 4, 
+            r = 0, b = 0, l = 0)), axis.text.y = element_text(size = 10, 
+            margin = margin(t = 0, r = 2, b = 0, l = 0))) + geom_vline(xintercept = BPref, 
+        col = "red", size = 0.5) + annotate("text", x = BPref + 
+        3, y = 0.8 * max.count, label = gname, color = "red", 
+        size = 3)
+    return(histBP)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_histChr.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_onlycisChr.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_onlycisChr.R`$value
+function (onlyChrcis, numChr, BPref, gname) 
+{
+    cisBPpos <- ggplot(onlyChrcis, aes(x = dist, y = pval)) + 
+        geom_point(color = cbPalette[6], size = 0.75) + scale_x_continuous(name = paste("Base Pair Position Relative to ", 
+        gname, " (Mb)", sep = ""), limits = c((min(onlyChrcis$dist) - 
+        5), (max(onlyChrcis$dist) + 5)), breaks = pretty_breaks(n = 8)) + 
+        scale_y_continuous(name = "-log10(P-value)") + ggtitle(paste("Base Pair Positions of Positively-Correlated Probes on Chromosome ", 
+        numChr, " \n Relative to ", gname, " vs. -log10(P-value)", 
+        sep = "")) + theme_classic() + theme(aspect.ratio = 0.618) + 
+        theme(axis.line = element_line(colour = "black", size = 0.25)) + 
+        theme(plot.title = element_text(color = "black", face = "bold", 
+            size = 10, hjust = 0)) + theme(axis.title = element_text(color = "black", 
+        size = 10, margin = margin(t = 0, r = 4, b = 4, l = 0))) + 
+        theme(axis.text.x = element_text(size = 10, margin = margin(t = 4, 
+            r = 0, b = 0, l = 0)), axis.text.y = element_text(size = 10, 
+            margin = margin(t = 0, r = 2, b = 0, l = 0))) + geom_vline(xintercept = c(0), 
+        col = "red", size = 0.5) + annotate("text", x = c(3), 
+        y = 0.9 * max(onlyChrcis$pval), label = c(gname), color = "red", 
+        size = 3) + annotate("text", x = c(-2), y = -1, label = c("5'"), 
+        color = "black", size = 3) + annotate("text", x = c(2), 
+        y = -1, label = c("3'"), color = "black", size = 3)
+    return(cisBPpos)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_onlycisChr.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_hypergeom_plot.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_hypergeom_plot.R`$value
+function (prob.50, prob.200, loCut, hiCut, limseq, callingID) 
+{
+    library(ggplot2, ggthemes)
+    library(ggExtra)
+    library(psych)
+    library(ggpubr)
+    library(knitr)
+    library(Hmisc)
+    library(openxlsx)
+    library(xtable)
+    library(magrittr)
+    library(tables)
+    library(stargazer)
+    library(plyr)
+    library(rlist)
+    library(qqman)
+    library(manhattanly)
+    library(Cairo)
+    library(RColorBrewer)
+    library(HGNChelper)
+    library(tools)
+    library(scales)
+    library(devtools)
+    library(dplyr)
+    prob.N.200.plot <- prob.200[c(seq(1, hiCut, 10)), ]
+    prob.N.50.plot <- prob.50[c(seq(1, loCut, 5)), ]
+    brk <- limseq
+    gold.R <- c(1.61803398875)
+    my_title <- expression(paste("Chance Probability that k of the 50 or 200 Most Strongly ", 
+        italic("COMT-"), "Correlated", sep = ""))
+    subt <- c("Probes in a Reference Brain Area Will Match in Another Brain Areas")
+    annot1 <- c("Prefrontal~Cortex~italic(cf)~Temporal~Cortex")
+    annot2 <- as.character((expression(paste(italic("N"), " = 20,000 probes", 
+        sep = ""))))
+    annot3 <- as.character((expression(paste(italic("n"), " = 138 subjects", 
+        sep = ""))))
+    hyp.plot <- ggplot() + geom_point(data = prob.N.50.plot, 
+        aes(x = n.match, y = prob, group = 1), size = 0.6, color = "blue", 
+        shape = 1) + geom_point(data = prob.N.200.plot, aes(x = n.match, 
+        y = prob, group = 1), size = 0.6, color = "red", shape = 6) + 
+        scale_y_continuous(breaks = brk, labels = comma(brk, 
+            digits = 1)) + scale_x_continuous(name = "Number of Probes in Common (k)", 
+        limits = c(0, hiCut), breaks = seq(0, hiCut, 25)) + theme_classic() + 
+        ggtitle(my_title) + ylab(expression(log[10](Probability))) + 
+        theme(aspect.ratio = 1/gold.R) + theme(plot.title = element_text(color = "black", 
+        size = 8.5, hjust = 0.5)) + theme(axis.title = element_text(color = "black", 
+        size = 10, vjust = 1)) + theme(axis.text.x = element_text(size = 8), 
+        axis.text.y = element_text(size = 8)) + annotate("text", 
+        x = 110, y = 10, label = subt, color = "black", size = 3) + 
+        annotate("text", x = 150, y = -100, label = annot2, parse = TRUE, 
+            color = "black", size = 3) + annotate("text", x = 148, 
+        y = -135, label = annot3, parse = TRUE, color = "black", 
+        size = 3) + annotate("text", x = 55, y = -150, label = c("Strongest 50"), 
+        parse = FALSE, color = "blue", size = 3) + annotate("text", 
+        x = 170, y = -450, label = c("Strongest 200"), parse = FALSE, 
+        color = "red", size = 3) + annotate("text", x = 27, y = -470, 
+        label = c("Every 5th (red) or 10th (blue) point plotted"), 
+        parse = FALSE, color = "black", size = 2) + annotate("text", 
+        x = 0.95 * hiCut, y = 0, label = c(paste("unique ID: ", 
+            callingID, sep = "")), parse = FALSE, color = "gray50", 
+        size = 0.75)
+    return(hyp.plot)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_hypergeom_plot.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_commaSep.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_commaSep.R`$value
+function (in.vec) 
+{
+    out.Sep <- matrix(rep(NA, ((nchar(in.vec[1, 2]) + 1) * dim(in.vec)[1])), 
+        ncol = dim(in.vec)[1])
+    for (i in 1:dim(in.vec)[1]) {
+        out.Sep[2:dim(out.Sep)[1], i] <- unlist(strsplit(in.vec[[2]][i], 
+            ""))
+        out.Sep[1, i] <- in.vec[[1]][i]
+    }
+    return(out.Sep)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_commaSep.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_nums2genes.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_nums2genes.R`$value
+function (in.data, indx.in) 
+{
+    new.gene.Symbols <- getBM(attributes = c("hgnc_symbol", "entrezgene"), 
+        filters = "entrezgene", values = as.character(in.data$ENTREZID[c(indx.in)]), 
+        mart = ensembl)
+    map.B.to.A <- match(as.character(in.data$ENTREZID[c(indx.in)]), 
+        new.gene.Symbols$entrezgene)
+    in.data$Symbol[c(indx.in)] <- new.gene.Symbols$hgnc_symbol[c(map.B.to.A)]
+    return(in.data$Symbol[c(indx.in)])
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_nums2genes.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_raincloudPlots.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_raincloudPlots.R`$value
+function (in.data) 
+{
+    source("geom_flat_violin.R")
+    raincloud_theme = theme(text = element_text(size = 10), axis.title.x = element_text(size = 11), 
+        axis.title.y = element_text(size = 11), axis.text = element_text(size = 9), 
+        axis.text.x = element_text(angle = 0, vjust = 0), legend.title = element_text(size = 16), 
+        legend.text = element_text(size = 16), legend.position = "right", 
+        plot.title = element_text(lineheight = 0.8, face = "bold", 
+            size = 12, hjust = 0.5), panel.border = element_blank(), 
+        panel.grid.minor = element_blank(), panel.grid.major = element_blank(), 
+        axis.line.x = element_line(colour = "black", size = 0.5, 
+            linetype = "solid"), axis.line.y = element_line(colour = "black", 
+            size = 0.5, linetype = "solid"))
+    lb <- function(x) mean(x) - 3 * sd(x)
+    ub <- function(x) mean(x) + 3 * sd(x)
+    colNames.stacked.area <- colnames(in.data)
+    colnames(in.data)[which(colNames.stacked.area == "Mean")] <- c("MeanExpression")
+    gplot <- ggplot(data = in.data, aes(y = MeanExpression, x = brainArea, 
+        fill = brainArea)) + geom_flat_violin(position = position_nudge(x = 0.2, 
+        y = 0.3), alpha = 0.8) + geom_point(aes(y = MeanExpression, 
+        color = brainArea), position = position_jitter(width = 0.1), 
+        size = 0.02, alpha = c(0.8)) + geom_boxplot(width = 0.1, 
+        guides = FALSE, outlier.shape = NA, alpha = 0.8, color = c(rep("black", 
+            4))) + scale_y_continuous(name = c("Mean Expression")) + 
+        scale_x_discrete(name = c("Brain Area")) + ggtitle("Mean Expression Level per Gene by Brain Area") + 
+        expand_limits(y = 6) + guides(fill = FALSE) + guides(color = FALSE) + 
+        scale_color_brewer(palette = "Spectral") + scale_fill_brewer(palette = "Spectral") + 
+        coord_flip() + theme_bw() + raincloud_theme
+    return(gplot)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_raincloudPlots.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_unique_id_generator.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_unique_id_generator.R`$value
+function (xstring) 
+{
+    return <- digest(xstring)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_unique_id_generator.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_csf.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_csf.R`$value
+function () 
+{
+    cmdArgs = commandArgs(trailingOnly = FALSE)
+    needle = "--file="
+    match = grep(needle, cmdArgs)
+    if (length(match) > 0) {
+        return(normalizePath(sub(needle, "", cmdArgs[match])))
+    }
+    else {
+        ls_vars = ls(sys.frames()[[1]])
+        if ("fileName" %in% ls_vars) {
+            return(normalizePath(sys.frames()[[1]]$fileName))
+        }
+        else {
+            if (!is.null(sys.frames()[[1]]$ofile)) {
+                return(normalizePath(sys.frames()[[1]]$ofile))
+            }
+            else {
+                return(normalizePath(rstudioapi::getActiveDocumentContext()$path))
+            }
+        }
+    }
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_csf.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_rec_script.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_rec_script.R`$value
+function (Rin, ui) 
+{
+    fileConn <- file(".Rscriptnames")
+    fd <- data.frame(read.csv(fileConn))
+    flag.exist <- FALSE
+    yt <- c(1)
+    while (!flag.exist & yt < (dim(fd)[1] + 1)) {
+        if (grepl(ui, fd[yt, 2])) {
+            flag.exist <- TRUE
+        }
+        else {
+        }
+        yt <- inc(yt, )
+    }
+    if (!flag.exist) {
+        wr.success <- try(write(x = paste(Rin, ui, as.POSIXct(origin = "1970-01-01", 
+            x = as.double(Sys.time())), sep = ", "), file = ".Rscriptnames", 
+            append = TRUE))
+        if (is.null(wr.success)) {
+            write.success <- c("script name and id recorded")
+        }
+        else {
+            write.success <- c("script name and id failed")
+        }
+    }
+    else {
+        write.success <- c("the program has already been recorded")
+    }
+    return(write.success)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_rec_script.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_inc.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_inc.R`$value
+function (xin, bump) 
+{
+    if (missing(bump)) {
+        delta <- opt("delta")
+    }
+    else {
+        delta <- bump
+    }
+    xout <- xin + delta
+    return(xout)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_inc.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_write_orig_data_one_set.R`
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_write_orig_data_one_set.R`$value
+function (ax, namex) 
+{
+    success.write <- is.null(try(write.csv(as.data.frame(ax), 
+        paste("/Volumes/Macintosh_HD_3/genetics/genenetwork2/comt_", 
+            namex, "_correlation_results.csv.txt", sep = ""), 
+        row.names = FALSE)))
+    return(success.write)
+}
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/func_write_orig_data_one_set.R`$visible
+[1] FALSE
+
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/`
+NULL
+
+$`/Volumes/Macintosh_HD_3/genetics/genenetwork2/`
+NULL
+\end{Soutput}
+\end{Schunk}
+
+
+\begin{Schunk}
+\begin{Sinput}
+> opts_chunk$set(include=FALSE,
++                echo=FALSE,
++                message=FALSE,
++                warning=FALSE)
+> # Function to catch warnings that a sheet has no data yet and returns NAs 
+> readPrime = function(x,y,z) {     
++      tryCatch(data.frame(read.xlsx(x,sheet = y)),
++             warning = function(w) {print(paste("no data ", y));
++             return(z)},
++             error = function(e) {print(paste("error reading data", y));
++             return(z)}
++ )
++ }
+\end{Sinput}
+\end{Schunk}
+

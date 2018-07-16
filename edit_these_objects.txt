@@ -1,7 +1,2 @@
-opt
-rec.script
-restart.queries
-source.prog
-tstamp
-work.path
-
+write.orig.one
+write.primary
