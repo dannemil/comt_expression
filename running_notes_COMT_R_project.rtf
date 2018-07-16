@@ -1,0 +1,2723 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf100
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fswiss\fcharset0 ArialMT;}
+{\colortbl;\red255\green255\blue255;\red217\green11\blue5;\red0\green0\blue0;\red27\green29\blue31;
+\red255\green255\blue255;\red252\green39\blue18;\red243\green235\blue10;\red191\green191\blue191;\red221\green32\blue103;
+\red252\green73\blue64;\red255\green255\blue51;\red255\green249\blue89;\red0\green0\blue0;\red165\green199\blue244;
+\red252\green73\blue64;\red252\green39\blue18;\red85\green142\blue40;\red102\green177\blue50;\red243\green235\blue10;
+\red255\green255\blue51;\red0\green0\blue0;\red255\green249\blue89;}
+{\*\expandedcolortbl;;\cssrgb\c88946\c14202\c0;\cssrgb\c0\c0\c0;\cssrgb\c14118\c15294\c16078;
+\cssrgb\c100000\c100000\c100000;\cssrgb\c100000\c25271\c7591;\cssrgb\c96264\c92423\c0;\csgray\c79525;\cssrgb\c90234\c23206\c47866;
+\cssrgb\c100000\c38374\c31601;\cssrgb\c99946\c98636\c25320;\cssrgb\c100000\c96976\c42052;\csgenericrgb\c0\c0\c0;\csgenericrgb\c64731\c77881\c95686;
+\cssrgb\c100000\c38374\c31601;\cssrgb\c100000\c25271\c7591;\cssrgb\c39975\c61335\c20601;\cssrgb\c46532\c73327\c25364;\cssrgb\c96264\c92423\c0;
+\cssrgb\c99946\c98636\c25320;\csgray\c0\c0;\cssrgb\c100000\c96976\c42052;}
+{\info
+{\author James L. Dannemiller}
+{\*\company Department of Psychology; Rice University}}\margl1440\margr1440\vieww25760\viewh13880\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs32 \cf0 Running notes on COMT project Started April 5, 2018\
+\
+data files at {\field{\*\fldinst{HYPERLINK "http://genenetwork.org/webqtl/main.py?FormID=sharinginfo&GN_AccessionId=482"}}{\fldrslt http://genenetwork.org/webqtl/main.py?FormID=sharinginfo&GN_AccessionId=482}}\
+\
+Citation:\
+Please review and cite: Gibbs JR, Hernandez DG, Dillman A, Ryten M, Trabzuni D, Traynor BJ, Nalls MA, Arepalli S, Ramasamy A, van der Brug MP, Troncoso J, Johnson R, O'Brien R, Zielke HR, Zonderman A, Ferrucci L, Longo DL, Smith C, Walker R, Weale M, Hardy JA, Cookson MR, Singleton AB. {\field{\*\fldinst{HYPERLINK "https://www.ncbi.nlm.nih.gov/pubmed/22433082"}}{\fldrslt PMID: 22433082}}.\
+\
+Authors above do not correspond to the authors at the PMID link.\
+Hernandez, D. G., Nalls, M. A., Moore, M., Chong, S., Dillman, A., Trabzuni, D., Gibbs, J. R., Ryten, M., Arepalli, S., Weale, M. E., Zonderman, A. B., Troncoso, J., O'Brien, R., Walker, R., Smith, C., Bandinelli, S., Traynor, B. J., Hardy, J., Singleton, A. B., & Cookson, M. R. (2012). Integration of GWAS SNPs and tissue specific expression profiling reveal discrete eQTLs for human traits in blood and brain. Neurobiol Dis, 47(1), 20-8. \
+\
+\
+\
+\
+Use Option-Shift-T to run the timeStamp AppleScript, then Control V to paste in the time stamp.\
+\
+April 5, 2018\
+\
+It looks like there is no way to recover gene symbols for the remaining cases in which the symbol looks like 'LOCxxx'. I tried several approaches, and none of them returned anything but 'LOCxxx'\
+\
+\
+Thursday, April 5, 2018 at 4:46:59 PM\
+The table below shows that there were approximately 100 rows with NA for the loc variable (Chromosome name)\
+sapply(na.loc.indx[ib], function(x,ib) length(x), ib)\
+\
+# rows that had NA under the Chr name variable loc\
+#  pf  cb  tm  po \
+# 104  98 104 100\
+\
+When ensembl is queried for these missing Chromosomes names it returns the numbers shown in the first column below.\
+The second column shows the number of those that were formatted as CHR_ which made them unusable, so I extracted the CHR name/number from them\
+\
+#    total_returned CH_returned CH2NAleft\
+# pf            319          56         6\
+# cb            280          21         6\
+# tm            311          40         2\
+# po            292          35         4\
+\
+After this step, only, 6, 6, 2 & 4 remain with CHR as the loc value. But this has not yet been integrated into the primary data files.\
+                            \
+# temp.Init holds the corrected Chromosome names to be used to replace the NAs in major.Area\
+# first need to match the ENTREZIDs of the NA loc against the extracted/returned Chr names in temp.Init\
+\
+\
+Friday, April 6, 2018 at 2:02:46 PM\
+\
+<< recover_Chr_names>>=\
+There were \
+\
+# rows that had NA under the Chr name variable loc\
+#  pf  cb  tm  po \
+# 104  98 104 100\
+\
+When getBM was queried using Symbol and ENTREZID of the rows missing Chromosome names, the following statistics resulted:\
+\
+#    total_returnedSymb CH_returnedSymb CH2NAleftSymb total_returnedEntrez CH_returnedEmntrez\
+# pf                319              56             6                  357                 59\
+# cb                280              21             6                  319                 27\
+# tm                311              40             2                  348                 51\
+# po                292              35             4                  340                 42\
+#    CH2NAleftEntrez\
+# pf               7\
+# cb               8\
+# tm               4\
+# po               5\
+\
+In other words, after reformatting the Chromosome names that looked like CHR_xxx only approximate 6-7 of the ~320 returned results could not be reformatted into standard Chromosome values such as '2' or 'X'.\
+\
+However, even though only approximately 100 NA entries were used in the query, getBM returned many more results ~300-320. This requires a matching between the missing NA Symbols and ENTREZIDs and the returned hgnc_gene and extrezgene values.\
+\
+\
+<< check_NA_reformatted_extracted_Chr_names >>=\
+                            \
+# temp.Init$symb and temp.Init$entrezg hold the corrected Chromosome names to be used to \
+  #replace the NAs in major.Area\
+# first need to match the ENTREZIDs of the NA loc in major.Area against the extracted/returned    Chr names in na.loc.returned and na.loc.returned.entrez using Symbols and ENTREZID\
+# For example, there were\
+\
+rows that had NA under the Chr name variable loc\
+  pf  cb  tm  po \
+ 104  98 104 100 \
+\
+Once the existence of the potential Chr_names was checked against was checked against NAs in the temp.Init$symbol and temp.Init$entrezg files, the numbers in the table below show how many additional chromosome names were recovered using Symbol and ENTREZID getBM queries.\
+\
+ add.Chr.names\
+           Symbol_query entrez_query\
+Prefrontal           21            7\
+Cerebellum           16            6\
+Temporal             19            7\
+Pons                 21            7\
+\
+<< union_Symb_entrez_returns >>=\
+Need to get the union of these available Chr names before substituting them into major.Area and the primary data files\
+\
+But creating the union loses the information about which of the two queries produced the Chromosome name to be used.\
+\
+\uc0\u711 Saturday, April 7, 2018 at 6:03:27 AM\
+\
+Rewrote section before the union operation to create lists that for each brain area have the index of the match using Symbol/hgnc_gene, the returned symbol (hgnc_gene), the returned enter (entrezgene), the returned loc (chromosome_name) and the reformatted/extracted chromosomes name from temp.Init$symbol.\
+\
+This was repeated for the getBM query that was based on entrezgene.\
+\
+When this is done, the numbers of useable additional Chromosome names that result are shown in the table below.\
+\
+> add.Chr.names\
+           Symbol_query entrez_query\
+Prefrontal           21            4\
+Cerebellum           16            3\
+Temporal             19            4\
+Pons                 21            4\
+\
+Now, the union operation can be completed.\
+\
+It looks like for union.found.Chr.indx that holds the union of the corresponding indices from the two types of getBM queries, the indices from the entrezgene query are always a subset of those from the hgnc_gene query.\
+\
+This table, comp.union.intersect.tab, shows that the getBM query for chromosome names based on entrezgene values produced no additional chromosome names over and above the ones produced by the query based on gene symbols.\
+\
+		No additional chromosome names?\
+Prefrontal 	TRUE \
+Cerebellum 	TRUE \
+Temporal 	TRUE \
+Pons 		TRUE \
+\
+Now use the union vector  to replace the NA values in major.Area and in the primary data files.\
+\
+After the recovered chromosome names were written to the major.Area files, the table below shows the number of missing chromosome names remaining.\
+\
+> missing.loc\
+   Missing_Chr_names\
+pf                83\
+cb                82\
+tm                85\
+po                79\
+\
+l 1320\
+\
+Saturday, April 7, 2018 at 11:15:25 AM\
+\
+added chunk << write_data_out >> to write out the primary data files after finding various missing values\
+\
+l 1335\
+\
+The chuck << find_miss_start_pos_bp >>= basically needs to repeat the procedure that was just completed for finding missing chromosome names\
+\
+This section to find the missing start positions begins at line 1341 - do not replace anything above that with new variable names\
+\
+<< check_NA_in_bp >>=                            \
+\
+sapply(na.bp.indx[ib], function(x,ib) length(x), ib)\
+\
+# rows that had NA under the Chr name variable loc\
+#  pf  cb  tm  po \
+# 104  98 104 100\
+\
+The table above shows the number of rows missing start positions in each brain area for trying to recover then using getBM.\
+\
+From the two getBM queries the number of additional starting positions returned was\
+\
+> add.start.Pos\
+           Symbol_query entrez_query\
+Prefrontal           18            2\
+Cerebellum           14            2\
+Temporal             16            2\
+Pons                 18            2\
+\
+********** Do not forget to divide the returned starting positions by 1,000,000\
+\
+> missing.bp\
+   Missing_start_Pos\
+pf                86\
+cb                85\
+tm                88\
+po                82\
+\
+Saturday, April 7, 2018 at 3:42:32 PM\
+\
+BLAST test using probe sequence for COMT\
+AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC\
+\
+Monday, April 9, 2018 at 8:59:35 AM\
+\
+This chunk << alternative_blast >>=\
+produces a data frame (after many transformations) of the form:\
+\
+            id gi.Access     ref.Access percent.Match qlen length mismatch gaps taxon.Code   evalue	bitscore\
+1 id_440589_pf 136724010 XR_001712422.2       100.000   50     50        0    0       9598 2.57e-16	93.5\
+\
+This comes from querying the blastn server using the probe Reporter.Sequence of all of the rows that have missing Chromosomes.\
+\
+It next needs to be subset by the taxon.Code=9606 (Homo sapiens).\
+\
+After this, only the top hit for each unique id should be retained. NOTICE that the top hit once the data have been subset by 9606 is not necessarily the top overall hit for that id. It is, on the other hand, the top hit for Homo sapiens of that probe sequence.\
+\
+NOTE: blastn was queried with 83 sequences, but the results returned by blastn for pf for example only contain 80 unique ids.\
+*** Will need to match the IDs to the ENTREZIDs of the 83 rows missing Chromosome names that were used in the query.\
+\
+In the chunk << subset_9606 >>= the variable pos.inc holds the row number of the first hit for each unique ENTREZID in the order in which they appear in the blast.out.pf9606\
+\
+first.hits holds only the first hits for homo sapiens for unique ENTREZIDs\
+\
+The second ACCESSION number can then be used with rentrez_search to find the Chromosome name, gene name, and start location.\
+\
+Monday, April 9, 2018 at 2:24:19 PM\
+\
+Documentation for querying the enter gene database\
+\uc0\u711 https://cran.r-project.org/web/packages/rentrez/vignettes/rentrez_tutorial.html\
+\
+<< match_new_Chr_names >>=\
+ The ENTREZIDs with missing chromosomes need to be matched against the newly found chromosomes from renters\
+\
+*************************************\
+Tuesday, April 10, 2018 at 7:37:46 AM\
+\
+When the results returned from the rentrez search were matched using entrezgene (uid) to the ENTREZIDs from the rows missing Chromosome names, there were only approximately 2-3 matches out of 83 ENTREZIDs from rows missing Chromosomes. Something is wrong, so the next step is to discover why rentrez returned so many hits, but so few of them could be used to reduce the number of rows with missing Chr names.\
+\
+<< get_illumina_entrezid_symbol >>=\
+\
+Retrieve the entrezgenes and symbols from the illumination file based on probes whose search key matched the .Record value from the major.Area lists.\
+\
+When the ENTREZIDs from major.Area of the rows missing Chromosome (loc) names are compared to the entrez values from the illumina file matched through ILMN_xxx values, the two sets of entrezgene IDs are identical.\
+\
+> setdiff(as.character(unlist(entrez.and.symb.Illum[[1]][1])),as.character(major.Area[[1]]$ENTREZID[unlist(miss.Chr[[1]])]))\
+character(0)\
+\
+> setdiff(as.character(unlist(entrez.and.symb.Illum[[1]][2])),as.character(major.Area[[2]]$ENTREZID[unlist(miss.Chr[[2]])]))\
+character(0)\
+\
+> setdiff(as.character(unlist(entrez.and.symb.Illum[[1]][3])),as.character(major.Area[[3]]$ENTREZID[unlist(miss.Chr[[3]])]))\
+character(0)\
+\
+> setdiff(as.character(unlist(entrez.and.symb.Illum[[1]][4])),as.character(major.Area[[4]]$ENTREZID[unlist(miss.Chr[[4]])]))\
+character(0)\
+\
+\
+COMT 1312 Reported.Sequence AGCCAGAGGGCTGGAGCCTGCTCAGAGGTGCTTTGAAGATGCCGGAGGCC\
+\
+Do not use the ACCESSION numbers found using BLASTN with the probe Reporter.Sequence(s) because the first hit for homo sapiens gives too few ENTREZID/uid matches to be useful.\
+\
+Instead, use the Symbols of the missing loc rows to retrieve chromosome names and start positions using rentrez.\
+\
+\
+This chunk << replace_missing_Chr_names >>= uses the chromosome names, and start positions recovered using rentrez to replace some of the missing loc values in major.Area[[1]] and in prefrontal.Data.\
+\
+Need to repeat this analysis for the other three brain areas to find missing loc (Chromosome names) then repeat it for all four areas to retrieve missing start positions (bp).\
+\
+Tuesday, April 10, 2018 at 3:44:47 PM\
+\
+Consider running a principle components analysis of the correlations with COMT. The genes that load most highly on there first several components could be another way of determining the set to use for ontology analysis.\
+\
+Wednesday, April 11, 2018 at 9:02:34 AM\
+\
+At the end of the first rentrez run using major.Area[[1]], for the symbol C12orf63 rentrez returned uids \
+[1] "144535"    "100490177" "417921"    "105097493" "105075061" "104963968" "104569553" "104513791"\
+ [9] "104491721" "104482013" "104370438" "104360091" "104254646" "104164853" "104143861" "104072519"\
+[17] "104041059" "104029002" "103811347" "104696434"\
+\
+None of these match the ENTREZID for that Symbol in major.Area[[1]]: 374467\
+\
+However, when you look up 374467 in the gene database, it shows that that ENTREZID was replaced with 144535 which is the first aid returned in the rentrez search.  Additionally, searching gene cards with thew symbol gives the chromosome and start position. It also gives the correct symbol, CFAP54. By hand I replaced the results for row 31 in rentrez.results[[1]] with the correct information.\
+\
+Thursday, April 12, 2018 at 8:02:03 AM\
+\
+rentrez.results[[1]][where.replace[1],1:4] <- c("144535",'CFAP54','12','96489556')\
+\
+I did the same one-off operation for the other three brain areas. The same ENTREZID, 374467, was missing from each of the returned sets of data.\
+\
+line 405\
+\
+Thursday, April 12, 2018 at 7:22:49 PM\
+\
+The code in the chunk << one.off >>= was used to replace outdated symbols and to fill in missing chromosomes and start positions just for rows in enter.comp.area before putting them into major.Area. The code was repeated four times with data as shown in these four matrices:\
+\
+area 1\
+  area indx   startpos   symbol chr\
+1    1   35 141.002591  SPANXB1   X\
+2    1   19  95.407266    SYNE3  14\
+3    1   11  28.505943     RCC1   1\
+4    1   50   2.184074 MGC40069  14\
+5    1   67    1.14516 FLJ35816   4\
+6    1   74   0.113348 RNA28SN5  22\
+7    1   77  11.976734    SNX29  16\
+\
+# redefine one.off.matx\
+#cb\
+one.off.matx <- matrix(c(2,12,141.002591,'SPANXB1','X',\
+                         2,41,11.976734,'SNX29','16',\
+                         2,64,95.407266,'SYNE3','14',\
+                         2,65,0.113348,'RNA28SN5','22'),\
+                         ncol=5,byrow=TRUE\
+                       )\
+\
+# redefine one.off.matx\
+#tm\
+one.off.matx <- matrix(c(3,13,141.002591,'SPANXB1','X',\
+                         3,28,11.976734,'SNX29','16',\
+                         3,29,0.113348,'RNA28SN5','22',\
+                         3,47,28.505943,'RCC1','1',\
+                         3,57,2.184074,'MGC40069','14',\
+                         3,82,95.407266,'SYNE3','14'),\
+                         ncol=5,byrow=TRUE\
+                       )\
+\
+# redefine one.off.matx\
+#po\
+one.off.matx <- matrix(c(4,13,141.002591,'SPANXB1','X',\
+                         4,39,11.976734,'SNX29','16',\
+                         4,53,95.407266,'SYNE3','14',\
+                         4,61,28.505943,'RCC1','1',\
+                         4,62,0.113348,'RNA28SN5','22',\
+                         4,77,2.184074,'MGC40069','14'),\
+                         ncol=5,byrow=TRUE\
+                       )\
+\
+In the chunk << substitute.new.values >>= the missing and incorrect values in major.Area will be addressed. it is probably best given all of the transformations, to link the missing ENTREZIDs in major to the uids in entrez.comp.area rather than assume that they are sequentially in register.\
+\
+Friday, April 13, 2018 at 11:32:02 AM\
+\
+"/Volumes/Macintosh_HD_3/genetics/genenetwork2/blast_test_v3.Rnw"\
+\
+So far, this is only being run on the pf data set.\
+In the chunk << subset_9606 >>=, before subsetting there were 10,477 hits returned.\
+\
+After subsetting with bitscore >= 93.5 and percent.Match > 94% there are 2098 hits remaining.\
+\
+Tested 50 random ref.Access numbers. The gene database returned 2 hits from those 50 queries. If all queries were independent, then that would give an estimate of  (2/50)*2098 =~ 84 new chromosome locations and start positions.\
+\
+ \
+{\field{\*\fldinst{HYPERLINK "https://biology.stackexchange.com/questions/19338/what-e-value-blast-cut-off-is-best"}}{\fldrslt https://biology.stackexchange.com/questions/19338/what-e-value-blast-cut-off-is-best}}\
+Use cutoff of 1xe-05 or the E-value (not p-value)\
+\
+\
+Saturday, April 14, 2018 at 2:50:10 PM\
+\
+In the chunk << use_new_rentrez >>= the newly recovered Symbols, Chr names and start positions are checked against major.Area to determine whether or not to substitute the new entries for the existing ones.\
+\
+dim(rentrez.results.by.entrez) = 37,4  There are potentially 37 Symbols, Chr names and start positions that could be used. BUT,\
+\
+For example, in the pf data set, the original query was for gene symbols that still had the designation 'LOCxxx.' There were 37 of these. That means that any gene name returned by the rentrez gene search that did not begin with 'LOC' should be substituted for its LOC name into major.Area[[1]]$Symbol.\
+\
+On the other hand, there are no missing Chromosome names among that set of 37 rows in major.Area, so none of the chromosome names returned by rentrez potentially should be substituted into major.Area[[1]]$loc.\
+\
+Similarly, there is only 1 missing start position in major.Area[[1]]$bp among the 37 rows, so only that one start position that corresponds to the missing one in major.Area[[1]]$bp should be used.\
+\
+The gene ASAH2C should be ASAH2B according to gene cards. Changed this as a one-off.\
+The gene "DEFB4B" which was "LOC728454" according to Gene Cards has a different ENTREZID than LOC728454 had. For this reason, I left the LOC symbol.\
+The gene CFAP74 replaced "LOC339457" in a One-off.\
+\
+The chromosome names from rentrez match exactly the ones already in major.Area\
+\
+Sunday, April 15, 2018 at 6:40:37 AM\
+\
+In the cb data set, the chromosome names returned by rentrez at indices 7 and 8 do not match those in major for the corresponding indices:\
+\
+comp.avail.needed[7,3] = 4	major.Area[[2]]$loc[xxx] = 21    LOC389833   389833\
+comp.avail.needed[8,3] = Un	major.Area[[2]]$loc[xxx] = 4	LOC389834	389834\
+\
+NCBI using LOC symbols confirmed that LOC389833 (pseudogene) is on Chromosome 21. The symbol was replaced with TEKT4P2.\
+Replaced in major April 15\
+\
+There was a rentrez/major discrepancy in chromosome names at index 8 Un vs. 4\
+Gene Cards confirmed it was Chr 4.\
+Replaced in major April 15\
+\
+******* wrote out the new cell.Data file. ********** Sunday, April 15, 2018 at 12:19:05 PM\
+\
+The criteria for retaining blasts search results were bitscore >= 93.5 and percentMatch > 94%\
+\
+{\field{\*\fldinst{HYPERLINK "file::/Volumes/Macintosh_HD_3/genetics/genenetwork2/blast_test_v3.Rnw"}}{\fldrslt file::/Volumes/Macintosh_HD_3/genetics/genenetwork2/blast_test_v3.Rnw}}\
+\
+** Need to write out the results of searching the 'gene' database using rentrez so the searches do not have to be repeated.\
+\
+********* Install this R memory management package: {\field{\*\fldinst{HYPERLINK "https://cran.r-project.org/web/packages/SOAR/SOAR.pdf"}}{\fldrslt https://cran.r-project.org/web/packages/SOAR/SOAR.pdf}}\
+\
+See this reference as a justification for excluding LOC genes from the analysis.: {\field{\*\fldinst{HYPERLINK "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4426370/"}}{\fldrslt https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4426370/}}\
+"Probes mapping to genes of uncertain function (LOC symbols) and those encompassing a common SNP (1000G, release June 2010) were further excluded, leaving 23,555 probes used in the analysis.\
+\
+Some fo the checks that I have implemented can be considered "\cf2 sanity checks\cf0 " or "\cf2 spot checks\cf0 .\'92\
+\
+l473\
+\
+l503\
+############## BEGIN One-off corrections ########################\
+#################################################################\
+\
+  # corrections for major.Area[[1]], prefrontal in the comp.avail.needed matrix\
+  # correct in comp.avail.need first and rentrez.results.by.entrez before major.Area\
+  col 1: rentrez symbol\
+  col 2: major symbol\
+  col 3: rentrez chr\
+  col 4: major chr\
+  col 5: rentrez startpos\
+  col 6: major startpos\
+  \
+  # the rentrez.results.by.entre data frame has the same row indices\
+  col 1: uid\
+  col 2: name      \
+  col 3: chromosome\
+  col 4: start.pos\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 Sunday, April 15, 2018 at 8:34:03 PM\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+temp.split <- gsub('\\\\t',' ',blast.out)\
+temp.split <- data.frame(do.call('rbind', strsplit(temp.split,' ')))\
+\
+colnames(temp.split) <- c('id', 'gi.ref.Access','percent.Match',\
+                              'qlen','length','mismatch','gaps','taxon.Code','evalue','bitscore')\
+\
+temp.split <- data.frame(do.call('rbind', strsplit(as.character(temp.split$gi.ref.Access),'\\\\^|[a-z]\{2,\}\\\\|')))\
+\
+\
+temp.split[,c(2,3)] <- gsub('\\\\|\{1\}','',temp.split[,c(2,3)])\
+temp.split <- temp.split[,2:3]\
+blast.out <- data.frame(blast.out[,1],temp.split[,1:2],blast.out[,c(3:10)])\
+colnames(blast.out) <- c('id','gi.Access','ref.Access','percent.Match',\
+                              'qlen','length','mismatch','gaps','taxon.Code','evalue','bitscore')\
+\
+Need to write out the results of the entrez_search, so that it does not have to be repeated. try.rentrez <- entrez_search(db='gene',query)\
+\
+l324\
+\
+Added SOAR memory management to the library.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 Monday, April 16, 2018 at 9:04:47 AM\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\i \cf0 ls()
+\i0   show all of the objects in the current environment\
+\
+
+\i objects()
+\i0   same as ls()\
+\
+
+\i ls(pattern="some pattern or reg expression")
+\i0   filter current objects\
+\
+
+\i hold.ls <- ls(pattern="some pattern or reg expression")
+\i0   assign filtered objects to hold.ls\
+\
+
+\i rm(list=hold.ls)  
+\i0  remove from the current environment the filtered objects held in hold.ls\
+\
+
+\i rm(list=ls(pattern="some pattern or reg expression"))
+\i0     This is equivalent to rm(list=hold.ls) ad avoids having to create a new variable.\
+\
+
+\i apropos('pattern') 
+\i0 same as ls(pattern="some pattern or reg expression") filter objects\
+\
+
+\i str(object1)
+\i0    structure of object1: what column names, what data frames if it is a list, etc. with detailed information on each column\
+\
+
+\i object.size(object1) 
+\i0  returns object size in bytes - occupying that much memory currently\
+\
+
+\i objSizeMb(object1)
+\i0     function to return object size in megabytes (Mb)\
+\
+************** SOAR ***************\
+see documentation in SOAR.pdf\
+\
+
+\i Store(object1,object2)
+\i0  from the package SOAR store object1 and object2 on disk in cache; they are still immediately available, but this frees up memory\
+\
+
+\i Attach()
+\i0    Place a stored object cache one the search path\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\i \cf0 Objects()
+\i0   List objects in current object cache used by SOAR - \cf2 note different from objects()\
+\
+
+\i \cf3 Remove(object1)
+\i0   remove object1 from the disk cache used by SOAR - \cf2 note this does not remove the variable from memory. Make sure to capitalize.\
+\cf3 \
+*************************************\
+l510\
+\
+The vector useable.results.indx holds the indices in the rentrez.results.by.entrez for which the entrezgene kids returned by querying entrez gene matched with the ENTREZIDs that were associated with the Accession number queries. This means that in using the results of these queries, only the symbols, chromosomes and start positions that correspond to these indices should be used ultimately to replace major.Area and the primary data files.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 Tuesday, April 17, 2018 at 10:10:18 AM\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 Deleted unused variables in the current environment with the program blast_test_v3.Rnw.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 l535\
+\
+Used the R program remove_unused.R with the files, remove_list.txt and remove_list_edited.txt to delete the unused variables.\
+\
+l626\
+\
+The chunk << genes_from_startpos >>= attempts to retrieve gene symbols using chromosome and start position. For the 6 useable values that resulted from the Accession query and the following entrez Gene db query, not a single returned gene had an Entrezgene ID that matched the one that corresponded to the chromosome and start position of the query. This was for the prefrontal data. For this reason, this query is unlikely to produce any new information.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 Tuesday, April 17, 2018 at 3:16:34 PM\cf0 \
+\
+l402\
+Stopped with the cbell data ready to query Gene db with Accession numbers.\
+\
+\cf2 Wednesday, April 18, 2018 at 6:07:23 AM\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 Ran the bell data through the Accession query of Gene db, but it halted after iteration 483.\
+\
+Wrote new code to help remove unused objects from memory before storing an image of the current session:\
+	
+\i new_objects.R
+\i0  and 
+\i func_new_objects.R\
+\
+
+\i0 Before restarting blast_test_v3.Rnw on the cell data, record the existing values of the variables\
+\
+im = 484\
+dim(query.ref.Access)[1] = 2037\
+num.hits = 30\
+count.returned[[2]][483] = 9\
+count.returned[[2]][484] = NA\
+"brain area Cerebellum iteration 484"\
+\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 Thursday, April 19, 2018 at 12:33:48 PM\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 Added functions to save and retrieve timestamps for when objects were created.\
+\
+file = func_tstamp.R\
+\
+tstamp(object)   # pass the name of the object without quotes\
+\
+If successful, it writes the name of the object, and a timestamp to the file .Rtimestamps and returns "timestamp recorded"\
+If it fails, it returns "timestamp failed"\
+\
+Note: it originally saved the timestamp as the 
+\f1\fs30 \cf4 \cb5 \expnd0\expndtw0\kerning0
+number of seconds since Epoch = Jan 1st 1970 0:00:00. I changed it to save it in human readable format.\
+\
+These next two functions are unnecessary now that the date/time is stored in human readable format.\
+The functions ctime(object) and mtime(object) return the date/time in human-readable format for the first time an object was created, and the last time it was changed.\
+\
+*************\
+The function, rec.script(eval(fname),eval(prog.Name)), in the file 
+\i func_prog_id.R
+\i0 , is invoked automatically when a new R script is created (not for functions) to write out the file name of the script, the unique ID, and the date/time. They are written to .
+\i Rscriptnames
+\i0   . The information is written only once for each script.\
+
+\f0\fs32 \cf3 \cb1 \kerning1\expnd0\expndtw0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 Friday, April 20, 2018 at 5:39:27 AM\cf3 \
+\cf0 \
+[1] "brain area Cerebellum iteration 839"\
+Error in curl::curl_fetch_memory(url, handle = handle) : \
+  Timeout was reached: Operation timed out after 10008 milliseconds with 0 out of 0 bytes received\
+\
+l674\
+\
+for cerebellum\
+> comp.avail.needed\
+   r.entrez m.entrez    r.symb    m.symb r.chr m.chr r.startpos m.startpos\
+1    115648   115648 LOC115648 LOC115648    19    19         NA  21.382659\
+2    155060   155060 LOC155060 LOC155060     7     7 149.285280 149.285280\
+3    283874   283874 LOC283874 LOC283874    16    16   2.651150   2.651150\
+4    285074   285074 LOC285074 LOC285074     2     2  87.030674  87.030674\
+5    286526   286526      RAR2 LOC286526     X     X         NA 102.079768\
+6    339457   339457  C1orf222 LOC339457     1     1         NA   1.843362\
+7    387820   387820 LOC387820 LOC387820    11    11 127.940983 127.940983\
+8    388022   388022 LOC388022 LOC388022    14    14 104.719759 104.719759\
+9    389833   389833 LOC389833 LOC389833     4     4         NA   0.026502\
+10   389834   389834 LOC389834 LOC389834    Un    Un         NA   0.051062\
+11   400464   400464 LOC400464 LOC400464    15    15  99.807022  99.807022\
+12   400499   400499 LOC400499 LOC400499    16    16  11.372014  11.372014\
+13   400924   400924 LOC400924 LOC400924    22    22         NA  28.756106\
+14   400968   400968 LOC400968 LOC400968    15    15  19.620670  19.620670\
+15   401252   401252 LOC401252 LOC401252     6     6  32.331465  32.331465\
+16   401589   401589 LOC401589 LOC401589     X     X  52.051170  52.051170\
+17   440337   440337 LOC440337 LOC440337    16    16   6.377742   6.377742\
+18   440568   440568 LOC440568 LOC440568     1     1  16.034509  16.034509\
+19   440570   440570 LOC440570 LOC440570     1     1         NA  17.071734\
+20   441070   441070 LOC441070 LOC441070     5     5  44.874939  44.874939\
+21   441120   441120 LOC441120 LOC441120     5     5         NA 179.012331\
+22   441193   441193 LOC441193 LOC441193     7     7   5.426139   5.426139\
+23   441257   441257 LOC441257 LOC441257     7     7         NA  72.134118\
+24   441268   441268 LOC441268 LOC441268     7     7         NA  97.394601\
+25   441956   441956 LOC441956 LOC441956    21    21  13.679218  13.679218\
+26   442535   442535 LOC442535 LOC442535     7     7         NA         NA\
+27   541469   541469 LOC541469 LOC541469    19    19         NA  43.486253\
+28   541473   541473 LOC541473 LOC541473     7     7  75.391948  75.391948\
+29   642897   642897 LOC642897 LOC642897    11    11  93.609431  93.609431\
+30   643576   643576 LOC643576 LOC643576    12    12 104.030728 104.030728\
+31   644563   644563 LOC644563 LOC644563     X     X 107.131573 107.131573\
+32   646347   646347 LOC646347 LOC646347     1     1 160.894888 160.894888\
+33   646517   646517 LOC646517 LOC646517     6     6  51.409883  51.409883\
+34   727726   727726 LOC727726 LOC727726    10    10  50.696330  50.696330\
+35   727849   727849 LOC727849 LOC727849    15    15         NA  80.943212\
+36   728392   728392 LOC728392 LOC728392    17    17   5.499426   5.499426\
+37   728454   728454    DEFB4B LOC728454     8     8   7.259787   7.259787\
+38    88523    88523  LOC88523  LOC88523    13    13         NA  31.905007\
+39    90925    90925  LOC90925  LOC90925    14    14         NA         NA\
+40    91431    91431  LOC91431  LOC91431     4     4         NA 113.680469\
+\
+\cf2 Saturday, April 21, 2018 at 6:38:22 AM\cf0 \
+l569\
+l424\
+\
+\
+\cf2 Saturday, April 21, 2018 at 4:15:58 PM\cf0 \
+\
+- Ran the findClosestGene routine on prefrontal, cerebellum and temporal.\
+- Replaced the primary data files e.g., comt_correlations_20000_prefrontal_augmentedNew.csv.txt with the new data frames\
+- Still need to repeat the procedure for pons starting with the Accession queries.\
+\
+The decision procedure on using the results from the closest gene queries:\
+1. If the starting position already in the major.Area file fell inside the txStart and txEnd of the returned query then that gene was substituted for the LOCxxx symbol\
+2. If the starting position of the gene in the major.Area file was within +/- 204363 bases of the txStart of the returned gene, then that gene was also used.\
+3. The range of +/- 204363 bp was based half the range of difference between the existing starting position and txStart for the temporal data for those genes in which the starting position fell within the gene. The prefrontal range was very similar.\
+\
+\cf2 Sunday, April 22, 2018 at 9:37:23 AM\cf0 \
+\
+Put all functions and programs to be sourced into the file 'sourced_functions_programs.txt'\
+This gets read in, formatted correctly, and all of the functions and programs get sourced.\
+\
+Sunday, April 22, 2018 at 5:53:51 PM\
+\
+When summarizing the number of NA entries in the four brain areas for Chromosome names (loc), I discovered that there were 99 NA in prefrontal, but only 5, 6, and 4 in cerebellum, temporal and pons, respectively. I am going back to recalculate the symbol.LOC for prefrontal and repeat the process of trying to replace these NAs.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf6 Monday, April 23, 2018 at 2:53:57 PM\cf0 \
+\
+Error in curl::curl_fetch_memory(url, handle = handle) : \
+  Empty reply from server\
+\
+stopped in temporal at 1573\
+curl error 53 "GOT_NOTHING"\
+curl error 57 "RECV_ERROR"\
+\
+\
+Prefrontal\
+inside.gene\
+# A tibble: 3 x 3\
+  in.middle   Mean   Range\
+  <lgl>      <dbl>   <dbl>\
+1 FALSE     61325. 707462.\
+2 TRUE      15105.  90461.\
+3 NA           NA      NA\
+\
+Finished line 1002 for prefrontal data. used only those genes that were inside the txStart txEnd range of the nearest gene.\
+Need to look up the start positions of the two NAs in the last column of comp.avail.needed.\
+\
+Changed major.Area[[1]] to reflect these changes. Checked number of NAs in loc (Chr name) of prefrontal: answer is now 80- NA.\
+\
+\cf6 Something is still wrong with the loc column in major.Area[[1]]. For example, row 46 shows a symbol of RPS2P8 - looking this up shows that it is on Chr 1 at 51250562\
+\
+Tuesday, April 24, 2018 at 10:59:29 AM\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 \
+After redoing the preprocessing of major.Area[[1]] the following NA stats are shown:\
+prefrontal\
+Symb			1\
+ENTREZID		1\
+loc				81\
+bp				84\
+\
+NEED to redo prefrontal after reading in query accession results because one of the tests for reconciling columns in comp.avail.needed used !is.nas instead of !grepl('^LOC',xxx) \
+\
+Finished replacing the prefrontal and cerebellum tabs in the aggregate excel file.\
+Reran the num.NA counts\
+\
+prefrontal  num.NA\
+Symb			1\
+ENTREZID		1\
+loc				79\
+bp				82\
+\
+cerebellum  num.NA\
+Symb			0\
+ENTREZID		0\
+loc				78\
+bp				83\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 \cb7 Forgot to write out comp.avail.needed file for redone prefrontal.\cb1 \
+\
+Stopped at the point where hand lookups were necessary for temporal closest genes.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf6 Wednesday, April 25, 2018 at 7:36:34 AM\cf3 \
+\
+Finished preprocessing on temporal data\
+\
+temporal  		num.NA\
+Symbol			0\
+ENTREZID		0\
+loc				78\
+bp				81\
+\
+Finished preprocessing pons data\
+\
+pons  		num.NA\
+Symbol			0\
+ENTREZID		0\
+loc				72\
+bp				77\
+\
+Need to mark in the aggregate spreadsheet, those rows in which the original Symbol was changed. Do this by comparing the original unprocessed data file to the completed preprocessed data file.\
+\
+Wednesday, April 25, 2018 at 5:25:56 PM\
+\
+Symbol changes from original data:\
+\
+A 	TOT.change 	\
+B 	ORF.tot 	\
+C 	orf.change \
+D	ORF.nochange \
+E	ORF.to.nonorf \
+F	LOC.tot \
+G	LOC.change  \
+H	Accounted.changes\
+\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clheight449 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx960
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clheight449 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx1920
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clheight449 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clheight449 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx3840
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clheight449 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx4800
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clheight449 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth2040\clftsWidth3 \clheight449 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx6720
+\clvertalc \clshdrawnil \clwWidth2680\clftsWidth3 \clheight449 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx7680
+\clvertalc \clshdrawnil \clwWidth3020\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 Area\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 TOT.change\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 ORF.tot\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 orf.change\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 ORF.nochange\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 ORF.to.nonorf \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 LOC.tot\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 LOC.change \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 Accounted.changes\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx960
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx1920
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx3840
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx4800
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth2040\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx6720
+\clvertalc \clshdrawnil \clwWidth2680\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx7680
+\clvertalc \clshdrawnil \clwWidth3020\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 Prefrontal \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1384\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1046\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1045\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 0\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 452\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 305\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1351\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx960
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx1920
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx3840
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx4800
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth2040\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx6720
+\clvertalc \clshdrawnil \clwWidth2680\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx7680
+\clvertalc \clshdrawnil \clwWidth3020\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 Cerebellum\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1410\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1072\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1072\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 0\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 0\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 461\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 305\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1377\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx960
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx1920
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx3840
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx4800
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth2040\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx6720
+\clvertalc \clshdrawnil \clwWidth2680\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx7680
+\clvertalc \clshdrawnil \clwWidth3020\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 Temporal\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1410\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1062\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1062\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 0\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 0\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 461\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 316\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1378\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx960
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx1920
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx3840
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx4800
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth2040\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx6720
+\clvertalc \clshdrawnil \clwWidth2680\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx7680
+\clvertalc \clshdrawnil \clwWidth3020\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 Pons\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1410\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1056\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1056\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 0\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 0\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 462\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 318\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 1374\cell \lastrow\row
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf6 Thursday, April 26, 2018 at 8:45:11 AM\cf3 \
+\
+There are two tables in the file genes_in_common_and_not_original_and_preprocessed_data.pdf that show the numbers of genes shared by pairs of brain areas in the original and the preprocessed data as well as the number of genes not shared by pairs of brain areas.\
+\
+There were no differences in any brain area on the illumination probe IDs between the original and preprocessed data.\
+\
+There were now rows with missing symbols either in the original or the preprocessed data.\
+ \
+\
+Friday, April 27, 2018 at 12:02:14 PM\
+\
+Discovered that the original data files in excel formatted gene symbols such as MAR8 or MARCH8 as numbers 41705. I will search for all date-like symbols in the preprocessed data major.Area because those were imported with the Symbol column set to text format to leave the dateline symbols as they were.\
+\
+Corrected the symbols in the original data frames that were numbers because they were dates in the downloaded data when opened in excel. Used the following steps:\
+1. Located all of the date-like symbols in the preprocessed, major.Area, data frames by grepping  'MARCH' and 'SEPT'.\
+2. Only the MARCH symbols had been converted to number because the SEPT symbols were originally Septin 2, etc.\
+3. Got indices of the MARCH symbols in the major.Area data frames.\
+4. Used these indices to write out the correct symbols (e.g., MARCH 8) to the original data frames in orig.major.Area[[n]]$Symbol\
+5. Replaced the separate original data frames, e.g., orig.prefront.Data, with their orig.major.Area[[1]], etc.\
+6. Wrote out new individual files with the area data with corrected symbols as for example: comt_temporal_correlation_results.csv.txt\
+7. Imported those individual files AS TEXT into comt_all_areas_correlation_results.xlsx setting the format of the Symbol column to TEXT to prevent excel for converting symbols like MARCH8 into dates.\
+\
+\
+\cf6 Saturday, April 28, 2018 at 11:15:29 AM\cf3 \
+\
+The SEPT10 symbol rows in major.Area[[2, 3, 4]] were identical:  69   734  1575 12154\
+But in major.Area[[1]], the first two rows were missing and had symbols that were not SEPT10. \
+Checking orig.major.Area showed that the illumination probe IDs were different for those rows between [[1]] versus [[2,3,4]].\
+\
+major.Area[[area.now]]$Symbol[SEPT10.indx[[area.now]][lpos]] <- c('RNF11')\
+major.Area[[area.now]]$ENTREZID[SEPT10.indx[[area.now]][lpos]] <- c('26994')\
+major.Area[[area.now]]$loc[SEPT10.indx[[area.now]][lpos]] <- c('1')\
+major.Area[[area.now]]$bp[SEPT10.indx[[area.now]][lpos]] <- c('51.236273')\
+major.Area[[area.now]]$new.symbol[SEPT10.indx[[area.now]][lpos]] <- c('RNF11')\
+major.Area[[area.now]]$orig.symbol[SEPT10.indx[[area.now]][lpos]] <- c('RNF11')\
+major.Area[[area.now]]$symbol_change[SEPT10.indx[[area.now]][lpos]] <- FALSE\
+\
+Replaced all of the incorrect SEPT10 entries in the primary data files and reimported them into the master data file.\
+\
+\
+\cf6 Tuesday, May 1, 2018 at 12:16:29 PM\cf3 \
+The following pdf\'92s contain the latest and probably final statistics on the preprocessed data:\
+\
+missing_stats_final.pdf\
+probes_per_chrom_final.pdf\
+probes_per_gene_final.pdf\
+\
+Because there are multiple probes per gene, the selection of the most strongly positively and negatively correlated genes could proceed in one of two ways:\
+\
+1. Probe as the unit of analysis - this favors genes that have greater numbers of probes than those with only one probe.\
+\
+2. Gene as the unit of analysis - for genes with more than one probe, select one probe to represent the gene. \
+	a. The literature says that the probe with the maximum mean expression should be used. That\'92s fine for positively correlated genes, but what about the negatively correlated genes? A negatively correlated probe could have a maximum mean expression equal to the maximum mean expression for a positively correlated probe and still be negatively correlated with COMT expression. The negative correlation is independent of the mean expression level. This would argue for also using the probe with the maximum mean expression to represent genes with more than one probe.\
+	b. Use probe as the unit of analysis, but when two or more probes from the same gene show up in the top N genes (+ or -), only use the most strongly correlated (highly ranked) and keep adding probes to make up for those that were discarded. So if 3 probes for gene XYZ show up in the top 100 positively correlated genes, then only keep the probe with the highest rank and throw out the other two. go down the list of ranked probes and bring in the probes with ranks 101 and 102 (assuming that they do not also belong to genes already represented in the top 100).\
+	\
+According to Miller et al. (2011), it makes sense to use the probe with the highest expression level, then get the correlation for this probe.\
+\
+\
+genes_in_common_pval_ranked\
+\
+\cf6 Thursday, May 3, 2018 at 7:51:49 AM\cf3 \
+\
+The file area_
+\i unique_genes_pval_ranked.pdf
+\i0  shows the genes in each area among the top 500 most strongly COMT-correlated genes (ranked by p-val) that were found in each brain area but not among the top 500 in any of the other three areas.\
+\
+These uniquely expressed genes within an area are most highly correlated with COMT expression but only in that area. As such, they should be related to the function of COMT in that particular area.\
+\
+The excel file 
+\i order_Chr_by_num.xlsx
+\i0  contains the mapping between Chromosome names ordered by text (e.g., 1, 10, 11, 12...2, 20...) and ordered by number (e.g., 1, 2, 3, 4 ..., 22, X, Y)\
+\
+\cf6 Friday, May 4, 2018 at 10:51:49 AM\cf3 \
+\
+Verified that none of the unique genes in prefrontal (from among the top 500) appear in any other the other brain area lists of the top 500 genes (not just the uniques in those areas):\
+\
+> temp.stack.23 <- c(hold.Lowest.pvals[[2]]$Symbol,hold.Lowest.pvals[[3]]$Symbol)\
+\
+> length(temp.stack.23)\
+[1] 1002\
+\
+> head(temp.stack.23)\
+[1] "PGCP"    "CAT"     "PCCB"    "FUCA2"   "TMEM170"\
+[6] "RAB9A"  \
+\
+> sum(duplicated(temp.stack.23))\
+[1] 109\
+\
+> length(union(hold.Lowest.pvals[[2]]$Symbol,hold.Lowest.pvals[[3]]$Symbol))\
+[1] 893                                           \
+\
+This shows that the union includes the full set of genes from both areas minus one copy of the genes that appear in both areas. For example:\
+\
+A = (a, b, c, d, e)\
+B = (c, d, f, g)\
+union(A,B) = (a, b, c, d, e, f, g) one copy of c and one copy of d from B have been eliminated.\
+\
+> temp.union.234 <- union(union(hold.Lowest.pvals[[2]]$Symbol,hold.Lowest.pvals[[3]]$Symbol),hold.Lowest.pvals[[4]]$Symbol)\
+\
+> length(temp.union.234)  \
+[1] 1144\
+\
+> intersect(unique.full.data.all[[1]]$Symbol,temp.union.234)   # no overlap with the union of cb, tm and po\
+character(0)\
+\
+> intersect(unique.full.data.all[[1]]$Symbol,hold.Lowest.pvals[[2]]$Symbol)  # no overlap with cb alone\
+character(0)\
+\
+> intersect(unique.full.data.all[[1]]$Symbol,hold.Lowest.pvals[[3]]$Symbol)   # no overlap with tm alone\
+character(0)\
+\
+> intersect(unique.full.data.all[[1]]$Symbol,hold.Lowest.pvals[[4]]$Symbol)   # no overlap with po alone\
+character(0)\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 Monday, May 7, 2018 at 10:03:50 AM\cf3 \
+\
+The percentages of the four bases in the human genome are:\
+\
+%A 	%G 	%C 	%T \
+30.0	20.0	20.0	30.0\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf6 Monday, May 7, 2018 at 10:00:06 PM\cf3 \
+The list promoter.entrez.lst contains the entrezgene ids of all of the fasta sequences in order in all of the brain areas.\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf9 Thursday, May 10, 2018 at 1:01:23 PM\cf3 \
+> seq.fasta.entrez[[1]][1]\
+$`_+1_id_1312_pf`\
+[1] "TCTGTGGCCCTAGGCCTGCCTCCTTGCCTGGGTGTGCCTTTCTAAAATGGAGCGTCCAGCAGAGAGTGGGATCTCCTATGCCACTGGGAGCCCAGGGCCCCATCCCAGAAAGACCTCTGAGTGAGCACAGGGGCCCTAGAAGAAGTTTCCTTGTGTCCTTCCCGTTTTAGGGTCTGTGACCTGAACCCCTGGGCTTCTGCCTCAGGCCTCCTGTGCTCTGCTCTCTGCCTGCTGGGTCCCCTCACCAGGCTTCTGTCTGGTTCCCAGGCTACCTGCCTGGAGGGTCACACCAGGAGGATTTCAAACAGGTTTCAAGTGGGGTCACTTGCCATCACTGTGCCCCACGAGGTACACTGTTGTGGGCGGCAGGGCTGGCCTTTCTCATCTGGGACATGCCACGTTGCTGTTCCCAAGGGGAGTGGTGAGTGGGTCTGTCCTGGTGTGCCTGGCCTGGGGACTGCCAGTGTCCTTACTTGGACACTCAATGAAAAGGCCACATGAATCCCTGGGGCGTCCAGAGCATGGGTGACCAGCACGGGCTCACCACATGAGGCCAAGGGGCTGCACCATACAGCCTCTCCTTTGGCCACCCGTGACTACCCCCAACTCCGGGCCATGGGGCTTCCCTACCCCTGGGTGTCCTCTAAGCCAGCTGGGAGACAACAGCCTGAGTCCGTGTCTGCTTCTGTATTTTGTGTGGTTTTAGAGGATCCCTGGGCTGCCTGGGGAAGCACCCAGGGCCAGGGAGTGTGACCCTGCAGGCTCCACACAGGACTGCCAGAGGCACACACCTGCTCTGTCTACCCGAGGGCACCAGAGGGCACGAGAAGGCTGGCTCCCTGGCGCTGACACGTCAGGCAACTGAGGCACAAGGCTGGCATTTCTGAACCTTGCCCCTCTGCAAACACAAGGGGGCGATGGTGGCACTCCAAGCAAAGGGGCGTGTGGGTGCTGCAGGAGGAGCACAGAGCACTGGCGCCCCTCCCCTCCCGCCCTGCAGCTGCCCCCCCGGCCCCCCTCTCGGGCTCTCTCACCCAGCCTGGTACTGAAGGTGCCAGACGTGCTCCTGCTGACCTTCTGCGGCTCCGGGCTGTGTCCTAAATGCAAAGCACACCTCGGCCGAGGCCTGCGCCCTGACATGCTAACCTCTCTGAACTGCAACACTGGATTGTTCTTTTTTAAGACTCAATCATGACTTCTTTACTAACACTGGCTAGCTATATTATCTTATATACTAATATCATGTTTTAAAAATATAAAATAGAAATTAAGAATCTAAATATTTAGATATAACTCGACTTAGTACATCCTTCTCAACTGCCATTCCCCTGCTGCCCTTGACTTGGGCACCAAACATTCAAAGCTCCCCTTGACGGACGCTAACGCTAAGGGCGGGGCCCCTAGCTGGCTGGGTTCTGGGTGGCACGCCTGGCCCACTGGCCTCCCAGCCACAGTGGTGCAGAGGTCAGCCCTCCTGCAGCTAGGCCAGGGGCACCTGTTAGCCCCATGGGGACGACTGCCGGCCTGGGAAACGAAGAGGAGTCAGCCAGCATTCACACCTTTCTGACCAAGCAGGCGCTGGGGACAGGTGGACCCCGCA"\
+attr(,"name")\
+[1] "_+1_id_1312_pf"\
+attr(,"Annot")\
+[1] ">_+1_id_1312_pf"\
+attr(,"class")\
+[1] "SeqFastadna"\
+\
+To access the individual DNA letters in a fast sequence use:\
+\
+> fasta.by.lett[[1]][1][[1]][1:6]\
+[1] "T" "C" "T" "G" "T" "G"\
+\
+> fasta.by.lett$pf[1][[1]][1:6]\
+[1] "T" "C" "T" "G" "T" "G"\
+\
+> top500.signs.tab\
+     areas\
+signs  cb  pf  po  tm\
+   -1 117 168  68  94\
+   1  376 323 424 399\
+\
+> chisq.test(top500.signs.tab)  Test of independence between \cf2 brain area\cf3  and the sign of the COMT correlations\
+\
+	Pearson's Chi-squared test\
+\
+data:  top500.signs.tab\
+X-squared = 63.2, df = 3, p-value = 0.00000000000012\
+\
+Here are the percentages of +/- correlations signs by area:\
+\
+   Prefrontal Cerebellum Temporal  Pons\
+-1      0.237      0.342    0.138 0.191\
++1      0.763      0.658    0.862 0.809\
+\
+Expected frequencies if independent:\
+\
+chisq.area.by.sign$expected\
+     areas\
+signs     cb     pf     po     tm\
+   -1 111.92 111.47 111.69 111.92\
+   1  381.08 379.53 380.31 381.08\
+\
+Friday, May 11, 2018 at 6:34:50 AM\
+\
+Number of possible DNA sequences of length 6:\
+4\super 6\nosupersub  = 4096\
+\
+Number of independent motifs of length n = 6 in 1600 bp promoter sequence:\
+1595/6 = 266\
+\
+Number of genes remaining in top 500 in pfctx:\
+491\
+\
+number of independent motifs across all of the top 491 genes:\
+491 x 266 = 130,606\
+\
+Expected number of matches to a given n = 6 motif:\
+130,606/4096 = 32\
+\
+Observed number of matches:\
+468\
+\
+Enrichment: 468/32 = 14.6x\
+\
+The file <comt_motif_CTGCAG_-5bp.txt> contains the 490 of top 500 COMT-correlated genes from prefrontal cortex with their\
+1. sign of correlation\
+2. gene symbol,\
+3. loci from each gene\'92s promoter region that matched the COMT motif CTGCAG that was located at -5bp from txStart\
+\
+TCCCGCCCTGCAG\
+\
+\
+Monday, May 14, 2018 at 12:41:31 PM\
+\
+unique.full.data.all <- list(pf=unique.prefront.Data,\
+                   cb=unique.cbell.Data,\
+                   tm=unique.tempor.Data,\
+                   po=unique.pons.Data)\
+\
+run findMotifFasta using top 500 pf as foreground versus top 500 cb (or tm or po) as background\
+\
+
+\b Only in prefrontal cortex were motifs found that significantly differentiated the positively COMT-correlated genes from the negatively COMT-correlated genes (restricted to the top 500 ranked by p-value)
+\b0 \
+\
+Motif 1: NNDSCCAGGVNN		CCAGG\
+Motif 2: NNBCCTGCCNBNN	CCT\{G/A\}CC\
+Motif 3: CNCCAGGANN		CCAGGA\
+\
+summaryMotif(PF.motifs$motifs,PF.motifs$category)\
+              scores signs fg.hits bg.hits fg.seq bg.seq  ratio fg.frac bg.frac\
+NNDSCCAGGVNN  6.3783  TRUE    1429     442    306    138 1.6816 0.94737 0.82143\
+NNBCCTGCCNBNN 6.0426  TRUE     794     229    278    111 1.8034 0.86068 0.66071\
+NNCCAGGANN    5.2444  TRUE     684     221    276    109 1.6098 0.85449 0.64881\
+\
+This says for example that 308/323 of the positively correlated genes (foreground) had at least one instance of motif 1 while only 138/168 of the negatively correlated genes had at least one instance of motif 1.\
+Additionally, across all positively correlated genes, there were1429 instances of motif 1, but only 442 instances of motif 1 across the negatively correlated promoter sequences.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf6 Tuesday, May 15, 2018 at 8:51:15 AM\cf3 \
+\
+t-tests on the average number of hits for each of the three motifs as well as the sum of the hits over all motifs found to differentiate the positively from the negatively COMT-correlated genes showed that for all three motifs (and the sum), the average number of hits was significantly greater for the positively versus the negatively correlated genes in Prefrontal Cortex.\
+\
+motif.POSvNEG.t\
+motif [[1]]\
+\
+	Welch Two Sample t-test\
+\
+data:  slot(PF.motifs$motifs[[1]], "count")[1:323] and slot(PF.motifs$motifs[[1]], "count")[324:491]\
+t = 7.47, df = 410, p-value = 0.00000000000049\
+alternative hypothesis: true difference in means is not equal to 0\
+95 percent confidence interval:\
+ 1.3213 2.2651\
+sample estimates:\
+mean of x mean of y \
+   4.4241    2.6310 \
+\
+\
+motif [[2]]\
+\
+	Welch Two Sample t-test\
+\
+data:  slot(PF.motifs$motifs[[2]], "count")[1:323] and slot(PF.motifs$motifs[[2]], "count")[324:491]\
+t = 7.08, df = 434, p-value = 0.0000000000059\
+alternative hypothesis: true difference in means is not equal to 0\
+95 percent confidence interval:\
+ 0.79105 1.39917\
+sample estimates:\
+mean of x mean of y \
+   2.4582    1.3631 \
+\
+\
+motif [[3]]\
+\
+	Welch Two Sample t-test\
+\
+data:  slot(PF.motifs$motifs[[3]], "count")[1:323] and slot(PF.motifs$motifs[[3]], "count")[324:491]\
+t = 5.48, df = 338, p-value = 0.000000084\
+alternative hypothesis: true difference in means is not equal to 0\
+95 percent confidence interval:\
+ 0.51411 1.09023\
+sample estimates:\
+mean of x mean of y \
+   2.1176    1.3155 \
+\
+\
+sum of hits for all motifs [[4]]\
+\
+	Welch Two Sample t-test\
+\
+data:  sum.motif.hits.pos and sum.motif.hits.neg\
+t = 8.75, df = 409, p-value <0.0000000000000002\
+alternative hypothesis: true difference in means is not equal to 0\
+95 percent confidence interval:\
+ 2.8617 4.5193\
+sample estimates:\
+mean of x mean of y \
+   9.0000    5.3095 \
+\
+\
+None of the transcription factor gene names from http://cisbp.ccbr.utoronto.ca/ that matched the motifs for prefrontal found by motifRG were among the top 500 genes.\
+<<matchTF.to.Symbols>>=\
+\
+tf.matches.pf <- match(as.character(tfs.PvN.pf$TF_Name),hold.Lowest.pvals[[1]]$Symbol)\
+tf.matches.pf\
+\
+@\
+\
+\cf6 Friday, May 25, 2018 at 8:18:10 AM\cf3 \
+\
+l1811\
+\
+l1789\
+\
+\cf6 Saturday, May 26, 2018 at 1:21:31 PM\cf3 \
+Need to separate the two motifs out of the 18 that had proportionally more positively than negatively correlated genes\
+\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf10 Monday, May 28, 2018 at 6:26:14 AM\cf3 \
+l2184\
+\
+l2485\
+\
+l2935\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf6 Tuesday, May 29, 2018 at 7:50:46 AM\cf3 \
+\
+The list 
+\i gene.Major
+\i0  contains the full data set with one probe per gene. The probe with the maximum expression level was chosen to represent each gene that had more than one probe/transcript.\
+\
+For the genes that are in common between two brain areas in their respective sets of 500 most strongly correlated genes, the rank order correlation between their expression correlations with COMT are significantly positive for all pairwise comparisons between brain areas.\
+\
+Note: it doers not make sense to run a Pearson correlation because the the genes have been selected to be the ones with basically the highest positive and highest negative correlations so there is a big gap in the middle when plotted on a scatterplot.\
+\
+l3058\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf10 Wednesday, May 30, 2018 at 1:37:27 PM\cf3 \
+Note: in the BP ontology results, the negatively correlated genes in cerebellum and temporal cortex returned no significant associations.\
+\
+Note: in the CC ontology results, the negatively correlated genes in prefrontal cortex, cerebellum, temporal cortex returned no significant associations.\
+\
+Note: in the MF ontology results, the negatively correlated genes in prefrontal cortex, cerebellum, temporal cortex, and pons returned no significant associations.\
+\
+l3215\
+\
+Thursday, May 31, 2018 at 6:49:23 AM\
+\
+See the file: chr22_enrichment_genes_500_and_COXPRESdb.txt\
+The proportion of the 500 most strongly positively correlated genes (from the NIH data set) that were located on Chromosome 22 (COMT location) and that overlapped with the 500 most strongly co-expressed genes from COXPRESdb http://coxpresdb.jp/ was significantly greater in all brain areas except pons than the overall proportion of the top 500 positively correlated genes from the NIH data set that were located on Chromosome 22 (note: this latter set did not include the requirement that they overlap with the COXPRESdb genes). In other words, genes for which there were two sources of positive COMT-coexpression evidence (NIH data and COXPRESdb data) were enriched on Chromosome 22. This could be an indication of sharing transcription factors.\
+\
+l2068\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf6 Friday, June 1, 2018 at 5:28:42 AM\cf3 \
+l2020\
+l2050\
+\
+\cf6 Saturday, June 2, 2018 at 12:07:05 PM\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 \
+l1409\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf6 Sunday, June 3, 2018 at 11:24:11 AM\cf3 \
+\
+For the CpG analysis, Restrict the promoter sequence to -1000 to 0 and split it into two sequences\
+-1000 to -501   in terms of indices 1 to 500    (500*0 + 1) to (500*1)\
+-500 to -1  501 to 1000    (500*1 + 1) to (500*2)\cf6 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 \
+l1560\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf6 Monday, June 4, 2018 at 8:58:39 AM\cf3 \
+The CpG island content plots show what would be expected in PfCtx, especially in the region near the TSS (cpg(pos) > cpg(neg)), but oddly, that reverses in TmCtx.\
+\
+Note: When the positively correlated genes in one area are compared to negatively correlated genes in another area, there are no intersection genes - no genes in common. In other words, there were no positively correlated genes in Prefrontal Cortex among the top 500 that appeared among the negatively correlated genes in any of the other areas, mutatis mutandas. Conversely, genes in common across pairs of brain areas were always correlated with COMT with the same sign.\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf10 Tuesday, June 5, 2018 at 6:52:24 AM\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 l1702\
+\
+None of the statistical tests on CpG island statistics showed significance when the full promoter region was used.\
+\
+However, when the search for CpG islands was restricted to -200 to 0 relative to the TSS, the proportion of positively correlated genes with at least 1 CpG island in that window was significantly greater than the proportion of negatively correlated genes in that same window:\
+\
+	2-sample test for equality of proportions with\
+	continuity correction\
+\
+data:  c(sum(cpg.dist.area[[1]][[2]][, 5]), sum(cpg.dist.area[[1]][[3]][,  out of c(tot.promoters[[2]][1], tot.promoters[[3]][1])    5])) out of c(tot.promoters[[2]][1], tot.promoters[[3]][1])\
+X-squared = 4.31, df = 1, \cb7 p-value = 0.038\cb1 \
+alternative hypothesis: two.sided\
+95 percent confidence interval:\
+ 0.0049133 0.1982416\
+sample estimates:\
+ \cb11 prop +  prop - \cb1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 \cb12 0.62539 0.52381\cb1   \
+\
+From the top 500 positively correlated genes, those found only in Prefrontal Cortex\
+RPL18P13\
+ACY1\
+HSCB\
+TTLL4\
+MEGF10   \
+ZFAND3\
+PIK3C2A\
+ACAA2\
+HIST1H2AC\
+H3F3AP4\
+WDFY2\
+ELOVL2\
+CYP2J2\
+KRT10\
+SASH1    \
+RELA\
+CTNNA1\
+PARP4\
+CRYL1\
+AP3M1    \
+FBXO8\
+MIF4GD\
+C1orf198 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf10 Wednesday, June 6, 2018 at 9:45:48 AM\cf3 \
+\
+l3197\
+\
+Table to look at tissue-specific vs nonspecific regulation\
+see table in <zsign_tab.pdf>\
+                  	cb.zsign   -1         		1     \
+                  po.zsign   -1    	1   		-1    	1\
+pf.zsign tm.zsign                             \
+-1       -1                5051  	531  	874  	737\
+         1                  316   	96   	93  		189\
+1        -1                 540   	80  		101  	212\
+         1                  738  		521  	311 	2663\
+\
+l5618\
+\
+Submitted 06/06/2018 to ASHG 2018 Conference\
+\
+Background: The membrane-bound form of Catechol-O-Methyltransferase (MB-COMT) catabolizes catecholamines such as the neurotransmitter dopamine and is expressed most strongly in human Prefrontal Cortex. Variants of COMT (22q11.21) have been associated with various normal and abnormal cognitive phenotypes, but the literature is often conflicting on their effects. It is possible that some of the discrepancies in the literature arise because of differences in the genes co-expressed with COMT. Methods: Publicly available, post-mortem mRNA expression data (Illumina humanRef-8 v2.0 expression beadchip GPL6104) from four brain areas (Prefrontal Cortex, Cerebellum, Temporal Cortical Wall and Pons; hereafter PfCtx, CBell, TmCtx, Pons) in 138 subjects (GeneNetwork GN Accession: GN482, GEO Series: GSE15745) were used to determine characteristics of genes co-expressed with COMT. Bioconductor software for R (v3.5.0) was used as the primary analysis platform with gene as the data-analytic unit. The 500 genes (TOP500) whose expression levels were most strongly correlated (ranked by p value) with COMT expression were selected for further analysis in each brain area. A form of differential co-expression analysis was implemented by separating the TOP500 genes in each brain area into two sets: those with expression positively (r-pos) vs. negatively (r-neg) correlated with COMT. Results: 1) While the proportion of neg-r genes in the full sample was approximately 66% in all brain areas, this proportion flipped among the four sets of TOP500 genes. 2) When all length-6 motifs were examined in the promoter regions of these genes (-1000 to +600 bp from the TSS), the proportion of neg-r genes containing at least one instance of a given motif significantly exceeded the proportion of pos-r genes in 14 of 16 tests surviving Bonferroni correction. 3) The proportion of genes in PfCtx with at least one CpG island within 200 bp of the TSS differed significantly: 52% vs. 63% (neg-r vs. pos-r, respectively). 4) GO analysis (BP) produced a clear difference between the two sets of genes in PfCtx; 9 of the top 10 GO terms for the neg-r genes were related to \'93vesicle\'94 processes. For pos-r genes, terms related to \'93catabolic\'94 processes were enriched. Implications: The \'93vesicular\'94 enrichment results could imply that when COMT is downregulated, some of the neg-r genes are upregulated possibly because of the increased demand for vesicular packaging of newly endocytic dopamine in presynaptic neurons.\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf6 Thursday, June 7, 2018 at 12:46:47 PM\cf3 \
+The most recent R file that produced most of the analysis for the ASHG 2018 conference is \cf10 comt_correlations_ontology_general_v7.Rnw\
+\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 /Library/Java/JavaVirtualMachines/jdk1.8.0_172.jdk/Contents/Home/jre\
+\
+dyn.load(paste0(system2('/usr/libexec/java_home', stdout = TRUE), '/jre/lib/server/libjvm.dylib'))\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf10 Sunday, June 10, 2018 at 4:02:14 PM\cf3 \
+\
+l5743\
+\
+\cf10 Monday, June 11, 2018 at 12:42:41 PM\cf3 \
+\
+The complete set of ontologies using GOHyperGParams is saved in the file "ontology_from500_GOHyperP.xlsx".\
+The gene sets that go with every significant GOID from those ontologies are saved in the file "ontology_from500_GOHyperP_genes.txt".\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf6 Tuesday, June 12, 2018 at 7:10:28 AM\cf3 \
+\
+Note: the ontologies prior to this point used the major.Area[[n]]$ENTREZID as the universe. This has 20000 entrezgene IDs in each area, but some of them are duplicates because there can be multiple Illumina probes per gene. It actually used unique(major.Area[[n]]$ENTREZID) which means that it selected one ENTREZID in cases where there were multiple ENTREZGENE IDs. This is in some sense not optimal because the geneses used in the ontologies were drawn from a larger set with one probe per gene, but that probe was the one with the greatest expression level. So this means that the same gene can appear in the geneset and the universe, but it can be different probes in the two.\
+\
+The list gene.Major has the data with only one probe per gene - the probe with the maximum expression. It would make more sense to use these as the universes in the ontology analyses.\
+\
+Ontologies were re-run with gene.Major[[n]]$ENTREZID as the universes, and it effectively made no difference. This could be because there is almost complete overlap between major.Area[[n]]$ENTREZID and gene.Major[[n]]$ENTREZID:\
+\
+length(unique(major.Area[[1]]$ENTREZID))\
+[1] 16648\
+> length(unique(gene.Major[[1]]$ENTREZID))\
+[1] 16644\
+> length(intersect(major.Area[[1]]$ENTREZID,gene.Major[[1]]$ENTREZID))\
+[1] 16644\
+\
+I did PCA both on the Mean expression levels and on there Sample.r correlations. The results were very similar in both cases. PC1 = roughly equal weightings of all areas, PC2 = -PF +CB -TM +PO\
+So Prefrontal Cortex and Temporal Cortex hang together as do Cerebellum and Pons.\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf10 Saturday, June 16, 2018 at 3:56:26 PM\cf3 \
+I calculated the mutual information between all pairs of positions (loci) -40 to +10 relative to the TSS for the positively correlated and negatively correlated subsets for each brain area.\
+\
+I plotted dendrograms for each of these cases to determine if certain loci tended to cluster - meaning that the bases at those two positions were not independent.\
+To generate the clustering, I used methods:\
+\
+dist = maximum\
+hclust = average\
+\
+\
+\
+TATA Box -25 to -35 from TSS\
+\
+I also determined from the dendrograms, how many upstream loci including the TSS (0) were in the same supercluster with that supercluster admitting no downstream (+l) loci.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\b \cf3 Negative
+\b0 \
+Brain area		Size of upstream supercluster	Farthest Upstrream\
+Prefrontal			\
+Cerebellum			\
+Temporal			\
+Pons				\
+\
+
+\b Positive
+\b0 \
+Brain area		Size of upstream supercluster	Farthest Upstrream\
+Prefrontal			\
+Cerebellum			\
+Temporal			\
+Pons	\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf10 Monday, June 18, 2018 at 8:37:38 AM\cf3 \
+\
+I tried to generate a permutation distribution for the correlation between distance (dissimilarity) and the cophenetic of the hierarchical clustering solution using random permutations of the the MI matrix. To generate the random matrices, I just randomly reordered the x and y indices that go with the MI value at their intersection in the matrix. I discovered that the distribution of these correlation coefficients is basically centered at the unpermuted correlation based on the MI matrix.\
+\
+Why? Because randomly reordering the indices leaves the same values in the MI matrix, it just 
+\b relabels
+\b0  the indices that went with each value in the unpermuted MI matrix (UMIM). In other words, whereas before the value Vij went with indices i and j, that same point goers with i\'92 and j\'92 in the permuted matrix. So the clustering algorithm finds the same structure in the data, it just relabels the objects in the dendrogram.\
+\
+Consider a row in the UMIM, i. In the upper triangle of the UMIM (that does not use the diagonal; the diagonal contains the Mutual Entropy values, not MI values), there will be column indices that run from i + 1 to k where k is the number of variables that went into the MI matrix. For example, using the loci from -40 to +10 re: TSS, the MIU matrix is 51 x 51, so k = 51. Pick an MI value in row i. Let the chosen column be the MI value that went with column index, j (i <= k). Now if the column indices are randomly permuted, that same value, Vij, will still appear in that column, but it will appear in a new column, j\'92, based on the permutation of the column indices. Likewise for all of the other values in that row, i. But notice that the row indices are also randomly permuted. The argument above still holds; it is just that instead of putting the values that go with row i into that row in a random order, all the same values in that row will now appear in a new row, i\'92. The important point is that all of the MI values in a given original row will still be together, but that row will now be called i\'92.\
+\
+For example, here is the random re-ordering of the row indices:\
+\
+x.r\
+ [1] 44 10  2 35 12 34 22 32  7 26 38 21 24 23 37 27 45  3\
+[19] 20 28 31 39  5 43 11 40 15 47 18 17 33 41 48 49  4  9\
+[37] 42  6 36 19 50 30  1 29 13 16 14 46  8 25\
+\
+This says that the algorithm will first fill up row 44 in the randomly permuted MIU matrix (RPMIM) with the randomly re-ordered values that were in row 44 of the UMIM. Here is the random reordering of the seven values that were originally in row 44 of the UMIM.\
+\
+y.r\
+[1] 45 47 46 51 49 50 48\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7255\pardirnatural\partightenfactor0
+\cf3 Whereas before in the UMIM, row 44 had values in the upper right triangular part of the matrix (excluding the diagonal) of:					\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\partightenfactor0
+\cf3 \
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf13 \clbrdrl\brdrs\brdrw60\brdrcf13 \clbrdrb\brdrs\brdrw60\brdrcf13 \clbrdrr\brdrs\brdrw60\brdrcf13 \clpadl100 \clpadr100 \gaph\cellx1080
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx3240
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx5400
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx7560
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\qc\partightenfactor0
+\cf3 [ ,45]\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\qc\partightenfactor0
+\cf3 [ ,46]\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\qc\partightenfactor0
+\cf3 [ ,47]\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\qc\partightenfactor0
+\cf3 [ ,48]\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\qc\partightenfactor0
+\cf3 [ ,49]\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\qc\partightenfactor0
+\cf3 [ ,50]\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\qc\partightenfactor0
+\cf3 [ ,51]\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx1080
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx3240
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx5400
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx7560
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\partightenfactor0
+\cf3 [44, ]  UMIM\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\qc\partightenfactor0
+\cf3 0.0446494\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\qc\partightenfactor0
+\cf3 0.0245254\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\qc\partightenfactor0
+\cf3 0.0196772\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\qc\partightenfactor0
+\cf3 0.0096540 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\qc\partightenfactor0
+\cf3 0.0103693\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\qc\partightenfactor0
+\cf3 0.0115243\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\qc\partightenfactor0
+\cf3 0.0173290\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx1080
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx3240
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx5400
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx7560
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw60\brdrcf3 \clbrdrl\brdrs\brdrw60\brdrcf3 \clbrdrb\brdrs\brdrw60\brdrcf3 \clbrdrr\brdrs\brdrw60\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\partightenfactor0
+\cf3 [44, ]  RPMIM (see y.r)\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\qc\partightenfactor0
+\cf3 0.0446494\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\qc\partightenfactor0
+\cf3 0.0196772\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\qc\partightenfactor0
+\cf3 0.0245254\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\qc\partightenfactor0
+\cf3 0.0173290\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\qc\partightenfactor0
+\cf3 0.0103693\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\qc\partightenfactor0
+\cf3 0.0115243\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\qc\partightenfactor0
+\cf3 0.0096540 \cell \lastrow\row
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7253\tx7827\tx8334\pardirnatural\partightenfactor0
+\cf3 \
+New Column	Old Column\
+45				45\
+46				47\
+47				46\
+48				51\
+49				49\
+50				50\
+51				48\
+\
+So the permutation of the column indices does reorder the MI values in a given row (in UMIM), but randomly permuting the row indices, only changes the ORDER of the rows in which the new random matrix is filled up with permuted column values.\
+\
+For example, in the UMIM the distance between [44, 47] and [44,49] would be (using a euclidean distance metric): (V\super 2\sub 44,47\nosupersub  + V\super 2\sub 44,49\nosupersub )\super 1/2 = (\nosupersub 0.0196772\super 2\nosupersub  + 0.0103693\super 2\nosupersub )\super 1/2 = 0.022242\
+\
+But notice that this is the same distance between [44,46] and [44,49] in the RPMIM. mutatis mutandas for the other pairwise distances in that row. What the random permutation has done is just to relabel:\
+UMIM			RPMIM			\
+[44,47] 	\'97> 	[44,46]\
+[44,49] 	\'97> 	[44,49]\nosupersub \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 So this is NOT a effective way to generate a null, permuted distribution of these correlation coefficients. This method can never work because the rows in RPMIM are always constrained to have the same set of matrix values as were in that row in UMIM. It could be that you have to go all the way back to generating random promoter sequences that conform to the percentages of the four nucleotides at each locus. The randomness is introduced on a per locus basis across the subset of genes in question.\
+\
+So in the original promoter sequence for gene i, at loci -20 and -19 (re: TSS) the sequence might have been:\
+\
+Gene		Locus 1		Locus 2\
+	i		-20				-19\
+			A				G    original promoter subsequence from -20 to -19\
+\
+	i		C				G	newly randomized subsequence that obeys the Percentages of the four nucleotides across all k genes in the subset.\
+\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf10 Tuesday, June 19, 2018 at 6:16:46 AM\cf3 \
+\
+In the list full.perm.set.neg produced by the R script motif_analysis_v1.Rnw, the term full.perm.set.neg[[1]][[1]] is a 51 x 51 matrix of Mutual Information values (off diagonal) and Mutual Entropy values on the diagonal. The first [[1]] refers to the replication number of the Monte Carlo, and the second [[1]] refers to brain area. Thus this list has:\
+\
+full.perm.set.neg[[a]][[b]] where a = 1:1000 (replications) and b = 1:4 (brain area)\
+\
+The Monte Carlo was used to produce random MI matrices as follows:\
+\
+1. These MI matrices are based on the nucleotide composition across the subset of negatively COMT-correlated genes at promoter loci -40 to +10 relative to the TSS. The original promoter sequences covered -1000 to +600 re: TSS where the TSS site is at 0. The range from -40 to +10 contains 51 loci. The TSS is at loci = 40 in this range from 1:51 [-40:+10].\
+\
+2. Mutual Information refers to the relations between 
+\i\b pairs
+\i0\b0  of loci, e.g., between loci -25 and -1. The MI is based on the subset of k genes (for brain area 1, g(neg) = 163 genes). At each locus for a given gene, g(k), the value of the data at that locus is the nucleotide (A, C, G, T) that appears at that locus in gene g(k), e.g. C. Across all k of the genes, there is some discrete frequency/percentage distribution over the four bases. So at locus -25, there is some distribution over the four bases based on the set of k genes.\
+\
+3. Similarly, at another locus, e.g., -1, there is also a frequency/percentage distribution over the four bases.\
+\
+4. Additionally, at these two loci considered together, there is a contingency table (4 x 4) that shows the distribution of all possible pairs of nucleotides that occurred across the k genes. For example:\
+\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth1540\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx1080
+\clvertalc \clshdrawnil \clwWidth1800\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalc \clshdrawnil \clwWidth1740\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx3240
+\clvertalc \clshdrawnil \clwWidth1740\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth1800\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx5400
+\clvertalc \clshdrawnil \clwWidth1640\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalc \clshdrawnil \clwWidth1620\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx7560
+\clvertalc \clshdrawnil \clwWidth1620\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 \
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 locus\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 -1 (j)\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 variable y\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth1540\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx1080
+\clvertalc \clshdrawnil \clwWidth1800\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalc \clshdrawnil \clwWidth1740\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx3240
+\clvertalc \clshdrawnil \clwWidth1740\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth1800\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx5400
+\clvertalc \clshdrawnil \clwWidth1640\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalc \clshdrawnil \clwWidth1620\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx7560
+\clvertalc \clshdrawnil \clwWidth1620\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 A\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 C\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 G\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 T\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth1540\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx1080
+\clvertalc \clshdrawnil \clwWidth1800\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalc \clcbpat14 \clwWidth1740\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx3240
+\clvertalc \clcbpat14 \clwWidth1740\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalc \clcbpat14 \clwWidth1800\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx5400
+\clvertalc \clcbpat14 \clwWidth1640\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalc \clshdrawnil \clwWidth1620\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx7560
+\clvertalc \clshdrawnil \clwWidth1620\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 A\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub AA
+\fs32 \nosupersub \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub AC
+\fs32 \nosupersub \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub AG
+\fs32 \nosupersub \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub AT
+\fs32 \nosupersub \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub Ai
+\fs32 \nosupersub \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth1540\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx1080
+\clvertalc \clshdrawnil \clwWidth1800\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalc \clcbpat14 \clwWidth1740\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx3240
+\clvertalc \clcbpat14 \clwWidth1740\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalc \clcbpat14 \clwWidth1800\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx5400
+\clvertalc \clcbpat14 \clwWidth1640\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalc \clshdrawnil \clwWidth1620\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx7560
+\clvertalc \clshdrawnil \clwWidth1620\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 locus\cell 
+\pard\intbl\itap1\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 C\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub CA
+\fs32 \nosupersub \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub CC
+\fs32 \nosupersub \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub CG
+\fs32 \nosupersub \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub CT
+\fs32 \nosupersub \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub Ci
+\fs32 \nosupersub \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth1540\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx1080
+\clvertalc \clshdrawnil \clwWidth1800\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalc \clcbpat14 \clwWidth1740\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx3240
+\clvertalc \clcbpat14 \clwWidth1740\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalc \clcbpat14 \clwWidth1800\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx5400
+\clvertalc \clcbpat14 \clwWidth1640\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalc \clshdrawnil \clwWidth1620\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx7560
+\clvertalc \clshdrawnil \clwWidth1620\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 -25 (i)\cell 
+\pard\intbl\itap1\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 G\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub GA
+\fs32 \nosupersub \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub GC
+\fs32 \nosupersub \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub GG
+\fs32 \nosupersub \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub GT
+\fs32 \nosupersub \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub Gi
+\fs32 \nosupersub \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth1540\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx1080
+\clvertalc \clshdrawnil \clwWidth1800\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalc \clcbpat14 \clwWidth1740\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx3240
+\clvertalc \clcbpat14 \clwWidth1740\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalc \clcbpat14 \clwWidth1800\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx5400
+\clvertalc \clcbpat14 \clwWidth1640\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalc \clshdrawnil \clwWidth1620\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx7560
+\clvertalc \clshdrawnil \clwWidth1620\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 variable x\cell 
+\pard\intbl\itap1\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 T\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub TA
+\fs32 \nosupersub \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub TC
+\fs32 \nosupersub \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub TG
+\fs32 \nosupersub \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub TT
+\fs32 \nosupersub \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub Ti
+\fs32 \nosupersub \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth1540\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx1080
+\clvertalc \clshdrawnil \clwWidth1800\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx2160
+\clvertalc \clshdrawnil \clwWidth1740\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx3240
+\clvertalc \clshdrawnil \clwWidth1740\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth1800\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx5400
+\clvertalc \clshdrawnil \clwWidth1640\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx6480
+\clvertalc \clshdrawnil \clwWidth1620\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx7560
+\clvertalc \clshdrawnil \clwWidth1620\clftsWidth3 \clbrdrt\brdrs\brdrw40\brdrcf3 \clbrdrl\brdrs\brdrw40\brdrcf3 \clbrdrb\brdrs\brdrw40\brdrcf3 \clbrdrr\brdrs\brdrw40\brdrcf3 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub Aj
+\fs32 \nosupersub \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub Cj
+\fs32 \nosupersub \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub Gj
+\fs32 \nosupersub \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 p
+\fs28 \sub Tj
+\fs32 \nosupersub \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 1.00\cell \lastrow\row
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 \
+p = probability; i,j = loci; i is 5\'92 to j\
+\
+The cells in blue represent the joint probabilities of the four nucleotides across the two loci,\
+The marginals represent the simple probabilities of the four bases at each locus.\
+The probability p
+\fs28 \sub CA
+\fs32 \nosupersub  means that at promoter loci -25 and -1 across all k genes, C was 5\'92 to A with observed probability p
+\fs28 \sub CA
+\fs32 \nosupersub .\
+The concept of Mutual Information refers to the gain in information (nucleotide predictability) at locus -1 that arises from knowing which nucleotide was at locus -25.\
+If a C at locus -25 is always accompanied by a G at locus -1 and an A at locus -25 is always accompanied by a T at locus -1 and a \'85 with perfect predictability, then the Mutual Information is 1.00.\
+If the appearance is a C at locus - 25 is equally likely to be followed by any of the four nucleotides and an A at locus -25 is equally likely to be followed by any of the four nucleotides, and a \'85, then the nucleotides at the two loci are independent of each other, and the Mutual Information is 0.\
+Because this is a contingency table, the test for independence of two loci involves being able to predict the joint probability, e.g., p
+\fs28 \sub TA
+\fs32 \nosupersub , from the two relevant marginal probabilities, p
+\fs28 \sub Ti
+\fs32 \nosupersub  and p
+\fs28 \sub Aj
+\fs32 \nosupersub . \
+The Mutual Information is defined as:\
+\
+MI\sub ij\nosupersub  =  \uc0\u931 
+\fs24 \sub y
+\fs32 \nosupersub \uc0\u931 
+\fs24 \sub x
+\fs32 \nosupersub  p
+\fs28 \sub xy
+\fs32 \nosupersub  log( p
+\fs28 \sub xy
+\fs32 \nosupersub /(p
+\fs28 \sub xy
+\fs32 \nosupersub p
+\fs28 \sub xy
+\fs32 \nosupersub )\
+\
+There is a MI value for each possible combination of the 51 loci.\
+Also, MI\sub ij\nosupersub  = MI\sub ji\nosupersub .\
+\
+5. To produce the random MI matrices, calculated as shown above\
+	a. The distribution of nucleotides at locus i was used for each replication of the k genes by randomly sampling without replacement from this distribution.\
+	b. Similarly, for locus j, the distribution of the four bases at locus j was used.\
+	c. In this way, for each Monte Carlo replication, (there were 1000) the distribution of the four nucleotides at locus i across the k genes was identical to the observed distribution.\
+	d. However, because the sampling was done independently at each locus, in the limit, the nucleotides at any two loci are independent of each other, and the MI should be 0 or close to 0 for each of the 1000 replications.\
+\
+6. These 1000, random 51 x 51 MI matrices, can then be used as input to a hierarchical clustering program. The hierarchical clustering program clusters the 51 loci (-40 to +10 re: TSS) based on their mutual information content. The dendrograms that are produced represent purely chance occurrences of, for example, locus i and locus j being in the same cluster. If locus i and j show up in the same cluster, then it means that in some sense they go together because of their mutual information relations.\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf6 Thursday, June 21, 2018 at 3:21:05 PM\cf3 \
+\
+###****  
+\b \cf6 permuted.neg.proms.area[[a]][[b]][j ,k ]  This contains the random promoter sequences from -40 to +10 TSS
+\b0 \cf3 \
+     # a = brain area\
+     # b = random replication number 1:1000\
+     # j = gene (row)\
+     # k = promoter locus -40 to +10 TSS\
+\
+save(permuted.neg.proms.area, file = '
+\b \cf6 random_promoters_neg_minus40_plus10_TSS.txt
+\b0 \cf3 ',\
+     ascii=TRUE)\
+\
+\
+permuted.neg.proms.area[[im]]    1000 matrices per brain area each 16 x 55\
+\
+\
+\
+\cf6 Sunday, June 24, 2018 at 10:11:03 AM\cf3 \
+The 51 x 51 Mutual Information matrices based on the permuted base sequences.\
+1000 matrices for each brain area.\
+rand.MI.matrix.pos\
+rand.MI.matrix.neg\
+\
+Check to make sure that the permutation procedure permuted independently at each locus from -40 to + 10\
+> prop.table(table(unlist(lapply(permuted.proms.pos[[1]][mc.range], function(x,mc.range) x[,10], mc.range))))\
+\
+      A       C       G       T \
+0.18885 0.32198 0.26625 0.22291 \
+> prop.table(table(near.TSS.prom$pos[[1]][,10]))\
+\
+      A       C       G       T \
+0.18885 0.32198 0.26625 0.22291 \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf10 Monday, June 25, 2018 at 2:47:31 PM\cf3 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\b \cf3 Positive subset
+\b0 \
+cophenetic correlations between pairs of dendrograms across brain areas (all are significant)\
+\
+           Prefrontal Cerebellum Temporal Pons\
+Prefrontal         NA         NA       NA   NA\
+Cerebellum      0.487         NA       NA   NA\
+Temporal        0.627      0.639       NA   NA\
+Pons            0.624      0.725    0.712   NA\
+\
+
+\b Negative subset
+\b0 \
+\
+           Prefrontal Cerebellum Temporal Pons\
+Prefrontal         NA         NA       NA   NA\
+Cerebellum      0.130         NA       NA   NA\
+Temporal        0.090      0.013       NA   NA\
+Pons            0.066     -0.002    0.014   NA\
+\
+This says that the dendrograms across brain areas for the positive subset, are much more similar than those for the negative subset. \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf6 Wednesday, June 27, 2018 at 7:20:57 AM\cf3 \
+\
+The graph <MI_relative_loci_posVneg.pdf> shows three things:\
+1) On average MI for the negative subset is higher than MI for the positive subset\
+2) There is some evidence that both upstream and downstream from a target promoter locus, the mutual information falls with distance, but shows a slight but consistent uptick at the 6th base away on both sides from the target locus. This would be at the heptameric base relative to the target. This could indicate that for a given hepatamer site in the promoter region, the 7th base upstream from the target locus is more likely to be related to the target locus than the immediately surrounding loci.\
+3) There is some indication that for both subsets, the MI is slightly higher 1 bp downstream from the target than 1 bp upstream from the target.\
+\
+\cf6 Thursday, June 28, 2018 at 1:17:44 PM\cf3 \
+\
+I saved out the 1000 matrices per brain area per valence so that I would not have to regenerate them.\
+  \cf6 save(rand.MI.matrix.pos,file="rand.MI.matrix.pos.Rdata",ascii=FALSE)\cf3  \
+\
+\
+According to FitzGerald et al (2006), RNA polymerase prefers an A nucleotide at position +1 relative to the TSS.\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf10 Friday, June 29, 2018 at 10:50:56 AM\cf3 \
+\
+The graph <CA_dinucleotide_proportion_re_TSS.pdf> shows that both for positive and negative subsets, there is a spike in the proportion of CA dinucleotides with C at -1 and A at +1.  \
+\
+I did another promoter sequence query for entrez gene "51827" for 1000 bases upstream and 600 bases downstream. It returned\
+\
+coding_gene_flank  - upstream\
+TGTGATCTCGGCTCTCCGCAACCTCCGCCTCCCGAGTTCAACCTCGGCTCTCCTGCTTCAGCCTCCTGAGTAGCTGGCATTACAGGCATATGCCACCACACCTTGCTAATTTTGTATTTTTAGTAGAGACGGGTTTCTCCATGTTGGTCAGGCTGATCTTGATCTCCCGACCTCAGGTGATCCGACTGCCTCAGTCTCCCAAAGTGCTGGGATTATAGGCATGAGCCACCGTATCCAGCCATTTTTAAATTTTTTTGTAGAGATGAGGTCTTGCTATTACCCCTGCTGGTCTCAAATTCCTGGGCTCAAGGGATCTTCCTGCCTCAGCCTCCCATAATGCTAGGATTACAGGTGTGAGCCATCGTACCTAGCTGAAAGTTTAGTTCTTTTTAGGTAGATCAGAGATAGCTTATCTAAAAAGATGACATTTCACCTAATTCATATTCCAATAGCAAAATCCACTGAGCTTATTGAATGTTATGTCAAGCATTCTCACAGTTTATCTCATTCAGTTCAAACCACTTTTCAGGCCTGCTCTCAGCCAGGCCTAGTGCTGGGGGCACAAAGGTAAATCAAGACGAACATCAGCCGGGCACAGTTGGCTCACACCTGTAATCCCAGCATTTTGGGTGGCTAAGGCAGGAGGATCACTTGAGCCCAGGAGTTTGAGACCATGCTGAGCAACATGGAAAAACCTTGTCTCTATTAAAGAATCAAAAAAATTAGCTGAGTGGTGATGCACACCTGTAGTCCCAGCTACTCTGGCCAGGGAGGGACTGAGGGGGAAGGATTGCTTGATCCCTAAAGATGGAGGCTACAGTGAGCCTGGGCAACAAAGCAAGACACCCTCAAAAAAAAAAAAAAAAAAACAAGCATCTGTCTTCAAGCTTAGAGTCTCCCACGGGAGACAGACACATTAAACAGGCTAAATGGTGCAGTCTGGTCAGTGCTATTTATAATTTAGGAACCTTACATATTATATCCCTACTCTAACCTGTTA\
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                entrezgene "51287" \
+\
+coding_gene_flank  - downstream\
+                                                                                                                                                                                                                                                                                                                                                                                                                GACCCCAAACCACCTATCCCCAGTAGATGGCCCTGCCAAGACCAGCACCCAGCAAGATTATAGAGGAAGAAATCCTAAATGCTGGTGTGGGAGGTCTAAAACATGGGGAGAGTTTTTGGATCTGGAGTTGAGAGCCATGGGTTTGGACATGACTGGCACAAACAGCTGTCATATGTTCATGGTCAGATGTCATACATTCTCAGCTGTCTTGTTCCACCAGTATTTACCAGGAAAACAAAGAATGTGTTAAGGGATGCTCCCCCACCCCACATCTTAAGTCAGTGTGCCAAGTACTGAGATGATTTTAGGGACATTTTATTTTAAATTAAATTTACAATCTAATGGTAAATTGATTACCTAATTAGTGCCTTTCTCTTTCATCACTTGTTCTGGATGTTTCAATCAGTTTAGTGGAAGGAAAAATAAATGGGGAAACTTTTTATTCAAATATGTTTTTCTTTTGTTTTTTTGAGACAGGGTCTCTGTTGCCCAGGCTGGAGTGTGGTGGTGGAGTCAGGGCTCACTGCATCCTCAGTGGGCTCAGGCCATCCTCCCACCTCAGCCTCTCAAGTAGCTGGAACCACAGGTGTGTGCATCACC\
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                entrezgene "51287"\
+\
+I put them together as temp.prom.seq.51827\
+TGTGATCTCGGCTCTCCGCAACCTCCG\cf10 CCTCCCGA\cf3 GTTCAACCTCGGCTCTCCTGCTTCAGCCTCCTGAGTAGCTGGCATTACAGGCATATGCCACCACACCTTGCTAATTTTGTATTTTTAGTAGAGACGGGTTTCTCCATGTTGGTCAGGCTGATCTTGATCTCCCGACCTCAGGTGATCCGACTGCCTCAGTCTCCCAAAGTGCTGGGATTATAGGCATGAGCCACCGTATCCAGCCATTTTTAAATTTTTTTGTAGAGATGAGGTCTTGCTATTACCCCTGCTGGTCTCAAATTCCTGGGCTCAAGGGATCTTCCTGCCTCAGCCTCCCATAATGCTAGGATTACAGGTGTGAGCCATCGTACCTAGCTGAAAGTTTAGTTCTTTTTAGGTAGATCAGAGATAGCTTATCTAAAAAGATGACATTTCACCTAATTCATATTCCAATAGCAAAATCCACTGAGCTTATTGAATGTTATGTCAAGCATTCTCACAGTTTATCTCATTCAGTTCAAACCACTTTTCAGGCCTGCTCTCAGCCAGGCCTAGTGCTGGGGGCACAAAGGTAAATCAAGACGAACATCAGCCGGGCACAGTTGGCTCACACCTGTAATCCCAGCATTTTGGGTGGCTAAGGCAGGAGGATCACTTGAGCCCAGGAGTTTGAGACCATGCTGAGCAACATGGAAAAACCTTGTCTCTATTAAAGAATCAAAAAAATTAGCTGAGTGGTGATGCACACCTGTAGTCCCAGCTACTCTGGCCAGGGAGGGACTGAGGGGGAAGGATTGCTTGATCCCTAAAGATGGAGGCTACAGTGAGCCTGGGCAACAAAGCAAGACACCCTCAAAAAAAAAAAAAAAAAAACAAGCATCTGTCTTCAAGCTTAGAGTCTCCCACGGGAGACAGACACATTAAACAGGCTAAATGGTGCAGTCTGGTCAGTGCTATTTATAATTTAGGAACCTTACATATTATATCCCTACTCTAACCTGTTAGACCCCAAACCACCTATCCCCAGTAGATGGCCCTGCCAAGACCAGCACCCAGCAAGATTATAGAGGAAGAAATCCTAAATGCTGGTGTGGGAGGTCTAAAACATGGGGAGAGTTTTTGGATCTGGAGTTGAGAGCCATGGGTTTGGACATGACTGGCACAAACAGCTGTCATATGTTCATGGTCAGATGTCATACATTCTCAGCTGTCTTGTTCCACCAGTATTTACCAGGAAAACAAAGAATGTGTTAAGGGATGCTCCCCCACCCCACATCTTAAGTCAGTGTGCCAAGTACTGAGATGATTTTAGGGACATTTTATTTTAAATTAAATTTACAATCTAATGGTAAATTGATTACCTAATTAGTGCCTTTCTCTTTCATCACTTGTTCTGGATGTTTCAATCAGTTTAGTGGAAGGAAAAATAAATGGGGAAACTTTTTATTCAAATATGTTTTTCTTTTGTTTTTTTGAGACAGGGTCTCTGTTGCCCAGGCTGGAGTGTGGTGGTGGAGTCAGGGCTCACTGCATCCTCAGTGGGCTCAGGCCATCCTCCCACCTCAGCCTCTCAAGTAGCTGGAACCACAGGTGTGTGCATCACC\
+\
+My original sequence for 51827 that was used in all of the analyses was:\
+\
+>>_+1_id_51287_pf\
+\cf10 CCTCCCGA\cf3 GTTCAACCTCGGCTCTCCTGCTTCAGCCTCCTGAGTAGCTGGCATTACAGGCATATGCCACCACACCTTGCTAATTTTGTATTTTTAGTAGAGACGGGTTTCTCCATGTTGGTCAGGCTGATCTTGATCTCCCGACCTCAGGTGATCCGACTGCCTCAGTCTCCCAAAGTGCTGGGATTATAGGCATGAGCCACCGTATCCAGCCATTTTTAAATTTTTTTGTAGAGATGAGGTCTTGCTATTACCCCTGCTGGTCTCAAATTCCTGGGCTCAAGGGATCTTCCTGCCTCAGCCTCCCATAATGCTAGGATTACAGGTGTGAGCCATCGTACCTAGCTGAAAGTTTAGTTCTTTTTAGGTAGATCAGAGATAGCTTATCTAAAAAGATGACATTTCACCTAATTCATATTCCAATAGCAAAATCCACTGAGCTTATTGAATGTTATGTCAAGCATTCTCACAGTTTATCTCATTCAGTTCAAACCACTTTTCAGGCCTGCTCTCAGCCAGGCCTAGTGCTGGGGGCACAAAGGTAAATCAAGACGAACATCAGCCGGGCACAGTTGGCTCACACCTGTAATCCCAGCATTTTGGGTGGCTAAGGCAGGAGGATCACTTGAGCCCAGGAGTTTGAGACCATGCTGAGCAACATGGAAAAACCTTGTCTCTATTAAAGAATCAAAAAAATTAGCTGAGTGGTGATGCACACCTGTAGTCCCAGCTACTCTGGCCAGGGAGGGACTGAGGGGGAAGGATTGCTTGATCCCTAAAGATGGAGGCTACAGTGAGCCTGGGCAACAAAGCAAGACACCCTCAAAAAAAAAAAAAAAAAAACAAGCATCTGTCTTCAAGCTTAGAGTCTCCCACGGGAGACAGACACATTAAACAGGCTAAATGGTGCAGTCTGGTCAGTGCTATTTATAATTTAGGAACCTTACATATTATATCCCTACTCTAACCTGTTAATGTTCTATAGACTCCCCATCCCCAGGGACCCCAAACCACCTATCCCCAGTAGATGGCCCTGCCAAGACCAGCACCCAGCAAGATTATAGAGGAAGAAATCCTAAATGCTGGTGTGGGAGGTCTAAAACATGGGGAGAGTTTTTGGATCTGGAGTTGAGAGCCATGGGTTTGGACATGACTGGCACAAACAGCTGTCATATGTTCATGGTCAGATGTCATACATTCTCAGCTGTCTTGTTCCACCAGTATTTACCAGGAAAACAAAGAATGTGTTAAGGGATGCTCCCCCACCCCACATCTTAAGTCAGTGTGCCAAGTACTGAGATGATTTTAGGGACATTTTATTTTAAATTAAATTTACAATCTAATGGTAAATTGATTACCTAATTAGTGCCTTTCTCTTTCATCACTTGTTCTGGATGTTTCAATCAGTTTAGTGGAAGGAAAAATAAATGGGGAAACTTTTTATTCAAATATGTTTTTCTTTTGTTTTTTTGAGACAGGGTCTCTGTTGCCCAGGCTGGAGTGTGGTGGTGGAGTCAGGGCTCACTGCATCCTCAGTGGGCTCAGGCCATCCTCCCACCTCAGCCTCTCAAGTAGCTGGAACCACAGGTGTGTGCATCACC\
+\
+Note that the first 8 bases in my original sequence, my.seq, occur starting at position 28 in the new sequence, temp.prom.seq.51827. Because both sequences are exactly 1600 bases long, somewhere in the new sequence, a total of 27 bases must be missing.\
+\
+Both sequences end identically with GCATCACC.\
+\
+The long string of As "AAAAAAAAAAAAAAAAAAA" starts at 824 in my original sequence.\
+It starts at position 851 in the new sequence: a difference of exactly 27 bases, so presumably up to that point, the sequences agree with the exception of the extra 27 bases at the beginning of the new sequence.\
+\
+The sequence "GACCCCAAACC" starts at position 1001 in the new sequence.\
+That sequence "GACCCCAAACC" also starts exactly at position 1001 in my original sequence. This would appear to indicate that the downstream 600 bases are probably identical in the two sequences.\
+\
+I verified that they are. The difference must lie in the upstream part.\
+\
+The bases in both sequences immediately preceding position 1001 are NOT the same.\
+My original sequence preceding position 1001 was "TCCCCAGG"\
+This does not occur in the new sequence.\
+\
+Conversely, the sequence "ACCTGTTA" that immediately precedes position 1001 in the new sequence and starts at position 993 in the new promoter sequence, occurs at position 966 in my original sequence, a difference of exactly 27 bases.\
+\
+So what has happened is that the extra 27 bases at the beginning g of the new sequence result in a loss of 27 bases from the upstream 1000 bases in the new sequence. It appears that the new query used a different TSS that the old query.\
+\
+But if this were true, then the 27 bases that end the original 1000 upstream bases should have appeared at the beginning of the new 600 base pair downstream sequence. Here are those bases:\
+\
+ATGTTCTATAGACTCCCCATCCCCAGG\
+\
+The 600 bp downstream sequence from the new query does not start with these bases. They have simply disappeared.\
+\
+\
+I located the start initial part of my original sequence and the end of that sequence in the NCBI fasta sequence and this is what resulted in\
+\
+ncbi.51287 <- CCTCCCGAGTTCAACCTCGGCTCTCCTGCTTCAGCCTCCTGAGTAGCTGGCATTACAGGCATATGCCACCACACCTTGCTAATTTTGTATTTTTAGTAGAGACGGGTTTCTCCATGTTGGTCAGGCTGATCTTGATCTCCCGACCTCAGGTGATCCGACTGCCTCAGTCTCCCAAAGTGCTGGGATTATAGGCATGAGCCACCGTATCCAGCCATTTTTAAATTTTTTTGTAGAGATGAGGTCTTGCTATTACCCCTGCTGGTCTCAAATTCCTGGGCTCAAGGGATCTTCCTGCCTCAGCCTCCCATAATGCTAGGATTACAGGTGTGAGCCATCGTACCTAGCTGAAAGTTTAGTTCTTTTTAGGTAGATCAGAGATAGCTTATCTAAAAAGATGACATTTCACCTAATTCATATTCCAATAGCAAAATCCACTGAGCTTATTGAATGTTATGTCAAGCATTCTCACAGTTTATCTCATTCAGTTCAAACCACTTTTCAGGCCTGCTCTCAGCCAGGCCTAGTGCTGGGGGCACAAAGGTAAATCAAGACGAACATCAGCCGGGCACAGTTGGCTCACACCTGTAATCCCAGCATTTTGGGTGGCTAAGGCAGGAGGATCACTTGAGCCCAGGAGTTTGAGACCATGCTGAGCAACATGGAAAAACCTTGTCTCTATTAAAGAATCAAAAAAATTAGCTGAGTGGTGATGCACACCTGTAGTCCCAGCTACTCTGGCCAGGGAGGGACTGAGGGGGAAGGATTGCTTGATCCCTAAAGATGGAGGCTACAGTGAGCCTGGGCAACAAAGCAAGACACCCTCAAAAAAAAAAAAAAAAAAACAAGCATCTGTCTTCAAGCTTAGAGTCTCCCACGGGAGACAGACACATTAAACAGGCTAAATGGTGCAGTCTGGTCAGTGCTATTTATAATTTAGGAACCTTACATATTATATCCCTACTCTAACCTGTTAATGTTCTATAGACTCCCCATCCCCAGGATGTCAACCTCAGTCCCTCAAGGCCATACCTGGACCCAACGGGTGAAGAAAGACGATGAGGAGGAGGACCCGCTGGACCAGCTGATCTCCCGCTCTGGCTGTGCTGCCTCCCACTTTGCAGTGCAGGAGTGCATGGCCCAGCACCAGGACTGGCGGCAATGCCAGCCACAGGTGCAGGCGTTCAAGGATTGCATGAGTGAACAGCAGGCGAGGCGGCAAGAGGAGCTGCAGAGGAGGCAAGAACAAGCCGGTGCCCACCACTGAGACCCCAAACCACCTATCCCCAGTAGATGGCCCTGCCAAGACCAGCACCCAGCAAGATTATAGAGGAAGAAATCCTAAATGCTGGTGTGGGAGGTCTAAAACATGGGGAGAGTTTTTGGATCTGGAGTTGAGAGCCATGGGTTTGGACATGACTGGCACAAACAGCTGTCATATGTTCATGGTCAGATGTCATACATTCTCAGCTGTCTTGTTCCACCAGTATTTACCAGGAAAACAAAGAATGTGTTAAGGGATGCTCCCCCACCCCACATCTTAAGTCAGTGTGCCAAGTACTGAGATGATTTTAGGGACATTTTATTTTAAATTAAATTTACAATCTAATGGTAAATTGATTACCTAATTAGTGCCTTTCTCTTTCATCACTTGTTCTGGATGTTTCAATCAGTTTAGTGGAAGGAAAAATAAATGGGGAAACTTTTTATTCAAATATGTTTTTCTTTTGTTTTTTTGAGACAGGGTCTCTGTTGCCCAGGCTGGAGTGTGGTGGTGGAGTCAGGGCTCACTGCATCCTCAGTGGGCTCAGGCCATCCTCCCACCTCAGCCTCTCAAGTAGCTGGAACCACAGGTGTGTGCATCACC\
+\
+The length of this sequence is 1864 bases rather than 1600 bases. There must be an additional 264 bases in this NCBI fasta sequence.\
+\
+The sequence that occurs just before position 1001 in my original sequence is "ATCCCCAGG". This occurs at position 992. That exactly coincides with my original sequence.\
+\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx960
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx1920
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx3840
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx4800
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx6720
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx7680
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 A\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 T\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 C\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 C\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 C\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 C\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 A\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 G\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 G\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx960
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx1920
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx3840
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx4800
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx6720
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx7680
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 992\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 993\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 994\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 995\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 996\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 997\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 998\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 999\cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 1000\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx960
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx1920
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx3840
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx4800
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx6720
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx7680
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx960
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx1920
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx2880
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx3840
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx4800
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx5760
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx6720
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx7680
+\clvertalc \clshdrawnil \clbrdrt\brdrs\brdrw20\brdrcf8 \clbrdrl\brdrs\brdrw20\brdrcf8 \clbrdrb\brdrs\brdrw20\brdrcf8 \clbrdrr\brdrs\brdrw20\brdrcf8 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell 
+\pard\intbl\itap1\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \cell \lastrow\row
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc\partightenfactor0
+\cf3 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 \
+The sequence that occurs at position 1001 in my sequence occurs at 1265 in the ncbi.51287 occurs at 1265. The additional 264 bases in the ncbi.51287 are in between my upstream 1000 and my downstream 600.\
+\
+The extra inserted sequence in the ncbi fasta between my position 1000 and 1001 is 264 bases long, and it is:\
+\
+ATGTCAACCTCAGTCCCTCAAGGCCATACCTGGACCCAACGGGTGAAGAAAGACGATGAGGAGGAGGACCCGCTGGACCAGCTGATCTCCCGCTCTGGCTGTGCTGCCTCCCACTTTGCAGTGCAGGAGTGCATGGCCCAGCACCAGGACTGGCGGCAATGCCAGCCACAGGTGCAGGCGTTCAAGGATTGCATGAGTGAACAGCAGGCGAGGCGGCAAGAGGAGCTGCAGAGGAGGCAAGAACAAGCCGGTGCCCACCACTGA\
+\
+Ensembl\
+start		end			tss\
+73872667 	73876988 	73876988\
+			73876988 	73876674\
+			73876988 	73874475\
+			73876988 	73876843\
+			73876988 	73876566\
+			73876988 	73876901\
+\
+NCBI\
+start		end\
+73876901	73870258\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf10 Saturday, June 30, 2018 at 2:21:34 PM\cf3 \
+\
+Checking agreement between NCBI gene sequences and my original fasta sequences: <comt_correlations_ontology_general_v7.Rnw>\
+entrez gene 8555\
+\
+The sequence GGTGGGGAGG is found at 1178 in the ncbi.8555. \
+That same sequence, GGTGGGGAGG, is found at 1184 in my original fasta my.fasta.8555. This would imply that my sequence starts 6 bases before the ncbi.8555 sequence.\
+\
+Starting at the 7th base in my sequence, the string TGCTTGGCCT is found. This should be the beginning of the ncbi sequence. It is not. That sequence begins with GTACTTAGCC.\
+That string does no appear in my sequence my.8555.\
+\
+The string CCATCAG appears starting at position 1001 in my.8555. Thus, it must be the start of the downstream 600 bases.\
+That string appears starting at 992 in the ncbi.8555.\
+\
+The sequence ACCCCCTGA starts at 1001 in ncbi.8555. I verified that from that position to the end of the ncbi.8555 sequence is 600 bases.\
+\
+So, once again, it is in the upstream 1000 bases that the two sequences differ.\
+\
+The string new.query.8555 contains the 1600 bp sequence from a new query using \
+\
+biomaRt::getSequence(id = '8555',\
+                                        type="entrezgene",\
+                                        seqType="coding_gene_flank",\
+                                        upstream=1000,\
+                                        mart=ensembl)\
+\
+\
+The string CCTTTTTTG starts at position 512 in my.seq.\
+This same string, CCTTTTTTG, appears at position 527 in the new.query.8555\
+It does not appear at all in ncbi.8555.\
+\
+\
+The string that appears at 1001 in my.8555 appears at 992 in there ncbi.8555 and it appears at 1115 in new.query.8555.\
+\
+Thus, there must be 1114 extra bases in the new query around position 1001.\
+\
+The string ACCTGCGGGGAA starts at position 1001 (start of downstream 600) in the new query new.query.8555. \
+That string does no appear in my.8555 nor in ncbi.8555.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf6 Wednesday, July 4, 2018 at 9:17:42 AM\cf3 \
+As of July 4, 2018, all fasta files are on the positive (+) strand\
+\
+\
+\
+\cf6 Thursday, July 5, 2018 at 11:06:37 AM\cf3 \
+\
+Consider this for getting the promoter region when there are more than one transcription start sites:\
+\
+5\'92                                                                                                            3\'92\
+      tsx1                tsx2                          tsx3\
+        |                      |                                |\
+  <\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97  | promoter\
+\
+This is equivalent to using the TSS wit the largest value for position.\
+\
+\
+Use tsx3 as the TSS, Use the most 3\'92 of the TSSs. In this way, the other TSSs are included in the promoter region.\
+\
+[See lines around 158 in <update_promoters_v2.Rnw> for the start of this process.\
+\
+\
+\cf6 Friday, July 6, 2018 at 10:49:07 AM\cf3 \
+\
+19957498\
+\
+651\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf15 Saturday, July 7, 2018 at 2:45:16 PM\cf3 \
+\
+[1]  33481870  33481897  33481870 122526813 122526813\
+  [6] 122526813 118739846 118727113 118739846  25684203\
+ [11]  25683376  25684203  25684203  25684203  25684203\
+\
+[1]  33481870  33481897  33481870 122526813 122526813\
+  [6] 122526813 118739846 118727113 118739846  25684203\
+ [11]  25683376  25684203  25684203  25684203  25684203\
+\
+\
+gn <- sort(GenomicFeatures::genes(txdb))\
+\
+\
+gn\
+GRanges object with 23056 ranges and 1 metadata column:\
+                  seqnames        ranges strand |\
+                     <Rle>     <IRanges>  <Rle> |\
+  100287102           chr1   \cf16 11874-14409 \cf3      + |\
+      79501           chr1   69091-70008      + |\
+     643837           chr1 762971-794826      + |\
+     148398           chr1 860530-879961      + |\
+     339451           chr1 895967-901099      + |\
+        ...            ...           ...    ... .\
+     283788 chrUn_gl000219   \cf17 53809-99642\cf3       - |\
+  100507412 chrUn_gl000220  97129-126696      + |\
+     728410 chrUn_gl000228  79448-113887      + |\
+  100653046 chrUn_gl000228   86060-90745      + |\
+  100288687 chrUn_gl000228 112605-124171      + |\
+                gene_id\
+            <character>\
+  100287102   100287102\
+      79501       79501\
+     643837      643837\
+     148398      148398\
+     339451      339451\
+        ...         ...\
+     283788      283788\
+  100507412   100507412\
+     728410      728410\
+  100653046   100653046\
+  100288687   100288687\
+  -------\
+  seqinfo: 93 sequences (1 circular) from hg19 genome\
+\
+\
+up1000 <- flank(gn, width=1000)    \
+\
+\
+up1000\
+GRanges object with 23056 ranges and 1 metadata column:\
+                  seqnames        ranges strand |\
+                     <Rle>     <IRanges>  <Rle> |\
+  100287102           chr1   \cf16 10874-11873\cf3       + |       # gets the upstream 5\'92 to 3\'92 1000 bases (-1000 to 0) re: TSS for strand +\
+      79501           chr1   68091-69090      + |\
+     643837           chr1 761971-762970      + |\
+     148398           chr1 859530-860529      + |\
+     339451           chr1 894967-895966      + |\
+        ...            ...           ...    ... .\
+     283788 chrUn_gl000219  \cf17 99643-100642 \cf3      - |     # gets the downstream 5\'92 to 3\'92 1000 bases from the end of the gene for strand -\
+  100507412 chrUn_gl000220   96129-97128      + |\
+     728410 chrUn_gl000228   78448-79447      + |\
+  100653046 chrUn_gl000228   85060-86059      + |\
+  100288687 chrUn_gl000228 111605-112604      + |\
+                gene_id\
+            <character>\
+  100287102   100287102\
+      79501       79501\
+     643837      643837\
+     148398      148398\
+     339451      339451\
+        ...         ...\
+     283788      283788\
+  100507412   100507412\
+     728410      728410\
+  100653046   100653046\
+  100288687   100288687\
+  -------\
+  seqinfo: 93 sequences (1 circular) from hg19 genome\
+\
+\
+down600 <- flank(gn, width=600,both=TRUE)\
+down600\
+GRanges object with 23056 ranges and 1 metadata column:\
+                  seqnames        ranges strand |\
+                     <Rle>     <IRanges>  <Rle> |\
+  100287102           chr1   \cf16 11274-12473      + |            up and downstream 600\cf3 \
+      79501           chr1   68491-69690      + |\
+     643837           chr1 762371-763570      + |\
+     148398           chr1 859930-861129      + |\
+     339451           chr1 895367-896566      + |\
+        ...            ...           ...    ... .\
+     283788 chrUn_gl000219  99043-100242      - |\
+  100507412 chrUn_gl000220   96529-97728      + |\
+     728410 chrUn_gl000228   78848-80047      + |\
+  100653046 chrUn_gl000228   85460-86659      + |\
+  100288687 chrUn_gl000228 112005-113204      + |\
+                gene_id\
+            <character>\
+  100287102   100287102\
+      79501       79501\
+     643837      643837\
+     148398      148398\
+     339451      339451\
+        ...         ...\
+     283788      283788\
+  100507412   100507412\
+     728410      728410\
+  100653046   100653046\
+  100288687   100288687\
+  -------\
+  seqinfo: 93 sequences (1 circular) from hg19 genome\
+\
+\
+plus.splt <- flank(down600, start=FALSE, width=-600,both=FALSE)\
+\
+plus.splt\
+GRanges object with 23056 ranges and 1 metadata column:\
+                  seqnames        ranges strand |\
+                     <Rle>     <IRanges>  <Rle> |\
+  100287102           chr1   \cf16 11874-12473 \cf3      + |            gives TSS + 600 for strand +\
+      79501           chr1   69091-69690      + |\
+     643837           chr1 762971-763570      + |\
+     148398           chr1 860530-861129      + |\
+     339451           chr1 895967-896566      + |\
+        ...            ...           ...    ... .\
+     283788 chrUn_gl000219   \cf18 99043-99642  \cf3     - |        gives END (of gene) -600 bp\
+  100507412 chrUn_gl000220   97129-97728      + |\
+     728410 chrUn_gl000228   79448-80047      + |\
+  100653046 chrUn_gl000228   86060-86659      + |\
+  100288687 chrUn_gl000228 112605-113204      + |\
+                gene_id\
+            <character>\
+  100287102   100287102\
+      79501       79501\
+     643837      643837\
+     148398      148398\
+     339451      339451\
+        ...         ...\
+     283788      283788\
+  100507412   100507412\
+     728410      728410\
+  100653046   100653046\
+  100288687   100288687\
+  -------\
+  seqinfo: 93 sequences (1 circular) from hg19 genome\
+\
+\cf15 Monday, July 9, 2018 at 8:09:05 AM\cf3 \
+\
+When plotting the facet plots of PWM by nucleotide:\
+Cerebellum: pos looks just like all\
+Temporal: all looks like Cerebellum\
+Pons: all looks like other brain areas\
+\
+\
+\cf15 Tuesday, July 10, 2018 at 1:43:30 PM\cf3 \
+The plots:\
+loci_highest_10_ntide_pos.pdf  and the neg version as well as\
+loci_highest_10_ntide_posVneg_po.pdf  and pf, cb and tm\
+\
+Show the following either comparing across brain areas within corr valence or across correlation valence within brain areas.\
+Each nucleotide\'92s percentage at each locus from -40 to +10 TSS was computed and these percentages were ranked bringing along the loci associated with those ranks. The top 10 percentages for each nucleotide were then extracted with their associated loci, and each of these 10 loci was marked along the range from -40 to + 10 TSS with the corresponding nucleotide. This was done for all 4 nucleotides.\
+\
+Several things are evident:\
+1) In almost all conditions a C at TSS (0) and an A at +1 is evident. These would be part of the initiator element.\
+2) In several of the brain regions, there is a region from about -20 to 0 for the positive subset genes in which almost exclusively C or G nucleotides are found. In this same region for the negative subset, A and T are mixed in as well.\
+3) There is some evidence that the presence of a TATA box is more common among the positive than the negative subset.\
+\
+\
+The file initiator_elem_counts_all.pdf/tex Shows how many genes of the total used in the COMT analysis had three different consensus Inr sequences. You can calculate the probability of having such a sequence by chance (assuming pA = pC = pG = pT = 0.25) as follows:\
+\
+[C/G/T]   [A/T]     C          A        [C/G/T]   [A/T]\
+0.75	x 0.5	x0.25	x0.25	x0.75	x0.5 = 0.00879 \
+number expected by chance = 0.00879 x 15998 genes = ~ 141 cf 551\
+\
+[C/T]   [C/T]     	A    		[A/C/G/T]      [A/T]     [C/T]     [C/T]\
+0.5		x0.5	x0.25    x 1.0            x 0.5     x0.5     x0.5  = 0.0078\
+number expected by chance = 0.0078 x 15998 genes = ~ 125 cf. 447\
+\
+[C/T]   [A/G]\
+ 0.5   x  0.5  = 0.25\
+number expected by chance = 0.25 x 15998 genes = ~ 4000 cf. 7721\
+\
+Given 551 for Inr1 you would expect 551 X (0.0078/0.00879) = ~ 488 cf 447\
+\
+\cf15 Wednesday, July 11, 2018 at 11:27:09 AM\cf3 \
+\
+I tried using the frequencies of the three consensus Inrs with brain area by corr valence in chi-square tests. None were significant.\
+\
+All three Inr\
+\
+, , pos\
+\
+     		Inre1 		Inr2 		Inr3\
+pf   		9   			10  			534\
+cb   	10    		8  			645\
+tm   	18   		11  			683\
+po   	19    		9  			710\
+\
+, , neg\
+\
+     		Inre1 		Inr2 		Inr3\
+pf    		5    		3  			304\
+cb    		5    		5  			186\
+tm    		5    		2  			160\
+po    		4    		1  			120\
+\
+ mantelhaen.test(x)\
+\
+Cochran-Mantel-Haenszel test\
+\
+data:  mtx3D\
+Cochran-Mantel-Haenszel M^2 = 4.7461888, df = 6,\
+p-value = 0.5767538\
+\
+Inr1 and Inr2\
+\
+, , pos\
+\
+     		Inre1 		Inr2 \
+pf   		9   			10\
+cb   	10    		8\
+tm   	18   		11\
+po   	19    		9\
+\
+, , neg\
+\
+     		Inre1 		Inr2\
+pf    		5    		3\
+cb    		5    		5\
+tm    		5    		2\
+po    		4    		1\
+\
+mantelhaen.test(x)\
+\
+	Cochran-Mantel-Haenszel test\
+\
+data:  mtx3D\
+Cochran-Mantel-Haenszel M^2 = 3.0178689, df = 3,\
+p-value = 0.3888783\
+\
+In other words, the presence of the Inr motifs around the TSS is independent of brain area and correlation valence.\
+\
+\
+\cf15 Sunday, July 15, 2018 at 10:31:10 AM\
+\cf3 \
+In the file <dinucleotides _all_pairs_near_TSS.pdf>, the dinucleotide content at positions -1 and + 1 TSS is shown for all comt genes, the positive subset and the negative subset.\
+\
+Here is the table for all comt genes (~16,000). The nucleotide at -1 is shown as rows and the nucleotide at + 1 is shown as columns.\
+\
+          A     		C     		G     		T   		Sum\
+  A     514   		394   		972   		228  	2108\
+  C    \cb19 3300 \cb1  		1255  		2018   		596  	\cb19 7169\cb1 \
+  G     976   		808  		1355   		271  	3410\
+  T     948   		646  		1455   		262  	3311\
+  Sum  5738  	3103  		\cb19 5800\cb1   		1357 	15998\
+\
+Notice:\
+\
+1. The most frequent dinucleotide at -1, +1 is CA.\
+2. C is the most frequent nucleotide at -1.\
+3. Instead of C being the most frequent nucleotide at +1, G is actually the most frequent.\
+\
+This implies that the two positions are not independent. If there is a C at -1, then instead of G bering the most likely nucleotide at +1, A is actually more frequent.\
+\
+A chisquare.test confirms this for all three conditions: All, Pos and Neg\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\b \cf3 All COMT Genes: (shown above) pf
+\b0 \
+\
+chisq.test(dinucl.nearTSS[[1]][[1]][1:4,1:4])\
+\
+	Pearson's Chi-squared test\
+\
+data:  dinucl.nearTSS[[1]][[1]][1:4, 1:4]\
+X-squared = 696.49531, df = 9, p-value <\
+0.00000000000000022204\
+\
+
+\b Positive subset pf
+\b0 \
+\
+dinucl.nearTSS[[2]][[1]]\
+     \
+        A   C   G   T Sum\
+  A     8   7  20   5  40\
+  C    54  35  45   6 140\
+  G    15  11  38   6  70\
+  T    21  17  27   4  69\
+  Sum  98  70 130  21 319\
+\
+\
+chisq.test(dinucl.nearTSS[[2]][[1]][1:4,1:4])\
+\
+	Pearson's Chi-squared test\
+\
+data:  dinucl.nearTSS[[2]][[1]][1:4, 1:4]\
+X-squared = 19.007671, df = 9, p-value = 0.02512775\
+\
+
+\b Negative subset pf
+\b0 \
+\
+dinucl.nearTSS[[3]][[1]]\
+     \
+        A   C   G   T Sum\
+  A     2   2   6   1  11\
+  C    45   6  29   1  81\
+  G     7   6  18   2  33\
+  T     8  11  22   2  43\
+  Sum  62  25  75   6 168\
+\
+\
+chisq.test(dinucl.nearTSS[[3]][[1]][1:4,1:4])\
+\
+	Pearson's Chi-squared test\
+\
+data:  dinucl.nearTSS[[3]][[1]][1:4, 1:4]\
+X-squared = 27.138389, df = 9, p-value = 0.001326901\
+\
+To test for whether or not the dinucleotide patterns near TSS are different between Positive and Negative Subsets, I ran the Cochran-Matel-Haenszel Test\
+\
+mtx3D <- aperm(array(t(as.matrix(near.TSS.posVnerg.pf)),c(4,4,2)),c(2,1,3))\
+> mtx3D\
+, , 1              ##### Positive\
+\
+     [,1] [,2] [,3] [,4]            ##### Columns: +1 TSS, Rows: -1 TSS\
+[1,]    8    7   20    5\
+[2,]   54   35   45    6\
+[3,]   15   11   38    6\
+[4,]   21   17   27    4\
+\
+, , 2             ###### Negative\
+\
+     [,1] [,2] [,3] [,4]\
+[1,]    2    2    6    1\
+[2,]   45    6   29    1\
+[3,]    7    6   18    2\
+[4,]    8   11   22    2\
+\
+> mantelhaen.test(mtx3D)\
+\
+	Cochran-Mantel-Haenszel test\
+\
+data:  mtx3D\
+Cochran-Mantel-Haenszel M^2 = 35.208312, df = 9,\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf3 \cb20 p-value = 0.00005474671\
+\
+\cb21 I also put the data into long from then stabs and ftable and got the same result.\
+\
+Conclusion: In Prefrontal Cortex, the dinucleotide content at -1, +1 is not independent of the correlation valence. This could mean that the proportion of genes with the consensus Inr at -1,+1 differs by the valence of the correlation with COMT.\
+\
+Same result holds in Cerebellum:\
+\
+near.TSS.posVneg.cb\
+Pos\
+   A  C  G  T\
+A 11  8 19  4\
+C 67 38 42 10\
+G 23 28 35  8\
+T 23 18 35  6\
+Neg\
+A  1  2 10  2\
+C 19 11 17  4\
+G  9  6 12  2\
+T  4  5 11  1\
+\
+	Cochran-Mantel-Haenszel test\
+\
+data:  tab.temp\
+Cochran-Mantel-Haenszel M^2 = 22.07536, df = 9,\
+\cb20 p-value = 0.008643184\cb21 \
+\
+\
+#### Temp Cortex\
+\
+near.TSS.posVneg.tm\
+Pos\
+   A  C  G T\
+A  9 11 29 7\
+C 71 45 44 7\
+G 23 17 52 7\
+T 25 18 31 5\
+Neg\
+A  0  2  9 1\
+C 19  6 12 5\
+G  7  3 12 3\
+T  3  3  7 2\
+\
+	Cochran-Mantel-Haenszel test\
+\
+data:  tab.temp\
+Cochran-Mantel-Haenszel M^2 = 41.298534, df = 9,\
+\cb22 p-value = 0.000004413363\
+\
+\cb21 \
+#### Pons\
+Pos\
+   A  C  G  T\
+A 13 14 32  1\
+C 76 38 59 14\
+G 25 32 36  6\
+T 19 15 34  9\
+Neg\
+A  2  3  6  0\
+C 16  3 11  1\
+G  1  4  8  1\
+T  2  2  6  2\
+\
+	Cochran-Mantel-Haenszel test\
+\
+data:  tab.temp\
+Cochran-Mantel-Haenszel M^2 = 34.981267, df = 9,\
+\cb20 p-value = 0.00006003836\cb21 \
+\
+\cb1 \
+\cb21 In all four areas, the dinucleotide patterns at -1 and +1 are different depending on which set of genes determined by their  correlation valences.\
+\
+Look for consensus Inr at -1, +1 in all its forms : Y-R   [C/T][A/G]\
+\
+CA, CG, TA, TG\
+\
+
+\b CA:
+\b0 \
+Pos\
+                   Inr1a  Inr2b      Inr3c Number of Genes\
+Prefrontal Cortex 0 (0)  0 (0)  54 (16.9)              319\
+Cerebellum        0 (0)  0 (0)  67 (17.9)              375\
+Temporal Cortex   0 (0)  0 (0)  71 (17.7)              401\
+Pons              0 (0)  0 (0)    76 (18)              423\
+\
+\
+> num.Inr.neg.f\
+Neg\
+                   Inr1a  Inr2b      Inr3c Number of Genes\
+Prefrontal Cortex 0 (0)  0 (0)  45 (26.8)              168\
+Cerebellum        0 (0)  0 (0)  19 (16.4)              116\
+Temporal Cortex   0 (0)  0 (0)  19 (20.2)               94\
+Pons              0 (0)  0 (0)  16 (23.5)               68\
+\cb1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\b \cf3 CG:
+\b0 \
+Pos\
+                   Inr1a  Inr2b      Inr3c Number of Genes\
+Prefrontal Cortex 0 (0)  0 (0)  45 (14.1)              319\
+Cerebellum        0 (0)  0 (0)  42 (11.2)              375\
+Temporal Cortex   0 (0)  0 (0)    44 (11)              401\
+Pons              0 (0)  0 (0)  59 (13.9)              423\
+\
+Neg\
+                   Inr1a  Inr2b      Inr3c Number of Genes\
+Prefrontal Cortex 0 (0)  0 (0)  29 (17.3)              168\
+Cerebellum        0 (0)  0 (0)  17 (14.7)              116\
+Temporal Cortex   0 (0)  0 (0)  12 (12.8)               94\
+Pons              0 (0)  0 (0)  11 (16.2)               68\
+\
+\
+
+\b TA:
+\b0 \
+Pos\
+                   Inr1a  Inr2b     Inr3c Number of Genes\
+Prefrontal Cortex 0 (0)  0 (0)  21 (6.6)              319\
+Cerebellum        0 (0)  0 (0)  23 (6.1)              375\
+Temporal Cortex   0 (0)  0 (0)  25 (6.2)              401\
+Pons              0 (0)  0 (0)  19 (4.5)              423\
+\
+Neg\
+                   Inr1a  Inr2b    Inr3c Number of Genes\
+Prefrontal Cortex 0 (0)  0 (0)  8 (4.8)              168\
+Cerebellum        0 (0)  0 (0)  4 (3.4)              116\
+Temporal Cortex   0 (0)  0 (0)  3 (3.2)               94\
+Pons              0 (0)  0 (0)  2 (2.9)               68\
+\
+
+\b TG:
+\b0 \
+Pos\
+                   Inr1a  Inr2b     Inr3c Number of Genes\
+Prefrontal Cortex 0 (0)  0 (0)  27 (8.5)              319\
+Cerebellum        0 (0)  0 (0)  35 (9.3)              375\
+Temporal Cortex   0 (0)  0 (0)  31 (7.7)              401\
+Pons              0 (0)  0 (0)    34 (8)              423\
+\
+Neg\
+                   Inr1a  Inr2b      Inr3c Number of Genes\
+Prefrontal Cortex 0 (0)  0 (0)  22 (13.1)              168\
+Cerebellum        0 (0)  0 (0)   11 (9.5)              116\
+Temporal Cortex   0 (0)  0 (0)    7 (7.4)               94\
+Pons              0 (0)  0 (0)    6 (8.8)               68\
+\
+\
+\
+\
+\
+\
+\
+\
+  \
+}

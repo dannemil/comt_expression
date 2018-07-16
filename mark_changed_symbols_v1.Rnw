@@ -1,0 +1,644 @@
+{\bfseries {pre_post_recovery_missing_stats_v1.Rnw}}\\
+
+Program to generate tables pre- and post- preprocessing of the data on number of rows with missing observations on various variables and the number of rows with gene symbols that begin with "LOC." Additionally, some chromosomes were initiaslly listed as 'Un' for unknown.\\
+
+\documentclass[11pt]{article}
+\usepackage{graphicx, subfig}
+\usepackage{float}
+\pagenumbering{arabic}
+\usepackage{enumerate}
+\usepackage{Sweave}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{framed}
+\usepackage{longtable}
+\usepackage{tablefootnote}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{keep.source=TRUE} 
+
+\hspace{-1.5em}Gene Network\\
+COMT expression correlations in Four Brain Areas\\
+Fall, 2017\\
+
+
+
+<<echo=FALSE>>=
+
+library(base)
+library(knitr)
+library(openxlsx)
+library(xtable)
+library(magrittr)
+library(tables)
+library(plyr)
+library(scales)
+library(utils)
+# library(ggman)
+library(dplyr)
+library(biomaRt)
+library(stringr)
+library(curl)
+library(git2r)
+library(githubinstall)
+library(devtools)
+library('xml2')
+library(RCurl)
+library(XML)
+library(rentrez)
+library(data.table)
+library(pracma)
+library(SOAR)
+library(roxygen2)
+library(GlobalOptions)
+library(tidyr)
+
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> 469fa81b3f25475c97821be10c4cce70996c2313
+work.path <- c('/Volumes/Macintosh_HD_3/genetics/genenetwork2/')
+
+setwd(work.path)
+
+
+################ READ THIS LIST OF TO-BE SOURCED FUNCTIONS AND PROGRAMS IN #################
+sourced.Funcs <-matrix()
+
+fileConn<-file('sourced_functions_programs.txt')
+     sourced.Funcs <- 
+          readLines(con=fileConn)
+     temp.Funcs <- str_replace(sourced.Funcs,',','.R')
+          sourced.Funcs <- matrix(as.character(temp.Funcs),ncol=1)
+     temp2.Funcs <- paste(work.path,sourced.Funcs,sep='') 
+          sourced.Funcs <- matrix(as.character(temp2.Funcs),ncol=1)
+close(fileConn)
+
+sF <- seq_len(length(sourced.Funcs))
+sapply(sourced.Funcs[sF], function(x,sF) source(as.character(x)), sF)
+
+
+stand.Col.names.lc <- c("prefrontal",
+                        "cerebellum",
+                        "temporal",
+                        "pons")
+
+opt <- setGlobalOptions(
+<<<<<<< HEAD
+          recordTimestamps = FALSE,
+          delta = 1                   # the default increment for the inc(x,) function
+)
+
+
+=======
+          recordTimestamps = FALSE
+)
+
+>>>>>>> 469fa81b3f25475c97821be10c4cce70996c2313
+@
+
+
+<<init, include=FALSE >>=
+opts_chunk$set(include=FALSE,
+               echo=FALSE,
+               message=FALSE,
+               warning=FALSE)
+
+# Function to catch warnings that a sheet has no data yet and returns NAs 
+readPrime = function(x,y,z) {     
+     tryCatch(data.frame(read.xlsx(x,sheet = y)),
+            warning = function(w) {print(paste("no data ", y));
+            return(z)},
+            error = function(e) {print(paste("error reading data", y));
+            return(z)}
+)
+}
+@
+
+<<include=FALSE, echo=FALSE, results=hide>>=
+# Generate a unique ID for this program by path and filename. This unique ID is attached to this file using a tag in the filesystem.
+
+fname <- csf()   # function to get current path including file name
+
+prog.Name <- unique.ID(fname)
+
+prog.Name   # unique ID based on hash of file name
+
+# Write out the file_name, unique ID and date/time to '.Rscriptnames'
+
+rec.script(eval(fname),eval(prog.Name))
+
+@
+
+<< read_data >>=
+
+################# Already processed data ######################
+<<<<<<< HEAD
+wball <- loadWorkbook('comt_correlations_20000_all_areas_augmentedNew.xlsx') 
+=======
+#wball <- loadWorkbook('comt_correlations_20000_all_areas_augmentedNew.xlsx') 
+
+
+################# DEBUG - use previous data
+wball <- loadWorkbook('comt_correlations_20000_all_areas_augmentedNewOLD10.xlsx') 
+###########################################
+>>>>>>> 469fa81b3f25475c97821be10c4cce70996c2313
+
+# now tell R to read that workbook and which sheet
+  prefront.Data <- data.frame(read.xlsx(wball,sheet = "prefrontal"))
+  
+  cbell.Data <- data.frame(read.xlsx(wball,sheet = "cerebellum"))
+
+  tempor.Data <- data.frame(read.xlsx(wball,sheet = "temporal"))
+
+  pons.Data <- data.frame(read.xlsx(wball,sheet = "pons"))
+  
+  Store(prefront.Data,
+        cbell.Data,
+        tempor.Data,
+        pons.Data)
+
+
+# create a list with these data frames to be used when the same operation is applied to all area
+  
+major.Area <- list(pf=prefront.Data,
+                   cb=cbell.Data,
+                   tm=tempor.Data,
+                   po=pons.Data)
+################# END Already processed data #######################
+
+################# Original data as downloaded from genenetwork2 ####
+wballo <- loadWorkbook('comt_all_areas_correlation_results.xlsx')   
+
+# now tell R to read that workbook and which sheet
+<<<<<<< HEAD
+  orig.prefront.Data <- data.frame(read.xlsx(wballo,sheet = "prefrontal"))
+  
+  orig.cbell.Data <- data.frame(read.xlsx(wballo,sheet = "cerebellum"))
+
+  orig.tempor.Data <- data.frame(read.xlsx(wballo,sheet = "temporal"))
+
+  orig.pons.Data <- data.frame(read.xlsx(wballo,sheet = "pons"))
+  
+  Store(orig.prefront.Data,
+        orig.cbell.Data,
+        orig.tempor.Data,
+        orig.pons.Data)
+=======
+  oprefront.Data <- data.frame(read.xlsx(wballo,sheet = "prefrontal"))
+  
+  ocbell.Data <- data.frame(read.xlsx(wballo,sheet = "cerebellum"))
+
+  otempor.Data <- data.frame(read.xlsx(wballo,sheet = "temporal"))
+
+  opons.Data <- data.frame(read.xlsx(wballo,sheet = "pons"))
+  
+  Store(oprefront.Data,
+        ocbell.Data,
+        otempor.Data,
+        opons.Data)
+>>>>>>> 469fa81b3f25475c97821be10c4cce70996c2313
+
+
+# create a list with these data frames to be used when the same operation is applied to all area
+  
+<<<<<<< HEAD
+orig.major.Area <- list(orig.pf=orig.prefront.Data,
+                   orig.cb=orig.cbell.Data,
+                   orig.tm=orig.tempor.Data,
+                   orig.po=orig.pons.Data)
+=======
+omajor.Area <- list(opf=oprefront.Data,
+                   ocb=ocbell.Data,
+                   otm=otempor.Data,
+                   opo=opons.Data)
+>>>>>>> 469fa81b3f25475c97821be10c4cce70996c2313
+
+################# END Original data as downloaded from genenetwork2 ####
+@
+
+<<<<<<< HEAD
+<< compare_unprocessed_preprocessed >>=
+# create a column in each preprocessed primary data file that indicates whether the gene symbol was changed in the course of preprocessing the data.
+
+ib <- seq_len(4)
+same.symb <- list()
+diff.symb <- list()
+count.diff <- matrix(rep(0,8),ncol=2)
+num.probes <- dim(major.Area[[1]])[1]
+common.Symb <- matrix(rep('',32),ncol=8)
+not.common.Symb <- matrix(rep('',32),ncol=8)
+illumina.change <- matrix(rep(NA,4))
+count.na <- matrix(rep(0,8),ncol=2)
+
+
+for (lm in ib) {
+
+######### One-off to correct an error in the prefrontal file
+
+# for (lm in 1:1) {
+     
+     DT <- data.table(x=as.character(major.Area[[lm]]$Symbol),
+                 y=as.character(orig.major.Area[[lm]]$Symbol),
+                 w=as.character(major.Area[[lm]]$Record),
+                 z=as.character(orig.major.Area[[lm]]$Record)
+                 )
+
+     DT[,test := (x == y), by=x]
+     
+     DT[,test2 := (x != y), by=x]
+     
+     DT[,test3 := (w != z), by=w]
+     
+     DT[,test4 := is.na(x), by=x]
+     
+     DT[,test5 := is.na(y), by=y]
+     
+     count.diff[lm,1] <- num.probes - sum(DT$test)
+     
+     count.diff[lm,2] <- sum(DT$test2)
+     
+     same.symb[[lm]] <- which(DT$test)
+     diff.symb[[lm]] <- which(DT$test2)
+     
+     illumina.change[lm] <- sum(DT$test3)
+     
+     count.na[lm,1] <- sum(DT$test4)
+     
+     count.na[lm,2] <- sum(DT$test5)
+
+     # Add a column to the preprocessed data in each brain area that is TRUE if there was a change in the symbol from original to preprocessed data.      
+     major.Area[[lm]]$symbol_change <- DT$test2
+     
+} # end brain area loop
+
+
+# Create two columns in the major.Area data sets that show the original and preprocessed Symbols only if there was a change.
+
+# old.new.symb <- data.frame(orig.symbol=rep(NA,dim(major.Area[[1]])[1]),
+#                            new.symbol=rep(NA,dim(major.Area[[1]])[1]))
+# 
+# major.Area[[1]][,c(20,21)] <- old.new.symb
+# major.Area[[2]][,c(20,21)] <- old.new.symb
+# major.Area[[3]][,c(20,21)] <- old.new.symb
+# major.Area[[4]][,c(20,21)] <- old.new.symb
+# 
+# for (kj in ib)   {
+#      
+#      for (pj in seq_len(dim(major.Area[[1]])[1]))  {
+#      
+#                major.Area[[kj]][pj,20] <- orig.major.Area[[kj]]$Symbol[pj]
+#                major.Area[[kj]][pj,21] <- major.Area[[kj]]$Symbol[pj]
+# 
+#      }
+# 
+# }
+
+
+# Note: some of the differences come from changing the 'ORF' in a gene symbol to the correct form 'orf'
+
+
+# Create table of number of identical symbols for pairs of areas in orig. and pre-processed data
+for (ij in 1:3) {
+     
+     common.Symb[ij,4] <- length(unique(orig.major.Area[[ij]]$Symbol))
+     common.Symb[4,4] <- length(unique(orig.major.Area[[ij]]$Symbol))
+     not.common.Symb[ij,4] <- length(unique(orig.major.Area[[ij]]$Symbol))
+     not.common.Symb[4,4] <- length(unique(orig.major.Area[[ij]]$Symbol))
+     
+     common.Symb[ij,8] <- length(unique(major.Area[[ij]]$Symbol))
+     common.Symb[4,8] <- length(unique(major.Area[[ij]]$Symbol))
+     not.common.Symb[ij,8] <- length(unique(major.Area[[ij]]$Symbol))
+     not.common.Symb[4,8] <- length(unique(major.Area[[ij]]$Symbol))
+     
+     
+     for (ik in (ij+1):4)   {
+          
+          common.Symb[ij,(ik-1)] <- length(intersect(unique(orig.major.Area[[ij]]$Symbol),
+                                                     unique(orig.major.Area[[ik]]$Symbol)))
+          common.Symb[ij,(ik-1 + 4)] <- length(intersect(unique(major.Area[[ij]]$Symbol),
+                                                     unique(major.Area[[ik]]$Symbol)))
+     
+          not.common.Symb[ij,(ik-1)] <- length(setdiff(unique(orig.major.Area[[ij]]$Symbol),
+                                                     unique(orig.major.Area[[ik]]$Symbol)))
+          not.common.Symb[ij,(ik-1 + 4)] <- length(setdiff(unique(major.Area[[ij]]$Symbol),
+                                                     unique(major.Area[[ik]]$Symbol)))
+     } # end inner brain area loop
+
+} # end outer brain area loop
+
+row.names(common.Symb) <- stand.Col.names.lc
+colnames(common.Symb) <- c(rep(c(stand.Col.names.lc[2:4],'Unique'),2))
+row.names(not.common.Symb) <- stand.Col.names.lc
+colnames(not.common.Symb) <- c(rep(c(stand.Col.names.lc[2:4],'Unique'),2))
+
+symbols.in.common.tab <- xtable(common.Symb,
+                                caption=c('Gene symbols in original, unprocessed data (columns 1 to 3) and in the preprocessed data (columns 4 to 6) shared by pairs of brain areas.'))
+
+symbols.not.shared.tab <- xtable(not.common.Symb,
+                                caption=c('Gene symbols in original, unprocessed data (columns 1 to 3) and in the preprocessed data (columns 4 to 6) not shared by pairs of brain areas.'))
+
+
+@
+
+<< categorize_symbol_changes >>=
+
+categ.symb.change <- data.frame()
+
+# Total symbol changes from original to preprocessed data
+for (im in ib)   {
+     
+     total.Symbol.changes <- 
+          major.Area[[im]]   %>%
+               filter(symbol_change)  %>%
+                    dplyr::select(symbol_change)  %>%
+                         dim
+     categ.symb.change[im,1] <- total.Symbol.changes[1]
+}
+
+# Original ORF
+for (im in ib)   {
+     ORF.orf.changes <- 
+          major.Area[[im]]   %>%
+               filter(grepl('ORF',orig.symbol))  %>%
+                         dim
+     categ.symb.change[im,2] <- ORF.orf.changes[1]
+}
+
+
+# ORF -> orf
+for (im in ib)   {
+     ORF.orf.changes <- 
+          major.Area[[im]]   %>%
+               filter(grepl('ORF',orig.symbol) & grepl('orf',new.symbol))  %>%
+                         dim
+     categ.symb.change[im,3] <- ORF.orf.changes[1]
+}
+
+
+# ORF to other
+for (im in ib)   {
+     ORF.to.other <- 
+          major.Area[[im]]   %>%
+               filter(grepl('ORF',orig.symbol) & !grepl('orf',new.symbol))  %>%
+                         dim
+     categ.symb.change[im,4] <- ORF.to.other[1]
+}
+
+# ORF no change
+for (im in ib)   {
+     ORF.no.change <- 
+          major.Area[[im]]   %>%
+               filter(grepl('ORF',orig.symbol) & grepl('ORF',new.symbol))  %>%
+                         dim
+     categ.symb.change[im,5] <- ORF.no.change[1]
+}
+
+# Original LOCxx
+for (im in ib)   {
+     LOC.original <- 
+          major.Area[[im]]   %>%
+               filter(grepl('^LOC',orig.symbol))  %>%
+                         dim
+     categ.symb.change[im,6] <- LOC.original[1]
+}
+
+# LOCxx to other
+for (im in ib)   {
+     LOC.to.other <- 
+          major.Area[[im]]   %>%
+               filter(grepl('^LOC',orig.symbol) & !grepl('^LOC',new.symbol))  %>%
+                         dim
+     categ.symb.change[im,7] <- LOC.to.other[1]
+}
+
+# LOCxx unchanged
+for (im in ib)   {
+     LOC.unchanged <- 
+          major.Area[[im]]   %>%
+               filter(grepl('^LOC',orig.symbol) & grepl('^LOC',new.symbol))  %>%
+                         dim
+     categ.symb.change[im,8] <- LOC.unchanged[1]
+}
+
+# nonLOCxx nonORF changes
+for (im in ib)   {
+     nonLOC.nonORF.changes <- 
+          major.Area[[im]]   %>%
+               filter(symbol_change)   %>%
+                    filter(!grepl('^LOC',orig.symbol) & !grepl('ORF',orig.symbol))  %>%
+                         dim
+     categ.symb.change[im,9] <- nonLOC.nonORF.changes[1]
+}
+
+
+# Total changes
+for (im in ib)   {
+
+          categ.symb.change[im,10] <- categ.symb.change[im,3] + categ.symb.change[im,4] + categ.symb.change[im,7] + categ.symb.change[im,9]
+          
+          categ.symb.change[im,11] <- categ.symb.change[im,1] - categ.symb.change[im,10]
+
+     }
+
+colnames(categ.symb.change) <- c('Symbols_changed',
+                                 'Original_ORF',
+                                 'ORF_to_orf',
+                                 'ORF_to_other',
+                                 'ORF_unchanged',
+                                 'Original_LOCxx',
+                                 'LOCxx_to_other',
+                                 'LOCxx_unchanged',
+                                 'nonLOC.nonORF.changes',
+                                 'Accounted_changes',
+                                 'Unaccounted changes')
+
+row.names(categ.symb.change) <- stand.Col.names.lc
+
+
+see.nonLOC.nonORF.changes <- list()                         
+# examine nonLOCxx nonORF changes
+for (im in ib)   {
+     see.nonLOC.nonORF.changes[[im]] <- 
+          major.Area[[im]]   %>%
+               filter(symbol_change)    %>%
+                    filter(!grepl('^LOC',orig.symbol) & !grepl('ORF',orig.symbol))
+
+}
+
+##### Search for date-like symbols in major.Area to back substitute into the original data files which converted them to numbers after brining them in as dates.
+
+
+# Search for date-like symbols to back substitute into the original data files that formatted them as dates and then converted them to numbers.
+
+# Only the MARCHx need to be replaced in the original files because the SEPTx symbols appeared as Septin x not as dates in thopse files.
+date.like.symbols <- list()
+
+for (im in ib)   {
+     date.like.symbols[[im]] <- 
+          major.Area[[im]]   %>%
+                    filter(grepl('^MARCH',Symbol))
+     
+}
+
+orig.major.Area[[1]]$Symbol[c(unlist(date.like.symbols[[1]]$Index))]
+major.Area[[1]]$Symbol[c(unlist(date.like.symbols[[1]]$Index))]
+
+# Now replace the symbols in the original data.frames
+
+for (im in ib)   {
+     
+     orig.major.Area[[im]]$Symbol[c(unlist(date.like.symbols[[im]]$Index))] <- major.Area[[im]]$Symbol[c(unlist(date.like.symbols[[im]]$Index))]
+     
+     
+}
+
+# create new data frames to hold the original data
+
+orig.prefront.Data <- orig.major.Area[[1]]
+orig.cbell.Data <- orig.major.Area[[2]]
+orig.tempor.Data <- orig.major.Area[[3]]
+orig.pons.Data <- orig.major.Area[[4]]
+@
+<< write_orig_data_out >>=
+##### Note: these will be new individual files with the prefix orig.
+
+
+
+#### >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> NEED AREA FILENAME HERE 
+success.of.write <- write.orig.one(orig.pons.Data,'pons')
+
+     # success.of.write <- unlist(lapply(success.of.write[ib], function(x,ib) {if (x[ib]) {x[ib] = 'succeeded'} else {x[ib] = 'failed'}}, ib))
+     # 
+     success.of.write
+=======
+<< original_stats >>=
+
+preprocess.Stats <- list()
+ib <- seq_len(4)
+
+preprocess.Stats[[1]] <- lapply(omajor.Area[ib], function(x,ib) data.frame(chrUnknown=sum(as.integer(str_count(x$Location,pattern='ChrUn')))))
+
+preprocess.Stats[[2]] <- lapply(omajor.Area[ib], function(x,ib) data.frame(chrUnknown=sum(as.integer(str_count(x$Symbol,pattern='^LOC')))))
+
+
+postprocess.Stats <- list()
+# Note: in the preprocessed data files, any missing values or 'Un' values have been replaced with NA
+
+############ HERE
+postprocess.Stats[[1]] <- lapply(major.Area[ib], function(x,ib) data.frame(chrUnknown=num.NA(x$loc)),ib)
+
+>>>>>>> 469fa81b3f25475c97821be10c4cce70996c2313
+
+@
+
+
+
+<<<<<<< HEAD
+
+
+
+<< table_Symbol_changes >>=
+
+symb.change.tab <- xtable(categ.symb.change,
+                          caption='Types of changes to the gene symbols from the original data to the preprocessed data.',
+                          align=c('l',rep('c',ncol(categ.symb.change))))
+
+# generate a table showing the various types of symbol changes
+example.symb.changes <- data.frame(Column_label=c('A.',         
+                    'B.',
+                    'C.', 
+                    'D.', 
+                    'E.', 
+                    'F.', 
+                    'G.', 
+                    'H.', 
+                    'I.', 
+                    'J.', 
+                    'K.'),
+                         Description=c('Symbols_changed',
+                                 'Original_ORF',
+                                 'ORF_to_orf',
+                                 'ORF_to_other',
+                                 'ORF_unchanged',
+                                 'Original_LOCxx',
+                                 'LOCxx_to_other',
+                                 'LOCxx_unchanged',
+                                 'nonLOC.nonORF.changes',
+                                 'Accounted_changes',
+                                 'Unaccounted changes'),
+                         Examples=c('',
+                    'C9ORF23, C20ORF58',
+                    'C9ORF23 -> C9orf23',
+                    'C20ORF58 -> NKAIN4',
+                    '',
+                    'LOC646531, LOC440093',
+                    'LOC646531 -> YBX1P2',
+                    '',
+                    'FLJ20105 -> ERCC6L',
+                    '',
+                    ''
+                    )
+)
+
+example.symb.changes.tab <- xtable(example.symb.changes,
+                                   caption='Definitions of column lables and examples of different types of symbol changes.')
+
+
+@
+
+<<>>=
+see.ORF.to.other <- list()
+for (im in ib)   {
+     see.ORF.to.other[[im]] <- 
+          major.Area[[im]]   %>%
+               filter(symbol_change)    %>%
+                   filter(grepl('ORF',orig.symbol) & !grepl('orf',new.symbol))
+
+}
+
+# see original LOCxx
+see.LOCxx.orig <- list()
+for (im in ib)   {
+     see.LOCxx.orig[[im]] <- 
+          major.Area[[im]]   %>%
+#               filter(symbol_change)    %>%
+                   filter(grepl('^LOC',orig.symbol))
+
+}
+
+## nonLOC, nonORF changes
+see.nonLOC.nonORF.change <- list()
+for (im in ib)   {
+     see.nonLOC.nonORF.change[[im]] <- 
+          major.Area[[im]]   %>%
+               filter(symbol_change)    %>%
+                   filter(!grepl('^LOC',orig.symbol) & !grepl('ORF',orig.symbol))
+
+}
+
+
+@
+
+
+<< write_data_out >>=
+
+#### >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> NEED AREA FILENAME HERE 
+success.of.write <- write.primary.one(prefront.Data,'prefrontal')
+
+     # success.of.write <- unlist(lapply(success.of.write[ib], function(x,ib) {if (x[ib]) {x[ib] = 'succeeded'} else {x[ib] = 'failed'}}, ib))
+     # 
+     success.of.write
+
+@
+
+
+=======
+>>>>>>> 469fa81b3f25475c97821be10c4cce70996c2313
+\end{document}

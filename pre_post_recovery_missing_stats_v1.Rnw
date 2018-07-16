@@ -1,0 +1,461 @@
+\documentclass[11pt]{article}
+\usepackage{rotating}
+\usepackage{graphicx, subfig}
+\usepackage{float}
+\pagenumbering{arabic}
+\usepackage{enumerate}
+\usepackage{Sweave}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{framed}
+\usepackage{longtable}
+\usepackage{tablefootnote}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{textcomp}
+\usepackage{tabularx}
+
+\setlength\parindent{0pt}
+
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{keep.source=TRUE} 
+
+\author{James L. Dannemiller \\ Rice University}
+\title{COMT Expression Correlations in Four Brain Areas}
+\maketitle
+\today \\
+Gene Network\\
+Spring, 2018\\
+{\textit {COMT}} catalyzes degradation of catecholamines including dopamine, norepinephrine and epinephrine.\\
+
+\textlangle{}{\textit {pre post recovery missing stats v1.Rnw}}\textrangle{}: Program to generate tables pre- and post- preprocessing of the data on number of rows with missing observations on various variables. Additionally, some chromosomes were initiaslly listed as 'Un' for unknown.\\
+
+
+<<include=FALSE,echo=FALSE,message=FALSE,warning=FALSE>>=
+
+library(base)
+library(knitr)
+library(openxlsx)
+library(xtable)
+options(xtable.floating = TRUE)
+options(xtable.timestamp = "")
+library(magrittr)
+library(tables)
+library(plyr)
+library(scales)
+library(utils)
+# library(ggman)
+library(dplyr)
+library(biomaRt)
+library(stringr)
+library(curl)
+library(git2r)
+library(githubinstall)
+library(devtools)
+library('xml2')
+library(RCurl)
+library(XML)
+library(rentrez)
+library(data.table)
+library(pracma)
+library(SOAR)
+library(roxygen2)
+library(GlobalOptions)
+library(tidyr)
+library(Hmisc)
+
+#opts_chunk$set(include=FALSE,echo=FALSE,message=FALSE,warning=FALSE)
+
+# Function to catch warnings that a sheet has no data yet and returns NAs 
+readPrime = function(x,y,z) {     
+     tryCatch(data.frame(read.xlsx(x,sheet = y)),
+            warning = function(w) {print(paste("no data ", y));
+            return(z)},
+            error = function(e) {print(paste("error reading data", y));
+            return(z)}
+)
+}
+
+work.path <- c('/Volumes/Macintosh_HD_3/genetics/genenetwork2/')
+
+setwd(work.path)
+@
+
+<<<<<<< HEAD
+<<include=FALSE,echo=FALSE,message=FALSE,warning=FALSE>>=
+=======
+>>>>>>> 469fa81b3f25475c97821be10c4cce70996c2313
+
+################ READ THIS LIST OF TO-BE SOURCED FUNCTIONS AND PROGRAMS IN #################
+
+fileConn<-file('sourced_functions_programs.txt')
+     sourced.Funcs <- 
+          data.frame(rfunc=readLines(con=fileConn),stringsAsFactors = FALSE)
+
+     temp.Funcs <- str_replace(sourced.Funcs$rfunc,',','.R')
+          sourced.Funcs <- data.frame(rfunc=as.character(temp.Funcs),stringsAsFactors = FALSE)
+     temp2.Funcs <- paste(work.path,sourced.Funcs$rfunc,sep='') 
+          sourced.Funcs <- data.frame(rfunc=as.character(temp2.Funcs),stringsAsFactors = FALSE)
+close(fileConn)
+
+source(sourced.Funcs$rfunc[1:length(sourced.Funcs)])
+
+
+stand.Col.names.lc <- c("prefrontal",
+                        "cerebellum",
+                        "temporal",
+                        "pons")
+
+opt <- setGlobalOptions(
+<<<<<<< HEAD
+          recordTimestamps = FALSE,
+          delta = 1,
+          read.data = TRUE
+          
+=======
+          recordTimestamps = FALSE
+>>>>>>> 469fa81b3f25475c97821be10c4cce70996c2313
+)
+
+@
+
+
+<<include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, results=hide>>=
+# Generate a unique ID for this program by path and filename. This unique ID is attached to this file using a tag in the filesystem.
+
+<<<<<<< HEAD
+#          fname <- csf()   # function to get current path including file name
+
+#          prog.Name <- unique.ID(fname)
+
+#          prog.Name   # unique ID based on hash of file name
+
+# Write out the file_name, unique ID and date/time to '.Rscriptnames'
+
+#          rec.script(eval(fname),eval(prog.Name))
+
+@
+
+<<read_data,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, results=hide>>=
+
+################# Already processed data ######################
+
+if(opt('read.data')) {
+
+wball <- loadWorkbook('comt_correlations_20000_all_areas_augmentedNew.xlsx')   
+
+# now tell R to read that workbook and which sheet
+  prefront.Data <- data.frame(read.xlsx(wball,sheet = "prefrontal"))
+  
+  cbell.Data <- data.frame(read.xlsx(wball,sheet = "cerebellum"))
+
+  tempor.Data <- data.frame(read.xlsx(wball,sheet = "temporal"))
+
+  pons.Data <- data.frame(read.xlsx(wball,sheet = "pons"))
+  
+  Store(prefront.Data,
+        cbell.Data,
+        tempor.Data,
+        pons.Data)
+
+
+# create a list with these data frames to be used when the same operation is applied to all area
+  
+major.Area <- list(pf=prefront.Data,
+                   cb=cbell.Data,
+                   tm=tempor.Data,
+                   po=pons.Data)
+
+} else {
+     
+=======
+# Function to catch warnings that a sheet has no data yet and returns NAs 
+readPrime = function(x,y,z) {     
+     tryCatch(data.frame(read.xlsx(x,sheet = y)),
+            warning = function(w) {print(paste("no data ", y));
+            return(z)},
+            error = function(e) {print(paste("error reading data", y));
+            return(z)}
+)
+>>>>>>> 469fa81b3f25475c97821be10c4cce70996c2313
+}
+
+################# END Already processed data #######################
+
+################# Original data as downloaded from genenetwork2 ####
+
+if(opt('read.data')) {
+
+wballo <- loadWorkbook('comt_all_areas_correlation_results.xlsx') 
+
+# now tell R to read that workbook and which sheet
+  orig.prefront.Data <- data.frame(read.xlsx(wballo,sheet = "prefrontal"))
+  
+  orig.cbell.Data <- data.frame(read.xlsx(wballo,sheet = "cerebellum"))
+
+  orig.tempor.Data <- data.frame(read.xlsx(wballo,sheet = "temporal"))
+
+  orig.pons.Data <- data.frame(read.xlsx(wballo,sheet = "pons"))
+  
+  Store(orig.prefront.Data,
+        orig.cbell.Data,
+        orig.tempor.Data,
+        orig.pons.Data)
+
+
+# create a list with these data frames to be used when the same operation is applied to all area
+  
+orig.major.Area <- list(orig.pf=orig.prefront.Data,
+                   orig.cb=orig.cbell.Data,
+                   orig.tm=orig.tempor.Data,
+                   orig.po=orig.pons.Data)
+
+} else {
+     
+}
+
+################# END Original data as downloaded from genenetwork2 ####
+
+@
+
+<<pre.post.ChrUn.Table,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, results=tex >>=
+
+
+
+summ.pre.post.Stats <- list()
+
+
+ib <- seq_len(4)
+
+
+count.Un.pre.post <- data.frame(matrix(rep(0,12),ncol=4))
+
+for (lm in ib) {
+     
+     
+     
+     DT <- data.table(x=as.character(orig.major.Area[[lm]]$Location),
+                 y=as.character(major.Area[[lm]]$loc)
+                 )
+
+     DT[,test1 := (grepl('^ChrUn',x)), by=x]
+     
+     DT[,test2 := (is.na(y)), by=y]
+     
+     count.Un.pre.post[1,lm] <- dim(major.Area[[lm]])[1]
+     count.Un.pre.post[2,lm] <- count.Un.pre.post[1,lm] - sum(DT$test1)
+     count.Un.pre.post[3,lm] <- count.Un.pre.post[1,lm] - sum(DT$test2)
+
+     
+} # end brain area loop
+
+colnames(count.Un.pre.post) <- stand.Col.names.lc
+
+row.names(count.Un.pre.post) <- c('Number of probes',
+                                  'Original',
+                                  'Processed')
+
+summ.pre.post.Stats[[1]] <- count.Un.pre.post
+
+summ.pre.post.ChrUnNA.tab <- xtable(summ.pre.post.Stats[[1]],
+                                  align=c('l','X','X','X','X'),
+                                  caption='Total numbers of probes (Row 1), original number of probes with chromosome names identified (Row 2), number of probes with chromosome names identified after processing (Row 3).',
+                                  digits=c(rep(0,5))
+                                  )
+
+print(summ.pre.post.ChrUnNA.tab,rownames=TRUE,caption.placement = "top",
+      hline.after=c(-1, 0, 3),
+      rotate.colnames = TRUE,
+      tabular.environment = "tabularx", 
+      width = "\\textwidth"
+      )
+
+@
+
+<<<<<<< HEAD
+\vspace{1em}
+
+
+<<pre.post.StartPos.blank.Table,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, results=tex>>=
+count.StartPos.pre.post <- data.frame(matrix(rep(0,12),ncol=4))
+
+for (lm in ib) {
+     
+     DT <- data.table(x=as.character(orig.major.Area[[lm]]$Location),
+                 y=as.character(major.Area[[lm]]$bp)
+                 )
+
+     DT[,test1 := (grepl('ChrUn: 1.000000',x)), by=x]
+     
+     DT[,test2 := (is.na(y)), by=y]
+     
+     count.StartPos.pre.post[1,lm] <- dim(major.Area[[lm]])[1]
+     count.StartPos.pre.post[2,lm] <- count.StartPos.pre.post[1,lm] - sum(DT$test1)
+     count.StartPos.pre.post[3,lm] <- count.StartPos.pre.post[1,lm] - sum(DT$test2)
+     
+} # end brain area loop
+
+colnames(count.StartPos.pre.post) <- stand.Col.names.lc
+     
+row.names(count.StartPos.pre.post) <- c('Number of probes',
+                                  'Original',
+                                  'Processed')
+
+
+summ.pre.post.Stats[[2]] <- count.StartPos.pre.post
+
+summ.pre.post.TxStartMissing.tab <- xtable(summ.pre.post.Stats[[2]],
+                                  align=c('l','X','X','X','X'),
+                                  caption='Total numbers of probes (Row 1), original number of probes with known transcription start positions (Row 2), number of probes with known transcription start positions after processing (Row 3).',
+                                  digits=c(rep(0,5))
+                                  )
+
+print(summ.pre.post.TxStartMissing.tab,rownames=TRUE,caption.placement = "top",
+      hline.after=c(-1, 0, 3),
+      rotate.colnames = TRUE,
+      tabular.environment = "tabularx", 
+      width = "\\textwidth"
+      )
+
+@
+
+<<pre.post.StartPos.blank.Table,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, results=tex>>=
+count.LOC.pre.post <- data.frame(matrix(rep(0,12),ncol=4))
+
+for (lm in ib) {
+     
+     DT <- data.table(x=as.character(orig.major.Area[[lm]]$Symbol),
+                 y=as.character(major.Area[[lm]]$Symbol)
+                 )
+
+     DT[,test1 := (grepl('^LOC',x)), by=x]
+     
+     DT[,test2 := (grepl('^LOC',y)), by=y]
+     
+     count.LOC.pre.post[1,lm] <- dim(major.Area[[lm]])[1]
+     count.LOC.pre.post[2,lm] <- sum(DT$test1)
+     count.LOC.pre.post[3,lm] <- sum(DT$test2)
+     
+} # end brain area loop
+
+colnames(count.LOC.pre.post) <- stand.Col.names.lc
+     
+row.names(count.LOC.pre.post) <- c('Number of probes',
+                                  'Original',
+                                  'Processed')
+
+
+summ.pre.post.Stats[[3]] <- count.LOC.pre.post
+
+summ.pre.post.LOC.tab <- xtable(summ.pre.post.Stats[[3]],
+                                  align=c('l','X','X','X','X'),
+                                  caption='Total numbers of probes (Row 1), original number of probes with LOCxx gene symbols (Row 2), number of probes with LOCxx gene symbols after processing (Row 3).',
+                                  digits=c(rep(0,5))
+                                  )
+
+print(summ.pre.post.LOC.tab,rownames=TRUE,caption.placement = "top",
+      hline.after=c(-1, 0, 3),
+      rotate.colnames = TRUE,
+      tabular.environment = "tabularx", 
+      width = "\\textwidth"
+      )
+
+@
+
+<<latex.tab.1,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE, results=tex>>=
+
+pre.post.LOC.tab <- latex(summ.pre.post.LOC.tab,file='',
+                   caption = paste0('Total numbers of probes (Row 1), original number of probes with LOCxx gene symbols (Row 2), number of probes with LOCxx gene symbols after processing (Row 3).',sep=''),
+                     caption.loc = c('top'),
+#                     cgroup = col.Groups,
+#                     n.cgroup = c(8,7),
+#                     colheads = add.col.Groups,
+#                   extracolheads = extra.Col.names,
+                     rowlabel = 'Measure',
+#                     rowname = stand.Col.names[2:4],
+                     colnamesTexCmd="bfseries",
+                     booktabs=TRUE,
+                     label=c('tab:missingstats'),
+                     na.blank = TRUE,
+                     vbar = FALSE,
+                     longtable=TRUE,
+                     table.env=TRUE,
+#                     center=c('center'),
+                     continued=c('Number of Genes in Common Continued'),
+                     first.hline.double = FALSE,
+                     append=FALSE
+#                     insert.bottom = bottom.Note,
+#                     insert.bottom.width = c('6in')
+                     )
+
+
+
+@
+=======
+<< read_data >>=
+
+################# Already processed data ######################
+wball <- loadWorkbook('comt_correlations_20000_all_areas_augmentedNew.xlsx')   
+
+# now tell R to read that workbook and which sheet
+  prefront.Data <- data.frame(read.xlsx(wball,sheet = "prefrontal"))
+  
+  cbell.Data <- data.frame(read.xlsx(wball,sheet = "cerebellum"))
+
+  tempor.Data <- data.frame(read.xlsx(wball,sheet = "temporal"))
+
+  pons.Data <- data.frame(read.xlsx(wball,sheet = "pons"))
+  
+  Store(prefront.Data,
+        cbell.Data,
+        tempor.Data,
+        pons.Data)
+
+
+# create a list with these data frames to be used when the same operation is applied to all area
+  
+major.Area <- list(pf=prefront.Data,
+                   cb=cbell.Data,
+                   tm=tempor.Data,
+                   po=pons.Data)
+################# END Already processed data #######################
+
+################# Original data as downloaded from genenetwork2 ####
+wballo <- loadWorkbook('comt_correlations_20000_all_areas_augmentedNew.xlsx')   
+
+# now tell R to read that workbook and which sheet
+  oprefront.Data <- data.frame(read.xlsx(wballo,sheet = "prefrontal"))
+  
+  ocbell.Data <- data.frame(read.xlsx(wballo,sheet = "cerebellum"))
+
+  otempor.Data <- data.frame(read.xlsx(wballo,sheet = "temporal"))
+
+  opons.Data <- data.frame(read.xlsx(wballo,sheet = "pons"))
+  
+  Store(oprefront.Data,
+        ocbell.Data,
+        otempor.Data,
+        opons.Data)
+
+
+# create a list with these data frames to be used when the same operation is applied to all area
+  
+omajor.Area <- list(opf=oprefront.Data,
+                   ocb=ocbell.Data,
+                   otm=otempor.Data,
+                   opo=opons.Data)
+
+
+
+
+################# END Original data as downloaded from genenetwork2 ####
+
+
+
+>>>>>>> 469fa81b3f25475c97821be10c4cce70996c2313
+
+
+\end{document}
